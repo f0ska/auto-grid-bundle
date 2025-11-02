@@ -11,5 +11,9 @@
         "psr-4": {
             "F0ska\\AutoGridBundle\\": "tests/"
         }
+    },
+    "require": {
+        "php": ">=8.3.0",
+        "symfony/framework-bundle": ">=7"
     }
 }

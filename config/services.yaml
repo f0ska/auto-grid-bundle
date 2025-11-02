@@ -23,13 +23,11 @@ services:
         resource: '../src/Action/*'
         tags: [ 'autogrid.action' ]
         autowire: true
-        lazy: true
 
     F0ska\AutoGridBundle\ActionParameter\:
         resource: '../src/ActionParameter/*'
         tags: [ 'autogrid.action.parameter' ]
         autowire: true
-        lazy: true
 
     F0ska\AutoGridBundle\Service\ActionListService:
         autowire: true

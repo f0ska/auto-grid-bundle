@@ -17,7 +17,6 @@ use F0ska\AutoGridBundle\Model\AutoGrid;
 
 class ActionService
 {
-    private PermissionService $permissionService;
     private AttributeService $attributeService;
     private ViewService $viewService;
     private ActionListService $actionList;
@@ -25,14 +24,12 @@ class ActionService
     private ParametersService $parametersService;
 
     public function __construct(
-        PermissionService $permissionService,
         AttributeService $attributeService,
         ViewService $viewService,
         ActionListService $actionList,
         ActionParametersListService $actionParametersList,
         ParametersService $parametersService
     ) {
-        $this->permissionService = $permissionService;
         $this->attributeService = $attributeService;
         $this->viewService = $viewService;
         $this->actionList = $actionList;

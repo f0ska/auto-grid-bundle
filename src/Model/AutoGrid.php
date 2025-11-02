@@ -14,14 +14,15 @@ namespace F0ska\AutoGridBundle\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query\Expr;
+use F0ska\AutoGridBundle\Exception\RenderException;
 use Symfony\Component\HttpFoundation\Response;
 
 class AutoGrid
 {
     private string $agId;
     private ?Response $response = null;
-    private string $template;
-    private array $context;
+    private ?string $template = null;
+    private array $context = [];
     private Expr\Comparison|Expr\Func|Expr\Andx|Expr\Orx|string|null $queryExpression = null;
     private ?ArrayCollection $queryParameters = null;
     private string $initialActionName = 'grid';
@@ -39,7 +40,13 @@ class AutoGrid
 
     public function getTemplate(): string
     {
-        return $this->template;
+        if ($this->template) {
+            return $this->template;
+        }
+        if ($this->response) {
+            throw new RenderException('Unable to render direct response. Please check your controller code.');
+        }
+        throw new RenderException('No template. Please set template or provide response instance directly.');
     }
 
     public function setTemplate(string $template): void
