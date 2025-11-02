@@ -1,0 +1,15 @@
+{% set value = agFieldValue(entity, field) %}
+{% set labels = agChoiceLabels(value, field) %}
+{% if (labels is empty) %}
+    -
+{% elseif (action is same as 'grid') %}
+    {{ labels|join(', ')|agTruncate(field.view.grid_truncate) }}
+{% elseif labels|length > 1 %}
+    <ul class="list-group list-group-flush">
+        {% for item in labels %}
+            <li class="list-group-item">{{ item }}</li>
+        {% endfor %}
+    </ul>
+{% else %}
+    {{ labels|first }}
+{% endif %}

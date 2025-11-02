@@ -1,0 +1,50 @@
+services:
+    _defaults:
+        public: false
+        autowire: false
+        autoconfigure: false
+
+    F0ska\AutoGridBundle\:
+        resource: '../src/{Builder/*,Service/*}'
+        autowire: true
+
+    F0ska\AutoGridBundle\Factory\:
+        resource: '../src/Factory/*'
+        autowire: true
+        lazy: true
+
+    F0ska\AutoGridBundle\Twig\:
+        resource: '../src/Twig/*'
+        lazy: true
+        autowire: true
+        autoconfigure: true
+
+    F0ska\AutoGridBundle\Action\:
+        resource: '../src/Action/*'
+        tags: [ 'autogrid.action' ]
+        autowire: true
+        lazy: true
+
+    F0ska\AutoGridBundle\ActionParameter\:
+        resource: '../src/ActionParameter/*'
+        tags: [ 'autogrid.action.parameter' ]
+        autowire: true
+        lazy: true
+
+    F0ska\AutoGridBundle\Service\ActionListService:
+        autowire: true
+        lazy: true
+        arguments:
+            $actions: !tagged_iterator 'autogrid.action'
+
+    F0ska\AutoGridBundle\Service\ActionParametersListService:
+        autowire: true
+        lazy: true
+        arguments:
+            $actionParameters: !tagged_iterator 'autogrid.action.parameter'
+
+    F0ska\AutoGridBundle\Service\PermissionService:
+        autowire: true
+        lazy: true
+        arguments:
+            $actions: !tagged_iterator 'autogrid.action'

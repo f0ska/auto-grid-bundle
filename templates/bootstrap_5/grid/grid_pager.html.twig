@@ -1,0 +1,48 @@
+<div class="btn-group" role="group">
+    {% set leftCount = 2 %}
+    {% set rightCount = 2 %}
+    {% set innerCount = 3 %}
+    {% set firstPage = 1 %}
+    {% set lastPage = (view.pagination.count / view.pagination.limit)|round(0, 'ceil') ?: 1 %}
+    {% set btnClass = attributes.html_classes.tfootBtn|default('btn-outline-secondary') %}
+
+    {% if view.pagination.page <= (leftCount + innerCount + 1) %}
+        {% set leftCount = leftCount + innerCount %}
+    {% endif %}
+
+    {% if (lastPage - view.pagination.page) <= (rightCount + innerCount) %}
+        {% set rightCount = rightCount + innerCount %}
+    {% endif %}
+
+    {% set gap = false %}
+    {% for i in firstPage..lastPage %}
+        {% set canRender = false %}
+
+        {% if i >= firstPage and i <= (firstPage + leftCount - 1) %}
+            {% set canRender = true %}
+            {% set gap = true %}
+        {% endif %}
+
+        {% if i <= lastPage and i >= (lastPage - rightCount + 1) %}
+            {% set canRender = true %}
+        {% endif %}
+
+        {% if i >= (view.pagination.page - innerCount + 1) and i <= (view.pagination.page + innerCount - 1) %}
+            {% set canRender = true %}
+            {% set gap = true %}
+        {% endif %}
+
+        {% if canRender %}
+            {% if view.pagination.page == i %}
+                <span class="btn btn-sm {{ btnClass }} active">{{ i }}</span>
+            {% else %}
+                <a type="button"
+                   href="{{ agRun(agActionUrl, 'grid', {'page': i|agToInt}) }}"
+                   class="btn btn-sm {{ btnClass }}">{{ i }}</a>
+            {% endif %}
+        {% elseif gap %}
+            {% set gap = false %}
+            <span class="muted btn btn-sm {{ btnClass }} disabled">...</span>
+        {% endif %}
+    {% endfor %}
+</div>

@@ -1,0 +1,26 @@
+{% if (agRun(agIsAnyAllowed)) or attributes.has_custom_action is defined %}
+    {% set btnClass = attributes.html_classes.tbodyBtn|default('btn-outline-secondary') %}
+    <td class="text-end text-nowrap pt-0 pb-0 align-middle">
+        <div class="btn-group" role="group">
+            {% if agRun(agIsAllowed, 'view') and attributes.view_button_in.grid %}
+                <a class="btn {{ btnClass }} btn-sm"
+                   href="{{ agRun(agActionUrl, 'view', {'id': entity.id}) }}"
+                ><i class="bi bi-eye"></i></a>
+            {% endif %}
+            {% if agRun(agIsAllowed, 'edit') and attributes.edit_button_in.grid %}
+                <a class="btn {{ btnClass }} btn-sm"
+                   href="{{ agRun(agActionUrl, 'edit', {'id': entity.id}) }}"
+                ><i class="bi bi-pencil-square"></i></a>
+            {% endif %}
+            {% if agRun(agIsAllowed, 'delete') and attributes.delete_button_in.grid %}
+                <a class="btn {{ btnClass }} btn-sm"
+                   href="{{ agRun(agActionUrl, 'delete', {'id': entity.id}) }}"
+                   onclick="return confirm('{{ 'f0ska.autogrid.dialog.delete_confirm'|trans }}');"
+                ><i class="bi bi-trash"></i></a>
+            {% endif %}
+            {% if field.attributes.action_template is defined %}
+                {{ include(field.attributes.action_template|agTheme) }}
+            {% endif %}
+        </div>
+    </td>
+{% endif %}

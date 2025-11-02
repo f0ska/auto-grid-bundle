@@ -1,0 +1,43 @@
+<div class="content-fluid">
+    <div class="row">
+        {% for fieldset in view.fieldset.defined %}
+            <div class="col {{ fieldset.class }}">
+                <div class="card mt-3">
+                    <h5 class="card-header">
+                        {{ fieldset.name|trans }}
+                    </h5>
+                    <table class="table mb-1">
+                        {% for fieldName in fieldset.fields %}
+                            {% set field = attribute(fields, fieldName) %}
+                            <tr>
+                                <th class="col col-4 text-end table-light {{ loop.last ? 'border-bottom-0' }}">
+                                    {{ field.attributes.label|trans }}
+                                </th>
+                                <td class="col col-8 {{ loop.last ? 'border-bottom-0' }}">
+                                    {{ include(field.view.template|agTheme) }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        {% endfor %}
+        {% if view.fieldset.not_defined %}
+            <div class="col">
+                <table class="table mt-4 mb-0">
+                    {% for fieldName in view.fieldset.not_defined %}
+                        {% set field = attribute(fields, fieldName) %}
+                        <tr>
+                            <th class="col col-4 text-end table-light {{ loop.last ? 'border-bottom-0' }}">
+                                {{ field.attributes.label|trans }}
+                            </th>
+                            <td class="col col-8 {{ loop.last ? 'border-bottom-0' }}">
+                                {{ include(field.view.template|agTheme) }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        {% endif %}
+    </div>
+</div>

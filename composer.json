@@ -1,0 +1,15 @@
+{
+    "name": "f0ska/auto-grid-bundle",
+    "description": "Automatic grid generation for the doctrine entity",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "F0ska\\AutoGridBundle\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "F0ska\\AutoGridBundle\\": "tests/"
+        }
+    }
+}

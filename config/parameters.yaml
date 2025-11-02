@@ -1,0 +1,51 @@
+parameters:
+    # Main theme and templates.
+    f0ska.autogrid.template.theme: '@@F0skaAutoGrid/bootstrap_5'
+    f0ska.autogrid.template.form_themes: [ 'bootstrap_5_layout.html.twig' ]
+    f0ska.autogrid.template.action.grid: '%%theme%%/grid.html.twig'
+    f0ska.autogrid.template.action.form: '%%theme%%/form.html.twig'
+    f0ska.autogrid.template.action.view: '%%theme%%/view.html.twig'
+    f0ska.autogrid.template.action.error: '%%theme%%/error.html.twig'
+
+    # Field type templates.
+    f0ska.autogrid.template.field.debug: '%%theme%%/field/debug.html.twig'
+    f0ska.autogrid.template.field.text: '%%theme%%/field/text.html.twig'
+    f0ska.autogrid.template.field.date: '%%theme%%/field/date.html.twig'
+    f0ska.autogrid.template.field.choice: '%%theme%%/field/choice.html.twig'
+    f0ska.autogrid.template.field.boolean: '%%theme%%/field/boolean.html.twig'
+    f0ska.autogrid.template.field.simple_array: '%%theme%%/field/array.html.twig'
+    f0ska.autogrid.template.field.json: '%%theme%%/field/json.html.twig'
+    f0ska.autogrid.template.field.ascii_string: '%%theme%%/field/ascii.html.twig'
+
+    # Date formats for data view (not for a form field)
+    f0ska.autogrid.view.field.format.date: 'Y-m-d'
+    f0ska.autogrid.view.field.format.time: 'H:i'
+    f0ska.autogrid.view.field.format.datetime: 'Y-m-d H:i'
+    f0ska.autogrid.view.field.format.interval: '%Yy, %mm, %dd'
+
+    # Display settings.
+    f0ska.autogrid.view.friendly_id: 'autogrid' # Used for frontend container id, class and link fragment generation.
+    f0ska.autogrid.grid.pagination_limits: [ 10, 50, 100 ] # Set it with a single value to remove grid limit selector.
+    f0ska.autogrid.grid.text.truncate: 45 # Maximal content length in grid cell.
+
+    # Basic action buttons display.
+    f0ska.autogrid.grid.view_button_in_grid: true
+    f0ska.autogrid.grid.view_button_in_edit: true
+    f0ska.autogrid.grid.edit_button_in_grid: true
+    f0ska.autogrid.grid.edit_button_in_view: true
+    f0ska.autogrid.grid.delete_button_in_grid: true
+    f0ska.autogrid.grid.delete_button_in_view: true
+    f0ska.autogrid.grid.delete_button_in_edit: true
+
+    # Request parameters setting
+    f0ska.autogrid.request.single_parameter_mode: false # Store all url parameters in single request parameter (base64).
+    f0ska.autogrid.request.single_parameter_code: '_ag'
+    f0ska.autogrid.request.parameter_code.id: 'agId' # Instance identifier.
+    f0ska.autogrid.request.parameter_code.action: 'agAction' # Current action.
+    f0ska.autogrid.request.parameter_code.params: 'agParams' # Current action parameters.
+
+    # Enable this for better experience on multiple grid pages.
+    f0ska.autogrid.store_navigation_in_session: true
+
+    # By default, render boolean as select (if no form options defined).
+    f0ska.autogrid.form.default_boolean_as_select: false

@@ -1,0 +1,41 @@
+{% set isFilterActive = (attribute(request.filter ?? {}, field.name) is defined) and attribute(request.filter, field.name) is not same as null %}
+{% set linkClass = attributes.html_classes.theadLink|default('link-secondary') %}
+{% set linkClassActive = attributes.html_classes.theadLinkActive|default('link-primary') %}
+<span class="dropdown-center">
+    <a class="{{ isFilterActive ? linkClassActive : linkClass }}"
+       role="button"
+       data-bs-toggle="dropdown"
+       aria-expanded="false"
+       data-bs-auto-close="outside"
+    ><small><i class="bi bi-funnel{{ isFilterActive ? '-fill' }}"></i></small></a>
+    <span class="dropdown-menu p-2 fw-normal">
+        {% set form = attribute(view.filter_forms, field.name) %}
+        {% if view.form_themes %}
+            {% form_theme form with view.form_themes %}
+        {% endif %}
+        {{ form_start(form) }}
+        {% if field.attributes.range_filter is defined %}
+            {% for searchField in attribute(form, field.name).children %}
+                {{ form_widget(searchField, {'attr': {'placeholder': field_label(searchField)}}) }}
+                {{ loop.first ? '<div class="mb-2"></div>' }}
+            {% endfor %}
+        {% else %}
+            {{ form_widget(attribute(form, field.name)) }}
+        {% endif %}
+        {{ form_rest(form) }}
+        {{ form_end(form) }}
+        <div class="btn-group w-100 mt-2" role="group">
+            <button type="submit"
+                    form="{{ form.vars.attr.id }}"
+                    class="btn btn-sm btn-outline-primary w-50"
+            >
+                {{- 'f0ska.autogrid.button.submit'|trans -}}
+            </button>
+            <a class="btn btn-sm btn-outline-secondary w-50 {% if not isFilterActive %}disabled{% endif %}"
+               href="{{ agRun(agActionUrl, 'grid', {'filter': {(field.name): null}}) }}"
+            >
+                {{- 'f0ska.autogrid.button.reset'|trans -}}
+            </a>
+        </div>
+    </span>
+</span>

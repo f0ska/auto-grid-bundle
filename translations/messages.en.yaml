@@ -1,0 +1,22 @@
+f0ska:
+    autogrid:
+        button:
+            submit: "Submit"
+            back: "Back"
+            modify: "Modify"
+            reset: "Reset"
+            delete: "Delete"
+            view: "View"
+        dialog:
+            delete_confirm: "Do you really want to delete this?"
+        action:
+            create: "Create"
+            edit: "Edit"
+            view: "View"
+        choice:
+            yes: "Yes"
+            no: "No"
+        range:
+            from: "From"
+            to: "To"
+        total: "Total"

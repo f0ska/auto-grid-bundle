@@ -1,0 +1,12 @@
+{% set value = agFieldValue(entity, field) %}
+{% if (value is null or value is same as '') %}
+    -
+{% else %}
+    {%- if field.attributes.value_prefix is defined %}<span class="text-body-secondary">{{ field.attributes.value_prefix }}</span>{% endif %}
+    {%- if action is same as 'grid' %}
+        {{- value|agTruncate(field.view.grid_truncate) -}}
+    {%- else %}
+        {{- value -}}
+    {% endif -%}
+    {% if field.attributes.value_suffix is defined %}<span class="text-body-secondary">{{ field.attributes.value_suffix }}</span>{% endif -%}
+{% endif %}

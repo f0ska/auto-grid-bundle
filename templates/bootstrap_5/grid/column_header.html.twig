@@ -1,0 +1,13 @@
+{% if field.permissions.grid %}
+    <th class="{{ field.attributes.column_header_class|default('align-middle') }}">
+        {% if (field.canSort) %}
+            {{ include('%theme%/grid/column_header_sort.html.twig'|agTheme) }}
+        {% endif %}
+
+        {{ field.attributes.label|trans }}
+
+        {% if (field.canFilter) %}
+            {{ include('%theme%/grid/column_header_filter.html.twig'|agTheme) }}
+        {% endif %}
+    </th>
+{% endif %}

@@ -1,0 +1,28 @@
+{{ form_start(form) }}
+<div class="content-fluid">
+    <div class="row">
+        {% for fieldset in view.fieldset.defined %}
+            <div class="col {{ fieldset.class }}">
+                <div class="card mt-3">
+                    <h5 class="card-header">
+                        {{ fieldset.name|trans }}
+                    </h5>
+                    <div class="card-body">
+                        {% for fieldName in fieldset.fields %}
+                            {{ form_row(attribute(form, fieldName)) }}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        {% if view.fieldset.not_defined %}
+            <div class="col mt-4">
+                {% for fieldName in view.fieldset.not_defined %}
+                    {{ form_row(attribute(form, fieldName)) }}
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+{{ form_end(form) }}

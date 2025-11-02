@@ -1,0 +1,16 @@
+{% if (agRun(agIsAnyAllowed)) or attributes.has_custom_action is defined %}
+    {% set btnClass = attributes.html_classes.theadBtn|default('btn-outline-secondary') %}
+    {% set btnClassActive = attributes.html_classes.theadBtnActive|default('btn-primary') %}
+    <th class="text-end text-nowrap align-middle">
+        {{ include('%theme%/grid/advanced_filter.html.twig'|agTheme) }}
+
+        {% if (agRun(agIsAllowed, 'create')) %}
+            <a class="btn btn-sm {{ btnClass }}" href="{{ agRun(agActionUrl, 'create') }}">
+                <i class="bi bi-plus-lg"></i>
+            </a>
+        {% endif %}
+        {% if attributes.header_action_template is defined %}
+            {{ include(attributes.header_action_template|agTheme) }}
+        {% endif %}
+    </th>
+{% endif %}

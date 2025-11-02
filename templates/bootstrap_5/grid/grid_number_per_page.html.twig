@@ -1,0 +1,16 @@
+{% if view.pagination.limits|length > 1 %}
+    {% set btnClass = attributes.html_classes.tfootBtn|default('btn-outline-secondary') %}
+    <div class="btn-group" role="group">
+        {% for pageLimit in view.pagination.limits %}
+            {% if pageLimit == view.pagination.limit %}
+                <span class="btn btn-sm {{ btnClass }} active">{{ pageLimit }}</span>
+            {% else %}
+                {% set calcOffset = (view.pagination.count > view.pagination.limit ? view.pagination.limit : view.pagination.count) * (view.pagination.page - 1) + 1 %}
+                {% set toPage = (calcOffset / pageLimit)|round(0, 'ceil')|agToInt %}
+                <a type="button"
+                   href="{{ agRun(agActionUrl, 'grid', {'limit': pageLimit, 'page': toPage}) }}"
+                   class="btn btn-sm {{ btnClass }}">{{ pageLimit }}</a>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endif %}

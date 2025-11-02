@@ -1,0 +1,16 @@
+{% set linkClass = attributes.html_classes.theadLink|default('link-secondary') %}
+{% set linkClassActive = attributes.html_classes.theadLinkActive|default('link-primary') %}
+
+{% if (attribute(request.order ?? {}, field.name) is not defined) or attribute(request.order, field.name) is same as null %}
+    <a class="{{ linkClass }}"
+       href="{{ agRun(agActionUrl, 'grid', {'order': {(field.name): 'asc'}}) }}"
+    ><i class="bi bi-chevron-expand"></i></a>
+{% elseif attribute(request.order, field.name) is same as 'asc' %}
+    <a class="{{ linkClassActive }}"
+       href="{{ agRun(agActionUrl, 'grid', {'order': {(field.name): 'desc'}}) }}"
+    ><i class="bi bi-caret-up-fill"></i></a>
+{% else %}
+    <a class="{{ linkClassActive }}"
+       href="{{ agRun(agActionUrl, 'grid', {'order': {(field.name): null}}) }}"
+    ><i class="bi bi-caret-down-fill"></i></a>
+{% endif %}

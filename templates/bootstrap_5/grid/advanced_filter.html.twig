@@ -1,0 +1,86 @@
+<span class="btn-group">
+    {% if request.filter is defined %}
+        <a class="btn btn-sm {{ btnClassActive }}" href="{{ agRun(agActionUrl, 'grid', {'filter': null}) }}">
+            <i class="bi bi-funnel"></i>
+        </a>
+    {% endif %}
+    {% if view.advanced_filter_form is defined %}
+        <button class="btn btn-sm {{ request.filter is defined ? btnClassActive : btnClass }}"
+                data-bs-toggle="modal"
+                data-bs-target="#exampleModal"
+                data-bs-backdrop="false"
+        ><i class="bi bi-search"></i></button>
+    {% endif %}
+</span>
+
+{% if view.advanced_filter_form is defined and agRun(agIsAllowed, 'advanced-filter') %}
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+         data-bs-backdrop="false">
+        <div class="modal-dialog modal-xl modal-fullscreen-sm-down">
+            <div class="modal-content text-start">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">
+                        <i class="bi bi-search mr-1"></i>
+                        {% if attributes.title is not empty %}
+                            {{ attributes.title|trans }}
+                        {% endif %}
+                    </h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        {% if view.form_themes %}
+                            {% form_theme view.advanced_filter_form with view.form_themes %}
+                        {% endif %}
+                        {{ form_start(view.advanced_filter_form) }}
+                        <div class="row">
+                            {% for field in fields %}
+                                {% if field.canFilter %}
+                                    {% set formField = attribute(view.advanced_filter_form, field.name) %}
+                                    {% if formField.children|length %}
+                                        {% for child in formField.children %}
+                                            <div class="col col-12 col-xl-4 col-lg-6 mb-3">
+                                                <label class="form-label">{{ field_label(formField) }}
+                                                    - {{ field_label(child) }}</label>
+                                                {{ form_widget(child) }}
+                                            </div>
+                                        {% endfor %}
+                                    {% else %}
+                                        <div class="col col-12 col-xl-4 col-lg-6 mb-3">
+                                            <label class="form-label">{{ field_label(formField) }}</label>
+                                            {{ form_widget(formField) }}
+                                        </div>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        {{ form_rest(view.advanced_filter_form) }}
+                        {{ form_end(view.advanced_filter_form) }}
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col col-6">
+                                <button type="submit"
+                                        form="{{ view.advanced_filter_form.vars.attr.id }}"
+                                        class="btn btn-outline-primary w-100 m-0"
+                                >
+                                    {{- 'f0ska.autogrid.button.submit'|trans -}}
+                                </button>
+                            </div>
+                            <div class="col col-6">
+                                <a class="btn btn-outline-secondary w-100 m-0 {% if request.filter is not defined %}disabled{% endif %}"
+                                   href="{{ agRun(agActionUrl, 'grid', {'filter': null}) }}"
+                                >
+                                    {{- 'f0ska.autogrid.button.reset'|trans -}}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}

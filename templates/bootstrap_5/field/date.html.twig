@@ -1,0 +1,6 @@
+{% set value = agFieldValue(entity, field) %}
+{% if (value is null) %}
+    -
+{% else %}
+    {{ value.format(field.view.format) }}
+{% endif %}
