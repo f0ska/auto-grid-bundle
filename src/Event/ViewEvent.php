@@ -17,7 +17,7 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 final class ViewEvent extends Event
 {
-    public const string EVENT_NAME = 'f0ska.autogrid.entity.view';
+    public const EVENT_NAME = 'f0ska.autogrid.entity.view';
 
     private object $entity;
     private Parameters $parameters;

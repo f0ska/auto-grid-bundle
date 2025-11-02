@@ -21,7 +21,7 @@ class Forbid extends AbstractAttribute
 {
     public function __construct(string $action, mixed $role = null)
     {
-        $this->value = new Permission()
+        $this->value = (new Permission())
             ->setAction($action)
             ->setAllowed(false)
             ->setRole($role);

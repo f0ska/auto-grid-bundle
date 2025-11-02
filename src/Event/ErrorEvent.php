@@ -17,7 +17,7 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 final class ErrorEvent extends Event
 {
-    public const string EVENT_NAME = 'f0ska.autogrid.error.show';
+    public const EVENT_NAME = 'f0ska.autogrid.error.show';
 
     private Parameters $parameters;
 

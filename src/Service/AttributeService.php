@@ -24,9 +24,9 @@ use function Symfony\Component\String\u;
 
 class AttributeService
 {
-    public const string MAPPING_FIELD   = 'field';
-    public const string MAPPING_ASSOC   = 'associated';
-    public const string MAPPING_VIRTUAL = 'virtual';
+    public const MAPPING_FIELD   = 'field';
+    public const MAPPING_ASSOC   = 'associated';
+    public const MAPPING_VIRTUAL = 'virtual';
 
     private MetaDataService $metaDataService;
     private PermissionService $permissionService;

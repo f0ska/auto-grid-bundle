@@ -14,7 +14,7 @@ namespace F0ska\AutoGridBundle\Service;
 
 class EncoderService
 {
-    private const array  BASE64_REPLACE = ['+' => '$', '/' => '!', '=' => ''];
+    private const BASE64_REPLACE = ['+' => '$', '/' => '!', '=' => ''];
 
     public function encodeAction(string $agId, string $action, array $parameters): string
     {

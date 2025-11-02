@@ -18,7 +18,7 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 final class SaveEvent extends Event
 {
-    public const string EVENT_NAME = 'f0ska.autogrid.entity.save';
+    public const EVENT_NAME = 'f0ska.autogrid.entity.save';
 
     private object $entity;
     private FormInterface $form;

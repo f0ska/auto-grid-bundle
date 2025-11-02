@@ -17,7 +17,7 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 final class DeleteEvent extends Event
 {
-    public const string EVENT_NAME = 'f0ska.autogrid.entity.delete';
+    public const EVENT_NAME = 'f0ska.autogrid.entity.delete';
 
     private object $entity;
     private Parameters $parameters;

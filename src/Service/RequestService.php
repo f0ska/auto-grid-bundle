@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 #[Lazy]
 class RequestService
 {
-    private const string ERROR_ACTION = 'error';
+    private const ERROR_ACTION = 'error';
 
     private ?Request $request;
     private ?string $agId = null;
