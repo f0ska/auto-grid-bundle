@@ -1,6 +1,6 @@
 {
     "name": "f0ska/auto-grid-bundle",
-    "description": "Automatic grid generation for the doctrine entity",
+    "description": "Automatic grid generation for Symfony Doctrine entities.",
     "license": "MIT",
     "autoload": {
         "psr-4": {
