@@ -45,6 +45,15 @@
 
         {% block autogrid_grid_body %}
             <tbody class="{{ attributes.html_classes.tbody|default('table-group-divider') }}">
+            {% if rows is empty %}
+                {% block autogrid_grid_body_empty %}
+                    <tr>
+                        <td class="text-muted" colspan="{{ (fields|length) + (agRun(agIsAnyAllowed) ? 1 : 0) }}">
+                            {{ 'f0ska.autogrid.empty'|trans }}
+                        </td>
+                    </tr>
+                {% endblock %}
+            {% endif %}
             {% for entity in rows %}
                 {% block autogrid_grid_row %}
                     <tr class="{{ include(attributes.row_class_template|default('%theme%/grid/row_class.html.twig'|agTheme)) }}">

@@ -28,13 +28,13 @@
                         </div>
                         <div class="col col-6 text-end">
                             {% if agRun(agIsAllowed, 'edit') and attributes.edit_button_in.view %}
-                                <a class="btn btn-sm btn-warning" href="{{ agRun(agActionUrl, 'edit') }}">
+                                <a class="btn btn-sm btn-outline-secondary" href="{{ agRun(agActionUrl, 'edit') }}">
                                     <i class="bi bi-pencil-square"></i>
                                     {{ 'f0ska.autogrid.button.modify'|trans }}
                                 </a>
                             {% endif %}
                             {% if agRun(agIsAllowed, 'delete') and attributes.delete_button_in.grid %}
-                                <a class="btn btn-sm btn-danger"
+                                <a class="btn btn-sm btn-outline-danger"
                                    href="{{ agRun(agActionUrl, 'delete', {'id': entity.id}) }}"
                                    onclick="return confirm('{{ 'f0ska.autogrid.dialog.delete_confirm'|trans }}');"
                                 >

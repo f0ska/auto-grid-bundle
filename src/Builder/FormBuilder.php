@@ -147,7 +147,6 @@ class FormBuilder
                 if ($builder->has($field->name)) {
                     $builder->remove($field->name);
                 }
-                $builder->add($field->name, HiddenType::class);
                 continue;
             }
 

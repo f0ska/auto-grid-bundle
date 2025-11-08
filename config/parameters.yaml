@@ -26,7 +26,7 @@ parameters:
     # Display settings.
     f0ska.autogrid.view.friendly_id: 'autogrid' # Used for frontend container id, class and link fragment generation.
     f0ska.autogrid.grid.pagination_limits: [ 10, 50, 100 ] # Set it with a single value to remove grid limit selector.
-    f0ska.autogrid.grid.text.truncate: 45 # Maximal content length in grid cell.
+    f0ska.autogrid.grid.text.truncate: 55 # Maximal content length in grid cell.
 
     # Basic action buttons display.
     f0ska.autogrid.grid.view_button_in_grid: true

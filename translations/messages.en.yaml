@@ -20,3 +20,4 @@ f0ska:
             from: "From"
             to: "To"
         total: "Total"
+        empty: "Empty"
