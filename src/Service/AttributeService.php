@@ -12,14 +12,8 @@ declare(strict_types=1);
 
 namespace F0ska\AutoGridBundle\Service;
 
-use Doctrine\ORM\Mapping\ToManyAssociationMapping;
 use F0ska\AutoGridBundle\Model\FieldParameter;
 use F0ska\AutoGridBundle\Model\Parameters;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\FormRegistryInterface;
 use function Symfony\Component\String\u;
 
 class AttributeService
@@ -30,19 +24,19 @@ class AttributeService
 
     private MetaDataService $metaDataService;
     private PermissionService $permissionService;
-    private FormRegistryInterface $formRegistry;
     private ConfigurationService $configuration;
+    private GuesserService $guesserService;
 
     public function __construct(
         MetaDataService $metaDataService,
         PermissionService $permissionService,
-        FormRegistryInterface $formRegistry,
-        ConfigurationService $configuration
+        ConfigurationService $configuration,
+        GuesserService $guesserService
     ) {
         $this->metaDataService = $metaDataService;
         $this->permissionService = $permissionService;
-        $this->formRegistry = $formRegistry;
         $this->configuration = $configuration;
+        $this->guesserService = $guesserService;
     }
 
     public function buildAttributes(Parameters $parameters): void
@@ -182,32 +176,7 @@ class AttributeService
         $field->canSort = $field->attributes['can_sort'] ?? $hasIndex;
         $field->canFilter = $field->attributes['can_filter'] ?? $hasIndex;
 
-        if (empty($field->attributes['form']['type'])) {
-            $field->attributes['form']['type'] = TextType::class;
-            $this->guessFormType($field, $agId);
-        }
-    }
-
-    private function guessFormType(FieldParameter $field, string $agId): void
-    {
-        $metadata = $this->metaDataService->getMetadata($agId);
-        $guesser = $this->formRegistry->getTypeGuesser();
-        if ($guesser) {
-            $guess = $guesser->guessType($metadata->rootEntityName, $field->subName ?? $field->name);
-            if ($guess->getType() === CheckboxType::class && $this->configuration->formBooleanAsSelect()) {
-                $field->attributes['form']['type'] = ChoiceType::class;
-                $field->attributes['form']['options'] = [
-                    'required' => true,
-                    'expanded' => false,
-                    'choices' => ['f0ska.autogrid.choice.yes' => '1', 'f0ska.autogrid.choice.no' => '0'],
-                ];
-                return;
-            }
-            $field->attributes['form']['type'] = $guess->getType();
-            $extra = ['required' => !$field->fieldMapping->nullable && $field->fieldMapping->type !== 'boolean'];
-            $options = ($field->attributes['form']['options'] ?? []) + $guess->getOptions() + $extra;
-            $field->attributes['form']['options'] = $options;
-        }
+        $this->guesserService->guessFieldFormType($field, $agId);
     }
 
     private function buildAssociated(FieldParameter $field, string $agId): void
@@ -226,31 +195,6 @@ class AttributeService
         $field->canSort = $field->attributes['can_sort'] ?? true;
         $field->canFilter = $field->attributes['can_filter'] ?? true;
 
-        $field->attributes['form']['type'] = EntityType::class;
-        $field->attributes['form']['options']['class'] = $field->associationMapping->targetEntity;
-        if ($field->associationMapping instanceof ToManyAssociationMapping) {
-            $field->attributes['form']['options']['multiple'] = true;
-            $field->canSort = false;
-        }
-        if (
-            empty($field->attributes['form']['options']['choice_label'])
-            && empty($field->attributes['form']['choices'])
-        ) {
-            $field->attributes['form']['options']['choice_label'] = $this->guessChoiceLabel($field->agSubId);
-        }
-    }
-
-    private function guessChoiceLabel(string $agId): string
-    {
-        $vars = ['title', 'label', 'name', 'code', 'model', 'reference', 'sku', 'uuid'];
-        $names = $this->metaDataService->getMetadata($agId)->getFieldNames();
-        foreach ($vars as $var) {
-            foreach ($names as $name) {
-                if (str_contains(strtolower($name), $var)) {
-                    return $name;
-                }
-            }
-        }
-        return 'id';
+        $this->guesserService->guessAssociatedFormType($field);
     }
 }

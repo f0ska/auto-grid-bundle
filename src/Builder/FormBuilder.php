@@ -222,6 +222,9 @@ class FormBuilder
             $options['label'] = $field->attributes['label'];
         }
         $builder->add($field->name, $type, $options);
+        if (!empty($field->attributes['form']['transformer'])) {
+            $builder->get($field->name)->addModelTransformer($field->attributes['form']['transformer']);
+        }
     }
 
     private function getFormType(string $action, Parameters $parameters): string

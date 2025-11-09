@@ -109,7 +109,10 @@ class Extension extends AbstractExtension
         }
         $result = [];
         foreach ($values as $value) {
-            $key = is_object($value) ? $value->getId() : $value;
+            $key = $value;
+            if (is_object($value)) {
+                $key = enum_exists($value::class) ? $value->value : $value->getId();
+            }
             $choice = $this->getSelectedChoice($field, $key);
             if ($choice) {
                 $label = $choice->label;

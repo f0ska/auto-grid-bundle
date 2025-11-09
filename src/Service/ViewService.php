@@ -29,6 +29,8 @@ class ViewService
     private array $templateByDbalType = [
         Types::SIMPLE_ARRAY => 'simple_array',
         Types::JSON => 'json',
+        Types::OBJECT => 'json',
+        Types::ARRAY => 'json',
         Types::ASCII_STRING => 'ascii_string',
     ];
     private array $dateFormats = [
@@ -41,6 +43,7 @@ class ViewService
         Types::DATETIMETZ_IMMUTABLE => 'datetime',
         Types::TIME_MUTABLE => 'time',
         Types::TIME_IMMUTABLE => 'time',
+        'date_point' => 'datetime',
     ];
     private array $viewForms = [];
     private FormBuilder $formBuilder;
