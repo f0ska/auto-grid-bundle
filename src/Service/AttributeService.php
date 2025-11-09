@@ -96,7 +96,7 @@ class AttributeService
         foreach ($metadata->getAssociationNames() as $key => $column) {
             $position = $this->metaDataService->getEntityFieldAttribute($parameters->agId, $column, 'position') ?? 0;
             $agSubId = $this->metaDataService->add($metadata->getAssociationTargetClass($column), null, true);
-            $parameters->fields[sprintf('%d_%d', $position, $key)] = new FieldParameter(
+            $parameters->fields[sprintf('%d_a%d', $position, $key)] = new FieldParameter(
                 [
                     'name' => $column,
                     'mappingType' => self::MAPPING_ASSOC,
@@ -120,7 +120,7 @@ class AttributeService
                 $subfield = sprintf('%s.%s', $column, $field['name']);
                 $position = $field['position'] ?? $this->metaDataService
                     ->getEntityFieldAttribute($parameters->agId, $subfield, 'position') ?? $parentPosition;
-                $index = sprintf('%d_%d_%d', $position, $parentPosition, $key++);
+                $index = sprintf('%d_v%d_%d', $position, $parentPosition, $key++);
                 $parameters->fields[$index] = new FieldParameter(
                     [
                         'name' => sprintf('%s:%s', $column, $field['name']),

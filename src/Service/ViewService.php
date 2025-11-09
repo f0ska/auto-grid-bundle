@@ -109,8 +109,9 @@ class ViewService
 
     private function setTruncate(FieldParameter $field): void
     {
-        if (empty($field->view['grid_truncate'])) {
-            $field->view['grid_truncate'] = $this->configuration->getGridTextTruncate();
+        $field->view['grid_truncate'] = $this->configuration->getGridTextTruncate();
+        if (!empty($field->attributes['grid_truncate'])) {
+            $field->view['grid_truncate'] = $field->attributes['grid_truncate'];
         }
     }
 
