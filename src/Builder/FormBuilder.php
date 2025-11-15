@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace F0ska\AutoGridBundle\Builder;
 
 use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Mapping\FieldMapping;
 use F0ska\AutoGridBundle\Exception\ActionException;
 use F0ska\AutoGridBundle\Model\FieldParameter;
 use F0ska\AutoGridBundle\Model\Parameters;
@@ -33,13 +32,12 @@ class FormBuilder
 {
     private FormFactoryInterface $formFactory;
 
-    public function __construct(
-        FormFactoryInterface $formFactory
-    ) {
+    public function __construct(FormFactoryInterface $formFactory)
+    {
         $this->formFactory = $formFactory;
     }
 
-    public function buildForm(object $entity, Parameters $parameters): ?FormInterface
+    public function buildForm(object $entity, Parameters $parameters): FormInterface
     {
         $formName = 'form-' . $parameters->agId;
         $action = $parameters->action;
@@ -47,7 +45,7 @@ class FormBuilder
             $formName,
             $this->getFormType($action, $parameters),
             $entity,
-            ['attr' => ['id' => $formName]]
+            ['attr' => ['id' => $formName, 'data-turbo' => 'false']]
         );
         $builder->setMethod('POST');
         $builder->setAction($parameters->actionUrl($action));
@@ -61,7 +59,7 @@ class FormBuilder
         ?string $fieldName,
         string $action,
         Parameters $parameters
-    ): ?FormInterface {
+    ): FormInterface {
         $formName = 'filter-' . $parameters->agId;
         $builder = $this->formFactory->createNamedBuilder(
             $formName,
@@ -100,7 +98,7 @@ class FormBuilder
 
     public function getSubmitRedirect(FormInterface $form, int $entityId, Parameters $parameters): RedirectResponse
     {
-        $actions = [
+        $actions = !$form->isValid() ? [$parameters->action] : [
             $form->getExtraData()['redirect'] ?? null,
             $parameters->request['redirect'] ?? null,
             $parameters->attributes['redirect_on_submit'] ?? null,
@@ -136,14 +134,14 @@ class FormBuilder
             if (
                 $isTrueForm
                 && (
-                    !empty($field->associationMapping?->mappedBy)
+                    !empty($field->associationMapping->mappedBy)
                     || $field->mappingType === AttributeService::MAPPING_VIRTUAL
                 )
             ) {
                 continue;
             }
 
-            if ($isTrueForm && $field->mappingType === AttributeService::MAPPING_FIELD && $field->fieldMapping->id) {
+            if ($isTrueForm && $field->mappingType === AttributeService::MAPPING_FIELD && $field->fieldMapping?->id) {
                 if ($builder->has($field->name)) {
                     $builder->remove($field->name);
                 }
@@ -173,7 +171,6 @@ class FormBuilder
 
     private function prepareFilterFieldForm(FieldParameter $field, bool $required): array
     {
-        /** @var FieldMapping $mapping */
         $mappingType = $field->fieldMapping?->type;
         $form = $field->attributes['form'];
         if ($mappingType) {
@@ -211,7 +208,7 @@ class FormBuilder
         return $form;
     }
 
-    private function addField(FormBuilderInterface $builder, FieldParameter $field, ?array $form = null): void
+    private function addField(FormBuilderInterface $builder, FieldParameter $field, array $form = []): void
     {
         if ($builder->has($field->name)) {
             return;
@@ -233,12 +230,17 @@ class FormBuilder
         return $attr['form_type_' . $action] ?? $attr['form_type'] ?? FormType::class;
     }
 
+    /**
+     * @param array<string|int, ChoiceView> $choices
+     * @return array<string, string>
+     */
     private function buildChoicesFromChoices(array $choices): array
     {
         $result = [];
-        /** @var ChoiceView $choice */
         foreach ($choices as $choice) {
-            $result[$choice->label] = $choice->value;
+            if (is_string($choice->label)) {
+                $result[$choice->label] = $choice->value;
+            }
         }
         return $result;
     }

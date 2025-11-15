@@ -18,13 +18,16 @@ use F0ska\AutoGridBundle\Attribute\AbstractAttribute;
 #[Attribute]
 class PageLimits extends AbstractAttribute
 {
+    /**
+     * @param int[] $value
+     */
     public function __construct(array $value)
     {
         $this->value = array_values(
             array_filter(
                 $value,
-                function ($item) {
-                    return is_int($item) && $item > 0;
+                function (int $item) {
+                    return $item > 0;
                 }
             )
         );

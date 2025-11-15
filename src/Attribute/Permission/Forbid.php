@@ -19,16 +19,19 @@ use F0ska\AutoGridBundle\Model\Permission;
 #[Attribute(Attribute::TARGET_ALL | Attribute::IS_REPEATABLE)]
 class Forbid extends AbstractAttribute
 {
+    private string $key;
+
     public function __construct(string $action, mixed $role = null)
     {
         $this->value = (new Permission())
             ->setAction($action)
             ->setAllowed(false)
             ->setRole($role);
+        $this->key = $action;
     }
 
     public function getCode(): string
     {
-        return 'permission.action.' . $this->value->getAction();
+        return 'permission.action.' . $this->key;
     }
 }

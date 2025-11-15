@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace F0ska\AutoGridBundle\Service;
 
 use F0ska\AutoGridBundle\Exception\ActionException;
+use F0ska\AutoGridBundle\Exception\ActionParameterException;
 use F0ska\AutoGridBundle\Model\AutoGrid;
 
 class ActionService
@@ -65,7 +66,10 @@ class ActionService
             $this->actionList->getErrorAction()->execute($autoGrid, $parameters);
             return;
         }
-        if ($this->actionList->getAction($action)->isIdRequired() && empty($requestParameters['id'])) {
+        if (
+            $this->actionList->getAction($action)->isIdRequired()
+            && !$this->actionParametersList->hasParameter('id')
+        ) {
             $parameters->message = 'Bad Request';
             $this->actionList->getErrorAction()->execute($autoGrid, $parameters);
             return;
@@ -74,8 +78,11 @@ class ActionService
         $parameters->action = $this->actionList->getAction($action)->getCode();
 
         foreach ($requestParameters as $key => $value) {
-            if ($this->actionParametersList->validateParameter($key, $value, $action, $parameters)) {
-                $parameters->request[$key] = $this->actionParametersList->normalizeParameter($key, $value);
+            try {
+                $parameters->request[$key] = $this->actionParametersList->normalizeParameter($key, $value, $parameters);
+            } catch (ActionParameterException $exception) {
+                $parameters->message = $exception->getMessage();
+                $this->actionList->getErrorAction()->execute($autoGrid, $parameters);
             }
         }
 

@@ -50,7 +50,7 @@ class ParametersService
         $callback = fn($value) => $value !== null && $value != '' && $value !== [];
 
         foreach ($params as $key => $value) {
-            if (!$this->actionParametersList->validateParameter($key, $value, $action, $parameters)) {
+            if (!$this->actionParametersList->hasParameter($key)) {
                 continue;
             }
             if (is_array($value) && !empty($request[$key]) && is_array($request[$key])) {

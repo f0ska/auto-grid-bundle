@@ -31,6 +31,15 @@ class AutoGridFactory
         $this->requestService = $requestService;
     }
 
+    /**
+     * @param string $entityClass
+     * @param string|null $gridId
+     * @param Expr\Comparison|Expr\Func|Expr\Andx|Expr\Orx|string|null $queryExpression
+     * @param ArrayCollection<string, string|array>|null $queryParameters
+     * @param string|null $initialAction
+     * @param array<string, string|array> $initialParameters
+     * @return AutoGrid
+     */
     public function create(
         string $entityClass,
         ?string $gridId = null,

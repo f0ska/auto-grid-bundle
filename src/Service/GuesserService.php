@@ -28,7 +28,9 @@ use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormRegistryInterface;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 class GuesserService
 {
@@ -76,17 +78,8 @@ class GuesserService
             $field->attributes['form']['options'] = $options;
         }
 
-        $this->guessRequired($field);
         $this->guessSpecificTypes($field);
-    }
-
-    private function guessRequired(FieldParameter $field): void
-    {
-        $required = !$field->fieldMapping->nullable && $field->fieldMapping->type !== 'boolean';
-        $field->attributes['form']['options']['required'] = $required;
-        if ($required) {
-            $field->attributes['form']['options']['constraints'][] = new NotBlank();
-        }
+        $this->guessGenericAttributes($field);
     }
 
     private function guessSpecificTypes(FieldParameter $field): void
@@ -108,6 +101,28 @@ class GuesserService
                 $field->attributes['form']['type'] = DateTimeType::class;
                 $field->attributes['form']['transformer'] = $this->getDatePointTransformer();
                 break;
+        }
+    }
+
+    private function guessGenericAttributes(FieldParameter $field): void
+    {
+        if ($field->fieldMapping->length) {
+            $field->attributes['form']['options']['constraints'][] = new Length(
+                max: $field->fieldMapping->length
+            );
+            $field->attributes['form']['options']['attr']['maxlength'] = $field->fieldMapping->length;
+        }
+
+        if ($field->fieldMapping->scale > 0) {
+            $field->attributes['form']['options']['attr']['step'] = 0.1 ** $field->fieldMapping->scale;
+        }
+
+        $required = $field->fieldMapping->nullable === false && $field->fieldMapping->type !== 'boolean';
+        $field->attributes['form']['options']['required'] = $required;
+        if ($required) {
+            $field->attributes['form']['options']['constraints'][] = new NotBlank();
+        } elseif ($field->fieldMapping->nullable === false) {
+            $field->attributes['form']['options']['constraints'][] = new NotNull();
         }
     }
 

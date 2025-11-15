@@ -1,5 +1,5 @@
 {{ form_start(form) }}
-<div class="content-fluid">
+<div class="container-fluid">
     <div class="row">
         {% for fieldset in view.fieldset.defined %}
             <div class="col {{ fieldset.class }}">
@@ -9,7 +9,9 @@
                     </h5>
                     <div class="card-body">
                         {% for fieldName in fieldset.fields %}
-                            {{ form_row(attribute(form, fieldName)) }}
+                            {% if attribute(form, fieldName) is defined %}
+                                {{ form_row(attribute(form, fieldName)) }}
+                            {% endif %}
                         {% endfor %}
                     </div>
                 </div>
@@ -18,7 +20,9 @@
         {% if view.fieldset.not_defined %}
             <div class="col mt-4">
                 {% for fieldName in view.fieldset.not_defined %}
-                    {{ form_row(attribute(form, fieldName)) }}
+                    {% if attribute(form, fieldName) is defined %}
+                        {{ form_row(attribute(form, fieldName)) }}
+                    {% endif %}
                 {% endfor %}
             </div>
         {% endif %}

@@ -2,46 +2,51 @@
 {% block autogrid %}
     <table class="table caption-top">
         {% block autogrid_view_caption %}
-            <caption class="text-center">
-                {% if attributes.title is not empty %}
+            {% if attributes.title is not empty %}
+                <caption class="text-center h4 text-secondary">
                     {{ attributes.title|trans }}
-                    <span class="badge rounded-pill text-bg-secondary"><span
-                            class="fw-normal">{{ ('f0ska.autogrid.action.' ~ action)|trans }}</span>  <i
-                            class="bi bi-hash"></i> {{ entity.id }}</span>
-                {% endif %}
-            </caption>
+                </caption>
+            {% endif %}
         {% endblock %}
 
         {% block autogrid_view_header %}
             {% set btnClass = attributes.html_classes.theadBtn|default('btn-outline-secondary') %}
             <thead class="{{ attributes.html_classes.thead|default('') }}">
             <tr>
-                <td class="text-nowrap h4 align-middle" colspan="2">
-                    <div class="row">
-                        <div class="col col-6 text-start">
-                            {% if agRun(agIsAllowed, 'grid') %}
-                                <a class="btn btn-sm {{ btnClass }}" href="{{ agRun(agActionUrl, 'grid') }}">
-                                    <i class="bi bi-chevron-left"></i>
-                                    {{ 'f0ska.autogrid.button.back'|trans }}
-                                </a>
-                            {% endif %}
-                        </div>
-                        <div class="col col-6 text-end">
-                            {% if agRun(agIsAllowed, 'edit') and attributes.edit_button_in.view %}
-                                <a class="btn btn-sm btn-outline-secondary" href="{{ agRun(agActionUrl, 'edit') }}">
-                                    <i class="bi bi-pencil-square"></i>
-                                    {{ 'f0ska.autogrid.button.modify'|trans }}
-                                </a>
-                            {% endif %}
-                            {% if agRun(agIsAllowed, 'delete') and attributes.delete_button_in.grid %}
-                                <a class="btn btn-sm btn-outline-danger"
-                                   href="{{ agRun(agActionUrl, 'delete', {'id': entity.id}) }}"
-                                   onclick="return confirm('{{ 'f0ska.autogrid.dialog.delete_confirm'|trans }}');"
-                                >
-                                    <i class="bi bi-trash"></i>
-                                    {{ 'f0ska.autogrid.button.delete'|trans }}
-                                </a>
-                            {% endif %}
+                <td class="text-nowrap h4 align-middle ps-0 pe-0" colspan="2">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col col-4 text-start">
+                                {% if agRun(agIsAllowed, 'grid') %}
+                                    <a class="btn btn-sm {{ btnClass }}" href="{{ agRun(agActionUrl, 'grid') }}">
+                                        <i class="bi bi-chevron-left"></i>
+                                        {{ 'f0ska.autogrid.button.back'|trans }}
+                                    </a>
+                                {% endif %}
+                            </div>
+                            <div class="col col-4 text-center">
+                            <span class="badge rounded-pill text-bg-light fw-normal">
+                                {{ ('f0ska.autogrid.action.' ~ action)|trans }}
+                                <i class="bi bi-hash"></i>{{ entity.id }}
+                            </span>
+                            </div>
+                            <div class="col col-4 text-end">
+                                {% if agRun(agIsAllowed, 'edit') and attributes.edit_button_in.view %}
+                                    <a class="btn btn-sm btn-outline-secondary" href="{{ agRun(agActionUrl, 'edit') }}">
+                                        <i class="bi bi-pencil-square"></i>
+                                        {{ 'f0ska.autogrid.button.modify'|trans }}
+                                    </a>
+                                {% endif %}
+                                {% if agRun(agIsAllowed, 'delete') and attributes.delete_button_in.grid %}
+                                    <a class="btn btn-sm btn-outline-danger"
+                                       href="{{ agRun(agActionUrl, 'delete', {'id': entity.id}) }}"
+                                       onclick="return confirm('{{ 'f0ska.autogrid.dialog.delete_confirm'|trans }}');"
+                                    >
+                                        <i class="bi bi-trash"></i>
+                                        {{ 'f0ska.autogrid.button.delete'|trans }}
+                                    </a>
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
                 </td>
@@ -52,12 +57,14 @@
         {% block autogrid_view_footer %}
             <tfoot class="{{ attributes.html_classes.tfoot|default('table-group-divider') }}">
             <tr>
-                <td colspan="2">
-                    <div class="row">
-                        <div class="col text-end">
-                            <a class="btn btn-sm {{ attributes.html_classes.tfootBtn|default('btn-outline-secondary') }}"
-                               href="#{{ attributes.container_id }}"
-                            ><i class="bi bi-chevron-up"></i></a>
+                <td colspan="2" class="ps-0 pe-0">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col text-end">
+                                <a class="btn btn-sm {{ attributes.html_classes.tfootBtn|default('btn-outline-secondary') }}"
+                                   href="#{{ attributes.container_id }}"
+                                ><i class="bi bi-chevron-up"></i></a>
+                            </div>
                         </div>
                     </div>
                 </td>

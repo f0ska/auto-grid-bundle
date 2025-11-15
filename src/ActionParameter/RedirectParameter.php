@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace F0ska\AutoGridBundle\ActionParameter;
 
+use F0ska\AutoGridBundle\Exception\ActionParameterException;
 use F0ska\AutoGridBundle\Model\Parameters;
 
 class RedirectParameter implements ActionParameterInterface
@@ -22,13 +23,11 @@ class RedirectParameter implements ActionParameterInterface
         return 'redirect';
     }
 
-    public function validate(string $action, mixed $value, Parameters $parameters): bool
+    public function normalize(mixed $value, Parameters $parameters): string
     {
-        return is_string($value) && !empty($value);
-    }
-
-    public function normalize(mixed $value): string
-    {
-        return (string) $value;
+        if (is_string($value) && !empty($value)) {
+            return $value;
+        }
+        throw new ActionParameterException();
     }
 }

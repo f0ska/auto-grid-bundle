@@ -18,19 +18,11 @@ use F0ska\AutoGridBundle\Attribute\AbstractAttribute;
 #[Attribute]
 class DefaultSort extends AbstractAttribute
 {
-    private string $direction;
-
-    public function __construct(string|array $value, string $direction = 'asc')
+    /**
+     * @param array<string, string> $value
+     */
+    public function __construct(array $value)
     {
         $this->value = $value;
-        $this->direction = $direction;
-    }
-
-    public function getValue(): array
-    {
-        if (is_string($this->value)) {
-            return [$this->value => $this->direction];
-        }
-        return $this->value;
     }
 }

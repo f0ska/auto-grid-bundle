@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace F0ska\AutoGridBundle\ActionParameter;
 
+use F0ska\AutoGridBundle\Exception\ActionParameterException;
 use F0ska\AutoGridBundle\Model\Parameters;
 
 class LimitParameter implements ActionParameterInterface
@@ -22,13 +23,11 @@ class LimitParameter implements ActionParameterInterface
         return 'limit';
     }
 
-    public function validate(string $action, mixed $value, Parameters $parameters): bool
+    public function normalize(mixed $value, Parameters $parameters): int
     {
-        return is_numeric($value) && (int) $value > 0;
-    }
-
-    public function normalize(mixed $value): int
-    {
-        return (int) $value;
+        if (is_numeric($value) && (int) $value > 0) {
+            return (int) $value;
+        }
+        throw new ActionParameterException();
     }
 }

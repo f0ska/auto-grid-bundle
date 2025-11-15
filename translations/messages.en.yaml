@@ -10,9 +10,9 @@ f0ska:
         dialog:
             delete_confirm: "Do you really want to delete this?"
         action:
-            create: "Create"
-            edit: "Edit"
-            view: "View"
+            create: "Create new enty"
+            edit: "Modify entry"
+            view: "View entry"
         choice:
             yes: "Yes"
             no: "No"

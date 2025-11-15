@@ -39,7 +39,7 @@ class FilterAction extends AbstractAction
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
             $fieldName = $form->get($parameters->agId)->getData();
-            if ($fieldName) {
+            if (is_string($fieldName) && !empty($fieldName)) {
                 $filter[$fieldName] = $form->get($fieldName)->getViewData();
             }
         }

@@ -31,9 +31,9 @@ class ActionParametersListService
         }
     }
 
-    public function hasParameter(string $key): bool
+    public function hasParameter(mixed $key): bool
     {
-        return isset($this->actionParameters[$key]);
+        return is_string($key) && isset($this->actionParameters[$key]);
     }
 
     public function getParameter(string $key): ActionParameterInterface
@@ -41,19 +41,11 @@ class ActionParametersListService
         return $this->actionParameters[$key] ?? throw new ActionParameterException();
     }
 
-    public function validateParameter(mixed $key, mixed $value, string $action, Parameters $parameters): bool
+    public function normalizeParameter(mixed $key, mixed $value, Parameters $parameters): mixed
     {
-        if (!is_string($key)) {
-            return false;
-        }
         if (!$this->hasParameter($key)) {
-            return false;
+            return throw new ActionParameterException();
         }
-        return $this->getParameter($key)->validate($action, $value, $parameters);
-    }
-
-    public function normalizeParameter(string $key, mixed $value): mixed
-    {
-        return $this->getParameter($key)->normalize($value);
+        return $this->getParameter($key)->normalize($value, $parameters);
     }
 }

@@ -29,7 +29,6 @@ class FieldParameter
     public bool $canSort = false;
     public array $permissions = [];
     public array $view = [];
-
     public array $attributes = [];
 
     public function __construct(array $initialData)

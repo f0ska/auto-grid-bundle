@@ -18,7 +18,5 @@ interface ActionParameterInterface
 {
     public function getCode(): string;
 
-    public function validate(string $action, mixed $value, Parameters $parameters): bool;
-
-    public function normalize(mixed $value): mixed;
+    public function normalize(mixed $value, Parameters $parameters): mixed;
 }

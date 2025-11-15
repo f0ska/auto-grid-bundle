@@ -18,6 +18,16 @@ use F0ska\AutoGridBundle\Attribute\AbstractAttribute;
 #[Attribute(Attribute::TARGET_ALL | Attribute::IS_REPEATABLE)]
 class AssociatedField extends AbstractAttribute
 {
+    private string $key;
+
+    /**
+     * @param string $name
+     * @param string|null $label
+     * @param int|null $position
+     * @param bool|null $canFilter
+     * @param bool|null $canSort
+     * @param array<string, string|int|bool|array> $options
+     */
     public function __construct(
         string $name,
         ?string $label = null,
@@ -40,10 +50,11 @@ class AssociatedField extends AbstractAttribute
             $options['can_sort'] = $canSort;
         }
         $this->value = $options;
+        $this->key = $name;
     }
 
     public function getCode(): string
     {
-        return 'fields.' . $this->value['name'];
+        return 'fields.' . $this->key;
     }
 }

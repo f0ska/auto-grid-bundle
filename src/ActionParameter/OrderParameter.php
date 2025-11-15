@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace F0ska\AutoGridBundle\ActionParameter;
 
+use F0ska\AutoGridBundle\Exception\ActionParameterException;
 use F0ska\AutoGridBundle\Model\Parameters;
 
 class OrderParameter implements ActionParameterInterface
@@ -21,24 +22,24 @@ class OrderParameter implements ActionParameterInterface
         return 'order';
     }
 
-    public function validate(string $action, mixed $value, Parameters $parameters): bool
+    public function normalize(mixed $value, Parameters $parameters): array
     {
+        $result = [];
         if (!is_array($value) || empty($value)) {
-            return false;
+            throw new ActionParameterException();
         }
         foreach ($value as $field => $direction) {
+            if (!is_string($field)) {
+                throw new ActionParameterException();
+            }
             if (!in_array($direction, ['asc', 'desc', null], true)) {
-                return false;
+                throw new ActionParameterException();
             }
             if (!isset($parameters->fields[$field])) {
-                return false;
+                throw new ActionParameterException();
             }
+            $result[$field] = $direction;
         }
-        return true;
-    }
-
-    public function normalize(mixed $value): array
-    {
-        return (array) $value;
+        return $result;
     }
 }

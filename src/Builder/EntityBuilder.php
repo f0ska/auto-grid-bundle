@@ -34,7 +34,7 @@ class EntityBuilder
         return new $class();
     }
 
-    public function loadEntity(Parameters $parameters): ?object
+    public function loadEntity(Parameters $parameters): object
     {
         $entityId = $parameters->request['id'] ?? null;
         if (empty($entityId)) {
@@ -45,9 +45,19 @@ class EntityBuilder
         if (empty($entity)) {
             throw new ActionException('Not found');
         }
+        if (!method_exists($entity, 'getId')) {
+            throw new ActionException('ID getter is missing');
+        }
+        if (!is_int($entity->getId())) {
+            throw new ActionException('ID must be an integer');
+        }
         return $entity;
     }
 
+    /**
+     * @param Parameters $parameters
+     * @return class-string
+     */
     private function getEntityClass(Parameters $parameters): string
     {
         $agId = $parameters->agId;

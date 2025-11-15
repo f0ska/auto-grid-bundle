@@ -123,4 +123,9 @@ class ConfigurationService
     {
         return $this->params->get('f0ska.autogrid.form.default_boolean_as_select');
     }
+
+    public function showEntityTitle(): bool
+    {
+        return $this->params->get('f0ska.autogrid.common.show_entity_title');
+    }
 }

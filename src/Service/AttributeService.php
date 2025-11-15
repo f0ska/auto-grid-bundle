@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace F0ska\AutoGridBundle\Service;
 
+use Doctrine\ORM\Mapping\ClassMetadata;
 use F0ska\AutoGridBundle\Model\FieldParameter;
 use F0ska\AutoGridBundle\Model\Parameters;
 use function Symfony\Component\String\u;
@@ -50,17 +51,25 @@ class AttributeService
         $agId = $parameters->agId;
         $metadata = $this->metaDataService->getMetadata($agId);
         $default = [
-                'title' => u($metadata->rootEntityName)
-                    ->afterLast('\\')
-                    ->snake()
-                    ->replace('_', ' ')
-                    ->title(true)
-                    ->toString(),
+                'title' => $this->buildEntityTitle($metadata),
                 'entity' => $metadata->rootEntityName,
             ] + $this->configuration->getDefaultButtonsPositions();
 
         $parameters->attributes = $this->metaDataService->getEntityAttributes($agId) + $default;
         $parameters->permissions = $this->permissionService->getEntityActionPermissions($agId);
+    }
+
+    private function buildEntityTitle(ClassMetadata $metadata): ?string
+    {
+        if (!$this->configuration->showEntityTitle()) {
+            return null;
+        }
+        return u($metadata->rootEntityName)
+            ->afterLast('\\')
+            ->snake()
+            ->replace('_', ' ')
+            ->title(true)
+            ->toString();
     }
 
     private function buildEntityFields(Parameters $parameters): void

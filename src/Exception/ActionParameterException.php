@@ -16,4 +16,5 @@ use Exception;
 
 class ActionParameterException extends Exception
 {
+    protected $message = 'Invalid request parameter';
 }

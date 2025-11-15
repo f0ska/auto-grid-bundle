@@ -22,6 +22,9 @@ class AutoGrid
     private string $agId;
     private ?Response $response = null;
     private ?string $template = null;
+    /**
+     * @var array<string, array>
+     */
     private array $context = [];
     private Expr\Comparison|Expr\Func|Expr\Andx|Expr\Orx|string|null $queryExpression = null;
     private ?ArrayCollection $queryParameters = null;

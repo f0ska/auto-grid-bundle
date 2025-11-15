@@ -81,7 +81,10 @@ class ViewService
         /** @var FormView $view */
         $view = $this->viewForms[$entity];
         $usefulKeys = ['choices', 'money_pattern'];
-        $vars = $view->children[$field->name]?->vars ?? [];
+        if (!isset($view->children[$field->name])) {
+            return;
+        }
+        $vars = $view->children[$field->name]->vars;
         foreach ($usefulKeys as $usefulKey) {
             if (!empty($vars[$usefulKey])) {
                 $field->view[$usefulKey] = $vars[$usefulKey];
@@ -117,7 +120,7 @@ class ViewService
 
     private function setFormat(FieldParameter $field): void
     {
-        $type = $field->fieldMapping?->type ?? null;
+        $type = $field->fieldMapping?->type;
         if (!$type || !isset($this->dateFormats[$type])) {
             return;
         }
@@ -131,7 +134,7 @@ class ViewService
 
     private function addFilterForms(Parameters $parameters): void
     {
-        $parameters->view['filter_forms'] = [];
+        $parameters->view->filterForms = [];
         foreach ($parameters->fields as $field) {
             if ($field->canFilter) {
                 $form = $this->formBuilder->buildFilterForm($field->name, 'filter', $parameters);
@@ -139,7 +142,7 @@ class ViewService
                 if ($value !== null) {
                     $form->get($field->name)->submit($value);
                 }
-                $parameters->view['filter_forms'][$field->name] = $form->createView();
+                $parameters->view->filterForms[$field->name] = $form->createView();
             }
         }
 
@@ -151,7 +154,7 @@ class ViewService
                     $formField->submit($value);
                 }
             }
-            $parameters->view['advanced_filter_form'] = $form->createView();
+            $parameters->view->advancedFilterForm = $form->createView();
         }
     }
 
@@ -218,7 +221,7 @@ class ViewService
             }
         }
 
-        $parameters->view['fieldset'] = [
+        $parameters->view->fieldset = [
             'defined' => $fieldSet,
             'not_defined' => array_keys($noFieldset),
         ];
@@ -227,7 +230,7 @@ class ViewService
     private function buildFormThemes(Parameters $parameters): void
     {
         $themes = $parameters->attributes['form_themes'] ?? null;
-        $parameters->view['form_themes'] = $themes ?? $this->configuration->getFormThemes();
+        $parameters->view->formThemes = $themes ?? $this->configuration->getFormThemes();
     }
 
     private function buildPaginationParameters(Parameters $parameters): void
@@ -237,7 +240,7 @@ class ViewService
         if (!$limit || !in_array($limit, $pageLimits, true)) {
             $limit = reset($pageLimits);
         }
-        $parameters->view['pagination'] = [
+        $parameters->view->pagination = [
             'limits' => $pageLimits,
             'limit' => $limit,
             'page' => $parameters->request['page'] ?? 1,

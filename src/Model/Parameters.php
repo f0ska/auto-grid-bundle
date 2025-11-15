@@ -18,7 +18,7 @@ class Parameters
 {
     private ParametersService $parametersService;
 
-    public ?string $action = null;
+    public string $action = '';
     public array $route;
     public string $agId;
     public array $permissions;
@@ -28,13 +28,14 @@ class Parameters
     public array $fields = [];
     public array $query;
     public ?string $message = null;
-    public array $view = [];
+    public ViewParameter $view;
 
     public function __construct(array $initial, ParametersService $parametersService)
     {
         foreach ($initial as $key => $value) {
             $this->{$key} = $value;
         }
+        $this->view = new ViewParameter();
         $this->parametersService = $parametersService;
     }
 
@@ -60,18 +61,18 @@ class Parameters
 
     public function initPagination(int $totalResults): void
     {
-        $limit = $this->view['pagination']['limit'];
-        $page = $this->view['pagination']['page'];
+        $limit = $this->view->pagination['limit'];
+        $page = $this->view->pagination['page'];
         if ($totalResults && (int) ceil($totalResults / $limit) < $page) {
             unset($this->request['page']);
-            $this->view['pagination']['page'] = 1;
+            $this->view->pagination['page'] = 1;
         }
-        $this->view['pagination']['count'] = $totalResults;
+        $this->view->pagination['count'] = $totalResults;
     }
 
     public function getTemplate(string $code): string
     {
-        return $parameters->attributes[$code . '_template'] ?? $this->parametersService->getTemplate($code);
+        return $this->attributes[$code . '_template'] ?? $this->parametersService->getTemplate($code);
     }
 
     public function render(array $parameters = []): array

@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace F0ska\AutoGridBundle\ActionParameter;
 
+use F0ska\AutoGridBundle\Exception\ActionParameterException;
 use F0ska\AutoGridBundle\Model\FieldParameter;
 use F0ska\AutoGridBundle\Model\Parameters;
 
@@ -22,17 +23,45 @@ class FilterParameter implements ActionParameterInterface
         return 'filter';
     }
 
-    public function normalize(mixed $value): array
+    public function normalize(mixed $value, Parameters $parameters): array
     {
-        if ($value === null) {
+        if (!$this->validate($value, $parameters)) {
+            throw new ActionParameterException();
+        }
+
+        if (!is_array($value)) {
             return [];
         }
-        $value = (array) $value;
-        array_walk_recursive($value, fn($item) => (string) $item);
-        return $value;
+
+        foreach ($value as $key1 => $value1) {
+            if (!is_string($key1)) {
+                unset($value[$key1]);
+                continue;
+            }
+            if (is_array($value1)) {
+                foreach ($value1 as $key2 => $value2) {
+                    if (!is_scalar($value2)) {
+                        unset($value1[$key2]);
+                        continue;
+                    }
+                    $value1[$key2] = strval($value2);
+                }
+                if (empty($value1)) {
+                    unset($value[$key1]);
+                }
+                continue;
+            }
+            if (!is_scalar($value1)) {
+                unset($value[$key1]);
+                continue;
+            }
+            $value[$key1] = strval($value1);
+        }
+
+        return $value ?: [];
     }
 
-    public function validate(string $action, mixed $value, Parameters $parameters): bool
+    private function validate(mixed $value, Parameters $parameters): bool
     {
         if ($value === null) {
             return true;
@@ -51,7 +80,7 @@ class FilterParameter implements ActionParameterInterface
         return true;
     }
 
-    private function isValueValid($value, FieldParameter $field): bool
+    private function isValueValid(mixed $value, FieldParameter $field): bool
     {
         if (is_scalar($value) || $value === null) {
             return true;

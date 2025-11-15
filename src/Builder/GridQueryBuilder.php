@@ -25,6 +25,9 @@ use function Symfony\Component\String\u;
 
 class GridQueryBuilder
 {
+    /**
+     * @var array<string, bool>
+     */
     private array $joins;
     private EntityManagerInterface $entityManager;
     private MetaDataService $metaDataService;
@@ -37,8 +40,8 @@ class GridQueryBuilder
 
     public function buildGridQuery(Parameters $parameters): Query
     {
-        $page = $parameters->view['pagination']['page'];
-        $limit = $parameters->view['pagination']['limit'];
+        $page = $parameters->view->pagination['page'];
+        $limit = $parameters->view->pagination['limit'];
 
         $builder = $this->buildGenericParts($parameters);
         $aliases = $builder->getRootAliases();
@@ -111,7 +114,7 @@ class GridQueryBuilder
         }
     }
 
-    private function prepareField($builder, $key): string
+    private function prepareField(QueryBuilder $builder, string $key): string
     {
         $aliases = $builder->getRootAliases();
         $key = str_replace(':', '.', $key);
@@ -121,7 +124,7 @@ class GridQueryBuilder
         }
 
         $alias = strstr($key, '.', true);
-        if (!isset($this->joins[$alias])) {
+        if (is_string($alias) && !isset($this->joins[$alias])) {
             $this->joins[$alias] = true;
             $builder->leftJoin($rootAlias . '.' . $alias, $alias);
         }
@@ -134,7 +137,7 @@ class GridQueryBuilder
         $column = $this->prepareField($builder, $field->name);
         $value = $parameters->request['filter'][$field->name];
         $alias = uniqid('param');
-        switch ($field->fieldMapping->type) {
+        switch ($field->fieldMapping?->type) {
             case Types::TEXT:
             case Types::JSON:
             case Types::SIMPLE_ARRAY:

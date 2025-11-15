@@ -18,6 +18,9 @@ use F0ska\AutoGridBundle\Attribute\AbstractAttribute;
 #[Attribute]
 class FormOptions extends AbstractAttribute
 {
+    /**
+     * @param array<string, array> $value
+     */
     public function __construct(array $value)
     {
         $this->value = $value;

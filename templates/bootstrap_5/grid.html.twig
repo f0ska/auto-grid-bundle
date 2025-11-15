@@ -2,11 +2,11 @@
 {% block autogrid %}
     <table class="table caption-top {{ attributes.html_classes.table|default('') }}">
         {% block autogrid_grid_caption %}
-            <caption class="text-center">
-                {% if attributes.title is not empty %}
+            {% if attributes.title is not empty %}
+                <caption class="text-center h4 text-secondary">
                     {{ attributes.title|trans }}
-                {% endif %}
-            </caption>
+                </caption>
+            {% endif %}
         {% endblock %}
 
         {% block autogrid_grid_header %}
@@ -23,19 +23,21 @@
         {% block autogrid_grid_footer %}
             <tfoot class="{{ attributes.html_classes.tfoot|default('table-group-divider') }}">
             <tr>
-                <td colspan="{{ (fields|length) + (agRun(agIsAnyAllowed) ? 1 : 0) }}">
-                    <div class="row">
-                        <div class="col col-3 text-start align-middle pt-1">
-                            <b>{{ 'f0ska.autogrid.total'|trans }}: {{ view.pagination.count }}</b>
-                        </div>
-                        <div class="col col-6 text-center">
-                            {{ include('%theme%/grid/grid_pager.html.twig'|agTheme) }}
-                        </div>
-                        <div class="col col-3 text-end">
-                            {{ include('%theme%/grid/grid_number_per_page.html.twig'|agTheme) }}
-                            <a class="btn btn-sm {{ attributes.html_classes.tfootBtn|default('btn-outline-secondary') }}"
-                               href="#{{ attributes.container_id }}"
-                            ><i class="bi bi-chevron-up"></i></a>
+                <td colspan="{{ (fields|length) + (agRun(agIsAnyAllowed) ? 1 : 0) }}" class="ps-0 pe-0">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col col-3 text-start align-middle pt-1">
+                                <b>{{ 'f0ska.autogrid.total'|trans }}: {{ view.pagination.count }}</b>
+                            </div>
+                            <div class="col col-6 text-center">
+                                {{ include('%theme%/grid/grid_pager.html.twig'|agTheme) }}
+                            </div>
+                            <div class="col col-3 text-end">
+                                {{ include('%theme%/grid/grid_number_per_page.html.twig'|agTheme) }}
+                                <a class="btn btn-sm {{ attributes.html_classes.tfootBtn|default('btn-outline-secondary') }}"
+                                   href="#{{ attributes.container_id }}"
+                                ><i class="bi bi-chevron-up"></i></a>
+                            </div>
                         </div>
                     </div>
                 </td>
