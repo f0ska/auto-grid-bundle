@@ -35,9 +35,9 @@ class AutoGridFactory
      * @param string $entityClass
      * @param string|null $gridId
      * @param Expr\Comparison|Expr\Func|Expr\Andx|Expr\Orx|string|null $queryExpression
-     * @param ArrayCollection<string, string|array>|null $queryParameters
+     * @param ArrayCollection<string, mixed>|null $queryParameters
      * @param string|null $initialAction
-     * @param array<string, string|array> $initialParameters
+     * @param array<string, int|string|array> $initialParameters
      * @return AutoGrid
      */
     public function create(

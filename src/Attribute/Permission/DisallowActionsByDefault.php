@@ -16,7 +16,7 @@ use Attribute;
 use F0ska\AutoGridBundle\Attribute\AbstractAttribute;
 
 #[Attribute]
-class DisallowByDefault extends AbstractAttribute
+class DisallowActionsByDefault extends AbstractAttribute
 {
     public function __construct()
     {

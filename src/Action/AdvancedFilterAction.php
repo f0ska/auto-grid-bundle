@@ -15,6 +15,7 @@ namespace F0ska\AutoGridBundle\Action;
 use F0ska\AutoGridBundle\Builder\FormBuilder;
 use F0ska\AutoGridBundle\Model\AutoGrid;
 use F0ska\AutoGridBundle\Model\Parameters;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -38,7 +39,7 @@ class AdvancedFilterAction extends AbstractAction
         $form = $this->formBuilder->buildFilterForm(null, 'filter', $parameters);
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
-            $filter = $form->getViewData();
+            $filter = $this->getFilter($form);
         }
         $autoGrid->setResponse(new RedirectResponse($parameters->actionUrl('grid', ['filter' => $filter])));
     }
@@ -46,5 +47,14 @@ class AdvancedFilterAction extends AbstractAction
     public function isIdRequired(): bool
     {
         return false;
+    }
+
+    private function getFilter(FormInterface $form): array
+    {
+        $filter = [];
+        foreach ($form->all() as $item) {
+            $filter[$item->getName()] = $item->getViewData();
+        }
+        return $filter;
     }
 }

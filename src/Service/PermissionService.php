@@ -39,15 +39,17 @@ class PermissionService
     public function getEntityActionPermissions(string $agId): array
     {
         $rules = [];
-        $defaultAllowed = !$this->metaDataService->getEntityAttribute($agId, 'permission.disallow_by_default');
+        $defaultAllowed = !$this->metaDataService->getEntityAttribute($agId, 'permission.disallow_actions_by_default');
         foreach ($this->actions as $action) {
             $key = $action->getCode();
             $rules[$key] = true;
             if (!$action->isRestrictable()) {
                 continue;
             }
+            $widePermission = $this->metaDataService->getEntityAttribute($agId, 'permission.all');
             $permission = $this->metaDataService->getEntityAttribute($agId, 'permission.action.' . $key);
-            $rules[$key] = $this->isAllowed($permission, $defaultAllowed);
+            $allAllowed = $this->isAllowed($widePermission, $defaultAllowed);
+            $rules[$key] = $this->isAllowed($permission, $allAllowed);
         }
         return $rules;
     }
@@ -55,18 +57,17 @@ class PermissionService
     public function getEntityFieldActionPermissions(string $agId, string $field): array
     {
         $rules = [];
-        $defaultAllowed = !$this->metaDataService->getEntityFieldAttribute(
-            $agId,
-            $field,
-            'permission.disallow_by_default'
-        );
+        $defaultAllowed = !$this->metaDataService->getEntityAttribute($agId, 'permission.disallow_fields_by_default');
+
         foreach ($this->actions as $action) {
             if (!$action->isRestrictable()) {
                 continue;
             }
             $key = $action->getCode();
+            $widePermission = $this->metaDataService->getEntityFieldAttribute($agId, $field, 'permission.all');
             $permission = $this->metaDataService->getEntityFieldAttribute($agId, $field, 'permission.action.' . $key);
-            $rules[$key] = $this->isAllowed($permission, $defaultAllowed);
+            $allAllowed = $this->isAllowed($widePermission, $defaultAllowed);
+            $rules[$key] = $this->isAllowed($permission, $allAllowed);
         }
         return $rules;
     }

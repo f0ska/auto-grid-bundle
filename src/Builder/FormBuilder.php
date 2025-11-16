@@ -65,7 +65,7 @@ class FormBuilder
             $formName,
             $this->getFormType($action, $parameters),
             null,
-            ['attr' => ['id' => $formName . uniqid('-')]]
+            ['attr' => ['id' => $formName . uniqid('-'), 'data-turbo' => 'false']]
         );
         $builder->setMethod('POST');
         $builder->setAction($parameters->actionUrl($action));

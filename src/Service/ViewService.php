@@ -147,7 +147,7 @@ class ViewService
         }
 
         if (!empty($parameters->attributes['advanced_filter'])) {
-            $form = $this->formBuilder->buildFilterForm(null, 'advanced-filter', $parameters);
+            $form = $this->formBuilder->buildFilterForm(null, 'advanced_filter', $parameters);
             foreach ($form->all() as $formField) {
                 $value = $parameters->request['filter'][$formField->getName()] ?? null;
                 if ($value !== null) {

@@ -24,10 +24,9 @@ class Allow extends AbstractAttribute
     public function __construct(string $action, mixed $role = null)
     {
         $this->value = (new Permission())
-            ->setAction($action)
             ->setAllowed(true)
             ->setRole($role);
-        $this->key = $action;
+        $this->key = $this->normalizeCode($action);
     }
 
     public function getCode(): string

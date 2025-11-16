@@ -29,31 +29,34 @@ class DemoOne
 
 ## Entity class attributes
 
-| Attribute                                                                | Description                                                                        |
-|--------------------------------------------------------------------------|------------------------------------------------------------------------------------|
-| [AdvancedFilter](../src/Attribute/Entity/AdvancedFilter.php)             | Enables the advanced filter feature.                                               |
-| [DefaultSort](../src/Attribute/Entity/DefaultSort.php)                   | Allows you to define the default sort order for your data in the grid.             |
-| [DeleteButtonIn](../src/Attribute/Entity/DeleteButtonIn.php)             | Enables or disables the default delete button.                                     |
-| [EditButtonIn](../src/Attribute/Entity/EditButtonIn.php)                 | Enables or disables the default edit button.                                       |
-| [ErrorTemplate](../src/Attribute/Entity/ErrorTemplate.php)               | Overrides the error page template.                                                 |
-| [Fieldset.php](../src/Attribute/Entity/Fieldset.php)                     | Groups fields on default form and view pages.                                      |
-| [FormTemplate](../src/Attribute/Entity/FormTemplate.php)                 | Overrides the form page template.                                                  |
-| [FormThemes](../src/Attribute/Entity/FormThemes.php)                     | Overrides form themes.                                                             |
-| [FormType](../src/Attribute/Entity/FormType.php)                         | Provides your own form definition.                                                 |
-| [FormTypeCreate](../src/Attribute/Entity/FormTypeCreate.php)             | Provides your own form definition for create action only.                          |
-| [FormTypeEdit](../src/Attribute/Entity/FormTypeEdit.php)                 | Provides your own form definition for edit action only.                            |
-| [FormTypeFilter](../src/Attribute/Entity/FormTypeFilter.php)             | Provides your own form definition for filters.                                     |
-| [GridTemplate](../src/Attribute/Entity/GridTemplate.php)                 | Overrides the grid page template.                                                  |
-| [HeaderActionTemplate](../src/Attribute/Entity/HeaderActionTemplate.php) | Adds your custom header action template.                                           |
-| [HtmlClasses.php](../src/Attribute/Entity/HtmlClasses.php)               | Sets the HTML classes for the grid table.                                          |
-| [PageLimits](../src/Attribute/Entity/PageLimits.php)                     | Customizes the page limits select buttons.                                         |
-| [RedirectOnSubmit](../src/Attribute/Entity/RedirectOnSubmit.php)         | Defines the redirect action name after creating or updating a form.                |
-| [Title](../src/Attribute/Entity/Title.php)                               | Sets the title for your entity.                                                    |
-| [ViewButtonIn](../src/Attribute/Entity/ViewButtonIn.php)                 | Enables or disables the default view button.                                       |
-| [ViewTemplate](../src/Attribute/Entity/ViewTemplate.php)                 | Overrides the view page template.                                                  |
-| [DisallowByDefault](../src/Attribute/Permission/DisallowByDefault.php)   | Inverts permissions for all AutoGrid actions. By default, all actions are allowed. |
-| [Allow](../src/Attribute/Permission/Allow.php)                           | Allows specific actions, with an optional role.                                    |
-| [Forbid](../src/Attribute/Permission/Forbid.php)                         | Disallows specific actions, with an optional role.                                 |
+| Attribute                                                                            | Description                                                                        |
+|--------------------------------------------------------------------------------------|------------------------------------------------------------------------------------|
+| [AdvancedFilter](../src/Attribute/Entity/AdvancedFilter.php)                         | Enables the advanced filter feature.                                               |
+| [DefaultSort](../src/Attribute/Entity/DefaultSort.php)                               | Allows you to define the default sort order for your data in the grid.             |
+| [DeleteButtonIn](../src/Attribute/Entity/DeleteButtonIn.php)                         | Enables or disables the default delete button.                                     |
+| [EditButtonIn](../src/Attribute/Entity/EditButtonIn.php)                             | Enables or disables the default edit button.                                       |
+| [ErrorTemplate](../src/Attribute/Entity/ErrorTemplate.php)                           | Overrides the error page template.                                                 |
+| [Fieldset.php](../src/Attribute/Entity/Fieldset.php)                                 | Groups fields on default form and view pages.                                      |
+| [FormTemplate](../src/Attribute/Entity/FormTemplate.php)                             | Overrides the form page template.                                                  |
+| [FormThemes](../src/Attribute/Entity/FormThemes.php)                                 | Overrides form themes.                                                             |
+| [FormType](../src/Attribute/Entity/FormType.php)                                     | Provides your own form definition.                                                 |
+| [FormTypeCreate](../src/Attribute/Entity/FormTypeCreate.php)                         | Provides your own form definition for create action only.                          |
+| [FormTypeEdit](../src/Attribute/Entity/FormTypeEdit.php)                             | Provides your own form definition for edit action only.                            |
+| [FormTypeFilter](../src/Attribute/Entity/FormTypeFilter.php)                         | Provides your own form definition for filters.                                     |
+| [GridTemplate](../src/Attribute/Entity/GridTemplate.php)                             | Overrides the grid page template.                                                  |
+| [HeaderActionTemplate](../src/Attribute/Entity/HeaderActionTemplate.php)             | Adds your custom header action template.                                           |
+| [HtmlClasses.php](../src/Attribute/Entity/HtmlClasses.php)                           | Sets the HTML classes for the grid table.                                          |
+| [PageLimits](../src/Attribute/Entity/PageLimits.php)                                 | Customizes the page limits select buttons.                                         |
+| [RedirectOnSubmit](../src/Attribute/Entity/RedirectOnSubmit.php)                     | Defines the redirect action name after creating or updating a form.                |
+| [Title](../src/Attribute/Entity/Title.php)                                           | Sets the title for your entity.                                                    |
+| [ViewButtonIn](../src/Attribute/Entity/ViewButtonIn.php)                             | Enables or disables the default view button.                                       |
+| [ViewTemplate](../src/Attribute/Entity/ViewTemplate.php)                             | Overrides the view page template.                                                  |
+| [DisallowActionsByDefault](../src/Attribute/Permission/DisallowActionsByDefault.php) | Inverts permissions for all AutoGrid actions. By default, all actions are allowed. |
+| [DisallowFieldsByDefault](../src/Attribute/Permission/DisallowFieldsByDefault.php)   | Inverts permissions for all AutoGrid fields. By default, all fields are allowed.   |
+| [Allow](../src/Attribute/Permission/Allow.php)                                       | Allows specific actions, with an optional role.                                    |
+| [Forbid](../src/Attribute/Permission/Forbid.php)                                     | Disallows specific actions, with an optional role.                                 |
+| [AllowAll](../src/Attribute/Permission/Allow.php)                                    | Allows all actions, with an optional role.                                         |
+| [ForbidAll](../src/Attribute/Permission/Forbid.php)                                  | Disallows all actions, with an optional role.                                      |
 
 ## Entity property attributes
 
@@ -77,6 +80,8 @@ class DemoOne
 | [ValueSuffix](../src/Attribute/EntityField/ValueSuffix.php)             | Adds a suffix to the displayed value.                                                                |
 | [Allow](../src/Attribute/Permission/Allow.php)                          | Allows access to this field for specific actions. A role can be provided optionally.                 |
 | [Forbid](../src/Attribute/Permission/Forbid.php)                        | Disallows access to this field for specific actions. A role can be provided optionally.              |
+| [AllowAll](../src/Attribute/Permission/AllowAll.php)                    | Allows access to this field for all actions. A role can be provided optionally.                      |
+| [ForbidAll](../src/Attribute/Permission/ForbidAll.php)                  | Disallows access to this field for all actions. A role can be provided optionally.                   |
 
 Check documentation for more possibilities
 ------------------------------------------

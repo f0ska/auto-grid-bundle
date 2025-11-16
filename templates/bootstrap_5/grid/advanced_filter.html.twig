@@ -1,25 +1,30 @@
 <span class="btn-group">
-    {% if request.filter is defined %}
+    {% if request.filter is defined and agRun(agIsAllowed, 'filter') %}
         <a class="btn btn-sm {{ btnClassActive }}" href="{{ agRun(agActionUrl, 'grid', {'filter': null}) }}">
             <i class="bi bi-funnel"></i>
         </a>
     {% endif %}
-    {% if view.advancedFilterForm %}
+    {% if view.advancedFilterForm and agRun(agIsAllowed, 'advanced_filter') %}
         <button class="btn btn-sm {{ request.filter is defined ? btnClassActive : btnClass }}"
                 data-bs-toggle="modal"
-                data-bs-target="#exampleModal"
+                data-bs-target="#adv{{ agId }}"
                 data-bs-backdrop="false"
         ><i class="bi bi-search"></i></button>
     {% endif %}
 </span>
 
-{% if view.advancedFilterForm and agRun(agIsAllowed, 'advanced-filter') %}
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
-         data-bs-backdrop="false">
+{% if view.advancedFilterForm and agRun(agIsAllowed, 'advanced_filter') %}
+    <div class="modal fade"
+         id="adv{{ agId }}"
+         tabindex="-1"
+         aria-labelledby="adv{{ agId }}Label"
+         aria-hidden="true"
+         data-bs-backdrop="false"
+    >
         <div class="modal-dialog modal-xl modal-fullscreen-sm-down">
             <div class="modal-content text-start">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">
+                    <h1 class="modal-title fs-5" id="adv{{ agId }}Label">
                         <i class="bi bi-search mr-1"></i>
                         {% if attributes.title is not empty %}
                             {{ attributes.title|trans }}

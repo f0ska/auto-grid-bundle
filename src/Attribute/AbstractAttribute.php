@@ -20,11 +20,16 @@ abstract class AbstractAttribute implements AttributeInterface
 
     public function getCode(): string
     {
-        return u(trim((string) strrchr(static::class, '\\'), '\\'))->snake()->toString();
+        return $this->normalizeCode(trim((string) strrchr(static::class, '\\'), '\\'));
     }
 
     public function getValue(): mixed
     {
         return $this->value;
+    }
+
+    protected function normalizeCode(string $code): string
+    {
+        return u($code)->snake()->toString();
     }
 }

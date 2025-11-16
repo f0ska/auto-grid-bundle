@@ -19,8 +19,8 @@ abstract class AbstractAction implements ActionInterface
     public function getCode(): string
     {
         return u(trim((string) strrchr(static::class, '\\'), '\\'))
-            ->kebab()
-            ->trimSuffix('-action')
+            ->snake()
+            ->trimSuffix('_action')
             ->toString();
     }
 

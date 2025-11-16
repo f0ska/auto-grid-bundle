@@ -6,7 +6,7 @@
 
         {{ field.attributes.label|trans }}
 
-        {% if (field.canFilter) %}
+        {% if (field.canFilter and agRun(agIsAllowed, 'filter')) %}
             {{ include('%theme%/grid/column_header_filter.html.twig'|agTheme) }}
         {% endif %}
     </th>

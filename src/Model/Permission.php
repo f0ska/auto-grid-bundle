@@ -14,20 +14,8 @@ namespace F0ska\AutoGridBundle\Model;
 
 class Permission
 {
-    private string $action;
     private bool $allowed;
     private mixed $role = null;
-
-    public function getAction(): string
-    {
-        return $this->action;
-    }
-
-    public function setAction(string $action): self
-    {
-        $this->action = $action;
-        return $this;
-    }
 
     public function isAllowed(): bool
     {
