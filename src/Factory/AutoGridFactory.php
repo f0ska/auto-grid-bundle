@@ -14,6 +14,7 @@ namespace F0ska\AutoGridBundle\Factory;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query\Expr;
+use Doctrine\ORM\Query\Parameter;
 use F0ska\AutoGridBundle\Model\AutoGrid;
 use F0ska\AutoGridBundle\Service\MetaDataService;
 use F0ska\AutoGridBundle\Service\RequestService;
@@ -35,7 +36,7 @@ class AutoGridFactory
      * @param string $entityClass
      * @param string|null $gridId
      * @param Expr\Comparison|Expr\Func|Expr\Andx|Expr\Orx|string|null $queryExpression
-     * @param ArrayCollection<string, mixed>|null $queryParameters
+     * @param ArrayCollection<Parameter>|null $queryParameters
      * @param string|null $initialAction
      * @param array<string, int|string|array> $initialParameters
      * @return AutoGrid

@@ -19,7 +19,7 @@ use F0ska\AutoGridBundle\Attribute\AbstractAttribute;
 class FormOptions extends AbstractAttribute
 {
     /**
-     * @param array<string, array> $value
+     * @param array<string, mixed> $value
      */
     public function __construct(array $value)
     {

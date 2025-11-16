@@ -54,7 +54,9 @@ class EditAction extends AbstractAction
         $form = $this->formBuilder->buildForm($entity, $parameters);
         $form->handleRequest($this->requestStack->getCurrentRequest());
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->dispatcher->dispatch(new SaveEvent($entity, $form, $parameters), SaveEvent::EVENT_NAME);
+            $event = new SaveEvent($entity, $form, $parameters);
+            $this->dispatcher->dispatch($event, $event::EVENT_NAME);
+            $this->dispatcher->dispatch($event, $event::EVENT_NAME . '.' . $autoGrid->getId());
             $this->entityManager->persist($entity);
             $this->entityManager->flush();
             $autoGrid->setResponse($this->formBuilder->getSubmitRedirect($form, $entity->getId(), $parameters));

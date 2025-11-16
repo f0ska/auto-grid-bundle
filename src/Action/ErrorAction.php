@@ -38,7 +38,9 @@ class ErrorAction extends AbstractAction
 
     public function execute(AutoGrid $autoGrid, Parameters $parameters): void
     {
-        $this->dispatcher->dispatch(new ErrorEvent($parameters), ErrorEvent::EVENT_NAME);
+        $event = new ErrorEvent($parameters);
+        $this->dispatcher->dispatch($event, $event::EVENT_NAME);
+        $this->dispatcher->dispatch($event, $event::EVENT_NAME . '.' . $autoGrid->getId());
         $autoGrid->setTemplate($parameters->getTemplate('error'));
         $autoGrid->setContext($parameters->render());
     }

@@ -39,7 +39,9 @@ class DeleteAction extends AbstractAction
     public function execute(AutoGrid $autoGrid, Parameters $parameters): void
     {
         $entity = $this->entityBuilder->loadEntity($parameters);
-        $this->dispatcher->dispatch(new DeleteEvent($entity, $parameters), DeleteEvent::EVENT_NAME);
+        $event = new DeleteEvent($entity, $parameters);
+        $this->dispatcher->dispatch($event, $event::EVENT_NAME);
+        $this->dispatcher->dispatch($event, $event::EVENT_NAME . '.' . $autoGrid->getId());
         $this->entityManager->remove($entity);
         $this->entityManager->flush();
         $autoGrid->setResponse(new RedirectResponse($parameters->actionUrl('grid')));

@@ -32,7 +32,9 @@ class ViewAction extends AbstractAction
     public function execute(AutoGrid $autoGrid, Parameters $parameters): void
     {
         $entity = $this->entityBuilder->loadEntity($parameters);
-        $this->dispatcher->dispatch(new ViewEvent($entity, $parameters), ViewEvent::EVENT_NAME);
+        $event = new ViewEvent($entity, $parameters);
+        $this->dispatcher->dispatch($event, $event::EVENT_NAME);
+        $this->dispatcher->dispatch($event, $event::EVENT_NAME . '.' . $autoGrid->getId());
         $autoGrid->setTemplate($parameters->getTemplate('view'));
         $autoGrid->setContext($parameters->render(['entity' => $entity]));
     }

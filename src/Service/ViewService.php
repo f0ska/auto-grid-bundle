@@ -94,6 +94,8 @@ class ViewService
 
     private function buildTemplateAttributes(FieldParameter $field): void
     {
+        $field->view['template'] = $field->attributes['view_template'] ?? null;
+
         $this->setTruncate($field);
         $this->setFormat($field);
         $this->setFormExtra($field);

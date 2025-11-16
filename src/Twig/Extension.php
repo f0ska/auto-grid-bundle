@@ -56,6 +56,7 @@ class Extension extends AbstractExtension
             new TwigFunction('agRender', $this->agRender(...)),
             new TwigFunction('agRun', $this->agRun(...)),
             new TwigFunction('agChoiceLabels', $this->agChoiceLabels(...)),
+            new TwigFunction('agChoiceValues', $this->agChoiceValues(...)),
             new TwigFunction('agFieldValue', $this->agFieldValue(...)),
         ];
     }
@@ -122,6 +123,25 @@ class Extension extends AbstractExtension
                     $label = $this->translator->trans($label);
                 }
                 $result[] = $label;
+            }
+        }
+        return $result;
+    }
+
+    public function agChoiceValues(mixed $values, FieldParameter $field): array
+    {
+        if (!is_iterable($values)) {
+            $values = [$values];
+        }
+        $result = [];
+        foreach ($values as $value) {
+            $key = $value;
+            if (is_object($value)) {
+                $key = enum_exists($value::class) ? $value->value : $value->getId();
+            }
+            $choice = $this->getSelectedChoice($field, $key);
+            if ($choice) {
+                $result[] = $choice->value;
             }
         }
         return $result;
