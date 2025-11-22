@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace F0ska\AutoGridBundle\Attribute\Entity;
 
 use Attribute;
-use F0ska\AutoGridBundle\Attribute\AbstractAttribute;
+use F0ska\AutoGridBundle\Attribute\Abstract\AbstractAttribute;
 
 #[Attribute]
 class HeaderActionTemplate extends AbstractAttribute

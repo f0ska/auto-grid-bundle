@@ -14,6 +14,10 @@ namespace F0ska\AutoGridBundle\Factory;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query\Expr;
+use Doctrine\ORM\Query\Expr\Andx;
+use Doctrine\ORM\Query\Expr\Comparison;
+use Doctrine\ORM\Query\Expr\Func;
+use Doctrine\ORM\Query\Expr\Orx;
 use Doctrine\ORM\Query\Parameter;
 use F0ska\AutoGridBundle\Model\AutoGrid;
 use F0ska\AutoGridBundle\Service\MetaDataService;
@@ -35,10 +39,12 @@ class AutoGridFactory
     /**
      * @param string $entityClass
      * @param string|null $gridId
-     * @param Expr\Comparison|Expr\Func|Expr\Andx|Expr\Orx|string|null $queryExpression
+     * @param Comparison|Func|Andx|Orx|string|null $queryExpression
      * @param ArrayCollection<Parameter>|null $queryParameters
      * @param string|null $initialAction
      * @param array<string, int|string|array> $initialParameters
+     * @param string|null $routePrefix
+     * @param array<string, int|string> $routeParameters
      * @return AutoGrid
      */
     public function create(
@@ -47,7 +53,9 @@ class AutoGridFactory
         Expr\Comparison|Expr\Func|Expr\Andx|Expr\Orx|string|null $queryExpression = null,
         ?ArrayCollection $queryParameters = null,
         ?string $initialAction = null,
-        array $initialParameters = []
+        array $initialParameters = [],
+        ?string $routePrefix = null,
+        array $routeParameters = []
     ): AutoGrid {
         $agId = $this->metaDataService->add($entityClass, $gridId);
         $autoGrid = new AutoGrid($agId);
@@ -55,6 +63,8 @@ class AutoGridFactory
         $autoGrid->setQueryParameters($queryParameters);
         $autoGrid->setInitialAction($initialAction);
         $autoGrid->setInitialParameters($initialParameters);
+        $autoGrid->setRoutePrefix($routePrefix);
+        $autoGrid->setRouteParameters($routeParameters);
         $this->requestService->processRequest($autoGrid);
         return $autoGrid;
     }

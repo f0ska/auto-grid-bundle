@@ -162,7 +162,7 @@ class FormBuilder
             $form['options'] = [
                 'required' => false,
                 'entry_type' => $entryType,
-                'data' => ['from' => '', 'to' => ''],
+                'data' => ['from' => null, 'to' => null],
                 'entry_options' => ['label' => null, 'label_format' => 'f0ska.autogrid.range.%name%'] + $entryOptions,
             ];
         }

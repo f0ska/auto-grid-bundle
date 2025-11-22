@@ -10,16 +10,16 @@
 
 declare(strict_types=1);
 
-namespace F0ska\AutoGridBundle\Attribute\EntityField;
+namespace F0ska\AutoGridBundle\Attribute\Entity;
 
 use Attribute;
-use F0ska\AutoGridBundle\Attribute\Abstract\AbstractAttribute;
+use F0ska\AutoGridBundle\Attribute\Abstract\AbstractCustomRoute;
 
 #[Attribute]
-class ActionTemplate extends AbstractAttribute
+class RouteEdit extends AbstractCustomRoute
 {
-    public function __construct(string $value)
+    public function getCode(): string
     {
-        $this->value = $value;
+        return 'route.edit';
     }
 }

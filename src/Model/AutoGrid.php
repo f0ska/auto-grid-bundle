@@ -30,6 +30,8 @@ class AutoGrid
     private ?ArrayCollection $queryParameters = null;
     private string $initialActionName = 'grid';
     private array $initialActionParameters = [];
+    private ?string $routePrefix = null;
+    private array $routeParameters = [];
 
     public function __construct(string $agId)
     {
@@ -118,5 +120,25 @@ class AutoGrid
     public function getInitialActionParameters(): array
     {
         return $this->initialActionParameters;
+    }
+
+    public function getRoutePrefix(): ?string
+    {
+        return $this->routePrefix;
+    }
+
+    public function setRoutePrefix(?string $routePrefix): void
+    {
+        $this->routePrefix = $routePrefix;
+    }
+
+    public function setRouteParameters(array $routeParameters): void
+    {
+        $this->routeParameters = $routeParameters;
+    }
+
+    public function getRouteParameters(): array
+    {
+        return $this->routeParameters;
     }
 }

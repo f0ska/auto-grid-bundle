@@ -10,8 +10,9 @@
 
 declare(strict_types=1);
 
-namespace F0ska\AutoGridBundle\Attribute;
+namespace F0ska\AutoGridBundle\Attribute\Abstract;
 
+use F0ska\AutoGridBundle\Attribute\AttributeInterface;
 use function Symfony\Component\String\u;
 
 abstract class AbstractAttribute implements AttributeInterface

@@ -53,19 +53,23 @@ class RequestService
 
     public function processRequest(AutoGrid $autoGrid): void
     {
+        $commonParameters = $this->commonParameters;
+        $commonParameters['route']['custom_prefix'] = $autoGrid->getRoutePrefix();
+        $commonParameters['route']['custom_params'] = $autoGrid->getRouteParameters();
+
         if ($this->badRequest) {
             $this->actionService->executeAction(
                 $autoGrid,
                 self::ERROR_ACTION,
                 [],
-                $this->commonParameters + ['message' => 'Bad request']
+                $commonParameters + ['message' => 'Bad request']
             );
             return;
         }
 
         if ($autoGrid->getId() === $this->agId) {
             $this->storeNavigation();
-            $this->actionService->executeAction($autoGrid, $this->action, $this->parameters, $this->commonParameters);
+            $this->actionService->executeAction($autoGrid, $this->action, $this->parameters, $commonParameters);
             return;
         }
 
@@ -75,7 +79,7 @@ class RequestService
                 $autoGrid,
                 reset($navigation),
                 end($navigation),
-                $this->commonParameters
+                $commonParameters
             );
             return;
         }
@@ -84,7 +88,7 @@ class RequestService
             $autoGrid,
             $autoGrid->getInitialActionName(),
             $autoGrid->getInitialActionParameters(),
-            $this->commonParameters
+            $commonParameters
         );
     }
 
