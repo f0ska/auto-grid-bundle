@@ -79,6 +79,7 @@ class GuesserService
         }
 
         $this->guessSpecificTypes($field);
+        $this->guessDateTypes($field);
         $this->guessGenericAttributes($field);
     }
 
@@ -100,6 +101,23 @@ class GuesserService
             case 'date_point':
                 $field->attributes['form']['type'] = DateTimeType::class;
                 $field->attributes['form']['transformer'] = $this->getDatePointTransformer();
+                break;
+        }
+    }
+
+    private function guessDateTypes(FieldParameter $field): void
+    {
+        switch ($field->fieldMapping->type) {
+            case Types::DATE_IMMUTABLE:
+            case Types::DATE_MUTABLE:
+            case Types::DATETIME_MUTABLE:
+            case Types::DATETIME_IMMUTABLE:
+            case Types::DATETIMETZ_MUTABLE:
+            case Types::DATETIMETZ_IMMUTABLE :
+            case Types::TIME_MUTABLE:
+            case Types::TIME_IMMUTABLE :
+            case 'date_point':
+                $field->attributes['form']['options']['widget'] = 'single_text';
                 break;
         }
     }

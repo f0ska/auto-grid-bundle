@@ -17,6 +17,7 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 use F0ska\AutoGridBundle\Attribute\AttributeInterface;
 use ReflectionAttribute;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\String\Slugger\SluggerInterface;
 use function Symfony\Component\String\u;
 
 class MetaDataService
@@ -29,15 +30,18 @@ class MetaDataService
     private EntityManagerInterface $entityManager;
     private ConfigurationService $configuration;
     private RequestStack $requestStack;
+    private SluggerInterface $slugger;
 
     public function __construct(
         EntityManagerInterface $entityManager,
         ConfigurationService $configuration,
-        RequestStack $requestStack
+        RequestStack $requestStack,
+        SluggerInterface $slugger
     ) {
         $this->entityManager = $entityManager;
         $this->configuration = $configuration;
         $this->requestStack = $requestStack;
+        $this->slugger = $slugger;
     }
 
     public function add(string $entityClass, ?string $customId = null, bool $isSubInstance = false): string
@@ -157,6 +161,6 @@ class MetaDataService
 
     private function prepareCustomAgId(string $customId): string
     {
-        return u($customId)->normalize()->kebab()->toString();
+        return $this->slugger->slug(u($customId)->normalize()->lower()->toString())->toString();
     }
 }
