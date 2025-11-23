@@ -38,7 +38,7 @@ public function myAction(AutoGridFactory $autoGridFactory): Response
 
 Technical notice
 ----------------
-AutoGrid is built for **Symfony 7+** and **PHP 8.2+**. It uses the **Bootstrap 5** theme and icons to display content nicely.
+AutoGrid is built for **Symfony 6+** and **PHP 8.1+**. It uses the **Bootstrap 5** theme and icons to display content nicely.
 
 You will need to adapt AutoGrid templates if your project does not use Bootstrap 5. 
 However, this process is straightforward and much faster than building grids from scratch. 
