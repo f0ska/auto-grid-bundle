@@ -67,6 +67,7 @@ class ViewService
         $this->buildFieldsets($parameters);
         $this->buildFormThemes($parameters);
         $this->buildPaginationParameters($parameters);
+        $this->buildMassAction($parameters);
     }
 
     private function prepareViewForm(string $entityClass, Parameters $parameters): void
@@ -248,5 +249,19 @@ class ViewService
             'page' => $parameters->request['page'] ?? 1,
             'count' => 0,
         ];
+    }
+
+    private function buildMassAction(Parameters $parameters): void
+    {
+        if (empty($parameters->permissions['mass'])) {
+            return;
+        }
+        $choices = $this->formBuilder->buildMassChoices($parameters);
+        if (!empty($choices)) {
+            $parameters->view->massActionChoices = $choices;
+            $parameters->view->massActionForm = $this->formBuilder
+                ->buildMassActionForm($parameters)
+                ->createView();
+        }
     }
 }

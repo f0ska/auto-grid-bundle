@@ -1,0 +1,27 @@
+{% if view.massActionForm %}
+    <th class="{{ field.attributes.column_header_class|default('align-middle') }}">
+        {{ form_start(view.massActionForm) }}
+        <div class="input-group flex-nowrap">
+            <div class="input-group-text">
+                <input class="form-check-input mt-0" type="checkbox" onchange="document.querySelectorAll('[name={{ ('"' ~ field_name(view.massActionForm.ids) ~ '[]"')|escape('html_attr') }}]').forEach(checkbox => { checkbox.checked = this.checked; })">
+            </div>
+            <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                <span class="visually-hidden">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+                {% for label,code in view.massActionChoices %}
+                <li>
+                    <button
+                        class="dropdown-item"
+                        type="submit"
+                        form="{{ view.massActionForm.vars.attr.id }}"
+                        name="{{ field_name(view.massActionForm.code) }}"
+                        value="{{ code }}"
+                    >{{ label|trans }}</button>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {{ form_end(view.massActionForm) }}
+    </th>
+{% endif %}

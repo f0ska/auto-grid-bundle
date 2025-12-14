@@ -1,5 +1,6 @@
 {% extends '%theme%/base.html.twig'|agTheme %}
 {% block autogrid %}
+    {% set columnsCount = (fields|length) + (agRun(agIsAnyAllowed) ? 1 : 0) + (view.massActionForm ? 1 : 0) %}
     <table class="table caption-top {{ attributes.html_classes.table|default('') }}">
         {% block autogrid_grid_caption %}
             {% if attributes.title is not empty %}
@@ -12,6 +13,7 @@
         {% block autogrid_grid_header %}
             <thead class="{{ attributes.html_classes.thead|default('') }}">
             <tr>
+                {{ include('%theme%/grid/column_header_massaction.html.twig'|agTheme) }}
                 {% for field in fields %}
                     {{ include('%theme%/grid/column_header.html.twig'|agTheme) }}
                 {% endfor %}
@@ -23,7 +25,7 @@
         {% block autogrid_grid_footer %}
             <tfoot class="{{ attributes.html_classes.tfoot|default('table-group-divider') }}">
             <tr>
-                <td colspan="{{ (fields|length) + (agRun(agIsAnyAllowed) ? 1 : 0) }}" class="ps-0 pe-0">
+                <td colspan="{{ columnsCount }}" class="ps-0 pe-0">
                     <div class="container-fluid">
                         <div class="row">
                             <div class="col col-3 text-start align-middle pt-1">
@@ -50,7 +52,7 @@
             {% if rows is empty %}
                 {% block autogrid_grid_body_empty %}
                     <tr>
-                        <td class="text-muted" colspan="{{ (fields|length) + (agRun(agIsAnyAllowed) ? 1 : 0) }}">
+                        <td class="text-muted" colspan="{{ columnsCount }}">
                             {{ 'f0ska.autogrid.empty'|trans }}
                         </td>
                     </tr>
@@ -59,6 +61,7 @@
             {% for entity in rows %}
                 {% block autogrid_grid_row %}
                     <tr class="{{ include(attributes.row_class_template|default('%theme%/grid/row_class.html.twig'|agTheme)) }}">
+                        {{ include('%theme%/grid/column_value_massaction.html.twig'|agTheme) }}
                         {% for field in fields %}
                             {{ include('%theme%/grid/column_value.html.twig'|agTheme) }}
                         {% endfor %}

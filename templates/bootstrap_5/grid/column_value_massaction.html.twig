@@ -1,0 +1,5 @@
+{% if view.massActionForm %}
+    <td class="{{ field.attributes.column_value_class|default('align-middle text-center') }}">
+        <input type="checkbox" name="{{ field_name(view.massActionForm.ids) }}[]" class="mass-ids-{{ agId }}" form="{{ view.massActionForm.vars.attr.id }}" value="{{ entity.id }}">
+    </td>
+{% endif %}

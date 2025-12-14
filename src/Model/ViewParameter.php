@@ -33,6 +33,13 @@ class ViewParameter
 
     public ?FormView $advancedFilterForm = null;
 
+    public ?FormView $massActionForm = null;
+
+    /**
+     * @var array<string, string>
+     */
+    public array $massActionChoices = [];
+
     /**
      * @var array<string, array<string>>
      */

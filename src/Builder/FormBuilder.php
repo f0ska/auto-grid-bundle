@@ -27,14 +27,20 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Positive;
+use Symfony\Component\Validator\Constraints\Type;
 
 class FormBuilder
 {
     private FormFactoryInterface $formFactory;
+    private AuthorizationCheckerInterface $authorizationChecker;
 
-    public function __construct(FormFactoryInterface $formFactory)
+    public function __construct(FormFactoryInterface $formFactory, AuthorizationCheckerInterface $authorizationChecker)
     {
         $this->formFactory = $formFactory;
+        $this->authorizationChecker = $authorizationChecker;
     }
 
     public function buildForm(object $entity, Parameters $parameters): FormInterface
@@ -94,6 +100,52 @@ class FormBuilder
         );
         $this->addFields($builder, $action, $parameters, false);
         return $builder->getForm();
+    }
+
+    public function buildMassActionForm(Parameters $parameters): ?FormInterface
+    {
+        $formName = 'mass-' . $parameters->agId;
+        $builder = $this->formFactory->createNamedBuilder(
+            $formName,
+            $this->getFormType('mass', $parameters),
+            null,
+            ['attr' => ['id' => $formName . uniqid('-'), 'data-turbo' => 'false']]
+        );
+        $builder->setMethod('POST');
+        $builder->setAction($parameters->actionUrl('mass'));
+
+        $builder->add(
+            'code',
+            ChoiceType::class,
+            ['choices' => $this->buildMassChoices($parameters), 'constraints' => [new NotBlank()]]
+        );
+        $builder->add(
+            'ids',
+            CollectionType::class,
+            [
+                'entry_options' => ['constraints' => [new NotBlank(), new Type(type: 'digit'), new Positive()]],
+                'allow_add' => true,
+            ]
+        );
+
+        return $builder->getForm();
+    }
+
+    /**
+     * @param Parameters $parameters
+     * @return array<string, string>
+     */
+    public function buildMassChoices(Parameters $parameters): array
+    {
+        $choices = [];
+        $actions = $parameters->attributes['mass_action'] ?? [];
+        foreach ($actions as $action) {
+            if ($action['role'] !== null && !$this->authorizationChecker->isGranted($action['role'])) {
+                continue;
+            }
+            $choices[$action['name']] = $action['code'];
+        }
+        return $choices;
     }
 
     public function getSubmitRedirect(FormInterface $form, int $entityId, Parameters $parameters): RedirectResponse
