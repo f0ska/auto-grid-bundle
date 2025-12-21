@@ -25,6 +25,7 @@ final class MassEvent extends Event
      */
     private array $ids;
     private Parameters $parameters;
+    private ?string $redirectUrl = null;
 
     /**
      * @param string $code
@@ -54,5 +55,15 @@ final class MassEvent extends Event
     public function getParameters(): Parameters
     {
         return $this->parameters;
+    }
+
+    public function getRedirectUrl(): ?string
+    {
+        return $this->redirectUrl;
+    }
+
+    public function setRedirectUrl(?string $redirectUrl): void
+    {
+        $this->redirectUrl = $redirectUrl;
     }
 }

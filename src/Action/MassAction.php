@@ -50,7 +50,8 @@ class MassAction extends AbstractAction
             $this->dispatcher->dispatch($event, MassEvent::EVENT_NAME);
             $this->dispatcher->dispatch($event, MassEvent::EVENT_NAME . '.' . $code);
             $this->dispatcher->dispatch($event, MassEvent::EVENT_NAME . '.' . $autoGrid->getId());
-            $autoGrid->setResponse(new RedirectResponse($parameters->actionUrl('grid')));
+            $url = $event->getRedirectUrl() ?? $parameters->actionUrl('grid');
+            $autoGrid->setResponse(new RedirectResponse($url));
             return;
         }
 
