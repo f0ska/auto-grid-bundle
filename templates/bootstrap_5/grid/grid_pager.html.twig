@@ -1,17 +1,18 @@
 <div class="btn-group" role="group">
-    {% set leftCount = 2 %}
-    {% set rightCount = 2 %}
-    {% set innerCount = 3 %}
+    {% set leftCount = 1 %}
+    {% set rightCount = 1 %}
+    {% set innerCount = 4 %}
+
     {% set firstPage = 1 %}
     {% set lastPage = (view.pagination.count / view.pagination.limit)|round(0, 'ceil') ?: 1 %}
     {% set btnClass = attributes.html_classes.tfootBtn|default('btn-outline-secondary') %}
 
-    {% if view.pagination.page <= (leftCount + innerCount + 1) %}
-        {% set leftCount = leftCount + innerCount %}
+    {% if view.pagination.page <= (leftCount + innerCount) %}
+        {% set leftCount = innerCount * 2 + leftCount  %}
     {% endif %}
 
     {% if (lastPage - view.pagination.page) <= (rightCount + innerCount) %}
-        {% set rightCount = rightCount + innerCount %}
+        {% set rightCount = innerCount * 2 + rightCount %}
     {% endif %}
 
     {% set gap = false %}
@@ -30,6 +31,10 @@
         {% if i >= (view.pagination.page - innerCount + 1) and i <= (view.pagination.page + innerCount - 1) %}
             {% set canRender = true %}
             {% set gap = true %}
+        {% endif %}
+
+        {% if i - leftCount == 1 and i + innerCount == view.pagination.page %}
+            {% set canRender = true %}
         {% endif %}
 
         {% if canRender %}
