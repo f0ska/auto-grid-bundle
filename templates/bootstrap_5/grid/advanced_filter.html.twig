@@ -1,7 +1,7 @@
 <span class="btn-group">
     {% if request.filter is defined and agRun(agIsAllowed, 'filter') %}
-        <a class="btn btn-sm {{ btnClassActive }}" href="{{ agRun(agActionUrl, 'grid', {'filter': null}) }}">
-            <i class="bi bi-funnel"></i>
+        <a class="btn btn-sm btn-outline-danger" href="{{ agRun(agActionUrl, 'grid', {'filter': null}) }}">
+            <i class="bi bi-x-lg"></i>
         </a>
     {% endif %}
     {% if view.advancedFilterFormView and agRun(agIsAllowed, 'advanced_filter') %}

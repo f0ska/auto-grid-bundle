@@ -32,14 +32,14 @@ class FilterParameter implements ActionParameterInterface
         return 'filter';
     }
 
-    public function normalize(mixed $value, Parameters $parameters): array
+    public function normalize(mixed $value, Parameters $parameters): ?array
     {
         if (!$this->validate($value, $parameters)) {
             throw new ActionParameterException();
         }
 
         if (!is_array($value)) {
-            return [];
+            return null;
         }
 
         foreach ($value as $key1 => $value1) {

@@ -7,11 +7,6 @@
             "F0ska\\AutoGridBundle\\": "src/"
         }
     },
-    "autoload-dev": {
-        "psr-4": {
-            "F0ska\\AutoGridBundle\\": "tests/"
-        }
-    },
     "require": {
         "php": ">=8.1",
         "symfony/framework-bundle": ">=6.4"
