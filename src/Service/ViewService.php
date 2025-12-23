@@ -140,24 +140,26 @@ class ViewService
         $parameters->view->filterForms = [];
         foreach ($parameters->fields as $field) {
             if ($field->canFilter) {
-                $form = $this->formBuilder->buildFilterForm($field->name, 'filter', $parameters);
+                $form = $this->formBuilder->buildSingleFieldFilterForm($field->name, $parameters);
                 $value = $parameters->request['filter'][$field->name] ?? null;
-                if ($value !== null) {
+                if ($value !== null && $parameters->action !== 'filter' && !$form->isSubmitted()) {
                     $form->get($field->name)->submit($value);
                 }
-                $parameters->view->filterForms[$field->name] = $form->createView();
+                $parameters->view->filterForms[$field->name] = $form;
+                $parameters->view->filterFormViews[$field->name] = $form->createView();
             }
         }
 
         if (!empty($parameters->attributes['advanced_filter'])) {
-            $form = $this->formBuilder->buildFilterForm(null, 'advanced_filter', $parameters);
+            $form = $this->formBuilder->buildAdvancedFilterForm($parameters);
             foreach ($form->all() as $formField) {
                 $value = $parameters->request['filter'][$formField->getName()] ?? null;
-                if ($value !== null) {
+                if ($value !== null && $parameters->action !== 'advanced_filter' && !$form->isSubmitted()) {
                     $formField->submit($value);
                 }
             }
-            $parameters->view->advancedFilterForm = $form->createView();
+            $parameters->view->advancedFilterForm = $form;
+            $parameters->view->advancedFilterFormView = $form->createView();
         }
     }
 

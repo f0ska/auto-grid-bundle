@@ -118,6 +118,9 @@ class GuesserService
             case Types::TIME_IMMUTABLE :
             case 'date_point':
                 $field->attributes['form']['options']['widget'] = 'single_text';
+                if (!isset($field->attributes['range_filter'])) {
+                    $field->attributes['range_filter'] = $this->configuration->formDateAsRange();
+                }
                 break;
         }
     }

@@ -21,7 +21,6 @@ use Symfony\Component\Form\ChoiceList\View\ChoiceView;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -61,12 +60,45 @@ class FormBuilder
         return $builder->getForm();
     }
 
-    public function buildFilterForm(
-        ?string $fieldName,
+    public function buildSingleFieldFilterForm(string $fieldName, Parameters $parameters): FormInterface
+    {
+        $action = 'filter';
+        $formName = 'filter-' . $fieldName . '-' . $parameters->agId;
+        $builder = $this->getFilterFormBuilder($formName, $action, $parameters);
+        foreach ($parameters->fields as $field) {
+            if ($field->name === $fieldName && $field->canFilter) {
+                $this->buildSearchField($builder, $field, true);
+                continue;
+            }
+            if ($builder->has($field->name)) {
+                $builder->remove($field->name);
+            }
+        }
+        return $builder->getForm();
+    }
+
+    public function buildAdvancedFilterForm(Parameters $parameters): FormInterface
+    {
+        $action = 'advanced_filter';
+        $formName = 'filter-' . $parameters->agId;
+        $builder = $this->getFilterFormBuilder($formName, $action, $parameters);
+        foreach ($parameters->fields as $field) {
+            if ($field->canFilter) {
+                $this->buildSearchField($builder, $field, false);
+                continue;
+            }
+            if ($builder->has($field->name)) {
+                $builder->remove($field->name);
+            }
+        }
+        return $builder->getForm();
+    }
+
+    private function getFilterFormBuilder(
+        string $formName,
         string $action,
         Parameters $parameters
-    ): FormInterface {
-        $formName = 'filter-' . $parameters->agId;
+    ): FormBuilderInterface {
         $builder = $this->formFactory->createNamedBuilder(
             $formName,
             $this->getFormType($action, $parameters),
@@ -75,21 +107,7 @@ class FormBuilder
         );
         $builder->setMethod('POST');
         $builder->setAction($parameters->actionUrl($action));
-        foreach ($parameters->fields as $field) {
-            if (($fieldName === null || $field->name === $fieldName) && $field->canFilter) {
-                $this->buildSearchField($builder, $field, $fieldName !== null);
-                continue;
-            }
-            if ($builder->has($field->name)) {
-                $builder->remove($field->name);
-            }
-        }
-        $builder->add(
-            $parameters->agId,
-            HiddenType::class,
-            ['mapped' => false, 'allow_extra_fields' => true, 'data' => $fieldName]
-        );
-        return $builder->getForm();
+        return $builder;
     }
 
     public function buildDisplayForm(Parameters $parameters): ?FormInterface
@@ -226,7 +244,11 @@ class FormBuilder
         $mappingType = $field->fieldMapping?->type;
         $form = $field->attributes['form'];
         if ($mappingType) {
-            if (in_array($mappingType, [Types::TEXT, Types::JSON, Types::SIMPLE_ARRAY], true)) {
+            if (in_array(
+                $mappingType,
+                [Types::TEXT, Types::JSON, Types::SIMPLE_ARRAY, Types::OBJECT, Types::ARRAY],
+                true
+            )) {
                 $form['type'] = TextType::class;
                 $form['options'] = ['required' => $required];
                 return $form;
@@ -279,7 +301,7 @@ class FormBuilder
     private function getFormType(string $action, Parameters $parameters): string
     {
         $attr = $parameters->attributes;
-        return $attr['form_type_' . $action] ?? $attr['form_type'] ?? FormType::class;
+        return $attr['form_type'][$action] ?? FormType::class;
     }
 
     /**

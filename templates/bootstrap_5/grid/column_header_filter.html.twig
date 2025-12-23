@@ -9,7 +9,7 @@
        data-bs-auto-close="outside"
     ><small><i class="bi bi-funnel{{ isFilterActive ? '-fill' }}"></i></small></a>
     <span class="dropdown-menu p-2 fw-normal">
-        {% set form = attribute(view.filterForms, field.name) %}
+        {% set form = attribute(view.filterFormViews, field.name) %}
         {% if view.formThemes is not empty %}
             {% form_theme form with view.formThemes %}
         {% endif %}

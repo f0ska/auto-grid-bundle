@@ -50,3 +50,5 @@ parameters:
 
     # By default, render boolean as select (if no form options defined).
     f0ska.autogrid.form.default_boolean_as_select: false
+    # By default, render all date filter as "range". Overrides by RangeFilter attribute.
+    f0ska.autogrid.form.default_date_filter_range: true

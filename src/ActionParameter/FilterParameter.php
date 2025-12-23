@@ -12,12 +12,21 @@ declare(strict_types=1);
 
 namespace F0ska\AutoGridBundle\ActionParameter;
 
+use DateTimeInterface;
+use Doctrine\ORM\EntityManagerInterface;
 use F0ska\AutoGridBundle\Exception\ActionParameterException;
 use F0ska\AutoGridBundle\Model\FieldParameter;
 use F0ska\AutoGridBundle\Model\Parameters;
 
 class FilterParameter implements ActionParameterInterface
 {
+    private EntityManagerInterface $entityManager;
+
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
     public function getCode(): string
     {
         return 'filter';
@@ -38,21 +47,19 @@ class FilterParameter implements ActionParameterInterface
                 unset($value[$key1]);
                 continue;
             }
+            $field = $parameters->fields[$key1];
             if (is_array($value1)) {
                 foreach ($value1 as $key2 => $value2) {
                     if (!is_scalar($value2)) {
-                        unset($value1[$key2]);
+                        $value[$key1][$key2] = $this->normalizeNotScalarValue($value2, $field);
                         continue;
                     }
-                    $value1[$key2] = strval($value2);
-                }
-                if (empty($value1)) {
-                    unset($value[$key1]);
+                    $value[$key1][$key2] = strval($value2);
                 }
                 continue;
             }
             if (!is_scalar($value1)) {
-                unset($value[$key1]);
+                $value[$key1] = $this->normalizeNotScalarValue($value1, $field);
                 continue;
             }
             $value[$key1] = strval($value1);
@@ -82,7 +89,7 @@ class FilterParameter implements ActionParameterInterface
 
     private function isValueValid(mixed $value, FieldParameter $field): bool
     {
-        if (is_scalar($value) || $value === null) {
+        if ($this->isValueTypeValid($value)) {
             return true;
         }
         if (is_array($value)) {
@@ -94,12 +101,30 @@ class FilterParameter implements ActionParameterInterface
                 return false;
             }
             foreach ($value as $subValue) {
-                if (!is_scalar($subValue) && !is_null($subValue)) {
+                if (!$this->isValueTypeValid($subValue)) {
                     return false;
                 }
             }
             return true;
         }
         return false;
+    }
+
+    private function isValueTypeValid(mixed $value): bool
+    {
+        return is_scalar($value)
+            || $value === null
+            || $value instanceof DateTimeInterface
+            || (is_object($value) && method_exists($value, 'getId'));
+    }
+
+    private function normalizeNotScalarValue(mixed $value, FieldParameter $field): ?string
+    {
+        if ($value instanceof DateTimeInterface && $field->fieldMapping !== null) {
+            return $this->entityManager
+                ->getConnection()
+                ->convertToDatabaseValue($value, $field->fieldMapping->type);
+        }
+        return $value?->getId() ? strval($value->getId()) : null;
     }
 }

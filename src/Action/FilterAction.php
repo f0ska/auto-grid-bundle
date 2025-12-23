@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace F0ska\AutoGridBundle\Action;
 
-use F0ska\AutoGridBundle\Builder\FormBuilder;
 use F0ska\AutoGridBundle\Model\AutoGrid;
 use F0ska\AutoGridBundle\Model\Parameters;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -20,14 +19,10 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class FilterAction extends AbstractAction
 {
-    private FormBuilder $formBuilder;
     private RequestStack $requestStack;
 
-    public function __construct(
-        FormBuilder $formBuilder,
-        RequestStack $requestStack
-    ) {
-        $this->formBuilder = $formBuilder;
+    public function __construct(RequestStack $requestStack)
+    {
         $this->requestStack = $requestStack;
     }
 
@@ -35,11 +30,9 @@ class FilterAction extends AbstractAction
     {
         $filter = [];
         $request = $this->requestStack->getCurrentRequest();
-        $form = $this->formBuilder->buildFilterForm(null, 'filter', $parameters);
-        $form->handleRequest($request);
-        if ($form->isSubmitted()) {
-            $fieldName = $form->get($parameters->agId)->getData();
-            if (is_string($fieldName) && !empty($fieldName)) {
+        foreach ($parameters->view->filterForms as $fieldName => $form) {
+            $form->handleRequest($request);
+            if ($form->isSubmitted()) {
                 $filter[$fieldName] = $form->get($fieldName)->getViewData();
             }
         }

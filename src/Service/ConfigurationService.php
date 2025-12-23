@@ -128,4 +128,9 @@ class ConfigurationService
     {
         return $this->params->get('f0ska.autogrid.common.show_entity_title');
     }
+
+    public function formDateAsRange(): bool
+    {
+        return $this->params->get('f0ska.autogrid.form.default_date_filter_range');
+    }
 }

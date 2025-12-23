@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace F0ska\AutoGridBundle\Model;
 
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 
 class ViewParameter
@@ -27,11 +28,19 @@ class ViewParameter
     ];
 
     /**
-     * @var array<string, FormView>
+     * @var array<string, FormInterface>
      */
+
     public array $filterForms = [];
 
-    public ?FormView $advancedFilterForm = null;
+    /**
+     * @var array<string, FormView>
+     */
+    public array $filterFormViews = [];
+
+    public ?FormInterface $advancedFilterForm = null;
+
+    public ?FormView $advancedFilterFormView = null;
 
     public ?FormView $massActionForm = null;
 

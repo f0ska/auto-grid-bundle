@@ -141,6 +141,8 @@ class GridQueryBuilder
             case Types::TEXT:
             case Types::JSON:
             case Types::SIMPLE_ARRAY:
+            case Types::ARRAY:
+            case Types::OBJECT:
                 $exp = $builder->expr()->like($column, ':' . $alias);
                 $value = '%' . $value . '%';
                 break;

@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace F0ska\AutoGridBundle\Action;
 
-use F0ska\AutoGridBundle\Builder\FormBuilder;
 use F0ska\AutoGridBundle\Model\AutoGrid;
 use F0ska\AutoGridBundle\Model\Parameters;
 use Symfony\Component\Form\FormInterface;
@@ -21,14 +20,10 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class AdvancedFilterAction extends AbstractAction
 {
-    private FormBuilder $formBuilder;
     private RequestStack $requestStack;
 
-    public function __construct(
-        FormBuilder $formBuilder,
-        RequestStack $requestStack
-    ) {
-        $this->formBuilder = $formBuilder;
+    public function __construct(RequestStack $requestStack)
+    {
         $this->requestStack = $requestStack;
     }
 
@@ -36,7 +31,7 @@ class AdvancedFilterAction extends AbstractAction
     {
         $filter = [];
         $request = $this->requestStack->getCurrentRequest();
-        $form = $this->formBuilder->buildFilterForm(null, 'filter', $parameters);
+        $form = $parameters->view->advancedFilterForm;
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
             $filter = $this->getFilter($form);
