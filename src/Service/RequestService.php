@@ -131,12 +131,9 @@ class RequestService
 
     private function getSingleParameterAction(): ?array
     {
-        $encodedAction = $this->request->get($this->configuration->getSingleParamRequestCode());
+        $encodedAction = $this->getRequestString($this->configuration->getSingleParamRequestCode());
         if (empty($encodedAction)) {
             $this->badRequest = false;
-            return null;
-        }
-        if (!is_string($encodedAction)) {
             return null;
         }
         return $this->encoderService->decodeAction($encodedAction);
@@ -144,9 +141,9 @@ class RequestService
 
     private function getMultiParameterAction(): ?array
     {
-        $id = $this->request->get($this->configuration->getMultiParamRequestId());
-        $action = $this->request->get($this->configuration->getMultiParamRequestAction());
-        $params = $this->request->get($this->configuration->getMultiParamRequestParams(), []);
+        $id = $this->getRequestString($this->configuration->getMultiParamRequestId());
+        $action = $this->getRequestString($this->configuration->getMultiParamRequestAction());
+        $params = $this->request->query->all($this->configuration->getMultiParamRequestParams());
 
         if (is_null($id) && is_null($action) && empty($params)) {
             $this->badRequest = false;
@@ -179,5 +176,20 @@ class RequestService
     private function getSessionKey(string $agId): string
     {
         return sprintf('autogrid_%s', $agId);
+    }
+
+    private function getRequestString(string $name): ?string
+    {
+        $value = $this->request->query->get($name);
+        if (is_string($value) && !empty($value)) {
+            return $value;
+        }
+
+        $value = $this->request->attributes->get($name);
+        if (is_string($value) && !empty($value)) {
+            return $value;
+        }
+
+        return null;
     }
 }
