@@ -20,7 +20,9 @@ use Doctrine\ORM\QueryBuilder;
 use F0ska\AutoGridBundle\Model\FieldParameter;
 use F0ska\AutoGridBundle\Model\Parameters;
 use F0ska\AutoGridBundle\Service\AttributeService;
+use F0ska\AutoGridBundle\Service\LegacyService;
 use F0ska\AutoGridBundle\Service\MetaDataService;
+
 use function Symfony\Component\String\u;
 
 class GridQueryBuilder
@@ -141,8 +143,8 @@ class GridQueryBuilder
             case Types::TEXT:
             case Types::JSON:
             case Types::SIMPLE_ARRAY:
-            case Types::ARRAY:
-            case Types::OBJECT:
+            case LegacyService::TYPES_ARRAY:
+            case LegacyService::TYPES_OBJECT:
                 $exp = $builder->expr()->like($column, ':' . $alias);
                 $value = '%' . $value . '%';
                 break;

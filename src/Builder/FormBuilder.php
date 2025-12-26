@@ -17,6 +17,7 @@ use F0ska\AutoGridBundle\Exception\ActionException;
 use F0ska\AutoGridBundle\Model\FieldParameter;
 use F0ska\AutoGridBundle\Model\Parameters;
 use F0ska\AutoGridBundle\Service\AttributeService;
+use F0ska\AutoGridBundle\Service\LegacyService;
 use Symfony\Component\Form\ChoiceList\View\ChoiceView;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -284,7 +285,13 @@ class FormBuilder
         if ($mappingType) {
             if (in_array(
                 $mappingType,
-                [Types::TEXT, Types::JSON, Types::SIMPLE_ARRAY, Types::OBJECT, Types::ARRAY],
+                [
+                    Types::TEXT,
+                    Types::JSON,
+                    Types::SIMPLE_ARRAY,
+                    LegacyService::TYPES_ARRAY,
+                    LegacyService::TYPES_OBJECT,
+                ],
                 true
             )) {
                 $form['type'] = TextType::class;

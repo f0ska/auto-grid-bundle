@@ -92,13 +92,13 @@ class GuesserService
 
         switch ($field->fieldMapping->type) {
             case Types::JSON:
-            case Types::OBJECT:
+            case LegacyService::TYPES_OBJECT:
                 $field->attributes['form']['type'] = TextareaType::class;
                 $field->attributes['form']['transformer'] = $this->getJsonTransformer(
-                    $field->fieldMapping->type === Types::OBJECT
+                    $field->fieldMapping->type === LegacyService::TYPES_OBJECT
                 );
                 break;
-            case 'date_point':
+            case LegacyService::TYPES_DATE_POINT:
                 $field->attributes['form']['type'] = DateTimeType::class;
                 $field->attributes['form']['transformer'] = $this->getDatePointTransformer();
                 break;
@@ -116,7 +116,7 @@ class GuesserService
             case Types::DATETIMETZ_IMMUTABLE :
             case Types::TIME_MUTABLE:
             case Types::TIME_IMMUTABLE :
-            case 'date_point':
+            case LegacyService::TYPES_DATE_POINT:
                 $field->attributes['form']['options']['widget'] = 'single_text';
                 if (!isset($field->attributes['range_filter'])) {
                     $field->attributes['range_filter'] = $this->configuration->formDateAsRange();
