@@ -2,7 +2,41 @@
     {% set btnClass = attributes.html_classes.theadBtn|default('btn-outline-secondary') %}
     {% set btnClassActive = attributes.html_classes.theadBtnActive|default('btn-primary') %}
     <th class="text-end text-nowrap align-middle">
-        {{ include('%theme%/grid/advanced_filter.html.twig'|agTheme) }}
+        <span class="btn-group">
+            {% if request.filter is defined and agRun(agIsAllowed, 'filter') %}
+                <a class="btn btn-sm btn-outline-danger" href="{{ agRun(agActionUrl, 'grid', {'filter': null}) }}">
+                    <i class="bi bi-x-lg"></i>
+                </a>
+            {% endif %}
+            {% if view.advancedFilterFormView and agRun(agIsAllowed, 'advanced_filter') %}
+                <button class="btn btn-sm {{ request.filter is defined ? btnClassActive : btnClass }}"
+                        data-bs-toggle="modal"
+                        data-bs-target="#adv{{ agId }}"
+                        data-bs-backdrop="false"
+                ><i class="bi bi-search"></i></button>
+            {% endif %}
+            {% if view.exportActionFormView and view.pagination.count %}
+                <button class="btn btn-sm {{ btnClass }} dropdown-toggle"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                        id="exp{{ agId }}"
+                ></button>
+                <ul class="dropdown-menu">
+                    {% for label,code in view.exportActionChoices %}
+                        <li>
+                            <button
+                                class="dropdown-item"
+                                type="submit"
+                                form="{{ view.exportActionFormView.vars.attr.id }}"
+                                name="{{ field_name(view.exportActionFormView.code) }}"
+                                value="{{ code }}"
+                            >{{ label|trans }}</button>
+                        </li>
+                    {% endfor %}
+                </ul>
+                {{ form(view.exportActionFormView) }}
+            {% endif %}
+        </span>
 
         {% if (agRun(agIsAllowed, 'create')) %}
             <a class="btn btn-sm {{ btnClass }}" href="{{ agRun(agActionUrl, 'create') }}">

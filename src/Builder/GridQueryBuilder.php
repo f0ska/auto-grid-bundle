@@ -61,7 +61,7 @@ class GridQueryBuilder
         return $builder->getQuery();
     }
 
-    private function buildGenericParts(Parameters $parameters): QueryBuilder
+    public function buildGenericParts(Parameters $parameters): QueryBuilder
     {
         $this->joins = [];
         $agId = $parameters->agId;

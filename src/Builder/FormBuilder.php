@@ -149,6 +149,27 @@ class FormBuilder
         return $builder->getForm();
     }
 
+    public function buildExportActionForm(Parameters $parameters): ?FormInterface
+    {
+        $formName = 'export-' . $parameters->agId;
+        $builder = $this->formFactory->createNamedBuilder(
+            $formName,
+            $this->getFormType('export', $parameters),
+            null,
+            ['attr' => ['id' => $formName . uniqid('-'), 'data-turbo' => 'false']]
+        );
+        $builder->setMethod('POST');
+        $builder->setAction($parameters->actionUrl('export'));
+
+        $builder->add(
+            'code',
+            ChoiceType::class,
+            ['choices' => $this->buildExportChoices($parameters), 'constraints' => [new NotBlank()]]
+        );
+
+        return $builder->getForm();
+    }
+
     /**
      * @param Parameters $parameters
      * @return array<string, string>
@@ -157,6 +178,23 @@ class FormBuilder
     {
         $choices = [];
         $actions = $parameters->attributes['mass_action'] ?? [];
+        foreach ($actions as $action) {
+            if ($action['role'] !== null && !$this->authorizationChecker->isGranted($action['role'])) {
+                continue;
+            }
+            $choices[$action['name']] = $action['code'];
+        }
+        return $choices;
+    }
+
+    /**
+     * @param Parameters $parameters
+     * @return array<string, string>
+     */
+    public function buildExportChoices(Parameters $parameters): array
+    {
+        $choices = [];
+        $actions = $parameters->attributes['export_action'] ?? [];
         foreach ($actions as $action) {
             if ($action['role'] !== null && !$this->authorizationChecker->isGranted($action['role'])) {
                 continue;

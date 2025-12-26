@@ -27,6 +27,7 @@ See [services.yaml](../config/services.yaml) file to understand how to do this.
 | `f0ska.autogrid.entity.save`   | [SaveEvent](../src/Event/SaveEvent.php)     |
 | `f0ska.autogrid.entity.view`   | [ViewEvent](../src/Event/ViewEvent.php)     |
 | `f0ska.autogrid.mass_action`   | [MassEvent](../src/Event/MassEvent.php)     |
+| `f0ska.autogrid.export_action` | [ExportEvent](../src/Event/ExportEvent.php) |
 
 Check documentation for more possibilities
 ------------------------------------------

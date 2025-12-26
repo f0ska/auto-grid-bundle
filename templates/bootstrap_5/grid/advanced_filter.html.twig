@@ -1,18 +1,3 @@
-<span class="btn-group">
-    {% if request.filter is defined and agRun(agIsAllowed, 'filter') %}
-        <a class="btn btn-sm btn-outline-danger" href="{{ agRun(agActionUrl, 'grid', {'filter': null}) }}">
-            <i class="bi bi-x-lg"></i>
-        </a>
-    {% endif %}
-    {% if view.advancedFilterFormView and agRun(agIsAllowed, 'advanced_filter') %}
-        <button class="btn btn-sm {{ request.filter is defined ? btnClassActive : btnClass }}"
-                data-bs-toggle="modal"
-                data-bs-target="#adv{{ agId }}"
-                data-bs-backdrop="false"
-        ><i class="bi bi-search"></i></button>
-    {% endif %}
-</span>
-
 {% if view.advancedFilterFormView and agRun(agIsAllowed, 'advanced_filter') %}
     <div class="modal fade"
          id="adv{{ agId }}"

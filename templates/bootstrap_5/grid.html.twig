@@ -1,6 +1,7 @@
 {% extends '%theme%/base.html.twig'|agTheme %}
 {% block autogrid %}
-    {% set columnsCount = (fields|length) + (agRun(agIsAnyAllowed) ? 1 : 0) + (view.massActionForm ? 1 : 0) %}
+    {{ include('%theme%/grid/advanced_filter.html.twig'|agTheme) }}
+    {% set columnsCount = (fields|length) + (agRun(agIsAnyAllowed) ? 1 : 0) + (view.massActionFormView ? 1 : 0) %}
     <table class="table caption-top {{ attributes.html_classes.table|default('') }}">
         {% block autogrid_grid_caption %}
             {% if attributes.title is not empty %}

@@ -68,6 +68,7 @@ class ViewService
         $this->buildFormThemes($parameters);
         $this->buildPaginationParameters($parameters);
         $this->buildMassAction($parameters);
+        $this->buildExportAction($parameters);
     }
 
     private function prepareViewForm(string $entityClass, Parameters $parameters): void
@@ -261,8 +262,22 @@ class ViewService
         $choices = $this->formBuilder->buildMassChoices($parameters);
         if (!empty($choices)) {
             $parameters->view->massActionChoices = $choices;
-            $parameters->view->massActionForm = $this->formBuilder
+            $parameters->view->massActionFormView = $this->formBuilder
                 ->buildMassActionForm($parameters)
+                ->createView();
+        }
+    }
+
+    private function buildExportAction(Parameters $parameters): void
+    {
+        if (empty($parameters->permissions['export'])) {
+            return;
+        }
+        $choices = $this->formBuilder->buildExportChoices($parameters);
+        if (!empty($choices)) {
+            $parameters->view->exportActionChoices = $choices;
+            $parameters->view->exportActionFormView = $this->formBuilder
+                ->buildExportActionForm($parameters)
                 ->createView();
         }
     }

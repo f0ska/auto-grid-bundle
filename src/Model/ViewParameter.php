@@ -42,12 +42,19 @@ class ViewParameter
 
     public ?FormView $advancedFilterFormView = null;
 
-    public ?FormView $massActionForm = null;
+    public ?FormView $massActionFormView = null;
 
     /**
      * @var array<string, string>
      */
     public array $massActionChoices = [];
+
+    public ?FormView $exportActionFormView = null;
+
+    /**
+     * @var array<string, string>
+     */
+    public array $exportActionChoices = [];
 
     /**
      * @var array<string, array<string>>

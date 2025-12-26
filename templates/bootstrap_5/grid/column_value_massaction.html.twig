@@ -1,8 +1,13 @@
-{% if view.massActionForm %}
+{% if view.massActionFormView %}
     <td class="{{ field.attributes.column_value_class|default('align-middle text-center') }}">
         <label class="w-100">
-            <input type="checkbox" name="{{ field_name(view.massActionForm.ids) }}[]" class="mass-ids-{{ agId }}"
-                   form="{{ view.massActionForm.vars.attr.id }}" value="{{ entity.id }}">
+            <input type="checkbox"
+                   autocomplete="off"
+                   name="{{ field_name(view.massActionFormView.ids) }}[]"
+                   class="mass-ids-{{ agId }}"
+                   form="{{ view.massActionFormView.vars.attr.id }}"
+                   value="{{ entity.id }}"
+            >
         </label>
     </td>
 {% endif %}
