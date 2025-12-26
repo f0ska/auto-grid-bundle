@@ -29,6 +29,7 @@ use Twig\Error\SyntaxError;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
+
 use function Symfony\Component\String\u;
 
 class Extension extends AbstractExtension
@@ -58,6 +59,7 @@ class Extension extends AbstractExtension
             new TwigFunction('agChoiceLabels', $this->agChoiceLabels(...)),
             new TwigFunction('agChoiceValues', $this->agChoiceValues(...)),
             new TwigFunction('agFieldValue', $this->agFieldValue(...)),
+            new TwigFunction('agBinarySize', $this->agBinarySize(...)),
         ];
     }
 
@@ -163,6 +165,28 @@ class Extension extends AbstractExtension
             return implode(', ', $result);
         }
         return $this->getPropertyValue($object, $property);
+    }
+
+    public function agBinarySize(mixed $binaryString): string
+    {
+        switch (gettype($binaryString)) {
+            case 'string':
+                $size = strlen($binaryString);
+                break;
+            case 'resource':
+                $size = fstat($binaryString)['size'];
+                break;
+            default:
+                return '-';
+        }
+
+        foreach (['B', 'KB', 'MB', 'GB'] as $suffix) {
+            if ($size <= 1024) {
+                break;
+            }
+            $size /= 1024;
+        }
+        return sprintf('%s %s', round($size, 2), $suffix);
     }
 
     private function getPropertyValue(object $object, string $property): mixed

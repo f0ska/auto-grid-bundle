@@ -16,6 +16,7 @@ parameters:
     f0ska.autogrid.template.field.simple_array: '%%theme%%/field/array.html.twig'
     f0ska.autogrid.template.field.json: '%%theme%%/field/json.html.twig'
     f0ska.autogrid.template.field.ascii_string: '%%theme%%/field/ascii.html.twig'
+    f0ska.autogrid.template.field.binary: '%%theme%%/field/binary.html.twig'
 
     # Date formats for data view (not for a form field)
     f0ska.autogrid.view.field.format.date: 'Y-m-d'

@@ -31,7 +31,7 @@
                                autocomplete="off"
                                onchange="document.querySelectorAll('[name={{ ('"' ~ field_name(view.massActionFormView.ids) ~ '[]"')|escape('html_attr') }}]').forEach(checkbox => { checkbox.checked = this.checked; })"
                         >
-                        Select All
+                        {{ 'f0ska.autogrid.action.select_all'|trans }}
                     </label>
                 </li>
             </ul>

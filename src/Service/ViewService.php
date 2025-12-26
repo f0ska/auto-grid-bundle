@@ -32,6 +32,8 @@ class ViewService
         LegacyService::TYPES_ARRAY => 'json',
         LegacyService::TYPES_OBJECT => 'json',
         Types::ASCII_STRING => 'ascii_string',
+        Types::BINARY => 'binary',
+        Types::BLOB => 'binary',
     ];
     private array $dateFormats = [
         Types::DATE_MUTABLE => 'date',

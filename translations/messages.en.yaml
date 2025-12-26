@@ -13,6 +13,7 @@ f0ska:
             create: "Create new enty"
             edit: "Modify entry"
             view: "View entry"
+            select_all: "Select All"
         choice:
             yes: "Yes"
             no: "No"
