@@ -18,6 +18,8 @@ use F0ska\AutoGridBundle\Attribute\Abstract\AbstractAttribute;
 #[Attribute(Attribute::TARGET_ALL | Attribute::IS_REPEATABLE)]
 class ActionRoute extends AbstractAttribute
 {
+    private string $action;
+
     /**
      * @param string $action
      * @param string|null $route It will use action name if empty.
@@ -25,7 +27,8 @@ class ActionRoute extends AbstractAttribute
      */
     public function __construct(string $action, ?string $route = null, array $parameters = [])
     {
-        $this->value[$action] = [
+        $this->action = $action;
+        $this->value = [
             'route' => $route,
             'parameters' => $parameters,
         ];
@@ -33,6 +36,6 @@ class ActionRoute extends AbstractAttribute
 
     public function getCode(): string
     {
-        return 'route';
+        return 'route.' . $this->action;
     }
 }
