@@ -107,18 +107,18 @@ class ConfigurationService
     public function getDefaultButtonsPositions(): array
     {
         return [
-            'view_button_in' => [
-                'grid' => $this->params->get('f0ska.autogrid.grid.view_button_in_grid'),
-                'edit' => $this->params->get('f0ska.autogrid.grid.view_button_in_edit'),
+            'view' => [
+                'display_in_grid' => $this->params->get('f0ska.autogrid.button.view.display_in_grid'),
+                'display_in_edit' => $this->params->get('f0ska.autogrid.button.view.display_in_edit'),
             ],
-            'edit_button_in' => [
-                'grid' => $this->params->get('f0ska.autogrid.grid.edit_button_in_grid'),
-                'view' => $this->params->get('f0ska.autogrid.grid.edit_button_in_view'),
+            'edit' => [
+                'display_in_grid' => $this->params->get('f0ska.autogrid.button.edit.display_in_grid'),
+                'display_in_view' => $this->params->get('f0ska.autogrid.button.edit.display_in_view'),
             ],
-            'delete_button_in' => [
-                'grid' => $this->params->get('f0ska.autogrid.grid.delete_button_in_grid'),
-                'view' => $this->params->get('f0ska.autogrid.grid.delete_button_in_view'),
-                'edit' => $this->params->get('f0ska.autogrid.grid.delete_button_in_edit'),
+            'delete' => [
+                'display_in_grid' => $this->params->get('f0ska.autogrid.button.delete.display_in_grid'),
+                'display_in_view' => $this->params->get('f0ska.autogrid.button.delete.display_in_view'),
+                'display_in_edit' => $this->params->get('f0ska.autogrid.button.delete.display_in_edit'),
             ],
         ];
     }

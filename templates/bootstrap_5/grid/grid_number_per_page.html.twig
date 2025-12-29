@@ -1,5 +1,5 @@
 {% if view.pagination.limits|length > 1 %}
-    {% set btnClass = attributes.html_classes.tfootBtn|default('btn-outline-secondary') %}
+    {% set btnClass = attributes.html_class.tfoot_btn|default('btn-outline-secondary') %}
     <div class="btn-group" role="group">
         {% for pageLimit in view.pagination.limits %}
             {% if pageLimit == view.pagination.limit %}

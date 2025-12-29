@@ -1,7 +1,7 @@
 {% if (agRun(agIsAnyAllowed)) or attributes.has_custom_action is defined %}
-    {% set btnClass = attributes.html_classes.theadBtn|default('btn-outline-secondary') %}
-    {% set btnClassActive = attributes.html_classes.theadBtnActive|default('btn-primary') %}
-    <th class="text-end text-nowrap align-middle">
+    {% set btnClass = attributes.html_class.thead_btn|default('btn-outline-secondary') %}
+    {% set btnClassActive = attributes.html_class.thead_btn_active|default('btn-primary') %}
+    <th class="{{ attributes.html_class.action_column_header|default('text-end text-nowrap align-middle') }}">
         <span class="btn-group">
             {% if request.filter is defined and agRun(agIsAllowed, 'filter') %}
                 <a class="btn btn-sm btn-outline-danger" href="{{ agRun(agActionUrl, 'grid', {'filter': null}) }}">
@@ -44,8 +44,6 @@
             </a>
         {% endif %}
 
-        {% if attributes.header_action_template is defined %}
-            {{ include(attributes.header_action_template) }}
-        {% endif %}
+        {% block autogrid_grid_header_custom_action %}{% endblock %}
     </th>
 {% endif %}

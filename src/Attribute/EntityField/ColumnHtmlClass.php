@@ -10,16 +10,19 @@
 
 declare(strict_types=1);
 
-namespace F0ska\AutoGridBundle\Attribute\Entity;
+namespace F0ska\AutoGridBundle\Attribute\EntityField;
 
 use Attribute;
 use F0ska\AutoGridBundle\Attribute\Abstract\AbstractAttribute;
 
 #[Attribute]
-class DeleteButtonIn extends AbstractAttribute
+class ColumnHtmlClass extends AbstractAttribute
 {
-    public function __construct(?bool $grid = null, ?bool $view = null, ?bool $edit = null)
+    public function __construct(?string $headerClass = null, ?string $valueClass = null)
     {
-        $this->value = ['grid' => $grid, 'view' => $view, 'edit' => $edit];
+        $this->value = [
+            'header' => $headerClass,
+            'value' => $valueClass,
+        ];
     }
 }

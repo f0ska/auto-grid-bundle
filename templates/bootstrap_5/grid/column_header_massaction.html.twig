@@ -1,6 +1,6 @@
 {% if view.massActionFormView %}
-    {% set btnClass = attributes.html_classes.theadBtn|default('btn-outline-secondary') %}
-    <th class="{{ field.attributes.column_header_class|default('align-middle') }}">
+    {% set btnClass = attributes.html_class.thead_btn|default('btn-outline-secondary') %}
+    <th class="{{ attributes.html_class.mass_action_column_header|default('align-middle') }}">
         {{ form_start(view.massActionFormView) }}
         <div class="input-group">
             <button type="button"

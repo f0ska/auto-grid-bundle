@@ -1,6 +1,6 @@
 {% set isFilterActive = (attribute(request.filter ?? {}, field.name) is defined) and attribute(request.filter, field.name) is not same as null %}
-{% set linkClass = attributes.html_classes.theadLink|default('link-secondary') %}
-{% set linkClassActive = attributes.html_classes.theadLinkActive|default('link-primary') %}
+{% set linkClass = attributes.html_class.thead_link|default('link-secondary') %}
+{% set linkClassActive = attributes.html_class.thead_link_active|default('link-primary') %}
 <span class="dropdown-center">
     <a class="{{ isFilterActive ? linkClassActive : linkClass }}"
        role="button"

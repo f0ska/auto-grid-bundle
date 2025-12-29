@@ -5,7 +5,7 @@
 
     {% set firstPage = 1 %}
     {% set lastPage = (view.pagination.count / view.pagination.limit)|round(0, 'ceil') ?: 1 %}
-    {% set btnClass = attributes.html_classes.tfootBtn|default('btn-outline-secondary') %}
+    {% set btnClass = attributes.html_class.tfoot_btn|default('btn-outline-secondary') %}
 
     {% if view.pagination.page <= (leftCount + innerCount) %}
         {% set leftCount = innerCount * 2 + leftCount  %}

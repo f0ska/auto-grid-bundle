@@ -54,13 +54,13 @@ parameters:
     f0ska.autogrid.common.show_entity_title: true # Just a grid title.
 
     # Basic action buttons display.
-    f0ska.autogrid.grid.view_button_in_grid: true
-    f0ska.autogrid.grid.view_button_in_edit: true
-    f0ska.autogrid.grid.edit_button_in_grid: true
-    f0ska.autogrid.grid.edit_button_in_view: true
-    f0ska.autogrid.grid.delete_button_in_grid: true
-    f0ska.autogrid.grid.delete_button_in_view: true
-    f0ska.autogrid.grid.delete_button_in_edit: true
+    f0ska.autogrid.button.view.display_in_grid: true
+    f0ska.autogrid.button.view.display_in_edit: true
+    f0ska.autogrid.button.edit.display_in_grid: true
+    f0ska.autogrid.button.edit.display_in_view: true
+    f0ska.autogrid.button.delete.display_in_grid: true
+    f0ska.autogrid.button.delete.display_in_view: true
+    f0ska.autogrid.button.delete.display_in_edit: true
 
     # Request parameters setting
     f0ska.autogrid.request.single_parameter_mode: false # Store all url parameters in single request parameter (base64).

@@ -10,15 +10,15 @@
 
 declare(strict_types=1);
 
-namespace F0ska\AutoGridBundle\Attribute\EntityField;
+namespace F0ska\AutoGridBundle\Attribute\Entity;
 
 use Attribute;
 use F0ska\AutoGridBundle\Attribute\Abstract\AbstractAttribute;
 
 #[Attribute]
-class ColumnHeaderClass extends AbstractAttribute
+class HasCustomAction extends AbstractAttribute
 {
-    public function __construct(string $value)
+    public function __construct(bool $value)
     {
         $this->value = $value;
     }

@@ -10,8 +10,8 @@
         {% endblock %}
 
         {% block autogrid_form_header %}
-            {% set btnClass = attributes.html_classes.theadBtn|default('btn-outline-secondary') %}
-            <thead class="{{ attributes.html_classes.thead|default('') }}">
+            {% set btnClass = attributes.html_class.thead_btn|default('btn-outline-secondary') %}
+            <thead class="{{ attributes.html_class.thead|default('') }}">
             <tr>
                 <td class="text-nowrap h4 align-middle ps-0 pe-0">
                     <div class="container-fluid">
@@ -23,7 +23,7 @@
                                         {{ 'f0ska.autogrid.button.back'|trans }}
                                     </a>
                                 {% endif %}
-                                {% if action is not same as 'create' and agRun(agIsAllowed, 'view') and attributes.view_button_in.edit %}
+                                {% if action is not same as 'create' and agRun(agIsAllowed, 'view') and attributes.button.view.display_in_edit %}
                                     <a class="btn btn-sm {{ btnClass }}"
                                        href="{{ agRun(agActionUrl, 'view', {'id': entity.id}) }}"
                                     >
@@ -46,7 +46,7 @@
                                     <i class="bi bi-save"></i>
                                     {{ 'f0ska.autogrid.button.submit'|trans }}
                                 </button>
-                                {% if action is not same as 'create' and agRun(agIsAllowed, 'delete') and attributes.delete_button_in.edit %}
+                                {% if action is not same as 'create' and agRun(agIsAllowed, 'delete') and attributes.button.delete.display_in_edit %}
                                     <a class="btn btn-sm btn-outline-danger"
                                        href="{{ agRun(agActionUrl, 'delete', {'id': entity.id}) }}"
                                        onclick="return confirm('{{ 'f0ska.autogrid.dialog.delete_confirm'|trans }}');"
@@ -64,13 +64,13 @@
         {% endblock %}
 
         {% block autogrid_form_footer %}
-            <tfoot class="{{ attributes.html_classes.tfoot|default('table-group-divider') }}">
+            <tfoot class="{{ attributes.html_class.tfoot|default('table-group-divider') }}">
             <tr>
                 <td class="ps-0 pe-0">
                     <div class="container-fluid">
                         <div class="row">
                             <div class="col text-end">
-                                <a class="btn btn-sm {{ attributes.html_classes.tfootBtn|default('btn-outline-secondary') }}"
+                                <a class="btn btn-sm {{ attributes.html_class.tfoot_btn|default('btn-outline-secondary') }}"
                                    href="#{{ attributes.container_id }}"
                                 ><i class="bi bi-chevron-up"></i></a>
                             </div>
@@ -82,7 +82,7 @@
         {% endblock %}
 
         {% block autogrid_form_body %}
-            <tbody class="{{ attributes.html_classes.tbody|default('table-group-divider') }}">
+            <tbody class="{{ attributes.html_class.tbody|default('table-group-divider') }}">
             <tr>
                 <td class="ps-0 pe-0">
                     {% block autogrid_form_form %}

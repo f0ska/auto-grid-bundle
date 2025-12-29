@@ -2,7 +2,7 @@
 {% block autogrid %}
     {{ include(attributes.template.grid.advanced_filter|default(agTemplate('grid.advanced_filter'))) }}
     {% set columnsCount = (fields|length) + (agRun(agIsAnyAllowed) ? 1 : 0) + (view.massActionFormView ? 1 : 0) %}
-    <table class="table caption-top {{ attributes.html_classes.table|default('') }}">
+    <table class="table caption-top {{ attributes.html_class.table|default('') }}">
         {% block autogrid_grid_caption %}
             {% if attributes.title is not empty %}
                 <caption class="text-center h4 text-secondary">
@@ -12,7 +12,7 @@
         {% endblock %}
 
         {% block autogrid_grid_header %}
-            <thead class="{{ attributes.html_classes.thead|default('') }}">
+            <thead class="{{ attributes.html_class.thead|default('') }}">
             <tr>
                 {{ include(attributes.template.grid.column_header_massaction|default(agTemplate('grid.column_header_massaction'))) }}
                 {% for field in fields %}
@@ -24,7 +24,7 @@
         {% endblock %}
 
         {% block autogrid_grid_footer %}
-            <tfoot class="{{ attributes.html_classes.tfoot|default('table-group-divider') }}">
+            <tfoot class="{{ attributes.html_class.tfoot|default('table-group-divider') }}">
             <tr>
                 <td colspan="{{ columnsCount }}" class="ps-0 pe-0">
                     <div class="container-fluid">
@@ -37,7 +37,7 @@
                             </div>
                             <div class="col col-3 text-end">
                                 {{ include(attributes.template.grid.grid_number_per_page|default(agTemplate('grid.grid_number_per_page'))) }}
-                                <a class="btn btn-sm {{ attributes.html_classes.tfootBtn|default('btn-outline-secondary') }}"
+                                <a class="btn btn-sm {{ attributes.html_class.tfoot_btn|default('btn-outline-secondary') }}"
                                    href="#{{ attributes.container_id }}"
                                 ><i class="bi bi-chevron-up"></i></a>
                             </div>
@@ -49,7 +49,7 @@
         {% endblock %}
 
         {% block autogrid_grid_body %}
-            <tbody class="{{ attributes.html_classes.tbody|default('table-group-divider') }}">
+            <tbody class="{{ attributes.html_class.tbody|default('table-group-divider') }}">
             {% if rows is empty %}
                 {% block autogrid_grid_body_empty %}
                     <tr>

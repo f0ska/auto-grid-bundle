@@ -16,7 +16,7 @@ use Attribute;
 use F0ska\AutoGridBundle\Attribute\Abstract\AbstractAttribute;
 
 #[Attribute]
-class HtmlClasses extends AbstractAttribute
+class HtmlClass extends AbstractAttribute
 {
     public function __construct(
         ?string $table = null,
@@ -28,7 +28,11 @@ class HtmlClasses extends AbstractAttribute
         ?string $tfootBtn = null,
         ?string $theadLink = null,
         ?string $theadLinkActive = null,
-        ?string $theadBtnActive = null
+        ?string $theadBtnActive = null,
+        ?string $actionColumn = null,
+        ?string $massActionColumn = null,
+        ?string $actionColumnHeader = null,
+        ?string $massActionColumnHeader = null
     ) {
         $this->value = array_filter(
             [
@@ -36,12 +40,16 @@ class HtmlClasses extends AbstractAttribute
                 'thead' => $thead,
                 'tfoot' => $tfoot,
                 'tbody' => $tbody,
-                'theadBtn' => $theadBtn,
-                'tbodyBtn' => $tbodyBtn,
-                'tfootBtn' => $tfootBtn,
-                'theadLink' => $theadLink,
-                'theadLinkActive' => $theadLinkActive,
-                'theadBtnActive' => $theadBtnActive,
+                'thead_btn' => $theadBtn,
+                'tbody_btn' => $tbodyBtn,
+                'tfoot_btn' => $tfootBtn,
+                'thead_link' => $theadLink,
+                'thead_link_active' => $theadLinkActive,
+                'thead_btn_active' => $theadBtnActive,
+                'action_column' => $actionColumn,
+                'mass_action_column' => $massActionColumn,
+                'action_column_header' => $actionColumnHeader,
+                'mass_action_column_header' => $massActionColumnHeader,
             ]
         );
     }
