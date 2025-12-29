@@ -13,13 +13,13 @@ declare(strict_types=1);
 namespace F0ska\AutoGridBundle\Attribute\Entity;
 
 use Attribute;
-use F0ska\AutoGridBundle\Attribute\Abstract\AbstractCustomRoute;
+use F0ska\AutoGridBundle\Attribute\Abstract\AbstractAttribute;
 
-#[Attribute]
-class RouteView extends AbstractCustomRoute
+#[Attribute(Attribute::TARGET_ALL | Attribute::IS_REPEATABLE)]
+class ButtonDisplay extends AbstractAttribute
 {
-    public function getCode(): string
+    public function __construct(string $buttonAction, array $allowedAtActions)
     {
-        return 'route.view';
+        $this->value[$buttonAction] = $allowedAtActions;
     }
 }

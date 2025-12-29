@@ -60,6 +60,7 @@ class Extension extends AbstractExtension
             new TwigFunction('agChoiceValues', $this->agChoiceValues(...)),
             new TwigFunction('agFieldValue', $this->agFieldValue(...)),
             new TwigFunction('agBinarySize', $this->agBinarySize(...)),
+            new TwigFunction('agTemplate', $this->agTemplate(...)),
         ];
     }
 
@@ -68,18 +69,19 @@ class Extension extends AbstractExtension
         return [
             new TwigFilter('agToInt', $this->agToInt(...)),
             new TwigFilter('agTruncate', $this->agTruncate(...)),
-            new TwigFilter('agTheme', $this->agTheme(...)),
         ];
     }
 
     /**
+     * @param AutoGrid $ui
      * @throws LoaderError
+     * @throws RenderException
      * @throws RuntimeError
      * @throws SyntaxError
      */
     public function agRender(AutoGrid $ui): void
     {
-        echo $this->twig->render($this->agTheme($ui->getTemplate()), $ui->getContext());
+        echo $this->twig->render($ui->getTemplate(), $ui->getContext());
     }
 
     public function agRun(Closure $agClosure, ...$arguments): mixed
@@ -100,9 +102,9 @@ class Extension extends AbstractExtension
             ->toString();
     }
 
-    public function agTheme(string $value): string
+    public function agTemplate(string $templateCode): string
     {
-        return str_replace('%theme%', $this->configurationService->getTheme(), $value);
+        return $this->configurationService->getTemplate($templateCode);
     }
 
     public function agChoiceLabels(mixed $values, FieldParameter $field): array

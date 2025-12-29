@@ -63,7 +63,7 @@ class EditAction extends AbstractAction
             return;
         }
 
-        $autoGrid->setTemplate($parameters->getTemplate('form'));
+        $autoGrid->setTemplate($parameters->getActionTemplate('form'));
         $autoGrid->setContext($parameters->render(['entity' => $entity, 'form' => $form->createView()]));
     }
 }

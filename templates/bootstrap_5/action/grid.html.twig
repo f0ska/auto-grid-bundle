@@ -1,6 +1,6 @@
-{% extends '%theme%/base.html.twig'|agTheme %}
+{% extends attributes.template.base|default(agTemplate('base')) %}
 {% block autogrid %}
-    {{ include('%theme%/grid/advanced_filter.html.twig'|agTheme) }}
+    {{ include(attributes.template.grid.advanced_filter|default(agTemplate('grid.advanced_filter'))) }}
     {% set columnsCount = (fields|length) + (agRun(agIsAnyAllowed) ? 1 : 0) + (view.massActionFormView ? 1 : 0) %}
     <table class="table caption-top {{ attributes.html_classes.table|default('') }}">
         {% block autogrid_grid_caption %}
@@ -14,11 +14,11 @@
         {% block autogrid_grid_header %}
             <thead class="{{ attributes.html_classes.thead|default('') }}">
             <tr>
-                {{ include('%theme%/grid/column_header_massaction.html.twig'|agTheme) }}
+                {{ include(attributes.template.grid.column_header_massaction|default(agTemplate('grid.column_header_massaction'))) }}
                 {% for field in fields %}
-                    {{ include('%theme%/grid/column_header.html.twig'|agTheme) }}
+                    {{ include(attributes.template.grid.column_header|default(agTemplate('grid.column_header'))) }}
                 {% endfor %}
-                {{ include('%theme%/grid/column_header_action.html.twig'|agTheme) }}
+                {{ include(attributes.template.grid.column_header_action|default(agTemplate('grid.column_header_action'))) }}
             </tr>
             </thead>
         {% endblock %}
@@ -33,10 +33,10 @@
                                 <b>{{ 'f0ska.autogrid.total'|trans }}: {{ view.pagination.count }}</b>
                             </div>
                             <div class="col col-6 text-center">
-                                {{ include('%theme%/grid/grid_pager.html.twig'|agTheme) }}
+                                {{ include(attributes.template.grid.grid_pagiantion|default(agTemplate('grid.grid_pagiantion'))) }}
                             </div>
                             <div class="col col-3 text-end">
-                                {{ include('%theme%/grid/grid_number_per_page.html.twig'|agTheme) }}
+                                {{ include(attributes.template.grid.grid_number_per_page|default(agTemplate('grid.grid_number_per_page'))) }}
                                 <a class="btn btn-sm {{ attributes.html_classes.tfootBtn|default('btn-outline-secondary') }}"
                                    href="#{{ attributes.container_id }}"
                                 ><i class="bi bi-chevron-up"></i></a>
@@ -61,12 +61,12 @@
             {% endif %}
             {% for entity in rows %}
                 {% block autogrid_grid_row %}
-                    <tr class="{{ include(attributes.row_class_template|default('%theme%/grid/row_class.html.twig'|agTheme)) }}">
-                        {{ include('%theme%/grid/column_value_massaction.html.twig'|agTheme) }}
+                    <tr class="{{ include(attributes.template.grid.row_class|default(agTemplate('grid.row_class'))) }}">
+                        {{ include(attributes.template.grid.column_value_massaction|default(agTemplate('grid.column_value_massaction'))) }}
                         {% for field in fields %}
-                            {{ include('%theme%/grid/column_value.html.twig'|agTheme) }}
+                            {{ include(attributes.template.grid.column_value|default(agTemplate('grid.column_value'))) }}
                         {% endfor %}
-                        {{ include('%theme%/grid/column_value_action.html.twig'|agTheme) }}
+                        {{ include(attributes.template.grid.column_value_action|default(agTemplate('grid.column_value_action'))) }}
                     </tr>
                 {% endblock %}
             {% endfor %}

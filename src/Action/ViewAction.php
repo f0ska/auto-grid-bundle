@@ -35,7 +35,7 @@ class ViewAction extends AbstractAction
         $event = new ViewEvent($entity, $parameters);
         $this->dispatcher->dispatch($event, $event::EVENT_NAME);
         $this->dispatcher->dispatch($event, $event::EVENT_NAME . '.' . $autoGrid->getId());
-        $autoGrid->setTemplate($parameters->getTemplate('view'));
+        $autoGrid->setTemplate($parameters->getActionTemplate('view'));
         $autoGrid->setContext($parameters->render(['entity' => $entity]));
     }
 }

@@ -1,7 +1,7 @@
-{% extends '%theme%/base.html.twig'|agTheme %}
+{% extends attributes.template.base|default(agTemplate('base')) %}
 {% block autogrid %}
     <table class="table caption-top">
-        {% block autogrid_form_caption %}
+        {% block autogrid_view_caption %}
             {% if attributes.title is not empty %}
                 <caption class="text-center h4 text-secondary">
                     {{ attributes.title|trans }}
@@ -9,11 +9,11 @@
             {% endif %}
         {% endblock %}
 
-        {% block autogrid_form_header %}
+        {% block autogrid_view_header %}
             {% set btnClass = attributes.html_classes.theadBtn|default('btn-outline-secondary') %}
             <thead class="{{ attributes.html_classes.thead|default('') }}">
             <tr>
-                <td class="text-nowrap h4 align-middle ps-0 pe-0">
+                <td class="text-nowrap h4 align-middle ps-0 pe-0" colspan="2">
                     <div class="container-fluid">
                         <div class="row">
                             <div class="col col-4 text-start">
@@ -23,30 +23,21 @@
                                         {{ 'f0ska.autogrid.button.back'|trans }}
                                     </a>
                                 {% endif %}
-                                {% if action is not same as 'create' and agRun(agIsAllowed, 'view') and attributes.view_button_in.edit %}
-                                    <a class="btn btn-sm {{ btnClass }}"
-                                       href="{{ agRun(agActionUrl, 'view', {'id': entity.id}) }}"
-                                    >
-                                        <i class="bi bi-eye"></i>
-                                        {{ 'f0ska.autogrid.button.view'|trans }}
-                                    </a>
-                                {% endif %}
                             </div>
                             <div class="col col-4 text-center">
                             <span class="badge rounded-pill text-bg-light fw-normal">
                                 {{ ('f0ska.autogrid.action.' ~ action)|trans }}
-                                {% if action is not same as 'create' %}
-                                    <i class="bi bi-hash"></i>{{ entity.id }}
-                                {% endif %}
+                                <i class="bi bi-hash"></i>{{ entity.id }}
                             </span>
                             </div>
                             <div class="col col-4 text-end">
-                                <button class="btn btn-sm btn-outline-secondary" type="submit"
-                                        form="{{ form.vars.attr.id }}">
-                                    <i class="bi bi-save"></i>
-                                    {{ 'f0ska.autogrid.button.submit'|trans }}
-                                </button>
-                                {% if action is not same as 'create' and agRun(agIsAllowed, 'delete') and attributes.delete_button_in.edit %}
+                                {% if agRun(agIsAllowed, 'edit') and attributes.edit_button_in.view %}
+                                    <a class="btn btn-sm btn-outline-secondary" href="{{ agRun(agActionUrl, 'edit') }}">
+                                        <i class="bi bi-pencil-square"></i>
+                                        {{ 'f0ska.autogrid.button.modify'|trans }}
+                                    </a>
+                                {% endif %}
+                                {% if agRun(agIsAllowed, 'delete') and attributes.delete_button_in.grid %}
                                     <a class="btn btn-sm btn-outline-danger"
                                        href="{{ agRun(agActionUrl, 'delete', {'id': entity.id}) }}"
                                        onclick="return confirm('{{ 'f0ska.autogrid.dialog.delete_confirm'|trans }}');"
@@ -63,10 +54,10 @@
             </thead>
         {% endblock %}
 
-        {% block autogrid_form_footer %}
+        {% block autogrid_view_footer %}
             <tfoot class="{{ attributes.html_classes.tfoot|default('table-group-divider') }}">
             <tr>
-                <td class="ps-0 pe-0">
+                <td colspan="2" class="ps-0 pe-0">
                     <div class="container-fluid">
                         <div class="row">
                             <div class="col text-end">
@@ -81,28 +72,28 @@
             </tfoot>
         {% endblock %}
 
-        {% block autogrid_form_body %}
+        {% block autogrid_view_body %}
             <tbody class="{{ attributes.html_classes.tbody|default('table-group-divider') }}">
-            <tr>
-                <td class="ps-0 pe-0">
-                    {% block autogrid_form_form %}
-                        {% if view.formThemes is not empty %}
-                            {% form_theme form with view.formThemes %}
-                        {% endif %}
-                        {% if view.fieldset.defined %}
-                            {{ include('%theme%/fieldset/form.html.twig'|agTheme) }}
-                        {% else %}
-                            <div class="container-fluid">
-                                <div class="row">
-                                    <div class="col">
-                                        {{ form(form) }}
-                                    </div>
-                                </div>
-                            </div>
-                        {% endif %}
-                    {% endblock %}
-                </td>
-            </tr>
+            {% if view.fieldset.defined %}
+                <tr>
+                    <td colspan="2" class="ps-0 pe-0">
+                        {{ include(attributes.template.fieldset.view|default(agTemplate('fieldset.view'))) }}
+                    </td>
+                </tr>
+            {% else %}
+                {% for field in fields %}
+                    {% if field.permissions.view %}
+                        <tr>
+                            <th class="col col-4 text-end table-light">
+                                {{ field.attributes.label|trans }}
+                            </th>
+                            <td class="col col-8">
+                                {{ include(field.view.template) }}
+                            </td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
             </tbody>
         {% endblock %}
     </table>

@@ -19,7 +19,7 @@
                 ><i class="bi bi-trash"></i></a>
             {% endif %}
             {% if field.attributes.action_template is defined %}
-                {{ include(field.attributes.action_template|agTheme) }}
+                {{ include(field.attributes.action_template) }}
             {% endif %}
         </div>
     </td>

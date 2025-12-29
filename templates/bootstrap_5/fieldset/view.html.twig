@@ -14,7 +14,7 @@
                                     {{ field.attributes.label|trans }}
                                 </th>
                                 <td class="col col-8 {{ loop.last ? 'border-bottom-0' }}">
-                                    {{ include(field.view.template|agTheme) }}
+                                    {{ include(field.view.template) }}
                                 </td>
                             </tr>
                         {% endfor %}
@@ -32,7 +32,7 @@
                                 {{ field.attributes.label|trans }}
                             </th>
                             <td class="col col-8 {{ loop.last ? 'border-bottom-0' }}">
-                                {{ include(field.view.template|agTheme) }}
+                                {{ include(field.view.template) }}
                             </td>
                         </tr>
                     {% endfor %}

@@ -26,14 +26,18 @@ class ConfigurationService
         $this->requestStack = $requestStack;
     }
 
-    public function getTemplate(string $action): string
+    public function getTemplate(string $templateCode): string
     {
-        return $this->params->get('f0ska.autogrid.template.action.' . $action);
+        $template = $this->params->get('f0ska.autogrid.template.' . $templateCode);
+        if (str_starts_with($template, '@')) {
+            return $template;
+        }
+        return sprintf('%s/%s', $this->getTheme(), $template);
     }
 
     public function getFieldTemplate(string $type): string
     {
-        return $this->params->get('f0ska.autogrid.template.field.' . $type);
+        return $this->getTemplate('field.' . $type);
     }
 
     public function getFieldFormat(string $type): string

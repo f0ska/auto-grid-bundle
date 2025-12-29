@@ -1,5 +1,5 @@
 {% if field.permissions.grid %}
     <td class="{{ field.attributes.column_value_class|default('align-middle') }}">
-        {{ include(field.view.template|agTheme) }}
+        {{ include(field.view.template) }}
     </td>
 {% endif %}

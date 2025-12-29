@@ -36,7 +36,7 @@ class GridAction extends AbstractAction
         $parameters->initPagination($count);
         $queryRows = $this->gridQueryBuilder->buildGridQuery($parameters);
 
-        $autoGrid->setTemplate($parameters->getTemplate('grid'));
+        $autoGrid->setTemplate($parameters->getActionTemplate('grid'));
         $autoGrid->setContext(
             $parameters->render(['rows' => $queryRows->getResult()])
         );

@@ -1,13 +1,13 @@
 {% if field.permissions.grid %}
     <th class="{{ field.attributes.column_header_class|default('align-middle') }}">
         {% if (field.canSort) %}
-            {{ include('%theme%/grid/column_header_sort.html.twig'|agTheme) }}
+            {{ include(attributes.template.grid.column_header_sort|default(agTemplate('grid.column_header_sort'))) }}
         {% endif %}
 
         {{ field.attributes.label|trans }}
 
         {% if (field.canFilter and agRun(agIsAllowed, 'filter')) %}
-            {{ include('%theme%/grid/column_header_filter.html.twig'|agTheme) }}
+            {{ include(attributes.template.grid.column_header_filter|default(agTemplate('grid.column_header_filter'))) }}
         {% endif %}
     </th>
 {% endif %}

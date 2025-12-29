@@ -15,11 +15,19 @@ namespace F0ska\AutoGridBundle\Attribute\Entity;
 use Attribute;
 use F0ska\AutoGridBundle\Attribute\Abstract\AbstractAttribute;
 
-#[Attribute]
-class GridTemplate extends AbstractAttribute
+#[Attribute(Attribute::TARGET_ALL | Attribute::IS_REPEATABLE)]
+class Template extends AbstractAttribute
 {
-    public function __construct(string $value)
+    private string $code;
+
+    public function __construct(string $code, string $templatePath)
     {
-        $this->value = $value;
+        $this->code = $code;
+        $this->value = $templatePath;
+    }
+
+    public function getCode(): string
+    {
+        return 'template.' . $this->code;
     }
 }

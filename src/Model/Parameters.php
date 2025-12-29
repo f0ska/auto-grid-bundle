@@ -70,9 +70,11 @@ class Parameters
         $this->view->pagination['count'] = $totalResults;
     }
 
-    public function getTemplate(string $code): string
+    public function getActionTemplate(string $code): string
     {
-        return $this->attributes[$code . '_template'] ?? $this->parametersService->getTemplate($code);
+        return $this->attributes['template']['action'][$code] ?? $this->parametersService->getTemplate(
+            'action.' . $code
+        );
     }
 
     public function render(array $parameters = []): array

@@ -1,24 +1,47 @@
 parameters:
-    # Main theme and templates.
+    # Main theme.
     f0ska.autogrid.template.theme: '@@F0skaAutoGrid/bootstrap_5'
     f0ska.autogrid.template.form_themes: [ 'bootstrap_5_layout.html.twig' ]
-    f0ska.autogrid.template.action.grid: '%%theme%%/grid.html.twig'
-    f0ska.autogrid.template.action.form: '%%theme%%/form.html.twig'
-    f0ska.autogrid.template.action.view: '%%theme%%/view.html.twig'
-    f0ska.autogrid.template.action.error: '%%theme%%/error.html.twig'
+
+    # Base templates
+    f0ska.autogrid.template.base: 'base.html.twig'
+
+    # Action templates
+    f0ska.autogrid.template.action.grid: 'action/grid.html.twig'
+    f0ska.autogrid.template.action.form: 'action/form.html.twig'
+    f0ska.autogrid.template.action.view: 'action/view.html.twig'
+    f0ska.autogrid.template.action.error: 'action/error.html.twig'
 
     # Field type templates.
-    f0ska.autogrid.template.field.debug: '%%theme%%/field/debug.html.twig'
-    f0ska.autogrid.template.field.text: '%%theme%%/field/text.html.twig'
-    f0ska.autogrid.template.field.date: '%%theme%%/field/date.html.twig'
-    f0ska.autogrid.template.field.choice: '%%theme%%/field/choice.html.twig'
-    f0ska.autogrid.template.field.boolean: '%%theme%%/field/boolean.html.twig'
-    f0ska.autogrid.template.field.simple_array: '%%theme%%/field/array.html.twig'
-    f0ska.autogrid.template.field.json: '%%theme%%/field/json.html.twig'
-    f0ska.autogrid.template.field.ascii_string: '%%theme%%/field/ascii.html.twig'
-    f0ska.autogrid.template.field.binary: '%%theme%%/field/binary.html.twig'
+    f0ska.autogrid.template.field.debug: 'field/debug.html.twig'
+    f0ska.autogrid.template.field.text: 'field/text.html.twig'
+    f0ska.autogrid.template.field.date: 'field/date.html.twig'
+    f0ska.autogrid.template.field.choice: 'field/choice.html.twig'
+    f0ska.autogrid.template.field.boolean: 'field/boolean.html.twig'
+    f0ska.autogrid.template.field.simple_array: 'field/array.html.twig'
+    f0ska.autogrid.template.field.json: 'field/json.html.twig'
+    f0ska.autogrid.template.field.ascii_string: 'field/ascii.html.twig'
+    f0ska.autogrid.template.field.binary: 'field/binary.html.twig'
 
-    # Date formats for data view (not for a form field)
+    # Fieldset templates.
+    f0ska.autogrid.template.fieldset.view: 'fieldset/view.html.twig'
+    f0ska.autogrid.template.fieldset.form: 'fieldset/form.html.twig'
+
+    # Grid parts.
+    f0ska.autogrid.template.grid.advanced_filter: 'grid/advanced_filter.html.twig'
+    f0ska.autogrid.template.grid.column_header: 'grid/column_header.html.twig'
+    f0ska.autogrid.template.grid.column_header_action: 'grid/column_header_action.html.twig'
+    f0ska.autogrid.template.grid.column_header_filter: 'grid/column_header_filter.html.twig'
+    f0ska.autogrid.template.grid.column_header_massaction: 'grid/column_header_massaction.html.twig'
+    f0ska.autogrid.template.grid.column_header_sort: 'grid/column_header_sort.html.twig'
+    f0ska.autogrid.template.grid.column_value: 'grid/column_value.html.twig'
+    f0ska.autogrid.template.grid.column_value_action: 'grid/column_value_action.html.twig'
+    f0ska.autogrid.template.grid.column_value_massaction: 'grid/column_value_massaction.html.twig'
+    f0ska.autogrid.template.grid.grid_number_per_page: 'grid/grid_number_per_page.html.twig'
+    f0ska.autogrid.template.grid.grid_pagiantion: 'grid/grid_pagiantion.html.twig'
+    f0ska.autogrid.template.grid.row_class: 'grid/row_class.html.twig'
+
+    # Date formats for the data view (not for a form field)
     f0ska.autogrid.view.field.format.date: 'Y-m-d'
     f0ska.autogrid.view.field.format.time: 'H:i'
     f0ska.autogrid.view.field.format.datetime: 'Y-m-d H:i'

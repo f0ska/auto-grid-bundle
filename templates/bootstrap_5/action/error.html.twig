@@ -1,4 +1,4 @@
-{% extends '%theme%/base.html.twig'|agTheme %}
+{% extends attributes.template.base|default(agTemplate('base')) %}
 {% block autogrid %}
 <div class="alert alert-danger text-center h4 p-4" role="alert">
     <i class="bi bi-exclamation-triangle"></i>

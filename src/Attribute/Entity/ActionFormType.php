@@ -16,7 +16,7 @@ use Attribute;
 use F0ska\AutoGridBundle\Attribute\Abstract\AbstractAttribute;
 
 #[Attribute(Attribute::TARGET_ALL | Attribute::IS_REPEATABLE)]
-class FormType extends AbstractAttribute
+class ActionFormType extends AbstractAttribute
 {
     /**
      * @param string $formType
@@ -28,5 +28,10 @@ class FormType extends AbstractAttribute
         foreach ($actions as $action) {
             $this->value[$action] = $formType;
         }
+    }
+
+    public function getCode(): string
+    {
+        return 'form_type';
     }
 }

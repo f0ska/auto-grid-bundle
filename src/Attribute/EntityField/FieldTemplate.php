@@ -16,10 +16,10 @@ use Attribute;
 use F0ska\AutoGridBundle\Attribute\Abstract\AbstractAttribute;
 
 #[Attribute]
-class ActionTemplate extends AbstractAttribute
+class FieldTemplate extends AbstractAttribute
 {
-    public function __construct(string $value)
+    public function __construct(string $templatePath)
     {
-        $this->value = $value;
+        $this->value = $templatePath;
     }
 }
