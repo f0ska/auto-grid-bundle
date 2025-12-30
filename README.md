@@ -36,6 +36,8 @@ public function myAction(AutoGridFactory $autoGridFactory): Response
 
 **For more advanced usage, refer to the [documentation](./docs/index.md).**
 
+**For more examples, check the [demo bundle](https://github.com/f0ska/auto-grid-test-bundle).**
+
 Technical notice
 ----------------
 AutoGrid is built for **Symfony 6+** and **PHP 8.1+**. It uses the **Bootstrap 5** theme and icons to display content nicely.
