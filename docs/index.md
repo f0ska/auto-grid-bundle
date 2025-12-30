@@ -19,6 +19,8 @@ Twig template example:
 ```
 This is all that is needed to create a fully functional grid.
 
+**You can find more examples in the [demo bundle](https://github.com/f0ska/auto-grid-test-bundle).**
+
 ![Default Bootstrap5 AutoGrid look](./media/grid.png)
 
 What AutoGrid does by default
