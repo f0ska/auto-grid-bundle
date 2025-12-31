@@ -14,8 +14,6 @@
         "symfony/security-bundle": "*",
         "symfony/form": "*",
         "symfony/validator": "*",
-        "symfony/twig-bundle": "*",
-        "symfony/asset-mapper": "*",
-        "symfony/mime": "*"
+        "symfony/twig-bundle": "*"
     }
 }
