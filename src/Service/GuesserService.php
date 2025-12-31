@@ -95,9 +95,19 @@ class GuesserService
         switch ($field->fieldMapping->type) {
             case Types::JSON:
             case LegacyService::TYPES_OBJECT:
+            case LegacyService::TYPES_JSONB:
+            case LegacyService::TYPES_JSON_OBJECT:
+            case LegacyService::TYPES_JSONB_OBJECT:
                 $field->attributes['form']['type'] = TextareaType::class;
                 $field->attributes['form']['transformer'] = $this->getJsonTransformer(
-                    $field->fieldMapping->type === LegacyService::TYPES_OBJECT
+                    in_array(
+                        $field->fieldMapping->type,
+                        [
+                            LegacyService::TYPES_OBJECT,
+                            LegacyService::TYPES_JSON_OBJECT,
+                            LegacyService::TYPES_JSONB_OBJECT,
+                        ]
+                    )
                 );
                 break;
             case LegacyService::TYPES_DATE_POINT:
