@@ -26,6 +26,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\EnumType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TimeType;
@@ -156,6 +157,10 @@ class GuesserService
 
         if ($field->fieldMapping->scale > 0) {
             $field->attributes['form']['options']['attr']['step'] = 0.1 ** $field->fieldMapping->scale;
+        }
+
+        if ($field->attributes['form']['type'] === NumberType::class) {
+            $field->attributes['form']['options']['html5'] = true;
         }
 
         $required = $field->fieldMapping->nullable === false && $field->fieldMapping->type !== 'boolean';
