@@ -46,6 +46,8 @@ class ViewService
         Types::TIME_MUTABLE => 'time',
         Types::TIME_IMMUTABLE => 'time',
         LegacyService::TYPES_DATE_POINT => 'datetime',
+        LegacyService::TYPES_DAY_POINT => 'date',
+        LegacyService::TYPES_TIME_POINT => 'time',
     ];
     private array $viewForms = [];
     private FormBuilder $formBuilder;

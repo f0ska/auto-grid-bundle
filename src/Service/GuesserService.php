@@ -24,9 +24,11 @@ use Symfony\Component\Form\Exception\TransformationFailedException;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\Form\FormRegistryInterface;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -100,6 +102,14 @@ class GuesserService
                 break;
             case LegacyService::TYPES_DATE_POINT:
                 $field->attributes['form']['type'] = DateTimeType::class;
+                $field->attributes['form']['transformer'] = $this->getDatePointTransformer();
+                break;
+            case LegacyService::TYPES_DAY_POINT:
+                $field->attributes['form']['type'] = DateType::class;
+                $field->attributes['form']['transformer'] = $this->getDatePointTransformer();
+                break;
+            case LegacyService::TYPES_TIME_POINT:
+                $field->attributes['form']['type'] = TimeType::class;
                 $field->attributes['form']['transformer'] = $this->getDatePointTransformer();
                 break;
         }

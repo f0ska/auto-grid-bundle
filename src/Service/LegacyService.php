@@ -14,7 +14,9 @@ namespace F0ska\AutoGridBundle\Service;
 
 class LegacyService
 {
-    public const TYPES_ARRAY = 'array';
-    public const TYPES_OBJECT = 'object';
+    public const TYPES_ARRAY      = 'array';
+    public const TYPES_OBJECT     = 'object';
     public const TYPES_DATE_POINT = 'date_point';
+    public const TYPES_DAY_POINT  = 'day_point';
+    public const TYPES_TIME_POINT = 'time_point';
 }
