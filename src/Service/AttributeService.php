@@ -15,6 +15,7 @@ namespace F0ska\AutoGridBundle\Service;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use F0ska\AutoGridBundle\Model\FieldParameter;
 use F0ska\AutoGridBundle\Model\Parameters;
+use F0ska\AutoGridBundle\Model\Permission;
 
 use function Symfony\Component\String\u;
 
@@ -190,6 +191,13 @@ class AttributeService
             if ($value !== null && !isset($field->{$key})) {
                 $field->attributes[$key] = $value;
             }
+        }
+
+        if ($field->fieldMapping->notInsertable) {
+            $field->attributes['permission']['action']['create'] = (new Permission())->setAllowed(false);
+        }
+        if ($field->fieldMapping->notUpdatable) {
+            $field->attributes['permission']['action']['edit'] = (new Permission())->setAllowed(false);
         }
 
         $field->canSort = $field->attributes['can_sort'] ?? $hasIndex;
