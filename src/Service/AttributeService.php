@@ -15,7 +15,6 @@ namespace F0ska\AutoGridBundle\Service;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use F0ska\AutoGridBundle\Model\FieldParameter;
 use F0ska\AutoGridBundle\Model\Parameters;
-use F0ska\AutoGridBundle\Model\Permission;
 
 use function Symfony\Component\String\u;
 
@@ -57,8 +56,8 @@ class AttributeService
             'entity' => $metadata->rootEntityName,
         ];
 
-        $parameters->attributes = $this->metaDataService->getEntityAttributes($agId) + $default;
         $parameters->permissions = $this->permissionService->getEntityActionPermissions($agId);
+        $parameters->attributes = $this->metaDataService->getEntityAttributes($agId) + $default;
 
         $buttons = $this->configuration->getDefaultButtonsPositions();
         foreach ($buttons as $button => $positions) {
@@ -89,8 +88,8 @@ class AttributeService
         $this->initFields($parameters);
         $this->initAssociations($parameters);
         foreach ($parameters->fields as $field) {
-            $this->buildFieldAttributes($field, $agId);
             $this->buildFieldPermissions($field, $agId);
+            $this->buildFieldAttributes($field, $agId);
         }
         ksort($parameters->fields);
         $parameters->fields = array_combine(
@@ -194,10 +193,10 @@ class AttributeService
         }
 
         if ($field->fieldMapping->notInsertable) {
-            $field->attributes['permission']['action']['create'] = (new Permission())->setAllowed(false);
+            $field->permissions['create'] = false;
         }
         if ($field->fieldMapping->notUpdatable) {
-            $field->attributes['permission']['action']['edit'] = (new Permission())->setAllowed(false);
+            $field->permissions['edit'] = false;
         }
 
         $field->canSort = $field->attributes['can_sort'] ?? $hasIndex;
