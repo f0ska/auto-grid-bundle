@@ -81,6 +81,11 @@ $autoGrid = $autoGridFactory->create(
 );
 ```
 
+### `customization`
+
+This argument can be used to provide your specific parameters to your own [customizations](./customization.md).
+This parameter is not used by AutoGrid natively.
+
 Check documentation for more possibilities
 ------------------------------------------
 

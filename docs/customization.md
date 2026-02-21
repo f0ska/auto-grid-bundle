@@ -12,11 +12,20 @@ You can not only provide custom templates and form
 but also add new attributes, actions and action parameters to AutoGrid.
 See [services.yaml](../config/services.yaml) file to understand how to do this.
 
+Possible scenarios:
+
 - **Attributes**: implement the [AttributeInterface](../src/Attribute/AttributeInterface.php)
 - **Actions**: implement the [ActionInterface](../src/Action/ActionInterface.php)
   and add your actions to the `autogrid.action` tag, making them public.
 - **Action parameters**: implement the [ActionParameterInterface](../src/ActionParameter/ActionParameterInterface.php)
   and add your actions to the `autogrid.action.parameter` tag, making them public.
+- **Customization Services**: implement the [CustomizationInterface](../src/Customization/CustomizationInterface.php)
+  and add your customization services to the `autogrid.customization` tag, making them public.
+  It allows you to impact directly to AutoGrid internal parameters.
+  You can find `customization` array parameter in [Parameters](../src/Model/Parameters.php)
+  and [FieldParameter](../src/Model/FieldParameter.php)
+  models, and also as an optional argument for [AutoGridFactory](../src/Factory/AutoGridFactory.php):
+  they provided to keep your customization data if needed.
 
 ## Events
 
