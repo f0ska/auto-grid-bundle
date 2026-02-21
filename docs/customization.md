@@ -21,11 +21,10 @@ Possible scenarios:
   and add your actions to the `autogrid.action.parameter` tag, making them public.
 - **Customization Services**: implement the [CustomizationInterface](../src/Customization/CustomizationInterface.php)
   and add your customization services to the `autogrid.customization` tag, making them public.
-  It allows you to impact directly to AutoGrid internal parameters.
-  You can find `customization` array parameter in [Parameters](../src/Model/Parameters.php)
-  and [FieldParameter](../src/Model/FieldParameter.php)
-  models, and also as an optional argument for [AutoGridFactory](../src/Factory/AutoGridFactory.php):
-  they provided to keep your customization data if needed.
+  It allows you to impact AutoGrid internal parameters directly.
+  You can use the `customization` array parameter within the [Parameters](../src/Model/Parameters.php)
+  and [FieldParameter](../src/Model/FieldParameter.php) models, as well as pass an optional `customization` argument
+  to the [AutoGridFactory](../src/Factory/AutoGridFactory.php) to persist your customization data if needed.
 
 ## Events
 
