@@ -30,6 +30,7 @@ class FieldParameter
     public array $permissions = [];
     public array $view = [];
     public array $attributes = [];
+    public array $customization = [];
 
     public function __construct(array $initialData)
     {

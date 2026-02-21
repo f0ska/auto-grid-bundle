@@ -32,6 +32,7 @@ class AutoGrid
     private array $initialActionParameters = [];
     private ?string $routePrefix = null;
     private array $routeParameters = [];
+    private array $customizationParameters = [];
 
     public function __construct(string $agId)
     {
@@ -140,5 +141,15 @@ class AutoGrid
     public function getRouteParameters(): array
     {
         return $this->routeParameters;
+    }
+
+    public function getCustomizationParameters(): array
+    {
+        return $this->customizationParameters;
+    }
+
+    public function setCustomizationParameters(array $customizationParameters): void
+    {
+        $this->customizationParameters = $customizationParameters;
     }
 }

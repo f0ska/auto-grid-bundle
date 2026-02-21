@@ -45,6 +45,7 @@ class AutoGridFactory
      * @param array<string, int|string|array> $initialParameters
      * @param string|null $routePrefix
      * @param array<string, int|string> $routeParameters
+     * @param array $customization
      * @return AutoGrid
      */
     public function create(
@@ -55,7 +56,8 @@ class AutoGridFactory
         ?string $initialAction = null,
         array $initialParameters = [],
         ?string $routePrefix = null,
-        array $routeParameters = []
+        array $routeParameters = [],
+        array $customization = []
     ): AutoGrid {
         $agId = $this->metaDataService->add($entityClass, $gridId);
         $autoGrid = new AutoGrid($agId);
@@ -65,6 +67,7 @@ class AutoGridFactory
         $autoGrid->setInitialParameters($initialParameters);
         $autoGrid->setRoutePrefix($routePrefix);
         $autoGrid->setRouteParameters($routeParameters);
+        $autoGrid->setCustomizationParameters($customization);
         $this->requestService->processRequest($autoGrid);
         return $autoGrid;
     }

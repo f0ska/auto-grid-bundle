@@ -23,19 +23,22 @@ class ActionService
     private ActionListService $actionList;
     private ActionParametersListService $actionParametersList;
     private ParametersService $parametersService;
+    private CustomizationService $customizationService;
 
     public function __construct(
         AttributeService $attributeService,
         ViewService $viewService,
         ActionListService $actionList,
         ActionParametersListService $actionParametersList,
-        ParametersService $parametersService
+        ParametersService $parametersService,
+        CustomizationService $customizationService
     ) {
         $this->attributeService = $attributeService;
         $this->viewService = $viewService;
         $this->actionList = $actionList;
         $this->actionParametersList = $actionParametersList;
         $this->parametersService = $parametersService;
+        $this->customizationService = $customizationService;
     }
 
     public function executeAction(
@@ -87,7 +90,9 @@ class ActionService
         }
 
         $this->viewService->prepareView($parameters);
+
         try {
+            $this->customizationService->executeCustomizations($autoGrid, $parameters);
             $this->actionList->getAction($action)->execute($autoGrid, $parameters);
         } catch (ActionException $exception) {
             $parameters->message = $exception->getMessage();

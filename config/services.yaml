@@ -46,3 +46,9 @@ services:
         lazy: true
         arguments:
             $actions: !tagged_iterator 'autogrid.action'
+
+    F0ska\AutoGridBundle\Service\CustomizationService:
+        autowire: true
+        lazy: true
+        arguments:
+            $customizations: !tagged_iterator { tag: 'autogrid.customization', default_priority_method: getPriority }

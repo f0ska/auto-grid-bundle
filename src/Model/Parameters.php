@@ -29,6 +29,7 @@ class Parameters
     public array $query;
     public ?string $message = null;
     public ViewParameter $view;
+    public array $customization = [];
 
     public function __construct(array $initial, ParametersService $parametersService)
     {
