@@ -54,7 +54,7 @@ $autoGrid2 = $autoGridFactory->create(
 
 You can also predefine initial filters or order, which can be changed or reset by the user.
 If you need persistent filters, use the`queryExpression` argument.
-For persistent order, refer to the [Attributes documentation](./attributes.md).
+For default order, refer to the [Attributes documentation](./attributes.md).
 
 ```php
 $autoGrid = $autoGridFactory->create(
