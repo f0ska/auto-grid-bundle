@@ -53,10 +53,10 @@ public function myAction(AutoGridFactory $factory): Response
 
 * **[Full Documentation](./docs/index.md)**
   * [Bundle Installation](./docs/installation.md)
-  * [Optional Factory Arguments](./optional-factory-arguments.md)
-  * [Attributes](./attributes.md)
-  * [Global Configuration](./global-configuration.md)
-  * [Customization](./customization.md)
+  * [Optional Factory Arguments](./docs/optional-factory-arguments.md)
+  * [Attributes](./docs/attributes.md)
+  * [Global Configuration](./docs/global-configuration.md)
+  * [Customization](./docs/customization.md)
 * **[Demo Bundle](https://github.com/f0ska/auto-grid-test-bundle)**
 
 ## ℹ️ Technical notice
