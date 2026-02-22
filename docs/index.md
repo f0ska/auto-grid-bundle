@@ -7,15 +7,16 @@ use F0ska\AutoGridBundle\Factory\AutoGridFactory;
 
 ...
 
-public function myAction(AutoGridFactory $autoGridFactory): Response
+#[Route('/basic-example')]
+public function myAction(AutoGridFactory $factory): Response
 {
-    $autoGrid = $autoGridFactory->create(MyEntity::class);
-    return $autoGrid->getResponse() ?? $this->render('my-template.html.twig', ['autoGrid' => $autoGrid]);
+    $grid = $factory->create(MyEntity::class);
+    return $grid->getResponse() ?? $this->render('my-template.html.twig', ['grid' => $grid]);
 }
 ```
 Twig template example:
 ```html
-{{ agRender(autoGrid) }}
+{{ agRender(grid) }}
 ```
 This is all that is needed to create a fully functional grid.
 
