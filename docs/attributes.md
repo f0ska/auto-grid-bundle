@@ -1,3 +1,5 @@
+[Index](./index.md) | [Installation](./installation.md) | [Configuration](./global-configuration.md) | **Attributes** | [Optional Factory Arguments](./optional-factory-arguments.md) | [Customization](./customization.md)
+
 Attributes
 ==========
 Using attributes is a primary way to customize **AutoGrid**.
@@ -47,7 +49,7 @@ class DemoOne
 | [Template](../src/Attribute/Entity/Template.php)                       | Allows overriding any default template.                                                                                                                                                                                                                                                                                                                                                        |
 | [Title](../src/Attribute/Entity/Title.php)                             | Sets the title for your entity.                                                                                                                                                                                                                                                                                                                                                                |
 
-### Entity access attributes
+## Entity access attributes
 
 | Attribute                                                                            | Description                                                                        |
 |--------------------------------------------------------------------------------------|------------------------------------------------------------------------------------|
@@ -78,7 +80,7 @@ class DemoOne
 | [ValuePrefix](../src/Attribute/EntityField/ValuePrefix.php)         | Adds a prefix to displayed values.                                                                                                   |
 | [ValueSuffix](../src/Attribute/EntityField/ValueSuffix.php)         | Adds a suffix to displayed values.                                                                                                   |
 
-### Entity property access attributes
+## Entity property access attributes
 
 | Attribute                                              | Description                                                                             |
 |--------------------------------------------------------|-----------------------------------------------------------------------------------------|
@@ -86,6 +88,8 @@ class DemoOne
 | [Forbid](../src/Attribute/Permission/Forbid.php)       | Disallows access to this field for specific actions. A role can be provided optionally. |
 | [AllowAll](../src/Attribute/Permission/AllowAll.php)   | Allows access to this field for all actions. A role can be provided optionally.         |
 | [ForbidAll](../src/Attribute/Permission/ForbidAll.php) | Disallows access to this field for all actions. A role can be provided optionally.      |
+
+---
 
 Check documentation for more possibilities
 ------------------------------------------

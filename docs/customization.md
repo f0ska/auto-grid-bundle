@@ -1,3 +1,5 @@
+[Index](./index.md) | [Installation](./installation.md) | [Configuration](./global-configuration.md) | [Attributes](./attributes.md) | [Optional Factory Arguments](./optional-factory-arguments.md) | **Customization**
+
 Customization
 =============
 Refer to the [Global Configuration](./global-configuration.md) and [Attributes](./attributes.md)
@@ -36,6 +38,8 @@ Possible scenarios:
 | `f0ska.autogrid.entity.view`   | [ViewEvent](../src/Event/ViewEvent.php)     |
 | `f0ska.autogrid.mass_action`   | [MassEvent](../src/Event/MassEvent.php)     |
 | `f0ska.autogrid.export_action` | [ExportEvent](../src/Event/ExportEvent.php) |
+
+---
 
 Check documentation for more possibilities
 ------------------------------------------

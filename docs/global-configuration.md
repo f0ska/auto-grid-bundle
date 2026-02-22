@@ -1,3 +1,5 @@
+[Index](./index.md) | [Installation](./installation.md) | **Configuration** | [Attributes](./attributes.md) | [Optional Factory Arguments](./optional-factory-arguments.md) | [Customization](./customization.md)
+
 Global configuration
 ====================
 ## Global parameters
@@ -12,6 +14,8 @@ Several route parameters are available:
 - `_autogrid_form_themes`: Overrides the global `f0ska.autogrid.template.form_themes`
 
 These parameters can be useful if you have a project with multiple design themes.
+
+---
 
 Check documentation for more possibilities
 ------------------------------------------

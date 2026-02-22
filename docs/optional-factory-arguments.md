@@ -1,3 +1,5 @@
+[Index](./index.md) | [Installation](./installation.md) | [Configuration](./global-configuration.md) | [Attributes](./attributes.md) | **Optional Factory Arguments** | [Customization](./customization.md)
+
 Optional Factory arguments
 ==========================
 There are several optional arguments you can provide to `AutoGridFactory::create`
@@ -85,6 +87,8 @@ $autoGrid = $autoGridFactory->create(
 
 This argument can be used to provide your specific parameters to your own [customizations](./customization.md).
 This parameter is not used by AutoGrid natively.
+
+---
 
 Check documentation for more possibilities
 ------------------------------------------

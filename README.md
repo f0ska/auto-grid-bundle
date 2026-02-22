@@ -1,8 +1,11 @@
 # AutoGridBundle
 
-**🚀 [Demo Bundle](https://github.com/f0ska/auto-grid-test-bundle) | 📖 [Full Documentation](./docs/index.md) | 🛠 [Installation](./docs/installation.md)**
+**🚀 [Demo Bundle](https://github.com/f0ska/auto-grid-test-bundle) | 📖 [Full Documentation](./docs/index.md) |
+🛠 [Installation](./docs/installation.md)**
 
-**AutoGridBundle** is a high-productivity Symfony bundle designed to eliminate boilerplate code. It automatically generates a full-featured CRUD interface (Grids, Forms, Pagination, and Filters) for your Doctrine entities with **zero initial configuration**.
+**AutoGridBundle** is a high-productivity Symfony bundle designed to eliminate boilerplate code. It automatically
+generates a full-featured CRUD interface (Grids, Forms, Pagination, and Filters) for your Doctrine entities with **zero
+initial configuration**.
 
 ![PHP 8.1+](https://img.shields.io/badge/PHP-8.1+-777BB4)
 ![Symfony 6.4+](https://img.shields.io/badge/Symfony-6.4+-222)
@@ -13,12 +16,14 @@
 
 ## ✨ Key Features
 
-*   🚀 **Zero Configuration:** Get a functional CRUD for any entity instantly without writing a single line of config.
-*   🛠 **Advanced Form Guessing:** Out-of-the-box support for complex types, improving upon the standard Symfony Form Guesser.
-*   🔍 **Automated Filters & Sorting:** Smart data filtering and sorting generated automatically based on your database schema.
-*   💎 **Attribute-Based Customization:** Fine-tune your UI using PHP 8 Attributes directly in your Entities.
-*   🔄 **Full CRUD Lifecycle:** Integrated views for Listing, Creating, Editing, and Deleting records.
-*   🎨 **Extensible UI:** Easily override templates or extend the core logic to fit your custom requirements.
+* 🚀 **Zero Configuration:** Get a functional CRUD for any entity instantly without writing a single line of config.
+* 🛠 **Advanced Form Guessing:** Out-of-the-box support for complex types, improving upon the standard Symfony Form
+  Guesser.
+* 🔍 **Automated Filters & Sorting:** Smart data filtering and sorting generated automatically based on your database
+  schema.
+* 💎 **Attribute-Based Customization:** Fine-tune your UI using PHP 8 Attributes directly in your Entities.
+* 🔄 **Full CRUD Lifecycle:** Integrated views for Listing, Creating, Editing, and Deleting records.
+* 🎨 **Extensible UI:** Easily override templates or extend the core logic to fit your custom requirements.
 
 ---
 
@@ -44,10 +49,18 @@ public function myAction(AutoGridFactory $factory): Response
 
 ![Default Bootstrap5 AutoGrid look](./docs/media/grid.png)
 
-- **For more advanced usage, refer to the [documentation](./docs/index.md).**
-- **For more examples, check the [demo bundle](https://github.com/f0ska/auto-grid-test-bundle).**
+## 📖 Explore more features:
+
+* **[Full Documentation](./docs/index.md)**
+  * [Bundle Installation](./docs/installation.md)
+  * [Optional Factory Arguments](./optional-factory-arguments.md)
+  * [Attributes](./attributes.md)
+  * [Global Configuration](./global-configuration.md)
+  * [Customization](./customization.md)
+* **[Demo Bundle](https://github.com/f0ska/auto-grid-test-bundle)**
 
 ## ℹ️ Technical notice
+
 AutoGrid is built for **Symfony 6+** and **PHP 8.1+**. It uses the **Bootstrap 5** theme and icons to display content
 nicely.
 
