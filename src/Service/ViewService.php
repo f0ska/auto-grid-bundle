@@ -59,7 +59,7 @@ class ViewService
         $this->configuration = $configuration;
     }
 
-    public function prepareView(Parameters $parameters)
+    public function prepareView(Parameters $parameters): void
     {
         $entity = $parameters->attributes['entity'];
         $this->prepareViewForm($entity, $parameters);
