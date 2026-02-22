@@ -51,15 +51,15 @@ public function myAction(AutoGridFactory $factory): Response
 
 ## 📖 Explore more features:
 
-* **[Full Documentation](./docs/index.md)**
+* [Documentation](./docs/index.md)
   * [Bundle Installation](./docs/installation.md)
   * [Optional Factory Arguments](./docs/optional-factory-arguments.md)
   * [Attributes](./docs/attributes.md)
   * [Global Configuration](./docs/global-configuration.md)
   * [Customization](./docs/customization.md)
-* **[Demo Bundle](https://github.com/f0ska/auto-grid-test-bundle)**
+* [Demo Bundle](https://github.com/f0ska/auto-grid-test-bundle)
 
-## ℹ️ Technical notice
+## ⚙️ Technical notice
 
 AutoGrid is built for **Symfony 6+** and **PHP 8.1+**. It uses the **Bootstrap 5** theme and icons to display content
 nicely.
