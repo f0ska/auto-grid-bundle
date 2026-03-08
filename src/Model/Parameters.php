@@ -90,6 +90,7 @@ class Parameters
         $parameters['query'] = $this->query;
         $parameters['view'] = $this->view;
         $parameters['message'] = $parameters['message'] ?? $this->message;
+        $parameters['customization'] = $this->customization;
 
         $parameters['agIsAllowed'] = fn(string $action) => $this->isAllowed($action);
         $parameters['agIsAnyAllowed'] = fn() => $this->isAnyAllowed();

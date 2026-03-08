@@ -76,3 +76,5 @@ parameters:
     f0ska.autogrid.form.default_boolean_as_select: false
     # By default, render all date filter as "range". Overrides by RangeFilter attribute.
     f0ska.autogrid.form.default_date_filter_range: true
+    # Guesser: choose choice label for relation automatically if entity contains one of given fields, by priority.
+    f0ska.autogrid.form.relation_label_candidates: [ 'title', 'label', 'name', 'code', 'subject', 'model', 'sku' ]

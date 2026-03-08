@@ -233,11 +233,11 @@ class GuesserService
 
     private function guessChoiceLabel(string $agId): string
     {
-        $vars = ['title', 'label', 'name', 'code', 'model', 'reference', 'sku', 'uuid'];
+        $vars = $this->configuration->getRelationLabelCandidates();
         $names = $this->metaDataService->getMetadata($agId)->getFieldNames();
         foreach ($vars as $var) {
             foreach ($names as $name) {
-                if (str_contains(strtolower($name), $var)) {
+                if (str_contains(strtolower($name), strtolower($var))) {
                     return $name;
                 }
             }

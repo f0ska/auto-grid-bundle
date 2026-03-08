@@ -240,21 +240,19 @@ class FormBuilder
                 continue;
             }
 
-            if (
-                $isTrueForm
-                && (
+            if ($isTrueForm) {
+                if (
                     !empty($field->associationMapping->mappedBy)
                     || $field->mappingType === AttributeService::MAPPING_VIRTUAL
-                )
-            ) {
-                continue;
-            }
-
-            if ($isTrueForm && $field->mappingType === AttributeService::MAPPING_FIELD && $field->fieldMapping?->id) {
-                if ($builder->has($field->name)) {
-                    $builder->remove($field->name);
+                ) {
+                    continue;
                 }
-                continue;
+                if ($field->mappingType === AttributeService::MAPPING_FIELD && $field->fieldMapping?->id) {
+                    if ($builder->has($field->name)) {
+                        $builder->remove($field->name);
+                    }
+                    continue;
+                }
             }
 
             $this->addField($builder, $field);
@@ -265,17 +263,23 @@ class FormBuilder
     {
         $form = $this->prepareFilterFieldForm($field, $required);
         if (!empty($field->attributes['range_filter'])) {
-            $entryType = $form['type'];
-            $entryOptions = $form['options'];
-            $form['type'] = CollectionType::class;
-            $form['options'] = [
-                'required' => false,
-                'entry_type' => $entryType,
-                'data' => ['from' => null, 'to' => null],
-                'entry_options' => ['label' => null, 'label_format' => 'f0ska.autogrid.range.%name%'] + $entryOptions,
-            ];
+            $form = $this->prepareRangeFieldForm($form);
         }
         $this->addField($builder, $field, $form);
+    }
+
+    private function prepareRangeFieldForm(array $form): array
+    {
+        $entryType = $form['type'];
+        $entryOptions = $form['options'];
+        $form['type'] = CollectionType::class;
+        $form['options'] = [
+            'required' => false,
+            'entry_type' => $entryType,
+            'data' => ['from' => null, 'to' => null],
+            'entry_options' => ['label' => null, 'label_format' => 'f0ska.autogrid.range.%name%'] + $entryOptions,
+        ];
+        return $form;
     }
 
     private function prepareFilterFieldForm(FieldParameter $field, bool $required): array

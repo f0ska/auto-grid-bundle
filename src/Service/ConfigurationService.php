@@ -137,4 +137,9 @@ class ConfigurationService
     {
         return $this->params->get('f0ska.autogrid.form.default_date_filter_range');
     }
+
+    public function getRelationLabelCandidates(): array
+    {
+        return $this->params->get('f0ska.autogrid.form.relation_label_candidates');
+    }
 }
