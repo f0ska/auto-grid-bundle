@@ -3,9 +3,9 @@
 **🚀 [Demo Bundle](https://github.com/f0ska/auto-grid-test-bundle) | 📖 [Full Documentation](./docs/index.md) |
 🛠 [Installation](./docs/installation.md)**
 
-**AutoGridBundle** is a high-productivity Symfony bundle designed to eliminate boilerplate code. It automatically
-generates a full-featured CRUD interface (Grids, Forms, Pagination, and Filters) for your Doctrine entities with **zero
-initial configuration**.
+**AutoGridBundle automates the CRUD layer in Symfony to eliminate repetitive boilerplate.**
+It provides fully functional grids, forms, and filters for your Doctrine entities right out of the box, with no initial
+configuration.
 
 ![PHP 8.1+](https://img.shields.io/badge/PHP-8.1+-777BB4)
 ![Symfony 6.4+](https://img.shields.io/badge/Symfony-6.4+-222)
@@ -52,11 +52,11 @@ public function myAction(AutoGridFactory $factory): Response
 ## 📖 Explore more features:
 
 * [Documentation](./docs/index.md)
-  * [Bundle Installation](./docs/installation.md)
-  * [Optional Factory Arguments](./docs/optional-factory-arguments.md)
-  * [Attributes](./docs/attributes.md)
-  * [Global Configuration](./docs/global-configuration.md)
-  * [Customization](./docs/customization.md)
+    * [Bundle Installation](./docs/installation.md)
+    * [Optional Factory Arguments](./docs/optional-factory-arguments.md)
+    * [Attributes](./docs/attributes.md)
+    * [Global Configuration](./docs/global-configuration.md)
+    * [Customization](./docs/customization.md)
 * [Demo Bundle](https://github.com/f0ska/auto-grid-test-bundle)
 
 ## ⚙️ Technical notice
