@@ -109,8 +109,14 @@ class Extension extends AbstractExtension
 
     public function agChoiceLabels(mixed $values, FieldParameter $field): array
     {
+        if ($values === null) {
+            return [];
+        }
         if (!is_iterable($values)) {
             $values = [$values];
+        }
+        if (empty($values)) {
+            return [];
         }
         $result = [];
         foreach ($values as $value) {

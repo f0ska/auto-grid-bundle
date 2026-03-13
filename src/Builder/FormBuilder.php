@@ -17,15 +17,20 @@ use F0ska\AutoGridBundle\Exception\ActionException;
 use F0ska\AutoGridBundle\Model\FieldParameter;
 use F0ska\AutoGridBundle\Model\Parameters;
 use F0ska\AutoGridBundle\Service\AttributeService;
-use F0ska\AutoGridBundle\Service\LegacyService;
 use Symfony\Component\Form\ChoiceList\View\ChoiceView;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormRegistryInterface;
+use Symfony\Component\Form\ResolvedFormTypeInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -34,13 +39,25 @@ use Symfony\Component\Validator\Constraints\Type;
 
 class FormBuilder
 {
+    private const FILTER_TYPES_ALLOWED = [
+        DateType::class,
+        DateTimeType::class,
+        TimeType::class,
+        NumberType::class,
+    ];
+
     private FormFactoryInterface $formFactory;
     private AuthorizationCheckerInterface $authorizationChecker;
+    private FormRegistryInterface $formRegistry;
 
-    public function __construct(FormFactoryInterface $formFactory, AuthorizationCheckerInterface $authorizationChecker)
-    {
+    public function __construct(
+        FormFactoryInterface $formFactory,
+        AuthorizationCheckerInterface $authorizationChecker,
+        FormRegistryInterface $formRegistry
+    ) {
         $this->formFactory = $formFactory;
         $this->authorizationChecker = $authorizationChecker;
+        $this->formRegistry = $formRegistry;
     }
 
     public function buildForm(object $entity, Parameters $parameters): FormInterface
@@ -286,23 +303,8 @@ class FormBuilder
     {
         $mappingType = $field->fieldMapping?->type;
         $form = $field->attributes['form'];
-        if ($mappingType) {
-            if (in_array(
-                $mappingType,
-                [
-                    Types::TEXT,
-                    Types::JSON,
-                    Types::SIMPLE_ARRAY,
-                    LegacyService::TYPES_ARRAY,
-                    LegacyService::TYPES_OBJECT,
-                ],
-                true
-            )) {
-                $form['type'] = TextType::class;
-                $form['options'] = ['required' => $required];
-                return $form;
-            }
 
+        if ($mappingType) {
             if ($mappingType === Types::BOOLEAN) {
                 $form['type'] = ChoiceType::class;
                 $form['options'] = [
@@ -327,8 +329,24 @@ class FormBuilder
             return $form;
         }
 
+        if ($this->isFormTypeAllowedInFilter($this->formRegistry->getType($form['type']))) {
+            $form['type'] = TextType::class;
+            $form['options'] = ['required' => $required];
+            return $form;
+        }
+
         $form['options']['required'] = $required;
         return $form;
+    }
+
+    private function isFormTypeAllowedInFilter(ResolvedFormTypeInterface $typeInstance): bool
+    {
+        foreach (self::FILTER_TYPES_ALLOWED as $allowed) {
+            if ($typeInstance instanceof $allowed || $typeInstance->getParent() instanceof $allowed) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private function addField(FormBuilderInterface $builder, FieldParameter $field, array $form = []): void

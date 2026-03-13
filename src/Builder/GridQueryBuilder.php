@@ -75,7 +75,7 @@ class GridQueryBuilder
         if ($parameters->query['expression']) {
             $builder->andWhere($parameters->query['expression']);
             if ($parameters->query['parameters']) {
-                $builder->setParameters($parameters->query['parameters']);
+                $builder->setParameters(clone $parameters->query['parameters']);
             }
         }
 
