@@ -111,6 +111,10 @@ class GuesserService
                     )
                 );
                 break;
+            case Types::SIMPLE_ARRAY:
+                $field->attributes['form']['type'] = TextareaType::class;
+                $field->attributes['form']['transformer'] = $this->getSimpleArrayTransformer();
+                break;
             case LegacyService::TYPES_DATE_POINT:
                 $field->attributes['form']['type'] = DateTimeType::class;
                 $field->attributes['form']['transformer'] = $this->getDatePointTransformer();
@@ -191,6 +195,31 @@ class GuesserService
                 $data = json_decode($json, !$isObject);
                 if (json_last_error() !== JSON_ERROR_NONE) {
                     throw new TransformationFailedException(json_last_error_msg());
+                }
+                return $data;
+            }
+        );
+    }
+
+    private function getSimpleArrayTransformer(): CallbackTransformer
+    {
+        return new CallbackTransformer(
+            function (array|null $data): ?string {
+                if (empty($data)) {
+                    return null;
+                }
+                return implode("\n", $data);
+            },
+            function (?string $string): array|null {
+                $string = trim($string);
+                if (empty($string)) {
+                    return null;
+                }
+                $data = explode("\n", $string);
+                $data = array_map('trim', $data);
+                $data = array_values(array_filter($data));
+                if (empty($data)) {
+                    return null;
                 }
                 return $data;
             }
