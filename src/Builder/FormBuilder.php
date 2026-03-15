@@ -14,6 +14,7 @@ namespace F0ska\AutoGridBundle\Builder;
 
 use Doctrine\DBAL\Types\Types;
 use F0ska\AutoGridBundle\Exception\ActionException;
+use F0ska\AutoGridBundle\Form\NotAvailableType;
 use F0ska\AutoGridBundle\Model\FieldParameter;
 use F0ska\AutoGridBundle\Model\Parameters;
 use F0ska\AutoGridBundle\Service\AttributeService;
@@ -250,14 +251,13 @@ class FormBuilder
         bool $isTrueForm
     ): void {
         foreach ($parameters->fields as $field) {
-            if (!$parameters->isFieldAllowed($field, $action)) {
-                if ($builder->has($field->name)) {
-                    $builder->remove($field->name);
-                }
-                continue;
-            }
-
             if ($isTrueForm) {
+                if (!$parameters->isFieldAllowed($field, $action)) {
+                    if ($builder->has($field->name)) {
+                        $builder->remove($field->name);
+                    }
+                    continue;
+                }
                 if (
                     !empty($field->associationMapping->mappedBy)
                     || $field->mappingType === AttributeService::MAPPING_VIRTUAL
@@ -329,7 +329,7 @@ class FormBuilder
             return $form;
         }
 
-        if ($this->isFormTypeAllowedInFilter($this->formRegistry->getType($form['type']))) {
+        if (!$this->isFormTypeAllowedInFilter($this->formRegistry->getType($form['type']))) {
             $form['type'] = TextType::class;
             $form['options'] = ['required' => $required];
             return $form;
@@ -356,6 +356,9 @@ class FormBuilder
         }
         $options = $form['options'] ?? $field->attributes['form']['options'] ?? [];
         $type = $form['type'] ?? $field->attributes['form']['type'] ?? null;
+        if ($type === NotAvailableType::class) {
+            return;
+        }
         if (!isset($options['label']) && isset($field->attributes['label'])) {
             $options['label'] = $field->attributes['label'];
         }

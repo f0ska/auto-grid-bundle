@@ -16,6 +16,7 @@ use DateTimeImmutable;
 use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\ToManyAssociationMapping;
+use F0ska\AutoGridBundle\Form\NotAvailableType;
 use F0ska\AutoGridBundle\Model\FieldParameter;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Clock\DatePoint;
@@ -100,6 +101,7 @@ class GuesserService
             case LegacyService::TYPES_JSON_OBJECT:
             case LegacyService::TYPES_JSONB_OBJECT:
                 $field->attributes['form']['type'] = TextareaType::class;
+                $field->attributes['form']['options']['attr']['rows'] = 5;
                 $field->attributes['form']['transformer'] = $this->getJsonTransformer(
                     in_array(
                         $field->fieldMapping->type,
@@ -113,6 +115,7 @@ class GuesserService
                 break;
             case Types::SIMPLE_ARRAY:
                 $field->attributes['form']['type'] = TextareaType::class;
+                $field->attributes['form']['options']['attr']['rows'] = 5;
                 $field->attributes['form']['transformer'] = $this->getSimpleArrayTransformer();
                 break;
             case LegacyService::TYPES_DATE_POINT:
@@ -126,6 +129,10 @@ class GuesserService
             case LegacyService::TYPES_TIME_POINT:
                 $field->attributes['form']['type'] = TimeType::class;
                 $field->attributes['form']['transformer'] = $this->getDatePointTransformer();
+                break;
+            case Types::BLOB:
+            case Types::BINARY:
+                $field->attributes['form']['type'] = NotAvailableType::class;
                 break;
         }
     }
