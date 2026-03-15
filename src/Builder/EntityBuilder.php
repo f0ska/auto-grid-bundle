@@ -21,11 +21,16 @@ class EntityBuilder
 {
     private EntityManagerInterface $entityManager;
     private MetaDataService $metaDataService;
+    private GridQueryBuilder $queryBuilder;
 
-    public function __construct(EntityManagerInterface $entityManager, MetaDataService $metaDataService)
-    {
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        MetaDataService $metaDataService,
+        GridQueryBuilder $queryBuilder
+    ) {
         $this->entityManager = $entityManager;
         $this->metaDataService = $metaDataService;
+        $this->queryBuilder = $queryBuilder;
     }
 
     public function getNewEntity(Parameters $parameters): object
@@ -36,12 +41,10 @@ class EntityBuilder
 
     public function loadEntity(Parameters $parameters): object
     {
-        $entityId = $parameters->request['id'] ?? null;
-        if (empty($entityId)) {
+        if (empty($parameters->request['id'])) {
             throw new ActionException('Not found');
         }
-        $class = $this->getEntityClass($parameters);
-        $entity = $this->entityManager->getRepository($class)->find($entityId);
+        $entity = $this->findEntity($parameters);
         if (empty($entity)) {
             throw new ActionException('Not found');
         }
@@ -63,5 +66,18 @@ class EntityBuilder
         $agId = $parameters->agId;
         $metadata = $this->metaDataService->getMetadata($agId);
         return $metadata->rootEntityName;
+    }
+
+    private function findEntity(Parameters $parameters): ?object
+    {
+        $entityId = $parameters->request['id'] ?? null;
+        $class = $this->getEntityClass($parameters);
+        $repository = $this->entityManager->getRepository($class);
+        $entity = $repository->find($entityId);
+        if (!empty($parameters->query['expression'])) {
+            $query = $this->queryBuilder->buildEntityQuery($parameters, $entity);
+            return $query->getOneOrNullResult();
+        }
+        return $entity;
     }
 }

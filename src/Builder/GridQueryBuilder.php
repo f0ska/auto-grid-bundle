@@ -46,6 +46,7 @@ class GridQueryBuilder
         $limit = $parameters->view->pagination['limit'];
 
         $builder = $this->buildGenericParts($parameters);
+        $this->buildFilters($builder, $parameters);
         $aliases = $builder->getRootAliases();
         $builder->select(reset($aliases));
         $builder->setMaxResults($limit);
@@ -58,8 +59,21 @@ class GridQueryBuilder
     public function buildGridCountQuery(Parameters $parameters): Query
     {
         $builder = $this->buildGenericParts($parameters);
+        $this->buildFilters($builder, $parameters);
         $aliases = $builder->getRootAliases();
         $builder->select(sprintf('COUNT(DISTINCT %s.id)', reset($aliases)));
+        return $builder->getQuery();
+    }
+
+    public function buildEntityQuery(Parameters $parameters, object $entity): Query
+    {
+        $builder = $this->buildGenericParts($parameters);
+        $this->buildFilters($builder, $parameters);
+        $aliases = $builder->getRootAliases();
+        $alias = reset($aliases);
+        $builder->select($alias);
+        $builder->andWhere($alias . ' = :entity');
+        $builder->setParameter('entity', $entity);
         return $builder->getQuery();
     }
 
@@ -78,8 +92,6 @@ class GridQueryBuilder
                 $builder->setParameters(clone $parameters->query['parameters']);
             }
         }
-
-        $this->buildFilters($builder, $parameters);
 
         return $builder;
     }
