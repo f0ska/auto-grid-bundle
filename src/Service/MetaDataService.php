@@ -14,8 +14,7 @@ namespace F0ska\AutoGridBundle\Service;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
-use F0ska\AutoGridBundle\Attribute\AttributeInterface;
-use ReflectionAttribute;
+use F0ska\AutoGridBundle\Model\AttributeCollection;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use function Symfony\Component\String\u;
@@ -24,59 +23,75 @@ class MetaDataService
 {
     private int $instanceCount = 0;
     private int $subInstanceCount = 0;
-    private array $metadata = [];
-    private array $entityAttributes = [];
-    private array $entityFieldAttributes = [];
+
+    /** @var array<string, array{metadata: ClassMetadata, attributes: AttributeCollection}> */
+    private static array $staticCache = [];
+
+    /** @var array<string, array{metadata: ClassMetadata, attributes: AttributeCollection, instanceAttributes: array}> */
+    private array $instanceCache = [];
+
     private EntityManagerInterface $entityManager;
     private ConfigurationService $configuration;
     private RequestStack $requestStack;
     private SluggerInterface $slugger;
+    private AttributeParserService $attributeParser;
 
     public function __construct(
         EntityManagerInterface $entityManager,
         ConfigurationService $configuration,
         RequestStack $requestStack,
-        SluggerInterface $slugger
+        SluggerInterface $slugger,
+        AttributeParserService $attributeParser
     ) {
         $this->entityManager = $entityManager;
         $this->configuration = $configuration;
         $this->requestStack = $requestStack;
         $this->slugger = $slugger;
+        $this->attributeParser = $attributeParser;
     }
 
     public function add(string $entityClass, ?string $customId = null, bool $isSubInstance = false): string
     {
-        $metadata = $this->entityManager->getClassMetadata($entityClass);
+        if (!isset(self::$staticCache[$entityClass])) {
+            self::$staticCache[$entityClass] = [
+                'metadata' => $this->entityManager->getClassMetadata($entityClass),
+                'attributes' => $this->attributeParser->parse($entityClass),
+            ];
+        }
+
+        $metadata = self::$staticCache[$entityClass]['metadata'];
         $instanceCount = $isSubInstance ? ++$this->subInstanceCount : ++$this->instanceCount;
         $agId = $customId ? $this->prepareCustomAgId($customId) : $this->prepareAgId($metadata, $instanceCount);
-        $this->metadata[$agId] = $metadata;
-        $this->entityAttributes[$agId] = [];
-        $this->entityFieldAttributes[$agId] = [];
-        $this->buildEntityAttributes($agId, $metadata);
+
+        $this->instanceCache[$agId] = self::$staticCache[$entityClass];
+        $this->instanceCache[$agId]['instanceAttributes'] = [];
+
         if (!$isSubInstance) {
-            $this->entityAttributes[$agId]['container_id'] = sprintf(
+            $this->instanceCache[$agId]['instanceAttributes']['container_id'] = sprintf(
                 '%s%s',
                 $this->configuration->getFriendlyId(),
                 $instanceCount > 1 ? $instanceCount : ''
             );
-            $this->entityAttributes[$agId]['container_class'] = $this->configuration->getFriendlyId();
+            $this->instanceCache[$agId]['instanceAttributes']['container_class'] = $this->configuration->getFriendlyId();
         }
+
         return $agId;
     }
 
     public function getMetadata(string $agId): ClassMetadata
     {
-        return $this->metadata[$agId];
+        return $this->instanceCache[$agId]['metadata'];
     }
 
     public function getEntityAttributes(string $agId): array
     {
-        return $this->entityAttributes[$agId];
+        $collection = $this->instanceCache[$agId]['attributes'];
+        return array_merge($collection->getEntityAttributes(), $this->instanceCache[$agId]['instanceAttributes']);
     }
 
     public function getEntityAttribute(string $agId, string $key): mixed
     {
-        $data = $this->entityAttributes[$agId];
+        $data = $this->getEntityAttributes($agId);
         foreach (explode('.', $key) as $part) {
             $data = $data[$part] ?? null;
         }
@@ -85,62 +100,17 @@ class MetaDataService
 
     public function getEntityFieldAttributes(string $agId, string $fieldName): array
     {
-        return $this->entityFieldAttributes[$agId][$fieldName] ?? [];
+        $collection = $this->instanceCache[$agId]['attributes'];
+        return $collection->getFieldAttributes()[$fieldName] ?? [];
     }
 
     public function getEntityFieldAttribute(string $agId, string $fieldName, string $key): mixed
     {
-        $data = $this->entityFieldAttributes[$agId][$fieldName] ?? [];
+        $data = $this->getEntityFieldAttributes($agId, $fieldName);
         foreach (explode('.', $key) as $part) {
             $data = $data[$part] ?? null;
         }
         return $data;
-    }
-
-    private function buildEntityAttributes(string $agId, ClassMetadata $metadata): void
-    {
-        foreach ($metadata->getReflectionClass()->getAttributes() as $attribute) {
-            $this->addEntityValue($agId, $attribute);
-        }
-        foreach ($metadata->getFieldNames() as $fieldName) {
-            foreach ($metadata->getReflectionClass()->getProperty($fieldName)->getAttributes() as $attribute) {
-                $this->addEntityFieldValue($agId, $attribute, $fieldName);
-            }
-        }
-        foreach ($metadata->getAssociationNames() as $fieldName) {
-            foreach ($metadata->getReflectionClass()->getProperty($fieldName)->getAttributes() as $attribute) {
-                $this->addEntityFieldValue($agId, $attribute, $fieldName);
-            }
-        }
-    }
-
-    private function addEntityValue(string $agId, ReflectionAttribute $attribute): void
-    {
-        $instance = $attribute->newInstance();
-        if ($instance instanceof AttributeInterface) {
-            $link = &$this->entityAttributes[$agId];
-            $this->addPropertyValue($link, $instance->getCode(), $instance->getValue());
-        }
-    }
-
-    private function addEntityFieldValue(string $agId, ReflectionAttribute $attribute, string $fieldName): void
-    {
-        $instance = $attribute->newInstance();
-        if ($instance instanceof AttributeInterface) {
-            $link = &$this->entityFieldAttributes[$agId];
-            $this->addPropertyValue($link, $fieldName . '.' . $instance->getCode(), $instance->getValue());
-        }
-    }
-
-    private function addPropertyValue(array &$link, string $code, mixed $value): void
-    {
-        foreach (explode('.', $code) as $part) {
-            if (!array_key_exists($part, $link)) {
-                $link[$part] = [];
-            }
-            $link = &$link[$part];
-        }
-        $link = $value;
     }
 
     private function prepareAgId(ClassMetadata $metadata, int $instanceNumber): string
