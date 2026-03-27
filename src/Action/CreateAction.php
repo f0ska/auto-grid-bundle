@@ -17,11 +17,6 @@ use F0ska\AutoGridBundle\Model\Parameters;
 
 class CreateAction extends EditAction
 {
-    public function isIdRequired(): bool
-    {
-        return false;
-    }
-
     public function execute(AutoGrid $autoGrid, Parameters $parameters): void
     {
         $entity = $this->entityBuilder->getNewEntity($parameters);

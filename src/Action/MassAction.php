@@ -57,9 +57,4 @@ class MassAction extends AbstractAction
 
         throw new ActionException('Not Allowed');
     }
-
-    public function isIdRequired(): bool
-    {
-        return false;
-    }
 }

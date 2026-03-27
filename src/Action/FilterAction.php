@@ -38,9 +38,4 @@ class FilterAction extends AbstractAction
         }
         $autoGrid->setResponse(new RedirectResponse($parameters->actionUrl('grid', ['filter' => $filter])));
     }
-
-    public function isIdRequired(): bool
-    {
-        return false;
-    }
 }

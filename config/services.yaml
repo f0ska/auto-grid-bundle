@@ -51,4 +51,4 @@ services:
         autowire: true
         lazy: true
         arguments:
-            $customizations: !tagged_iterator { tag: 'autogrid.customization', default_priority_method: getPriority }
+            $customizations: !tagged_iterator 'autogrid.customization'

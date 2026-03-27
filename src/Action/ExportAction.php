@@ -41,11 +41,6 @@ class ExportAction extends AbstractAction
         $this->dispatcher = $dispatcher;
     }
 
-    public function isIdRequired(): bool
-    {
-        return false;
-    }
-
     public function execute(AutoGrid $autoGrid, Parameters $parameters): void
     {
         $request = $this->requestStack->getCurrentRequest();

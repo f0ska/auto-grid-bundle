@@ -25,11 +25,6 @@ class GridAction extends AbstractAction
         $this->gridQueryBuilder = $gridQueryBuilder;
     }
 
-    public function isIdRequired(): bool
-    {
-        return false;
-    }
-
     public function execute(AutoGrid $autoGrid, Parameters $parameters): void
     {
         $count = (int) $this->gridQueryBuilder->buildGridCountQuery($parameters)->getSingleScalarResult();

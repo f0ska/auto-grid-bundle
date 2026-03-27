@@ -16,12 +16,17 @@ use function Symfony\Component\String\u;
 
 abstract class AbstractAction implements ActionInterface
 {
-    public function getCode(): string
+    public static function getActionCode(): string
     {
         return u(trim((string) strrchr(static::class, '\\'), '\\'))
             ->snake()
             ->trimSuffix('_action')
             ->toString();
+    }
+
+    public function getCode(): string
+    {
+        return static::getActionCode();
     }
 
     public function isRestrictable(): bool
@@ -31,6 +36,6 @@ abstract class AbstractAction implements ActionInterface
 
     public function isIdRequired(): bool
     {
-        return true;
+        return false;
     }
 }

@@ -66,4 +66,9 @@ class EditAction extends AbstractAction
         $autoGrid->setTemplate($parameters->getActionTemplate('form'));
         $autoGrid->setContext($parameters->render(['entity' => $entity, 'form' => $form->createView()]));
     }
+
+    public function isIdRequired(): bool
+    {
+        return true;
+    }
 }

@@ -38,4 +38,9 @@ class ViewAction extends AbstractAction
         $autoGrid->setTemplate($parameters->getActionTemplate('view'));
         $autoGrid->setContext($parameters->render(['entity' => $entity]));
     }
+
+    public function isIdRequired(): bool
+    {
+        return true;
+    }
 }
