@@ -12,12 +12,12 @@ declare(strict_types=1);
 
 namespace F0ska\AutoGridBundle\Action;
 
-use F0ska\AutoGridBundle\Builder\FormBuilder;
 use F0ska\AutoGridBundle\Builder\GridQueryBuilder;
 use F0ska\AutoGridBundle\Event\ExportEvent;
 use F0ska\AutoGridBundle\Exception\ActionException;
 use F0ska\AutoGridBundle\Model\AutoGrid;
 use F0ska\AutoGridBundle\Model\Parameters;
+use F0ska\AutoGridBundle\Service\GridFormFacade;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
@@ -25,18 +25,18 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 class ExportAction extends AbstractAction
 {
     private GridQueryBuilder $gridQueryBuilder;
-    private FormBuilder $formBuilder;
+    private GridFormFacade $gridFormFacade;
     private RequestStack $requestStack;
     private EventDispatcherInterface $dispatcher;
 
     public function __construct(
         GridQueryBuilder $gridQueryBuilder,
-        FormBuilder $formBuilder,
+        GridFormFacade $gridFormFacade,
         RequestStack $requestStack,
         EventDispatcherInterface $dispatcher
     ) {
         $this->gridQueryBuilder = $gridQueryBuilder;
-        $this->formBuilder = $formBuilder;
+        $this->gridFormFacade = $gridFormFacade;
         $this->requestStack = $requestStack;
         $this->dispatcher = $dispatcher;
     }
@@ -44,7 +44,7 @@ class ExportAction extends AbstractAction
     public function execute(AutoGrid $autoGrid, Parameters $parameters): void
     {
         $request = $this->requestStack->getCurrentRequest();
-        $form = $this->formBuilder->buildExportActionForm($parameters);
+        $form = $this->gridFormFacade->buildExportActionForm($parameters);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

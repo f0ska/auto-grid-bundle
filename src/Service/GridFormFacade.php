@@ -12,19 +12,45 @@ declare(strict_types=1);
 
 namespace F0ska\AutoGridBundle\Service;
 
+use F0ska\AutoGridBundle\Builder\EntityFormBuilder;
 use F0ska\AutoGridBundle\Builder\FilterFormBuilder;
 use F0ska\AutoGridBundle\Model\Parameters;
+use Symfony\Component\Form\FormInterface;
 
-class FilterFormService
+class GridFormFacade
 {
+    private EntityFormBuilder $entityFormBuilder;
     private FilterFormBuilder $filterFormBuilder;
 
-    public function __construct(FilterFormBuilder $filterFormBuilder)
-    {
+    public function __construct(
+        EntityFormBuilder $entityFormBuilder,
+        FilterFormBuilder $filterFormBuilder
+    ) {
+        $this->entityFormBuilder = $entityFormBuilder;
         $this->filterFormBuilder = $filterFormBuilder;
     }
 
-    public function build(Parameters $parameters): array
+    public function buildEntityForm(object $entity, Parameters $parameters): FormInterface
+    {
+        return $this->entityFormBuilder->buildForm($entity, $parameters);
+    }
+
+    public function buildDisplayForm(Parameters $parameters): FormInterface
+    {
+        return $this->entityFormBuilder->buildDisplayForm($parameters);
+    }
+
+    public function buildMassActionForm(Parameters $parameters): FormInterface
+    {
+        return $this->entityFormBuilder->buildMassActionForm($parameters);
+    }
+
+    public function buildExportActionForm(Parameters $parameters): FormInterface
+    {
+        return $this->entityFormBuilder->buildExportActionForm($parameters);
+    }
+
+    public function buildFilterForms(Parameters $parameters): array
     {
         $filterForms = [];
         $filterFormViews = [];

@@ -12,43 +12,43 @@ declare(strict_types=1);
 
 namespace F0ska\AutoGridBundle\Service;
 
-use F0ska\AutoGridBundle\Builder\FormBuilder;
+use F0ska\AutoGridBundle\Builder\ChoiceBuilder;
 use F0ska\AutoGridBundle\Model\FieldParameter;
 use F0ska\AutoGridBundle\Model\Parameters;
 use Symfony\Component\Form\FormView;
 
 class ViewService
 {
-    private FormBuilder $formBuilder;
+    private GridFormFacade $gridFormFacade;
     private ConfigurationService $configuration;
-    private FilterFormService $filterFormService;
     private FieldsetService $fieldsetService;
     private TemplateGuesserService $templateGuesserService;
+    private ChoiceBuilder $choiceBuilder;
 
     public function __construct(
-        FormBuilder $formBuilder,
+        GridFormFacade $gridFormFacade,
         ConfigurationService $configuration,
-        FilterFormService $filterFormService,
         FieldsetService $fieldsetService,
-        TemplateGuesserService $templateGuesserService
+        TemplateGuesserService $templateGuesserService,
+        ChoiceBuilder $choiceBuilder
     ) {
-        $this->formBuilder = $formBuilder;
+        $this->gridFormFacade = $gridFormFacade;
         $this->configuration = $configuration;
-        $this->filterFormService = $filterFormService;
         $this->fieldsetService = $fieldsetService;
         $this->templateGuesserService = $templateGuesserService;
+        $this->choiceBuilder = $choiceBuilder;
     }
 
     public function prepareView(Parameters $parameters): void
     {
-        $displayFormView = $this->formBuilder->buildDisplayForm($parameters)->createView();
+        $displayFormView = $this->gridFormFacade->buildDisplayForm($parameters)->createView();
 
         foreach ($parameters->fields as $field) {
             $this->addViewParameters($displayFormView, $field);
             $this->templateGuesserService->guess($field);
         }
 
-        $filterData = $this->filterFormService->build($parameters);
+        $filterData = $this->gridFormFacade->buildFilterForms($parameters);
         $parameters->view->filterForms = $filterData['filterForms'];
         $parameters->view->filterFormViews = $filterData['filterFormViews'];
         $parameters->view->advancedFilterForm = $filterData['advancedFilterForm'];
@@ -102,10 +102,10 @@ class ViewService
         if (empty($parameters->permissions['mass'])) {
             return;
         }
-        $choices = $this->formBuilder->buildMassChoices($parameters);
+        $choices = $this->choiceBuilder->buildMassChoices($parameters);
         if (!empty($choices)) {
             $parameters->view->massActionChoices = $choices;
-            $parameters->view->massActionFormView = $this->formBuilder
+            $parameters->view->massActionFormView = $this->gridFormFacade
                 ->buildMassActionForm($parameters)
                 ->createView();
         }
@@ -116,10 +116,10 @@ class ViewService
         if (empty($parameters->permissions['export'])) {
             return;
         }
-        $choices = $this->formBuilder->buildExportChoices($parameters);
+        $choices = $this->choiceBuilder->buildExportChoices($parameters);
         if (!empty($choices)) {
             $parameters->view->exportActionChoices = $choices;
-            $parameters->view->exportActionFormView = $this->formBuilder
+            $parameters->view->exportActionFormView = $this->gridFormFacade
                 ->buildExportActionForm($parameters)
                 ->createView();
         }

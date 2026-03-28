@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace F0ska\AutoGridBundle\Service;
 
 use Doctrine\ORM\EntityManagerInterface;
-use F0ska\AutoGridBundle\Builder\FormBuilder;
 use F0ska\AutoGridBundle\Event\SaveEvent;
 use F0ska\AutoGridBundle\Model\AutoGrid;
 use F0ska\AutoGridBundle\Model\Parameters;
@@ -22,26 +21,29 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class FormProcessorService
 {
-    private FormBuilder $formBuilder;
+    private GridFormFacade $gridFormFacade;
     private RequestStack $requestStack;
     private EntityManagerInterface $entityManager;
     private EventDispatcherInterface $dispatcher;
+    private RedirectService $redirectService;
 
     public function __construct(
-        FormBuilder $formBuilder,
+        GridFormFacade $gridFormFacade,
         RequestStack $requestStack,
         EntityManagerInterface $entityManager,
-        EventDispatcherInterface $dispatcher
+        EventDispatcherInterface $dispatcher,
+        RedirectService $redirectService
     ) {
-        $this->formBuilder = $formBuilder;
+        $this->gridFormFacade = $gridFormFacade;
         $this->requestStack = $requestStack;
         $this->entityManager = $entityManager;
         $this->dispatcher = $dispatcher;
+        $this->redirectService = $redirectService;
     }
 
     public function process(object $entity, AutoGrid $autoGrid, Parameters $parameters): void
     {
-        $form = $this->formBuilder->buildForm($entity, $parameters);
+        $form = $this->gridFormFacade->buildEntityForm($entity, $parameters);
         $form->handleRequest($this->requestStack->getCurrentRequest());
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -52,7 +54,7 @@ class FormProcessorService
             $this->entityManager->persist($entity);
             $this->entityManager->flush();
 
-            $autoGrid->setResponse($this->formBuilder->getSubmitRedirect($form, $entity->getId(), $parameters));
+            $autoGrid->setResponse($this->redirectService->getSubmitRedirect($form, $entity->getId(), $parameters));
             return;
         }
 
