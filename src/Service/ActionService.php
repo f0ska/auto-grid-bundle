@@ -51,8 +51,13 @@ class ActionService
                     'expression' => $autoGrid->getQueryExpression(),
                     'parameters' => $autoGrid->getQueryParameters(),
                 ],
+                'customization' => $autoGrid->getCustomizationParameters(),
             ]
         );
+
+        if (isset($commonParameters['message'])) {
+            $parameters->message = $commonParameters['message'];
+        }
 
         if (!$this->actionList->hasAction($action)) {
             $parameters->message = 'Unknown Action';

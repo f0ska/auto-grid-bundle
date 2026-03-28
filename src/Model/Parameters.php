@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace F0ska\AutoGridBundle\Model;
 
 use F0ska\AutoGridBundle\Service\ParametersService;
+use InvalidArgumentException;
 
 class Parameters
 {
@@ -34,6 +35,11 @@ class Parameters
     public function __construct(array $initial, ParametersService $parametersService)
     {
         foreach ($initial as $key => $value) {
+            if (!property_exists($this, $key)) {
+                throw new InvalidArgumentException(
+                    sprintf('Property "%s" does not exist in class "%s".', $key, self::class)
+                );
+            }
             $this->{$key} = $value;
         }
         $this->view = new ViewParameter();

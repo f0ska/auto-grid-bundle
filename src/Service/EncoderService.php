@@ -18,10 +18,9 @@ class EncoderService
 
     public function encodeAction(string $agId, string $action, array $parameters): string
     {
-        return str_replace(
-            array_keys(self::BASE64_REPLACE),
-            array_values(self::BASE64_REPLACE),
-            base64_encode(json_encode([$agId, $action, $parameters]))
+        return strtr(
+            base64_encode(json_encode([$agId, $action, $parameters])),
+            self::BASE64_REPLACE
         );
     }
 
@@ -29,11 +28,7 @@ class EncoderService
     {
         return json_decode(
             base64_decode(
-                str_replace(
-                    array_values(self::BASE64_REPLACE),
-                    array_keys(self::BASE64_REPLACE),
-                    $uiAction
-                )
+                strtr($uiAction, array_flip(self::BASE64_REPLACE))
             ) ?: '[]',
             true
         ) ?: [];
