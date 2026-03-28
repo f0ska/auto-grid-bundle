@@ -125,6 +125,15 @@ class FilterParameter implements ActionParameterInterface
                 ->getConnection()
                 ->convertToDatabaseValue($value, $field->fieldMapping->type);
         }
-        return $value?->getId() ? strval($value->getId()) : null;
+
+        if (is_object($value) && !$value instanceof DateTimeInterface) {
+            $metadata = $this->entityManager->getClassMetadata(get_class($value));
+            $identifier = $metadata->getIdentifierValues($value);
+            if (count($identifier) > 0) {
+                return (string) reset($identifier);
+            }
+        }
+
+        return null;
     }
 }
