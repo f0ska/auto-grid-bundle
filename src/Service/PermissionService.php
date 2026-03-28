@@ -12,35 +12,30 @@ declare(strict_types=1);
 
 namespace F0ska\AutoGridBundle\Service;
 
-use F0ska\AutoGridBundle\Action\ActionInterface;
 use F0ska\AutoGridBundle\Model\Permission;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class PermissionService
 {
     private MetaDataService $metaDataService;
-    /** @var ActionInterface[] */
-    private array $actions;
+    private ActionListService $actionListService;
     private AuthorizationCheckerInterface $authorizationChecker;
 
     public function __construct(
         MetaDataService $metaDataService,
         AuthorizationCheckerInterface $authorizationChecker,
-        iterable $actions
+        ActionListService $actionListService
     ) {
-        /** @var ActionInterface $action */
-        foreach ($actions as $action) {
-            $this->actions[$action->getCode()] = $action;
-        }
         $this->metaDataService = $metaDataService;
         $this->authorizationChecker = $authorizationChecker;
+        $this->actionListService = $actionListService;
     }
 
     public function getEntityActionPermissions(string $agId): array
     {
         $rules = [];
         $defaultAllowed = !$this->metaDataService->getEntityAttribute($agId, 'permission.disallow_actions_by_default');
-        foreach ($this->actions as $action) {
+        foreach ($this->actionListService->getActions() as $action) {
             $key = $action->getCode();
             $rules[$key] = true;
             if (!$action->isRestrictable()) {
@@ -59,7 +54,7 @@ class PermissionService
         $rules = [];
         $defaultAllowed = !$this->metaDataService->getEntityAttribute($agId, 'permission.disallow_fields_by_default');
 
-        foreach ($this->actions as $action) {
+        foreach ($this->actionListService->getActions() as $action) {
             if (!$action->isRestrictable()) {
                 continue;
             }
@@ -72,18 +67,33 @@ class PermissionService
         return $rules;
     }
 
+    /**
+     * Determines if a permission is granted based on a Permission object and a default value.
+     *
+     * @param Permission|null $permission The permission object to check.
+     * @param bool $default The default value to return if no specific permission is defined.
+     * @return bool
+     */
     private function isAllowed(?Permission $permission, bool $default): bool
     {
+        // If no specific permission attribute is set, fall back to the default.
         if ($permission === null) {
             return $default;
         }
+
+        // If the permission has no role, it's a simple boolean check.
         if ($permission->getRole() === null) {
             return $permission->isAllowed();
         }
+
+        // If the user has the required role, the permission's "allowed" flag is authoritative.
         if ($this->authorizationChecker->isGranted($permission->getRole())) {
             return $permission->isAllowed();
         }
+
+        // If the user does NOT have the role, the result is the inverse of the "allowed" flag.
+        // e.g., if allow=true for ROLE_ADMIN, a non-admin is denied (returns false).
+        // e.g., if allow=false for ROLE_ADMIN, a non-admin is granted (returns true).
         return !$permission->isAllowed();
     }
-
 }

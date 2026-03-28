@@ -17,11 +17,11 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ToManyAssociationMapping;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
+use F0ska\AutoGridBundle\DBAL\TypesCompatibility;
 use F0ska\AutoGridBundle\Model\FieldParameter;
 use F0ska\AutoGridBundle\Model\Parameters;
-use F0ska\AutoGridBundle\Service\AttributeService;
-use F0ska\AutoGridBundle\Service\LegacyService;
 use F0ska\AutoGridBundle\Service\MetaDataService;
+use F0ska\AutoGridBundle\Service\ParametersService;
 
 use function Symfony\Component\String\u;
 
@@ -109,7 +109,7 @@ class GridQueryBuilder
                     continue;
                 }
                 switch ($field->mappingType) {
-                    case AttributeService::MAPPING_ASSOC:
+                    case ParametersService::MAPPING_ASSOC:
                         $this->buildAssociatedFieldFilter($builder, $field, $parameters);
                         break;
                     default:
@@ -155,8 +155,8 @@ class GridQueryBuilder
             case Types::TEXT:
             case Types::JSON:
             case Types::SIMPLE_ARRAY:
-            case LegacyService::TYPES_ARRAY:
-            case LegacyService::TYPES_OBJECT:
+            case TypesCompatibility::TYPES_ARRAY:
+            case TypesCompatibility::TYPES_OBJECT:
                 $exp = $builder->expr()->like($column, ':' . $alias);
                 $value = '%' . $value . '%';
                 break;

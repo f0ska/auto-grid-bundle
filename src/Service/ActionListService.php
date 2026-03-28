@@ -45,4 +45,12 @@ class ActionListService
     {
         return $this->actions[$action] ?? throw new ActionException('Undefined action');
     }
+
+    /**
+     * @return ActionInterface[]
+     */
+    public function getActions(): array
+    {
+        return $this->actions;
+    }
 }

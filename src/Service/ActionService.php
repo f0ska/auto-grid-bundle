@@ -18,7 +18,6 @@ use F0ska\AutoGridBundle\Model\AutoGrid;
 
 class ActionService
 {
-    private AttributeService $attributeService;
     private ViewService $viewService;
     private ActionListService $actionList;
     private ActionParametersListService $actionParametersList;
@@ -26,14 +25,12 @@ class ActionService
     private CustomizationService $customizationService;
 
     public function __construct(
-        AttributeService $attributeService,
         ViewService $viewService,
         ActionListService $actionList,
         ActionParametersListService $actionParametersList,
         ParametersService $parametersService,
         CustomizationService $customizationService
     ) {
-        $this->attributeService = $attributeService;
         $this->viewService = $viewService;
         $this->actionList = $actionList;
         $this->actionParametersList = $actionParametersList;
@@ -56,8 +53,6 @@ class ActionService
                 ],
             ]
         );
-
-        $this->attributeService->buildAttributes($parameters);
 
         if (!$this->actionList->hasAction($action)) {
             $parameters->message = 'Unknown Action';
