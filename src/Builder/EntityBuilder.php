@@ -41,9 +41,18 @@ class EntityBuilder
 
     public function loadEntity(Parameters $parameters): object
     {
+        if (empty($parameters->request['id'])) {
+            throw new ActionException('Not found');
+        }
         $entity = $this->findEntity($parameters);
         if (empty($entity)) {
             throw new ActionException('Not found');
+        }
+        if (!method_exists($entity, 'getId')) {
+            throw new ActionException('ID getter is missing');
+        }
+        if (!is_int($entity->getId())) {
+            throw new ActionException('ID must be an integer');
         }
         return $entity;
     }
@@ -61,39 +70,14 @@ class EntityBuilder
 
     private function findEntity(Parameters $parameters): ?object
     {
+        $entityId = $parameters->request['id'] ?? null;
         $class = $this->getEntityClass($parameters);
-        $metadata = $this->entityManager->getClassMetadata($class);
-        $identifier = $this->getIdentifierFromRequest($metadata->getIdentifierFieldNames(), $parameters->request);
-
-        if (empty($identifier)) {
-            return null;
-        }
-
         $repository = $this->entityManager->getRepository($class);
-        $entity = $repository->find($identifier);
-
-        if ($entity && !empty($parameters->query['expression'])) {
+        $entity = $repository->find($entityId);
+        if (!empty($parameters->query['expression'])) {
             $query = $this->queryBuilder->buildEntityQuery($parameters, $entity);
             return $query->getOneOrNullResult();
         }
-
         return $entity;
-    }
-
-    private function getIdentifierFromRequest(array $identifierFields, array $requestParams): mixed
-    {
-        $identifier = [];
-        foreach ($identifierFields as $field) {
-            if (!isset($requestParams[$field])) {
-                return null;
-            }
-            $identifier[$field] = $requestParams[$field];
-        }
-
-        if (count($identifier) === 1) {
-            return reset($identifier);
-        }
-
-        return $identifier;
     }
 }

@@ -61,7 +61,7 @@ class GridQueryBuilder
         $builder = $this->buildGenericParts($parameters);
         $this->buildFilters($builder, $parameters);
         $aliases = $builder->getRootAliases();
-        $builder->select(sprintf('COUNT(DISTINCT %s)', reset($aliases)));
+        $builder->select(sprintf('COUNT(DISTINCT %s.id)', reset($aliases)));
         return $builder->getQuery();
     }
 

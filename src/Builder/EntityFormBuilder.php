@@ -84,6 +84,7 @@ class EntityFormBuilder
             ChoiceType::class,
             ['choices' => $this->choiceBuilder->buildMassChoices($parameters), 'constraints' => [new NotBlank()]]
         );
+
         $builder->add(
             'ids',
             CollectionType::class,

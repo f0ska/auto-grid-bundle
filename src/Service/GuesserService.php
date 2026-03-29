@@ -257,6 +257,7 @@ class GuesserService
     {
         $field->attributes['form']['type'] = EntityType::class;
         $field->attributes['form']['options']['class'] = $field->associationMapping->targetEntity;
+
         if ($field->associationMapping instanceof ToManyAssociationMapping) {
             $field->attributes['form']['options']['multiple'] = true;
             $field->canSort = false;
