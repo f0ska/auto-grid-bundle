@@ -16,23 +16,23 @@ use F0ska\AutoGridBundle\Event\MassEvent;
 use F0ska\AutoGridBundle\Exception\ActionException;
 use F0ska\AutoGridBundle\Model\AutoGrid;
 use F0ska\AutoGridBundle\Model\Parameters;
-use F0ska\AutoGridBundle\Service\GridFormFacade;
+use F0ska\AutoGridBundle\Service\FormFacade;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class MassAction extends AbstractAction
 {
-    private GridFormFacade $gridFormFacade;
+    private FormFacade $formFacade;
     private RequestStack $requestStack;
     private EventDispatcherInterface $dispatcher;
 
     public function __construct(
-        GridFormFacade $gridFormFacade,
+        FormFacade $formFacade,
         RequestStack $requestStack,
         EventDispatcherInterface $dispatcher
     ) {
-        $this->gridFormFacade = $gridFormFacade;
+        $this->formFacade = $formFacade;
         $this->requestStack = $requestStack;
         $this->dispatcher = $dispatcher;
     }
@@ -40,7 +40,7 @@ class MassAction extends AbstractAction
     public function execute(AutoGrid $autoGrid, Parameters $parameters): void
     {
         $request = $this->requestStack->getCurrentRequest();
-        $form = $this->gridFormFacade->buildMassActionForm($parameters);
+        $form = $this->formFacade->buildMassActionForm($parameters);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

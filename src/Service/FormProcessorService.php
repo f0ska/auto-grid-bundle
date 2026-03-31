@@ -21,20 +21,20 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class FormProcessorService
 {
-    private GridFormFacade $gridFormFacade;
+    private FormFacade $formFacade;
     private RequestStack $requestStack;
     private EntityManagerInterface $entityManager;
     private EventDispatcherInterface $dispatcher;
     private RedirectService $redirectService;
 
     public function __construct(
-        GridFormFacade $gridFormFacade,
+        FormFacade $formFacade,
         RequestStack $requestStack,
         EntityManagerInterface $entityManager,
         EventDispatcherInterface $dispatcher,
         RedirectService $redirectService
     ) {
-        $this->gridFormFacade = $gridFormFacade;
+        $this->formFacade = $formFacade;
         $this->requestStack = $requestStack;
         $this->entityManager = $entityManager;
         $this->dispatcher = $dispatcher;
@@ -43,7 +43,7 @@ class FormProcessorService
 
     public function process(object $entity, AutoGrid $autoGrid, Parameters $parameters): void
     {
-        $form = $this->gridFormFacade->buildEntityForm($entity, $parameters);
+        $form = $this->formFacade->buildEntityForm($entity, $parameters);
         $form->handleRequest($this->requestStack->getCurrentRequest());
 
         if ($form->isSubmitted() && $form->isValid()) {

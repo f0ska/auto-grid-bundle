@@ -49,8 +49,11 @@ class AttributeParserService
         return $entityAttributes;
     }
 
-    private function parseFieldAttributes(ClassMetadata $metadata, ReflectionClass $reflectionClass, array &$entityAttributes): array
-    {
+    private function parseFieldAttributes(
+        ClassMetadata $metadata,
+        ReflectionClass $reflectionClass,
+        array &$entityAttributes
+    ): array {
         $fieldAttributes = [];
         $fieldNames = array_merge($metadata->getFieldNames(), $metadata->getAssociationNames());
         $defaultSort = [];
@@ -76,14 +79,18 @@ class AttributeParserService
         return $fieldAttributes;
     }
 
-    private function processSortableAttribute(Sortable $attribute, string $fieldName, array &$fieldAttributes, array &$defaultSort): void
-    {
-        $this->addValue($fieldAttributes, $fieldName . '.can_sort', true);
+    private function processSortableAttribute(
+        Sortable $attribute,
+        string $fieldName,
+        array &$fieldAttributes,
+        array &$defaultSort
+    ): void {
         $sortInfo = $attribute->getValue();
+        $this->addValue($fieldAttributes, $fieldName . '.can_sort', $sortInfo['can_sort']);
         if (isset($sortInfo['direction'])) {
             $defaultSort[$fieldName] = [
                 'direction' => $sortInfo['direction'],
-                'priority' => $sortInfo['priority'],
+                'priority'  => $sortInfo['priority'],
             ];
         }
     }

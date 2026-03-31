@@ -19,20 +19,20 @@ use Symfony\Component\Form\FormView;
 
 class ViewService
 {
-    private GridFormFacade $gridFormFacade;
+    private FormFacade $formFacade;
     private ConfigurationService $configuration;
     private FieldsetService $fieldsetService;
     private TemplateGuesserService $templateGuesserService;
     private ChoiceBuilder $choiceBuilder;
 
     public function __construct(
-        GridFormFacade $gridFormFacade,
+        FormFacade $formFacade,
         ConfigurationService $configuration,
         FieldsetService $fieldsetService,
         TemplateGuesserService $templateGuesserService,
         ChoiceBuilder $choiceBuilder
     ) {
-        $this->gridFormFacade = $gridFormFacade;
+        $this->formFacade = $formFacade;
         $this->configuration = $configuration;
         $this->fieldsetService = $fieldsetService;
         $this->templateGuesserService = $templateGuesserService;
@@ -41,14 +41,14 @@ class ViewService
 
     public function prepareView(Parameters $parameters): void
     {
-        $displayFormView = $this->gridFormFacade->buildDisplayForm($parameters)->createView();
+        $displayFormView = $this->formFacade->buildDisplayForm($parameters)->createView();
 
         foreach ($parameters->fields as $field) {
             $this->addViewParameters($displayFormView, $field);
             $this->templateGuesserService->guess($field);
         }
 
-        $filterData = $this->gridFormFacade->buildFilterForms($parameters);
+        $filterData = $this->formFacade->buildFilterForms($parameters);
         $parameters->view->filterForms = $filterData['filterForms'];
         $parameters->view->filterFormViews = $filterData['filterFormViews'];
         $parameters->view->advancedFilterForm = $filterData['advancedFilterForm'];
@@ -105,7 +105,7 @@ class ViewService
         $choices = $this->choiceBuilder->buildMassChoices($parameters);
         if (!empty($choices)) {
             $parameters->view->massActionChoices = $choices;
-            $parameters->view->massActionFormView = $this->gridFormFacade
+            $parameters->view->massActionFormView = $this->formFacade
                 ->buildMassActionForm($parameters)
                 ->createView();
         }
@@ -119,7 +119,7 @@ class ViewService
         $choices = $this->choiceBuilder->buildExportChoices($parameters);
         if (!empty($choices)) {
             $parameters->view->exportActionChoices = $choices;
-            $parameters->view->exportActionFormView = $this->gridFormFacade
+            $parameters->view->exportActionFormView = $this->formFacade
                 ->buildExportActionForm($parameters)
                 ->createView();
         }

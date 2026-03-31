@@ -22,11 +22,13 @@ class Sortable implements AttributeInterface
 
     public function __construct(
         ?string $direction = null,
-        int $priority = 0
+        int $priority = 0,
+        bool $allowed = true
     ) {
         $this->value = [
             'direction' => $direction,
-            'priority' => $priority,
+            'priority'  => $priority,
+            'can_sort'  => $allowed,
         ];
     }
 

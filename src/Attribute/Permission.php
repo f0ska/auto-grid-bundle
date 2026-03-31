@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace F0ska\AutoGridBundle\Attribute;
 
 use Attribute;
-use F0ska\AutoGridBundle\Attribute\Abstract\AbstractAttribute;
 use F0ska\AutoGridBundle\Model\Permission as PermissionModel;
 
 #[Attribute(Attribute::TARGET_ALL | Attribute::IS_REPEATABLE)]
