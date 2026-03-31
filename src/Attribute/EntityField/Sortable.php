@@ -10,30 +10,33 @@
 
 declare(strict_types=1);
 
-namespace F0ska\AutoGridBundle\Attribute\Abstract;
+namespace F0ska\AutoGridBundle\Attribute\EntityField;
 
+use Attribute;
 use F0ska\AutoGridBundle\Attribute\AttributeInterface;
-use function Symfony\Component\String\u;
 
-abstract class AbstractAttribute implements AttributeInterface
+#[Attribute(Attribute::TARGET_PROPERTY)]
+class Sortable implements AttributeInterface
 {
+    private array $value;
+
     public function __construct(
-        public readonly mixed $value
+        ?string $direction = null,
+        int $priority = 0
     ) {
+        $this->value = [
+            'direction' => $direction,
+            'priority' => $priority,
+        ];
     }
 
     public function getCode(): string
     {
-        return $this->normalizeCode(trim((string) strrchr(static::class, '\\'), '\\'));
+        return 'sortable';
     }
 
-    public function getValue(): mixed
+    public function getValue(): array
     {
         return $this->value;
-    }
-
-    protected function normalizeCode(string $code): string
-    {
-        return u($code)->snake()->toString();
     }
 }

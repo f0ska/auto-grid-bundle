@@ -23,7 +23,7 @@ class FormOptions extends AbstractAttribute
      */
     public function __construct(array $value)
     {
-        $this->value = $value;
+        parent::__construct($value);
     }
 
     public function getCode(): string

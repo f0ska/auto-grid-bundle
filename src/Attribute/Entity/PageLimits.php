@@ -23,16 +23,13 @@ class PageLimits extends AbstractAttribute
      */
     public function __construct(array $value)
     {
-        $this->value = array_values(
+        $filteredValue = array_values(
             array_filter(
                 $value,
-                function (int $item) {
-                    return $item > 0;
-                }
+                fn (int $item) => $item > 0
             )
         );
-        if (empty($this->value)) {
-            $this->value = null;
-        }
+
+        parent::__construct($filteredValue ?: null);
     }
 }

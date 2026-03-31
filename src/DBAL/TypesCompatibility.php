@@ -12,8 +12,6 @@ declare(strict_types=1);
 
 namespace F0ska\AutoGridBundle\DBAL;
 
-use Doctrine\DBAL\Types\Types;
-
 /**
  * Provides a compatibility layer for Doctrine DBAL types that may differ across versions.
  */
@@ -33,13 +31,13 @@ final class TypesCompatibility
      * Custom type for date points, for compatibility with older Symfony/Doctrine versions.
      */
     public const TYPES_DATE_POINT = 'date_point';
-    public const TYPES_DAY_POINT = 'day_point';
+    public const TYPES_DAY_POINT  = 'day_point';
     public const TYPES_TIME_POINT = 'time_point';
 
     /**
      * The 'jsonb' type, which may not be a standard constant.
      */
-    public const TYPES_JSONB = 'jsonb';
-    public const TYPES_JSON_OBJECT = 'json_object';
+    public const TYPES_JSONB        = 'jsonb';
+    public const TYPES_JSON_OBJECT  = 'json_object';
     public const TYPES_JSONB_OBJECT = 'jsonb_object';
 }

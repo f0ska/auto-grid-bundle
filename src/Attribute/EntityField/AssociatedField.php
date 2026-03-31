@@ -15,7 +15,7 @@ namespace F0ska\AutoGridBundle\Attribute\EntityField;
 use Attribute;
 use F0ska\AutoGridBundle\Attribute\Abstract\AbstractAttribute;
 
-#[Attribute(Attribute::TARGET_ALL | Attribute::IS_REPEATABLE)]
+#[Attribute(Attribute::TARGET_PROPERTY | Attribute::IS_REPEATABLE)]
 class AssociatedField extends AbstractAttribute
 {
     private string $key;
@@ -36,21 +36,17 @@ class AssociatedField extends AbstractAttribute
         ?bool $canSort = null,
         array $options = []
     ) {
-        $options['name'] = $name;
-        if ($label !== null) {
-            $options['label'] = $label;
-        }
-        if ($position !== null) {
-            $options['position'] = $position;
-        }
-        if ($canFilter !== null) {
-            $options['can_filter'] = $canFilter;
-        }
-        if ($canSort !== null) {
-            $options['can_sort'] = $canSort;
-        }
-        $this->value = $options;
         $this->key = $name;
+
+        $value = array_merge($options, array_filter([
+            'name' => $name,
+            'label' => $label,
+            'position' => $position,
+            'can_filter' => $canFilter,
+            'can_sort' => $canSort,
+        ], fn ($v) => $v !== null));
+
+        parent::__construct($value);
     }
 
     public function getCode(): string

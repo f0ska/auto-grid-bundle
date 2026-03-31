@@ -15,12 +15,12 @@ namespace F0ska\AutoGridBundle\Attribute\Permission;
 use Attribute;
 use F0ska\AutoGridBundle\Attribute\Abstract\AbstractAttribute;
 
-#[Attribute]
+#[Attribute(Attribute::TARGET_CLASS)]
 class DisallowFieldsByDefault extends AbstractAttribute
 {
     public function __construct()
     {
-        $this->value = true;
+        parent::__construct(true);
     }
 
     public function getCode(): string

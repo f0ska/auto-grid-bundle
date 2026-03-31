@@ -18,8 +18,8 @@ use F0ska\AutoGridBundle\Attribute\Abstract\AbstractAttribute;
 #[Attribute]
 class MultipleFilter extends AbstractAttribute
 {
-    public function __construct(bool $value)
+    public function __construct(bool $value = true)
     {
-        $this->value = $value;
+        parent::__construct($value);
     }
 }

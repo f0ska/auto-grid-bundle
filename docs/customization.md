@@ -28,6 +28,28 @@ Possible scenarios:
   and [FieldParameter](../src/Model/FieldParameter.php) models, as well as pass an optional `customization` argument
   to the [AutoGridFactory](../src/Factory/AutoGridFactory.php) to persist your customization data if needed.
 
+## Grid-Specific Permissions
+
+You can use the `gridId` to differentiate between different instances of AutoGrid for the same entity. This is particularly useful when you need different access rules for different grids.
+
+1.  **Set `gridId` in your controller:**
+
+    ```php
+    $autoGrid = $this->autoGridService->create(User::class);
+    $autoGrid->setGridId('admin_user_grid');
+    return $this->autoGridService->render($autoGrid);
+    ```
+
+2.  **Apply grid-specific attributes to your entity:**
+
+    ```php
+    #[Attribute\Permission(action: 'delete', allow: false, gridId: 'admin_user_grid')]
+    #[Attribute\Permission(action: 'delete', allow: true)]
+    class User { ... }
+    ```
+
+    In this example, the "delete" action will be disallowed in the grid with ID `admin_user_grid`, but allowed in all other grids for this entity.
+
 ## Events
 
 | Event Name                     | Event Object                                |

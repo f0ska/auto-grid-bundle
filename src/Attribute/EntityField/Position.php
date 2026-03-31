@@ -20,6 +20,6 @@ class Position extends AbstractAttribute
 {
     public function __construct(int $value)
     {
-        $this->value = $value;
+        parent::__construct($value);
     }
 }

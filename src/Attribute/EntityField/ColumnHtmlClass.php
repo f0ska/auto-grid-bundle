@@ -20,9 +20,11 @@ class ColumnHtmlClass extends AbstractAttribute
 {
     public function __construct(?string $headerClass = null, ?string $valueClass = null)
     {
-        $this->value = [
+        $value = array_filter([
             'header' => $headerClass,
             'value' => $valueClass,
-        ];
+        ], fn ($v) => $v !== null);
+
+        parent::__construct($value);
     }
 }

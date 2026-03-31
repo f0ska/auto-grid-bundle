@@ -20,6 +20,6 @@ class ValuePrefix extends AbstractAttribute
 {
     public function __construct(string $value)
     {
-        $this->value = $value;
+        parent::__construct($value);
     }
 }

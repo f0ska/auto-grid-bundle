@@ -2,29 +2,37 @@
 <div class="container-fluid">
     <div class="row">
         {% for fieldset in view.fieldset.defined %}
-            <div class="col {{ fieldset.class }}">
-                <div class="card mt-3">
-                    <h5 class="card-header">
-                        {{ fieldset.name|trans }}
-                    </h5>
-                    <div class="card-body">
-                        {% for fieldName in fieldset.fields %}
-                            {% if attribute(form, fieldName) is defined %}
-                                {{ form_row(attribute(form, fieldName)) }}
-                            {% endif %}
-                        {% endfor %}
+            {% block autogrid_fieldset_form_card %}
+                <div class="col {{ fieldset.class }}">
+                    <div class="card mt-3">
+                        {% block autogrid_fieldset_form_header %}
+                            <h5 class="card-header">
+                                {{ fieldset.name|trans }}
+                            </h5>
+                        {% endblock %}
+                        {% block autogrid_fieldset_form_body %}
+                            <div class="card-body">
+                                {% for fieldName in fieldset.fields %}
+                                    {% if attribute(form, fieldName) is defined %}
+                                        {{ form_row(attribute(form, fieldName)) }}
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        {% endblock %}
                     </div>
                 </div>
-            </div>
+            {% endblock %}
         {% endfor %}
         {% if view.fieldset.not_defined %}
-            <div class="col mt-4">
-                {% for fieldName in view.fieldset.not_defined %}
-                    {% if attribute(form, fieldName) is defined %}
-                        {{ form_row(attribute(form, fieldName)) }}
-                    {% endif %}
-                {% endfor %}
-            </div>
+            {% block autogrid_fieldset_form_no_fieldset %}
+                <div class="col mt-4">
+                    {% for fieldName in view.fieldset.not_defined %}
+                        {% if attribute(form, fieldName) is defined %}
+                            {{ form_row(attribute(form, fieldName)) }}
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endblock %}
         {% endif %}
     </div>
 </div>

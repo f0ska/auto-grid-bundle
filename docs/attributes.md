@@ -13,7 +13,6 @@ use F0ska\AutoGridBundle\Attribute;
 ...
 
 #[ORM\Entity(repositoryClass: DemoOneRepository::class)]
-#[Attribute\Entity\DefaultSort(['name' => 'asc'])]
 class DemoOne
 {
     #[ORM\Id]
@@ -23,6 +22,7 @@ class DemoOne
 
     #[ORM\Column(length: 255)]
     #[Attribute\EntityField\CanFilter(true)]
+    #[Attribute\EntityField\Sortable(direction: 'asc')]
     private ?string $name = null;
     
     ...
@@ -37,7 +37,6 @@ class DemoOne
 | [ActionFormType](../src/Attribute/Entity/ActionFormType.php)           | Provides your own form definition. You can provide different form definitions for the actions such as `create`, `edit`, `filter`, and `advanced_filter`.                                                                                                                                                                                                                                       |
 | [ActionRoute](../src/Attribute/Entity/ActionRoute.php)                 | Allows to define custom routes for various actions.<ul><li>The `route` argument defines the custom route name. If skipped, the action name uses instead.</li><li>The `parameters` argument specifies the parameter names used in the route, with values taken from the factory's route parameters (see [Optional Factory Arguments](optional-factory-arguments.md)) or from the current route. |
 | [AdvancedFilter](../src/Attribute/Entity/AdvancedFilter.php)           | Enables the advanced filter feature.                                                                                                                                                                                                                                                                                                                                                           |
-| [DefaultSort](../src/Attribute/Entity/DefaultSort.php)                 | Allows you to define the default sort order for your data in the grid.                                                                                                                                                                                                                                                                                                                         |
 | [ExportAction](../src/Attribute/Entity/ExportAction.php)               | Provides a simple export feature. Takes applied filters into account. Triggers [ExportEvent](../src/Event/ExportEvent.php). Does nothing by default.                                                                                                                                                                                                                                           |
 | [Fieldset](../src/Attribute/Entity/Fieldset.php)                       | Groups fields on default form and view pages.                                                                                                                                                                                                                                                                                                                                                  |
 | [FormThemes](../src/Attribute/Entity/FormThemes.php)                   | Overrides form themes.                                                                                                                                                                                                                                                                                                                                                                         |
@@ -55,10 +54,7 @@ class DemoOne
 |--------------------------------------------------------------------------------------|------------------------------------------------------------------------------------|
 | [DisallowActionsByDefault](../src/Attribute/Permission/DisallowActionsByDefault.php) | Inverts permissions for all AutoGrid actions. By default, all actions are allowed. |
 | [DisallowFieldsByDefault](../src/Attribute/Permission/DisallowFieldsByDefault.php)   | Inverts permissions for all AutoGrid fields. By default, all fields are allowed.   |
-| [Allow](../src/Attribute/Permission/Allow.php)                                       | Allows specific actions, with an optional role.                                    |
-| [Forbid](../src/Attribute/Permission/Forbid.php)                                     | Disallows specific actions, with an optional role.                                 |
-| [AllowAll](../src/Attribute/Permission/Allow.php)                                    | Allows all actions, with an optional role.                                         |
-| [ForbidAll](../src/Attribute/Permission/Forbid.php)                                  | Disallows all actions, with an optional role.                                      |
+| [Permission](../src/Attribute/Permission.php)                                       | Allows or disallows specific actions, with an optional role and grid context. Use `#[Permission(action: 'delete', allow: false)]` to forbid an action globally. Use `#[Permission(action: 'edit', gridId: 'my_grid')]` for grid-specific rules. |
 
 ## Entity property (field) attributes
 
@@ -67,7 +63,7 @@ class DemoOne
 | [AddToFieldset](../src/Attribute/EntityField/AddToFieldset.php)     | Adds a field to a group defined in [Fieldset](../src/Attribute/Entity/Fieldset.php), allowing better organization of related fields. |
 | [AssociatedField](../src/Attribute/EntityField/AssociatedField.php) | Creates "virtual" fields from associated entities (relations).                                                                       |
 | [CanFilter](../src/Attribute/EntityField/CanFilter.php)             | Controls the column filter feature, allowing to filter data by this column.                                                          |
-| [CanSort](../src/Attribute/EntityField/CanSort.php)                 | Controls the column sort feature, enabling to sort data by this column.                                                              |
+| [Sortable](../src/Attribute/EntityField/Sortable.php)               | Makes a column sortable. The `direction` (`asc` or `desc`) and `priority` arguments can be used to set the default sort order.       |
 | [ColumnHtmlClass](../src/Attribute/EntityField/ColumnHtmlClass.php) | Adds HTML classes to the grid table column for styling purposes.                                                                     |
 | [FieldTemplate](../src/Attribute/EntityField/FieldTemplate.php)     | Overrides the field template for custom rendering.                                                                                   |
 | [FormOptions](../src/Attribute/EntityField/FormOptions.php)         | Overrides form options for the form field.                                                                                           |
@@ -84,10 +80,7 @@ class DemoOne
 
 | Attribute                                              | Description                                                                             |
 |--------------------------------------------------------|-----------------------------------------------------------------------------------------|
-| [Allow](../src/Attribute/Permission/Allow.php)         | Allows access to this field for specific actions. A role can be provided optionally.    |
-| [Forbid](../src/Attribute/Permission/Forbid.php)       | Disallows access to this field for specific actions. A role can be provided optionally. |
-| [AllowAll](../src/Attribute/Permission/AllowAll.php)   | Allows access to this field for all actions. A role can be provided optionally.         |
-| [ForbidAll](../src/Attribute/Permission/ForbidAll.php) | Disallows access to this field for all actions. A role can be provided optionally.      |
+| [Permission](../src/Attribute/Permission.php)         | Allows or disallows access to this field for specific actions, with optional role and grid context. |
 
 ---
 

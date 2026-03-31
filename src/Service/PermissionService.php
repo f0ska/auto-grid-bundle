@@ -37,14 +37,21 @@ class PermissionService
         $defaultAllowed = !$this->metaDataService->getEntityAttribute($agId, 'permission.disallow_actions_by_default');
         foreach ($this->actionListService->getActions() as $action) {
             $key = $action->getCode();
-            $rules[$key] = true;
             if (!$action->isRestrictable()) {
+                $rules[$key] = true;
                 continue;
             }
-            $widePermission = $this->metaDataService->getEntityAttribute($agId, 'permission.all');
-            $permission = $this->metaDataService->getEntityAttribute($agId, 'permission.action.' . $key);
-            $allAllowed = $this->isAllowed($widePermission, $defaultAllowed);
-            $rules[$key] = $this->isAllowed($permission, $allAllowed);
+
+            $genericGlobal = $this->metaDataService->getEntityAttribute($agId, 'permission.all');
+            $gridSpecificGlobal = $this->metaDataService->getEntityAttribute($agId, "permission.grid.$agId.all");
+            $genericAction = $this->metaDataService->getEntityAttribute($agId, "permission.action.$key");
+            $gridSpecificAction = $this->metaDataService->getEntityAttribute($agId, "permission.grid.$agId.action.$key");
+
+            // Resolve global first
+            $resolvedGlobal = $this->isAllowed($gridSpecificGlobal, $this->isAllowed($genericGlobal, $defaultAllowed));
+
+            // Resolve action with global as default
+            $rules[$key] = $this->isAllowed($gridSpecificAction, $this->isAllowed($genericAction, $resolvedGlobal));
         }
         return $rules;
     }
@@ -59,10 +66,17 @@ class PermissionService
                 continue;
             }
             $key = $action->getCode();
-            $widePermission = $this->metaDataService->getEntityFieldAttribute($agId, $field, 'permission.all');
-            $permission = $this->metaDataService->getEntityFieldAttribute($agId, $field, 'permission.action.' . $key);
-            $allAllowed = $this->isAllowed($widePermission, $defaultAllowed);
-            $rules[$key] = $this->isAllowed($permission, $allAllowed);
+
+            $genericGlobal = $this->metaDataService->getEntityFieldAttribute($agId, $field, 'permission.all');
+            $gridSpecificGlobal = $this->metaDataService->getEntityFieldAttribute($agId, $field, "permission.grid.$agId.all");
+            $genericAction = $this->metaDataService->getEntityFieldAttribute($agId, $field, "permission.action.$key");
+            $gridSpecificAction = $this->metaDataService->getEntityFieldAttribute($agId, $field, "permission.grid.$agId.action.$key");
+
+            // Resolve global first
+            $resolvedGlobal = $this->isAllowed($gridSpecificGlobal, $this->isAllowed($genericGlobal, $defaultAllowed));
+
+            // Resolve action with global as default
+            $rules[$key] = $this->isAllowed($gridSpecificAction, $this->isAllowed($genericAction, $resolvedGlobal));
         }
         return $rules;
     }

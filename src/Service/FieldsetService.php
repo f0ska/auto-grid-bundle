@@ -18,43 +18,31 @@ class FieldsetService
 {
     public function build(Parameters $parameters): array
     {
-        $fieldSet = $parameters->attributes['fieldset'] ?? [];
+        $fieldsets = $parameters->attributes['fieldset'] ?? [];
         $allowedFields = [];
-        $noFieldset = [];
+        $fieldsWithoutFieldset = [];
 
         foreach ($parameters->fields as $field) {
             if (!empty($field->permissions[$parameters->action])) {
                 $allowedFields[] = $field->name;
-                $noFieldset[$field->name] = null;
+                $fieldsWithoutFieldset[$field->name] = null;
             }
         }
 
-        foreach ($fieldSet as &$set) {
-            $set['fields'] = array_intersect($set['fields'], $allowedFields);
-            $noFieldset = array_diff_key($noFieldset, array_flip($set['fields']));
-        }
-        unset($set); // Unset reference
-
-        foreach ($allowedFields as $fieldName) {
-            $key = $parameters->fields[$fieldName]->attributes['add_to_fieldset'] ?? null;
-            if ($key === null || !isset($fieldSet[$key])) {
-                continue;
-            }
-            if (!in_array($fieldName, $fieldSet[$key]['fields'], true)) {
-                $fieldSet[$key]['fields'][] = $fieldName;
-                unset($noFieldset[$fieldName]);
-            }
-        }
-
-        foreach ($fieldSet as $key => $set) {
-            if (empty($set['fields'])) {
-                unset($fieldSet[$key]);
+        foreach ($fieldsets as $key => &$fieldset) {
+            $fieldset['fields'] = array_intersect($fieldset['fields'], $allowedFields);
+            if (empty($fieldset['fields'])) {
+                unset($fieldsets[$key]);
+            } else {
+                foreach ($fieldset['fields'] as $fieldName) {
+                    unset($fieldsWithoutFieldset[$fieldName]);
+                }
             }
         }
 
         return [
-            'defined' => $fieldSet,
-            'not_defined' => array_keys($noFieldset),
+            'defined' => $fieldsets,
+            'not_defined' => array_keys($fieldsWithoutFieldset),
         ];
     }
 }

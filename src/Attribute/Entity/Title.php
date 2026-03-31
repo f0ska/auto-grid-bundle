@@ -15,11 +15,11 @@ namespace F0ska\AutoGridBundle\Attribute\Entity;
 use Attribute;
 use F0ska\AutoGridBundle\Attribute\Abstract\AbstractAttribute;
 
-#[Attribute]
+#[Attribute(Attribute::TARGET_CLASS)]
 class Title extends AbstractAttribute
 {
     public function __construct(string $value)
     {
-        $this->value = $value;
+        parent::__construct($value);
     }
 }

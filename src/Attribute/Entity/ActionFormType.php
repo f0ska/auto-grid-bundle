@@ -15,7 +15,7 @@ namespace F0ska\AutoGridBundle\Attribute\Entity;
 use Attribute;
 use F0ska\AutoGridBundle\Attribute\Abstract\AbstractAttribute;
 
-#[Attribute(Attribute::TARGET_ALL | Attribute::IS_REPEATABLE)]
+#[Attribute(Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
 class ActionFormType extends AbstractAttribute
 {
     /**
@@ -24,10 +24,11 @@ class ActionFormType extends AbstractAttribute
      */
     public function __construct(string $formType, array $actions = ['create', 'edit'])
     {
-        $this->value = [];
+        $value = [];
         foreach ($actions as $action) {
-            $this->value[$action] = $formType;
+            $value[$action] = $formType;
         }
+        parent::__construct($value);
     }
 
     public function getCode(): string

@@ -23,6 +23,6 @@ class FormThemes extends AbstractAttribute
      */
     public function __construct(array $value)
     {
-        $this->value = $value;
+        parent::__construct($value);
     }
 }

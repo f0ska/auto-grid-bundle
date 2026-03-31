@@ -56,7 +56,7 @@ f0ska_auto_grid:
             column_value_action: 'grid/column_value_action.html.twig'
             column_value_massaction: 'grid/column_value_massaction.html.twig'
             grid_number_per_page: 'grid/grid_number_per_page.html.twig'
-            grid_pagiantion: 'grid/grid_pagiantion.html.twig'
+            grid_pagination: 'grid/grid_pagination.html.twig'
             row_class: 'grid/row_class.html.twig'
 
     # --- View & Display Settings ---

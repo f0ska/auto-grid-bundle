@@ -16,19 +16,21 @@ use Attribute;
 use F0ska\AutoGridBundle\Attribute\Abstract\AbstractAttribute;
 use function Symfony\Component\String\u;
 
-#[Attribute(Attribute::TARGET_ALL | Attribute::IS_REPEATABLE)]
+#[Attribute(Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
 class Fieldset extends AbstractAttribute
 {
     private string $code;
 
-    public function __construct(string $name, string $class = '', ?string $code = null, array $fields = [])
+    public function __construct(string $name, string $class = '', ?string $code = null)
     {
         $this->code = u($code ?? $name)->ascii()->snake()->toString();
-        $this->value = [
+        $value = [
             'name' => $name,
             'class' => $class,
-            'fields' => $fields,
+            'fields' => [], // Fields are added by the parser from AddToFieldset attributes
         ];
+
+        parent::__construct($value);
     }
 
     public function getCode(): string

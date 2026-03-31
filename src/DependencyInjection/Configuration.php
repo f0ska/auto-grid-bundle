@@ -76,7 +76,7 @@ class Configuration implements ConfigurationInterface
                                 ->scalarNode('column_value_action')->defaultValue('grid/column_value_action.html.twig')->end()
                                 ->scalarNode('column_value_massaction')->defaultValue('grid/column_value_massaction.html.twig')->end()
                                 ->scalarNode('grid_number_per_page')->defaultValue('grid/grid_number_per_page.html.twig')->end()
-                                ->scalarNode('grid_pagiantion')->defaultValue('grid/grid_pagiantion.html.twig')->end()
+                                ->scalarNode('grid_pagination')->defaultValue('grid/grid_pagination.html.twig')->end()
                                 ->scalarNode('row_class')->defaultValue('grid/row_class.html.twig')->end()
                             ->end()
                         ->end()

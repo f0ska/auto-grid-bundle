@@ -20,6 +20,6 @@ class FieldTemplate extends AbstractAttribute
 {
     public function __construct(string $templatePath)
     {
-        $this->value = $templatePath;
+        parent::__construct($templatePath);
     }
 }

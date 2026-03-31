@@ -15,16 +15,20 @@ namespace F0ska\AutoGridBundle\Attribute\Entity;
 use Attribute;
 use F0ska\AutoGridBundle\Attribute\Abstract\AbstractAttribute;
 
-#[Attribute(Attribute::TARGET_ALL | Attribute::IS_REPEATABLE)]
+#[Attribute(Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
 class ExportAction extends AbstractAttribute
 {
+    private readonly string $code;
+
     public function __construct(string $name, ?string $code = null, ?string $role = null)
     {
-        $this->value = ['name' => $name, 'code' => $this->normalizeCode($code ?? $name), 'role' => $role];
+        $this->code = $this->normalizeCode($code ?? $name);
+        $value = ['name' => $name, 'code' => $this->code, 'role' => $role];
+        parent::__construct($value);
     }
 
     public function getCode(): string
     {
-        return 'export_action.' . $this->value['code'];
+        return 'export_action.' . $this->code;
     }
 }

@@ -1,4 +1,6 @@
-{% set value = agFieldValue(entity, field) %}
-<span class="h5 m-0">
-    <i class="bi bi-{{ value ? 'check-lg' : 'dash' }}"></i>
-</span>
+{% block autogrid_field_boolean_content %}
+    {% set value = agFieldValue(entity, field) %}
+    <span class="h5 m-0">
+        <i class="bi bi-{{ value ? 'check-lg' : 'dash' }}"></i>
+    </span>
+{% endblock %}

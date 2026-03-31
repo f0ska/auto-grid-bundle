@@ -12,6 +12,9 @@ declare(strict_types=1);
 
 namespace F0ska\AutoGridBundle\Attribute\Abstract;
 
+use Attribute;
+
+#[Attribute(Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)] // Added Attribute target for clarity, assuming it's meant to be repeatable on classes
 class AbstractCustomRoute extends AbstractAttribute
 {
     /**
@@ -20,9 +23,10 @@ class AbstractCustomRoute extends AbstractAttribute
      */
     public function __construct(?string $route = null, array $parameters = [])
     {
-        $this->value = [
+        $value = [
             'route' => $route,
             'parameters' => $parameters,
         ];
+        parent::__construct($value);
     }
 }

@@ -21,6 +21,7 @@ class AddToFieldset extends AbstractAttribute
 {
     public function __construct(string $nameOrCode)
     {
-        $this->value = u($nameOrCode)->ascii()->snake()->toString();
+        $value = u($nameOrCode)->ascii()->snake()->toString();
+        parent::__construct($value);
     }
 }

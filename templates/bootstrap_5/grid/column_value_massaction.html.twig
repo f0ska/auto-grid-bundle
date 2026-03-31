@@ -1,13 +1,17 @@
 {% if view.massActionFormView %}
-    <td class="{{ attributes.html_class.mass_action_column|default('align-middle text-center') }}">
-        <label class="w-100">
-            <input type="checkbox"
-                   autocomplete="off"
-                   name="{{ field_name(view.massActionFormView.ids) }}[]"
-                   class="mass-ids-{{ agId }}"
-                   form="{{ view.massActionFormView.vars.attr.id }}"
-                   value="{{ entity.id }}"
-            >
-        </label>
-    </td>
+    {% block autogrid_grid_column_value_massaction %}
+        <td class="{{ attributes.html_class.mass_action_column|default('align-middle text-center') }}">
+            {% block autogrid_grid_column_value_massaction_checkbox %}
+                <label class="w-100">
+                    <input type="checkbox"
+                           autocomplete="off"
+                           name="{{ field_name(view.massActionFormView.ids) }}[]"
+                           class="mass-ids-{{ agId }}"
+                           form="{{ view.massActionFormView.vars.attr.id }}"
+                           value="{{ entity.id }}"
+                    >
+                </label>
+            {% endblock %}
+        </td>
+    {% endblock %}
 {% endif %}

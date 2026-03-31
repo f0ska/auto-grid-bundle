@@ -1,16 +1,22 @@
 {% if view.pagination.limits|length > 1 %}
     {% set btnClass = attributes.html_class.tfoot_btn|default('btn-outline-secondary') %}
-    <div class="btn-group" role="group">
-        {% for pageLimit in view.pagination.limits %}
-            {% if pageLimit == view.pagination.limit %}
-                <span class="btn btn-sm {{ btnClass }} active">{{ pageLimit }}</span>
-            {% else %}
-                {% set calcOffset = (view.pagination.count > view.pagination.limit ? view.pagination.limit : view.pagination.count) * (view.pagination.page - 1) + 1 %}
-                {% set toPage = (calcOffset / pageLimit)|round(0, 'ceil')|agToInt %}
-                <a type="button"
-                   href="{{ agRun(agActionUrl, 'grid', {'limit': pageLimit, 'page': toPage}) }}"
-                   class="btn btn-sm {{ btnClass }}">{{ pageLimit }}</a>
-            {% endif %}
-        {% endfor %}
-    </div>
+    {% block autogrid_grid_limit %}
+        <div class="btn-group" role="group">
+            {% for pageLimit in view.pagination.limits %}
+                {% if pageLimit == view.pagination.limit %}
+                    {% block autogrid_grid_limit_active %}
+                        <span class="btn btn-sm {{ btnClass }} active">{{ pageLimit }}</span>
+                    {% endblock %}
+                {% else %}
+                    {% block autogrid_grid_limit_button %}
+                        {% set calcOffset = (view.pagination.count > view.pagination.limit ? view.pagination.limit : view.pagination.count) * (view.pagination.page - 1) + 1 %}
+                        {% set toPage = (calcOffset / pageLimit)|round(0, 'ceil')|agToInt %}
+                        <a type="button"
+                           href="{{ agRun(agActionUrl, 'grid', {'limit': pageLimit, 'page': toPage}) }}"
+                           class="btn btn-sm {{ btnClass }}">{{ pageLimit }}</a>
+                    {% endblock %}
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endblock %}
 {% endif %}

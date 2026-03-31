@@ -20,6 +20,6 @@ class AdvancedFilter extends AbstractAttribute
 {
     public function __construct(bool $value)
     {
-        $this->value = $value;
+        parent::__construct($value);
     }
 }
