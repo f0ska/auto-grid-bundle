@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace F0ska\AutoGridBundle\Builder;
 
-use F0ska\AutoGridBundle\Form\NotAvailableType;
 use F0ska\AutoGridBundle\Model\FieldParameter;
 use F0ska\AutoGridBundle\Model\Parameters;
 use F0ska\AutoGridBundle\Service\ParametersService;
@@ -157,7 +156,7 @@ class EntityFormBuilder
         }
         $options = $field->attributes['form']['options'] ?? [];
         $type = $field->attributes['form']['type'] ?? null;
-        if ($type === NotAvailableType::class) {
+        if (!$field->canEdit) {
             return;
         }
         if (!isset($options['label']) && isset($field->attributes['label'])) {

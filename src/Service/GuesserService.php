@@ -17,7 +17,6 @@ use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\ToManyAssociationMapping;
 use F0ska\AutoGridBundle\DBAL\TypesCompatibility;
-use F0ska\AutoGridBundle\Form\NotAvailableType;
 use F0ska\AutoGridBundle\Model\FieldParameter;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Clock\DatePoint;
@@ -134,7 +133,9 @@ class GuesserService
                 break;
             case Types::BLOB:
             case Types::BINARY:
-                $field->attributes['form']['type'] = NotAvailableType::class;
+                $field->canEdit = false;
+                $field->canFilter = false;
+                $field->canSort = false;
                 break;
         }
     }
