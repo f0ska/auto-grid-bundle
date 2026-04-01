@@ -13,6 +13,8 @@ declare(strict_types=1);
 namespace F0ska\AutoGridBundle\Builder;
 
 use Doctrine\DBAL\Types\Types;
+use F0ska\AutoGridBundle\Condition\InCondition;
+use F0ska\AutoGridBundle\Condition\RangeCondition;
 use F0ska\AutoGridBundle\Model\FieldParameter;
 use F0ska\AutoGridBundle\Model\Parameters;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -54,9 +56,8 @@ class FilterFormBuilder
 
     public function buildSingleFieldFilterForm(string $fieldName, Parameters $parameters): FormInterface
     {
-        $action = 'filter';
         $formName = 'filter-' . $fieldName . '-' . $parameters->agId;
-        $builder = $this->getFilterFormBuilder($formName, $action, $parameters);
+        $builder = $this->getFilterFormBuilder($formName, 'filter', $parameters);
         foreach ($parameters->fields as $field) {
             if ($field->name === $fieldName && $field->canFilter) {
                 $this->buildSearchField($builder, $field, true);
@@ -71,9 +72,8 @@ class FilterFormBuilder
 
     public function buildAdvancedFilterForm(Parameters $parameters): FormInterface
     {
-        $action = 'advanced_filter';
         $formName = 'filter-' . $parameters->agId;
-        $builder = $this->getFilterFormBuilder($formName, $action, $parameters);
+        $builder = $this->getFilterFormBuilder($formName, 'advanced_filter', $parameters);
         foreach ($parameters->fields as $field) {
             if ($field->canFilter) {
                 $this->buildSearchField($builder, $field, false);
@@ -105,7 +105,7 @@ class FilterFormBuilder
     private function buildSearchField(FormBuilderInterface $builder, FieldParameter $field, bool $required): void
     {
         $form = $this->prepareFilterFieldForm($field, $required);
-        if (!empty($field->attributes['range_filter'])) {
+        if ($field->filterCondition === RangeCondition::class) {
             $form = $this->prepareRangeFieldForm($form);
         }
         $this->addField($builder, $field, $form);
@@ -127,19 +127,28 @@ class FilterFormBuilder
 
     private function prepareFilterFieldForm(FieldParameter $field, bool $required): array
     {
-        $mappingType = $field->fieldMapping?->type;
         $form = $field->attributes['form'];
 
-        if ($mappingType) {
-            if ($mappingType === Types::BOOLEAN) {
-                $form['type'] = ChoiceType::class;
-                $form['options'] = [
-                    'required' => $required,
-                    'expanded' => $required,
-                    'choices' => ['f0ska.autogrid.choice.yes' => '1', 'f0ska.autogrid.choice.no' => '0'],
-                ];
-                return $form;
-            }
+        // User-provided filter form type/options via Filterable attribute take priority
+        if (!empty($field->attributes['filterable']['form_type'])) {
+            $form['type'] = $field->attributes['filterable']['form_type'];
+            $form['options'] = array_merge(
+                ['required' => $required],
+                $field->attributes['filterable']['form_options'] ?? []
+            );
+            return $form;
+        }
+
+        $mappingType = $field->fieldMapping?->type;
+
+        if ($mappingType === Types::BOOLEAN) {
+            $form['type'] = ChoiceType::class;
+            $form['options'] = [
+                'required' => $required,
+                'expanded' => $required,
+                'choices' => ['f0ska.autogrid.choice.yes' => '1', 'f0ska.autogrid.choice.no' => '0'],
+            ];
+            return $form;
         }
 
         $choices = $field->view['choices'] ?? null;
@@ -149,7 +158,15 @@ class FilterFormBuilder
                 'required' => $required,
                 'choices' => $this->choiceBuilder->buildChoicesFromChoices($choices),
             ];
-            if (!empty($field->attributes['multiple_filter'])) {
+            if ($this->resolveMultiple($field)) {
+                $form['options']['multiple'] = true;
+            }
+            return $form;
+        }
+
+        if ($form['type'] === ChoiceType::class && !empty($form['options']['choices'])) {
+            $form['options']['required'] = $required;
+            if ($this->resolveMultiple($field)) {
                 $form['options']['multiple'] = true;
             }
             return $form;
@@ -165,12 +182,26 @@ class FilterFormBuilder
         return $form;
     }
 
+    private function resolveMultiple(FieldParameter $field): bool
+    {
+        $filterableOptions = $field->attributes['filterable']['form_options'] ?? [];
+        if (array_key_exists('multiple', $filterableOptions)) {
+            return (bool) $filterableOptions['multiple'];
+        }
+        return $field->filterCondition === InCondition::class
+            || !empty($field->attributes['form']['options']['multiple']);
+    }
+
     private function isFormTypeAllowedInFilter(ResolvedFormTypeInterface $typeInstance): bool
     {
-        foreach (self::FILTER_TYPES_ALLOWED as $allowed) {
-            if ($typeInstance instanceof $allowed || $typeInstance->getParent() instanceof $allowed) {
-                return true;
+        $type = $typeInstance;
+        while ($type !== null) {
+            foreach (self::FILTER_TYPES_ALLOWED as $allowed) {
+                if ($type->getInnerType() instanceof $allowed) {
+                    return true;
+                }
             }
+            $type = $type->getParent();
         }
         return false;
     }

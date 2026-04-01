@@ -12,16 +12,12 @@ declare(strict_types=1);
 
 namespace F0ska\AutoGridBundle\Builder;
 
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Mapping\ToManyAssociationMapping;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
-use F0ska\AutoGridBundle\DBAL\TypesCompatibility;
-use F0ska\AutoGridBundle\Model\FieldParameter;
 use F0ska\AutoGridBundle\Model\Parameters;
+use F0ska\AutoGridBundle\Service\FilterConditionListService;
 use F0ska\AutoGridBundle\Service\MetaDataService;
-use F0ska\AutoGridBundle\Service\ParametersService;
 
 use function Symfony\Component\String\u;
 
@@ -33,11 +29,16 @@ class GridQueryBuilder
     private array $joins;
     private EntityManagerInterface $entityManager;
     private MetaDataService $metaDataService;
+    private FilterConditionListService $conditionList;
 
-    public function __construct(EntityManagerInterface $entityManager, MetaDataService $metaDataService)
-    {
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        MetaDataService $metaDataService,
+        FilterConditionListService $conditionList
+    ) {
         $this->entityManager = $entityManager;
         $this->metaDataService = $metaDataService;
+        $this->conditionList = $conditionList;
     }
 
     public function buildGridQuery(Parameters $parameters): Query
@@ -103,19 +104,9 @@ class GridQueryBuilder
             return;
         }
         foreach ($parameters->fields as $field) {
-            if (isset($filters[$field->name])) {
-                if (!empty($field->attributes['range_filter'])) {
-                    $this->buildFieldRangeFilter($builder, $field, $parameters);
-                    continue;
-                }
-                switch ($field->mappingType) {
-                    case ParametersService::MAPPING_ASSOC:
-                        $this->buildAssociatedFieldFilter($builder, $field, $parameters);
-                        break;
-                    default:
-                        $this->buildFieldFilter($builder, $field, $parameters);
-                        break;
-                }
+            if (isset($filters[$field->name]) && $field->filterCondition !== null) {
+                $column = $this->prepareField($builder, $field->name);
+                $this->conditionList->get($field->filterCondition)->apply($builder, $column, $field, $filters[$field->name]);
             }
         }
     }
@@ -144,69 +135,5 @@ class GridQueryBuilder
         }
 
         return $key;
-    }
-
-    private function buildFieldFilter(QueryBuilder $builder, FieldParameter $field, Parameters $parameters): void
-    {
-        $column = $this->prepareField($builder, $field->name);
-        $value = $parameters->request['filter'][$field->name];
-        $alias = uniqid('param');
-        switch ($field->fieldMapping?->type) {
-            case Types::TEXT:
-            case Types::JSON:
-            case Types::SIMPLE_ARRAY:
-            case TypesCompatibility::TYPES_ARRAY:
-            case TypesCompatibility::TYPES_OBJECT:
-                $exp = $builder->expr()->like($column, ':' . $alias);
-                $value = '%' . $value . '%';
-                break;
-            case Types::STRING:
-                $exp = $builder->expr()->like($column, ':' . $alias);
-                $value = $value . '%';
-                break;
-            default:
-                $exp = $builder->expr()->in($column, ':' . $alias);
-                break;
-        }
-        $builder->andWhere($exp);
-        $builder->setParameter($alias, $value);
-    }
-
-    private function buildAssociatedFieldFilter(
-        QueryBuilder $builder,
-        FieldParameter $field,
-        Parameters $parameters
-    ): void {
-        $multiple = $field->associationMapping instanceof ToManyAssociationMapping;
-        $column = $this->prepareField($builder, $field->name);
-        $value = $parameters->request['filter'][$field->name];
-        $alias = uniqid('param');
-
-        if ($multiple) {
-            $builder->innerJoin($column, $field->name);
-            $column = $field->name;
-        }
-
-        $exp = $builder->expr()->in($column, ':' . $alias);
-        $builder->andWhere($exp);
-        $builder->setParameter($alias, $value);
-    }
-
-    private function buildFieldRangeFilter(QueryBuilder $builder, FieldParameter $field, Parameters $parameters): void
-    {
-        $column = $this->prepareField($builder, $field->name);
-        $values = $parameters->request['filter'][$field->name];
-        $valueFrom = $values['from'] ?? null;
-        $valueTo = $values['to'] ?? null;
-        $aliasFrom = uniqid('param');
-        $aliasTo = $aliasFrom . 'To';
-        if ($valueFrom) {
-            $builder->andWhere($builder->expr()->gte($column, ':' . $aliasFrom));
-            $builder->setParameter($aliasFrom, $valueFrom);
-        }
-        if ($valueTo) {
-            $builder->andWhere($builder->expr()->lte($column, ':' . $aliasTo));
-            $builder->setParameter($aliasTo, $valueTo);
-        }
     }
 }

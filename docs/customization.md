@@ -21,12 +21,59 @@ Possible scenarios:
   and add your actions to the `autogrid.action` tag, making them public.
 - **Action parameters**: implement the [ActionParameterInterface](../src/ActionParameter/ActionParameterInterface.php)
   and add your actions to the `autogrid.action.parameter` tag, making them public.
+- **Filter conditions**: implement the [FilterConditionInterface](../src/Condition/FilterConditionInterface.php)
+  and add your condition to the `autogrid.filter_condition` tag, making it public. See [Custom filter conditions](#custom-filter-conditions) below.
 - **Customization Services**: implement the [CustomizationInterface](../src/Customization/CustomizationInterface.php)
   and add your customization services to the `autogrid.customization` tag, making them public.
   It allows you to impact AutoGrid internal parameters directly.
   You can use the `customization` array parameter within the [Parameters](../src/Model/Parameters.php)
   and [FieldParameter](../src/Model/FieldParameter.php) models, as well as pass an optional `customization` argument
   to the [AutoGridFactory](../src/Factory/AutoGridFactory.php) to persist your customization data if needed.
+
+## Custom filter conditions
+
+A filter condition controls how a submitted filter value is applied to the Doctrine query builder.
+Implement [FilterConditionInterface](../src/Condition/FilterConditionInterface.php) and register the class as a tagged service:
+
+```php
+// src/AutoGrid/MyCustomCondition.php
+namespace App\AutoGrid;
+
+use Doctrine\ORM\QueryBuilder;
+use F0ska\AutoGridBundle\Condition\FilterConditionInterface;
+use F0ska\AutoGridBundle\Model\FieldParameter;
+
+class MyCustomCondition implements FilterConditionInterface
+{
+    public function apply(QueryBuilder $qb, string $column, FieldParameter $field, mixed $value): void
+    {
+        $alias = uniqid('param');
+        $qb->andWhere("JSON_CONTAINS($column, :$alias) = 1")
+           ->setParameter($alias, json_encode($value));
+    }
+}
+```
+
+Register it in `services.yaml`:
+
+```yaml
+App\AutoGrid\MyCustomCondition:
+    tags:
+        - { name: autogrid.filter_condition }
+    public: true
+```
+
+Then use it in your entity via the `condition` parameter of `#[Filterable]`:
+
+```php
+use App\AutoGrid\MyCustomCondition;
+use F0ska\AutoGridBundle\Attribute\EntityField\Filterable;
+
+#[Filterable(condition: MyCustomCondition::class)]
+private ?array $tags = null;
+```
+
+You can inject any service into your condition class constructor — the DI container handles it automatically.
 
 ## Events
 

@@ -19,6 +19,12 @@ services:
         tags: [ 'autogrid.action' ]
         autowire: true
 
+    F0ska\AutoGridBundle\Condition\:
+        resource: '../src/Condition/*'
+        tags: [ 'autogrid.filter_condition' ]
+        autowire: true
+        public: true
+
     F0ska\AutoGridBundle\ActionParameter\:
         resource: '../src/ActionParameter/*'
         tags: [ 'autogrid.action.parameter' ]
@@ -44,6 +50,12 @@ services:
     F0ska\AutoGridBundle\Service\PermissionService:
         autowire: true
         lazy: true
+
+    F0ska\AutoGridBundle\Service\FilterConditionListService:
+        autowire: true
+        lazy: true
+        arguments:
+            $conditions: !tagged_iterator 'autogrid.filter_condition'
 
     F0ska\AutoGridBundle\Service\CustomizationService:
         autowire: true

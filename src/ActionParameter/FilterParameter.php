@@ -14,6 +14,8 @@ namespace F0ska\AutoGridBundle\ActionParameter;
 
 use DateTimeInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use F0ska\AutoGridBundle\Condition\InCondition;
+use F0ska\AutoGridBundle\Condition\RangeCondition;
 use F0ska\AutoGridBundle\Exception\ActionParameterException;
 use F0ska\AutoGridBundle\Model\FieldParameter;
 use F0ska\AutoGridBundle\Model\Parameters;
@@ -93,11 +95,12 @@ class FilterParameter implements ActionParameterInterface
             return true;
         }
         if (is_array($value)) {
-            if (
-                empty($field->attributes['range_filter'])
-                && empty($field->attributes['multiple_filter'])
-                && empty($field->attributes['form']['options']['multiple'])
-            ) {
+            $conditionAllowsArray = in_array(
+                $field->filterCondition,
+                [RangeCondition::class, InCondition::class],
+                true
+            );
+            if (!$conditionAllowsArray && empty($field->attributes['form']['options']['multiple'])) {
                 return false;
             }
             foreach ($value as $subValue) {

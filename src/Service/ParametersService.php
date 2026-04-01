@@ -254,8 +254,10 @@ class ParametersService
 
         $field->canSort = $field->attributes['can_sort'] ?? $hasIndex;
         $field->canFilter = $field->attributes['can_filter'] ?? $hasIndex;
+        $field->filterCondition = $field->attributes['filterable']['condition'] ?? null;
 
         $this->guesserService->guessFieldFormType($field, $agId);
+        $this->guesserService->guessFilterCondition($field);
     }
 
     private function buildAssociated(FieldParameter $field, string $agId): void
@@ -273,8 +275,10 @@ class ParametersService
 
         $field->canSort = $field->attributes['can_sort'] ?? true;
         $field->canFilter = $field->attributes['can_filter'] ?? true;
+        $field->filterCondition = $field->attributes['filterable']['condition'] ?? null;
 
         $this->guesserService->guessAssociatedFormType($field);
+        $this->guesserService->guessFilterCondition($field);
     }
 
     private function buildActionParams(Parameters $parameters, string $action, array $params): array

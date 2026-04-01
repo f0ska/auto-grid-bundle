@@ -16,8 +16,14 @@ use DateTimeImmutable;
 use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\ToManyAssociationMapping;
+use F0ska\AutoGridBundle\Condition\AssociationCondition;
+use F0ska\AutoGridBundle\Condition\ContainsCondition;
+use F0ska\AutoGridBundle\Condition\ExactCondition;
+use F0ska\AutoGridBundle\Condition\RangeCondition;
+use F0ska\AutoGridBundle\Condition\StartsWithCondition;
 use F0ska\AutoGridBundle\DBAL\TypesCompatibility;
 use F0ska\AutoGridBundle\Model\FieldParameter;
+use F0ska\AutoGridBundle\Service\ParametersService;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Clock\DatePoint;
 use Symfony\Component\Form\CallbackTransformer;
@@ -153,8 +159,8 @@ class GuesserService
             case Types::TIME_IMMUTABLE :
             case TypesCompatibility::TYPES_DATE_POINT:
                 $field->attributes['form']['options']['widget'] = 'single_text';
-                if (!isset($field->attributes['range_filter'])) {
-                    $field->attributes['range_filter'] = $this->configuration->formDateAsRange();
+                if ($field->filterCondition === null && $this->configuration->formDateAsRange()) {
+                    $field->filterCondition = RangeCondition::class;
                 }
                 break;
         }
@@ -252,6 +258,28 @@ class GuesserService
                 return new DatePoint($data->format(DateTimeInterface::ATOM));
             }
         );
+    }
+
+    public function guessFilterCondition(FieldParameter $field): void
+    {
+        if (!$field->canFilter || $field->filterCondition !== null) {
+            return;
+        }
+
+        if ($field->mappingType === ParametersService::MAPPING_ASSOC) {
+            $field->filterCondition = AssociationCondition::class;
+            return;
+        }
+
+        $field->filterCondition = match ($field->fieldMapping?->type) {
+            Types::TEXT,
+            Types::JSON,
+            Types::SIMPLE_ARRAY,
+            TypesCompatibility::TYPES_ARRAY,
+            TypesCompatibility::TYPES_OBJECT => ContainsCondition::class,
+            Types::STRING                    => StartsWithCondition::class,
+            default                          => ExactCondition::class,
+        };
     }
 
     public function guessAssociatedFormType(FieldParameter $field): void

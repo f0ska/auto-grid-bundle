@@ -15,6 +15,7 @@ namespace F0ska\AutoGridBundle\Service;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use F0ska\AutoGridBundle\Attribute\AttributeInterface;
+use F0ska\AutoGridBundle\Attribute\EntityField\Filterable;
 use F0ska\AutoGridBundle\Attribute\EntityField\Sortable;
 use F0ska\AutoGridBundle\Model\AttributeCollection;
 use ReflectionAttribute;
@@ -64,6 +65,8 @@ class AttributeParserService
                     $instance = $attribute->newInstance();
                     if ($instance instanceof Sortable) {
                         $this->processSortableAttribute($instance, $fieldName, $fieldAttributes, $defaultSort);
+                    } elseif ($instance instanceof Filterable) {
+                        $this->processFilterableAttribute($instance, $fieldName, $fieldAttributes);
                     } elseif ($instance instanceof AttributeInterface) {
                         $this->addFieldValue($fieldAttributes, $instance, $fieldName);
                     }
@@ -92,6 +95,24 @@ class AttributeParserService
                 'direction' => $sortInfo['direction'],
                 'priority'  => $sortInfo['priority'],
             ];
+        }
+    }
+
+    private function processFilterableAttribute(
+        Filterable $attribute,
+        string $fieldName,
+        array &$fieldAttributes
+    ): void {
+        $info = $attribute->getValue();
+        $this->addValue($fieldAttributes, $fieldName . '.can_filter', $info['enabled']);
+        if ($info['condition'] !== null) {
+            $this->addValue($fieldAttributes, $fieldName . '.filterable.condition', $info['condition']);
+        }
+        if ($info['form_type'] !== null) {
+            $this->addValue($fieldAttributes, $fieldName . '.filterable.form_type', $info['form_type']);
+        }
+        if (!empty($info['form_options'])) {
+            $this->addValue($fieldAttributes, $fieldName . '.filterable.form_options', $info['form_options']);
         }
     }
 

@@ -21,7 +21,7 @@ class DemoOne
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Attribute\EntityField\CanFilter(true)]
+    #[Attribute\EntityField\Filterable]
     #[Attribute\EntityField\Sortable(direction: 'asc')]
     private ?string $name = null;
     
@@ -62,7 +62,7 @@ class DemoOne
 |---------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------|
 | [AddToFieldset](../src/Attribute/EntityField/AddToFieldset.php)     | Adds a field to a group defined in [Fieldset](../src/Attribute/Entity/Fieldset.php), allowing better organization of related fields. |
 | [AssociatedField](../src/Attribute/EntityField/AssociatedField.php) | Creates "virtual" fields from associated entities (relations).                                                                       |
-| [CanFilter](../src/Attribute/EntityField/CanFilter.php)             | Controls the column filter feature, allowing to filter data by this column.                                                          |
+| [Filterable](../src/Attribute/EntityField/Filterable.php)           | Enables filtering for this field. Accepts optional `condition`, `formType`, and `formOptions` to customize filter behavior. See [Filterable in depth](#filterable-in-depth). |
 | [Sortable](../src/Attribute/EntityField/Sortable.php)               | Makes a column sortable. The `direction` (`asc` or `desc`) and `priority` arguments can be used to set the default sort order.       |
 | [ColumnHtmlClass](../src/Attribute/EntityField/ColumnHtmlClass.php) | Adds HTML classes to the grid table column for styling purposes.                                                                     |
 | [FieldTemplate](../src/Attribute/EntityField/FieldTemplate.php)     | Overrides the field template for custom rendering.                                                                                   |
@@ -70,11 +70,72 @@ class DemoOne
 | [FormType](../src/Attribute/EntityField/FormType.php)               | Overrides the form type for the form field.                                                                                          |
 | [GridTruncate](../src/Attribute/EntityField/GridTruncate.php)       | Sets the maximum number of characters displayed in the grid cell.                                                                    |
 | [Label](../src/Attribute/EntityField/Label.php)                     | Overrides the field label.                                                                                                           |
-| [MultipleFilter](../src/Attribute/EntityField/MultipleFilter.php)   | Allows multiple filters on forms with choices. Does not work for OneToMany and ManyToMany relations.                                 |
 | [Position](../src/Attribute/EntityField/Position.php)               | Sets the field position, which can be positive or negative. Default is `0` for all fields.                                           |
-| [RangeFilter](../src/Attribute/EntityField/RangeFilter.php)         | Creates a range filter instead of a single one. It does not work for all field types.                                                |
 | [ValuePrefix](../src/Attribute/EntityField/ValuePrefix.php)         | Adds a prefix to displayed values.                                                                                                   |
 | [ValueSuffix](../src/Attribute/EntityField/ValueSuffix.php)         | Adds a suffix to displayed values.                                                                                                   |
+
+## Filterable in depth
+
+`#[Filterable]` enables filtering for a field and auto-guesses the filter form type and condition from Doctrine metadata.
+
+```php
+#[Filterable]
+private ?string $name = null;
+```
+
+### Parameters
+
+| Parameter     | Type      | Default | Description                                                                                              |
+|---------------|-----------|---------|----------------------------------------------------------------------------------------------------------|
+| `enabled`     | `bool`    | `true`  | Enable or disable filtering for this field.                                                              |
+| `condition`   | `?string` | `null`  | Filter condition class (implements `FilterConditionInterface`). Auto-guessed from field type if `null`.  |
+| `formType`    | `?string` | `null`  | Override the filter form type class. Auto-guessed if `null`.                                             |
+| `formOptions` | `array`   | `[]`    | Override the filter form options. Merged on top of auto-guessed options when `formType` is also set.     |
+
+### Built-in filter conditions
+
+| Class                                                                      | Behavior                                                                               | Auto-guessed for                              |
+|----------------------------------------------------------------------------|----------------------------------------------------------------------------------------|-----------------------------------------------|
+| [ExactCondition](../src/Condition/ExactCondition.php)                      | `column = :value`                                                                      | integers, booleans, enums, and most types     |
+| [StartsWithCondition](../src/Condition/StartsWithCondition.php)            | `column LIKE 'value%'`                                                                 | `string` columns                              |
+| [ContainsCondition](../src/Condition/ContainsCondition.php)                | `column LIKE '%value%'` — supports arrays (OR of LIKE per value)                       | `text`, `json`, `array` columns               |
+| [InCondition](../src/Condition/InCondition.php)                            | `column IN (:values)` — for multi-select on scalar/relation fields                     | not auto-guessed; use explicitly              |
+| [RangeCondition](../src/Condition/RangeCondition.php)                      | `column >= :from AND column <= :to` — renders two inputs                               | date/time columns when `form_date_as_range` is enabled |
+| [AssociationCondition](../src/Condition/AssociationCondition.php)          | `IN` with `innerJoin` for ToMany relations                                             | association fields                            |
+
+### Examples
+
+**Range filter on a date field:**
+```php
+use F0ska\AutoGridBundle\Condition\RangeCondition;
+
+#[Filterable(condition: RangeCondition::class)]
+private ?\DateTimeImmutable $publishAt = null;
+```
+
+**Multi-select filter using a choice field:**
+```php
+use F0ska\AutoGridBundle\Condition\InCondition;
+
+#[Filterable(condition: InCondition::class, formOptions: ['multiple' => true])]
+private ?string $status = null;
+```
+
+**Custom form type for the filter:**
+```php
+use App\Form\MyCustomFilterType;
+
+#[Filterable(formType: MyCustomFilterType::class, formOptions: ['required' => false])]
+private ?string $category = null;
+```
+
+**Custom filter condition (see [Customization](customization.md)):**
+```php
+use App\Filter\MyCustomCondition;
+
+#[Filterable(condition: MyCustomCondition::class)]
+private ?string $tags = null;
+```
 
 ## Entity property access attributes
 
