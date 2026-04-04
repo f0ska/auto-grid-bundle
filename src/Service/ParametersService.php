@@ -228,6 +228,10 @@ class ParametersService
 
     private function buildFieldPermissions(FieldParameter $field, string $agId): void
     {
+        if ($field->mappingType === self::MAPPING_VIRTUAL) {
+            $field->permissions = $this->permissionService->getEntityFieldActionPermissions($field->agId, $field->subName, $agId);
+            return;
+        }
         $field->permissions = $this->permissionService->getEntityFieldActionPermissions($agId, $field->name);
     }
 

@@ -17,10 +17,12 @@ use F0ska\AutoGridBundle\Condition\InCondition;
 use F0ska\AutoGridBundle\Condition\RangeCondition;
 use F0ska\AutoGridBundle\Model\FieldParameter;
 use F0ska\AutoGridBundle\Model\Parameters;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -38,6 +40,9 @@ class FilterFormBuilder
         DateTimeType::class,
         TimeType::class,
         NumberType::class,
+        ChoiceType::class,
+        EnumType::class,
+        EntityType::class,
     ];
 
     private FormFactoryInterface $formFactory;
@@ -127,59 +132,76 @@ class FilterFormBuilder
 
     private function prepareFilterFieldForm(FieldParameter $field, bool $required): array
     {
-        $form = $field->attributes['form'];
+        $formConfig = $this->initializeFormConfig($field, $required);
 
-        // User-provided filter form type/options via Filterable attribute take priority
+        // 1. Prioritize explicit filter form type/options from #[Filterable]
+        if ($this->applyExplicitFilterableAttributes($field, $formConfig)) {
+            return $formConfig;
+        }
+
+        // 2. If no explicit filter type, inherit and apply filter-specific rules
+        if ($field->canFilter) {
+            $this->applyBooleanFilterLogic($field, $formConfig);
+            $this->applyChoicesFilterLogic($field, $formConfig);
+            $this->handleTypeAllowanceAndFallback($field, $formConfig);
+        } else {
+            $formConfig['type'] = TextType::class;
+        }
+
+        return $formConfig;
+    }
+
+    private function initializeFormConfig(FieldParameter $field, bool $required): array
+    {
+        return [
+            'type' => $field->attributes['form']['type'] ?? TextType::class,
+            'options' => ['required' => $required] + ($field->attributes['form']['options'] ?? []),
+        ];
+    }
+
+    private function applyExplicitFilterableAttributes(FieldParameter $field, array &$formConfig): bool
+    {
         if (!empty($field->attributes['filterable']['form_type'])) {
-            $form['type'] = $field->attributes['filterable']['form_type'];
-            $form['options'] = array_merge(
-                ['required' => $required],
+            $formConfig['type'] = $field->attributes['filterable']['form_type'];
+            $formConfig['options'] = array_merge(
+                $formConfig['options'],
                 $field->attributes['filterable']['form_options'] ?? []
             );
-            return $form;
+            return true;
         }
+        return false;
+    }
 
-        $mappingType = $field->fieldMapping?->type;
-
-        if ($mappingType === Types::BOOLEAN) {
-            $form['type'] = ChoiceType::class;
-            $form['options'] = [
-                'required' => $required,
-                'expanded' => $required,
+    private function applyBooleanFilterLogic(FieldParameter $field, array &$formConfig): void
+    {
+        if ($field->fieldMapping?->type === Types::BOOLEAN && $formConfig['type'] !== ChoiceType::class) {
+            $formConfig['type'] = ChoiceType::class;
+            $formConfig['options'] = array_merge($formConfig['options'], [
+                'expanded' => $formConfig['options']['required'],
                 'choices' => ['f0ska.autogrid.choice.yes' => '1', 'f0ska.autogrid.choice.no' => '0'],
-            ];
-            return $form;
+            ]);
         }
+    }
 
+    private function applyChoicesFilterLogic(FieldParameter $field, array &$formConfig): void
+    {
         $choices = $field->view['choices'] ?? null;
-        if ($choices) {
-            $form['type'] = ChoiceType::class;
-            $form['options'] = [
-                'required' => $required,
-                'choices' => $this->choiceBuilder->buildChoicesFromChoices($choices),
-            ];
+        if ($choices && !in_array($formConfig['type'], [ChoiceType::class, EnumType::class, EntityType::class])) {
+            $formConfig['type'] = ChoiceType::class;
+            $formConfig['options']['choices'] = $this->choiceBuilder->buildChoicesFromChoices($choices);
             if ($this->resolveMultiple($field)) {
-                $form['options']['multiple'] = true;
+                $formConfig['options']['multiple'] = true;
             }
-            return $form;
         }
+    }
 
-        if ($form['type'] === ChoiceType::class && !empty($form['options']['choices'])) {
-            $form['options']['required'] = $required;
-            if ($this->resolveMultiple($field)) {
-                $form['options']['multiple'] = true;
-            }
-            return $form;
+    private function handleTypeAllowanceAndFallback(FieldParameter $field, array &$formConfig): void
+    {
+        if (!$this->isFormTypeAllowedInFilter($this->formRegistry->getType($formConfig['type']))) {
+            $formConfig['type'] = TextType::class;
+        } elseif ($this->resolveMultiple($field)) {
+            $formConfig['options']['multiple'] = true;
         }
-
-        if (!$this->isFormTypeAllowedInFilter($this->formRegistry->getType($form['type']))) {
-            $form['type'] = TextType::class;
-            $form['options'] = ['required' => $required];
-            return $form;
-        }
-
-        $form['options']['required'] = $required;
-        return $form;
     }
 
     private function resolveMultiple(FieldParameter $field): bool

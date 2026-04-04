@@ -185,9 +185,11 @@ Can be used on Class (for actions) or Property (for fields).
 ```php
 // Only admins can delete
 #[Attribute\Permission(action: 'delete', roles: ['ROLE_ADMIN'])]
-// Hide this field in 'public_grid'
-#[Attribute\Permission(gridId: 'public_grid', allow: false)]
-private ?string $internalNote = null;
+
+// Hide a field specifically in a grid with ID 'articles'
+// This is useful for virtual fields from [AssociatedField]
+#[Attribute\Permission(action: 'grid', gridId: 'articles', allow: false)]
+private ?string $email = null;
 ```
 </details>
 
@@ -206,7 +208,10 @@ private ?bool $notificationsEnabled = null;
 <summary><strong>AssociatedField</strong>: Pull specific fields from a related entity.</summary>
 
 This attribute is repeatable, allowing you to show multiple fields from the same relation. 
-Note: The main related entity is displayed by default; use `#[Permission(allow: false)]` on the property if you only want the virtual associated fields. Permissions for these fields are inherited from the target entity.
+
+**Notes:**
+- The main related entity is displayed by default; use `#[Permission(allow: false)]` on the property to hide it. 
+- Permissions for associated fields are inherited from the target entity. To hide a specific associated field in a parent grid, use `#[Permission]` on the target entity's property with the parent's `gridId`.
 
 ```php
 #[ORM\ManyToOne]
@@ -218,11 +223,11 @@ private ?User $author = null;
 </details>
 
 <details>
-<summary><strong>ColumnHtmlClass</strong>: Add CSS classes to the table column.</summary>
+<summary><strong>ColumnHtmlClass</strong>: Add CSS classes to the table header and cell.</summary>
 
 ```php
-#[ColumnHtmlClass("text-end font-monospace")]
-private ?float $amount = null;
+#[ColumnHtmlClass(headerClass: "text-center", valueClass: "fw-bold")]
+private ?string $status = null;
 ```
 </details>
 
@@ -240,18 +245,28 @@ private ?string $avatarPath = null;
 
 Auto-detects logic from Doctrine, but can be overridden.
 
+**Smart Fallback:** If you define `#[FormType]` and `#[FormOptions]` on the same property, the filter will automatically inherit these settings.
+
 **Conditions:**
-- `ExactCondition`: `column = :value` (IDs, Enums)
+- `ExactCondition`: `column = :value` (IDs, Enums, Choices)
 - `StartsWithCondition`: `LIKE 'val%'` (Strings)
 - `ContainsCondition`: `LIKE '%val%'` (Text)
 - `InCondition`: `column IN (...)` (Multi-select)
 - `RangeCondition`: Between two values (Dates, Numbers)
 
 ```php
-#[Filterable(condition: RangeCondition::class)]
-private ?DateTime $createdAt = null;
+// 1. Simple usage: Auto-guesses condition (e.g. StartsWith for strings)
+#[Filterable]
+private ?string $name = null;
 
-#[Filterable(condition: InCondition::class, formOptions: ['multiple' => true])]
+// 2. Override default condition (e.g. use 'Contains' instead of 'StartsWith')
+#[Filterable(condition: ContainsCondition::class)]
+private ?string $description = null;
+
+// 3. Choice fallback: Inherits ChoiceType and options automatically
+#[FormType(ChoiceType::class)]
+#[FormOptions(['choices' => ['Active' => 'a', 'Pending' => 'p']])]
+#[Filterable]
 private ?string $status = null;
 ```
 </details>
@@ -296,7 +311,14 @@ private ?int $id = null;
 <details>
 <summary><strong>Sortable</strong>: Enables column sorting.</summary>
 
+If a direction is provided, this field becomes the *initial* sort for the grid.
+
 ```php
+// Enable sorting for this column
+#[Sortable]
+private ?string $name = null;
+
+// Set as the default initial sort (descending)
 #[Sortable(direction: 'desc', priority: 1)]
 private ?int $id = null;
 ```

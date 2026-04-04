@@ -41,7 +41,7 @@ class Permission extends AbstractAttribute
     {
         $code = 'permission';
         if ($this->gridId !== null) {
-            $code .= '.grid.' . $this->gridId;
+            $code .= '.grid.' . $this->normalizeId($this->gridId);
         }
 
         if ($this->action === null) {

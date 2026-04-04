@@ -56,10 +56,11 @@ class PermissionService
         return $rules;
     }
 
-    public function getEntityFieldActionPermissions(string $agId, string $field): array
+    public function getEntityFieldActionPermissions(string $agId, string $field, ?string $gridId = null): array
     {
         $rules = [];
         $defaultAllowed = !$this->metaDataService->getEntityAttribute($agId, 'permission.disallow_fields_by_default');
+        $gridId = $gridId ?? $agId;
 
         foreach ($this->actionListService->getActions() as $action) {
             if (!$action->isRestrictable()) {
@@ -68,9 +69,9 @@ class PermissionService
             $key = $action->getCode();
 
             $genericGlobal = $this->metaDataService->getEntityFieldAttribute($agId, $field, 'permission.all');
-            $gridSpecificGlobal = $this->metaDataService->getEntityFieldAttribute($agId, $field, "permission.grid.$agId.all");
+            $gridSpecificGlobal = $this->metaDataService->getEntityFieldAttribute($agId, $field, "permission.grid.$gridId.all");
             $genericAction = $this->metaDataService->getEntityFieldAttribute($agId, $field, "permission.action.$key");
-            $gridSpecificAction = $this->metaDataService->getEntityFieldAttribute($agId, $field, "permission.grid.$agId.action.$key");
+            $gridSpecificAction = $this->metaDataService->getEntityFieldAttribute($agId, $field, "permission.grid.$gridId.action.$key");
 
             // Resolve global first
             $resolvedGlobal = $this->isAllowed($gridSpecificGlobal, $this->isAllowed($genericGlobal, $defaultAllowed));
