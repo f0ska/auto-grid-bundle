@@ -1,153 +1,319 @@
-[Index](./index.md) | [Installation](./installation.md) | [Configuration](./global-configuration.md) | **Attributes** | [Optional Factory Arguments](./optional-factory-arguments.md) | [Customization](./customization.md)
+[Index](./index.md) | [Installation](./installation.md) | [Configuration](./global-configuration.md) | **Attributes** | [Optional Factory Arguments](./optional-factory-arguments.md) | [Templates](./templates.md) | [Customization](./customization.md)
 
-Attributes
-==========
-Using attributes is a primary way to customize **AutoGrid**.
-You can use attributes on entity class and entity property.
+# Attributes
+
+Attributes are the primary way to configure **AutoGrid**. Use them on your Entity class or its properties.
+
+## Class Level Attributes
+
+<details>
+<summary><strong>ActionButtonDisplay</strong>: Controls visibility of default action buttons.</summary>
 
 ```php
-...
+// Hide delete button for everyone
+#[Attribute\Entity\ActionButtonDisplay(showDelete: false)]
+class User { ... }
+```
+</details>
 
-use F0ska\AutoGridBundle\Attribute;
+<details>
+<summary><strong>ActionFormType</strong>: Use specific Symfony Forms for different actions.</summary>
 
-...
+```php
+#[Attribute\Entity\ActionFormType(
+    create: UserCreateType::class, 
+    edit: UserEditType::class
+)]
+class User { ... }
+```
+</details>
 
-#[ORM\Entity(repositoryClass: DemoOneRepository::class)]
-class DemoOne
-{
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+<details>
+<summary><strong>ActionRoute</strong>: Define custom routes or extra parameters for actions.</summary>
 
-    #[ORM\Column(length: 255)]
-    #[Attribute\EntityField\Filterable]
-    #[Attribute\EntityField\Sortable(direction: 'asc')]
+```php
+#[Attribute\Entity\ActionRoute(action: 'view', route: 'app_custom_view')]
+class User { ... }
+```
+</details>
+
+<details>
+<summary><strong>AdvancedFilter</strong>: Enables the complex/multi-criteria filter UI.</summary>
+
+```php
+#[Attribute\Entity\AdvancedFilter(true)]
+class User { ... }
+```
+</details>
+
+<details>
+<summary><strong>ExportAction</strong>: Adds an export button to the grid.</summary>
+
+Dispatches `ExportEvent` when clicked. You are responsible for the actual file generation (CSV, Excel, etc.) in an event listener.
+
+```php
+#[Attribute\Entity\ExportAction]
+class User { ... }
+```
+</details>
+
+<details>
+<summary><strong>Fieldset</strong>: Groups fields into logical sections or tabs.</summary>
+
+Used to organize fields in the form and view pages. Define them on the class and assign fields using `#[AddToFieldset]`.
+
+```php
+#[Fieldset(name: 'General', class: 'col-md-6')]
+#[Fieldset(name: 'Settings', class: 'col-md-6')]
+class User { ... }
+```
+</details>
+
+<details>
+<summary><strong>FormThemes</strong>: Apply custom Twig themes to AutoGrid-generated forms.</summary>
+
+```php
+#[Attribute\Entity\FormThemes(['@App/form/custom_theme.html.twig'])]
+class User { ... }
+```
+</details>
+
+<details>
+<summary><strong>HasCustomAction</strong>: Tells AutoGrid that your grid has custom actions.</summary>
+
+Use this if you have disabled all standard actions but added your own custom actions. It ensures the action column/logic is still rendered correctly.
+
+```php
+#[Attribute\Entity\HasCustomAction(true)]
+class User { ... }
+```
+</details>
+
+<details>
+<summary><strong>HtmlClass</strong>: Add CSS classes to the grid table.</summary>
+
+```php
+#[Attribute\Entity\HtmlClass("table-striped table-hover")]
+class User { ... }
+```
+</details>
+
+<details>
+<summary><strong>MassAction</strong>: Enables bulk actions on selected rows.</summary>
+
+Dispatches `MassEvent`. Useful for bulk delete, status updates, etc.
+
+```php
+#[Attribute\Entity\MassAction]
+class User { ... }
+```
+</details>
+
+<details>
+<summary><strong>PageLimits</strong>: Customize "items per page" options.</summary>
+
+```php
+#[Attribute\Entity\PageLimits([25, 50, 100, 500])]
+class User { ... }
+```
+</details>
+
+<details>
+<summary><strong>RedirectOnSubmit</strong>: Target action after a successful form save.</summary>
+
+You must provide the internal action name (e.g., `grid`, `view`, `edit`, `create`).
+
+```php
+#[Attribute\Entity\RedirectOnSubmit('grid')] // Redirect back to grid view
+class User { ... }
+```
+</details>
+
+<details>
+<summary><strong>Template</strong>: Override specific AutoGrid template areas.</summary>
+
+Available template areas are defined in `TemplateArea.php` (e.g., `action.grid`, `grid.row_class`, `fieldset.view`).
+
+```php
+use F0ska\AutoGridBundle\ValueObject\TemplateArea;
+
+#[Attribute\Entity\Template([
+    TemplateArea::ACTION_GRID => 'admin/user/custom_grid.html.twig'
+])]
+class User { ... }
+```
+</details>
+
+<details>
+<summary><strong>Title</strong>: Sets the entity display name in the UI.</summary>
+
+```php
+#[Attribute\Entity\Title("User Management")]
+class User { ... }
+```
+</details>
+
+## Access Control
+
+<details>
+<summary><strong>DisallowActionsByDefault</strong>: Deny all actions unless explicitly allowed.</summary>
+
+```php
+#[DisallowActionsByDefault]
+#[Permission('view')] // Only 'view' is allowed now
+class User { ... }
+```
+</details>
+
+<details>
+<summary><strong>DisallowFieldsByDefault</strong>: Hide all fields unless explicitly allowed.</summary>
+
+```php
+#[DisallowFieldsByDefault]
+class User {
+    #[Permission] // Explicitly show this field
     private ?string $name = null;
-    
-    ...
 }
 ```
+</details>
 
-## Entity class attributes
+<details>
+<summary><strong>Permission</strong>: Granular access control based on Roles or Grid IDs.</summary>
 
-| Attribute                                                              | Description                                                                                                                                                                                                                                                                                                                                                                                    |
-|------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [ActionButtonDisplay](../src/Attribute/Entity/ActionButtonDisplay.php) | Controls action button display. Overrides default configuration.                                                                                                                                                                                                                                                                                                                               |
-| [ActionFormType](../src/Attribute/Entity/ActionFormType.php)           | Provides your own form definition. You can provide different form definitions for the actions such as `create`, `edit`, `filter`, and `advanced_filter`.                                                                                                                                                                                                                                       |
-| [ActionRoute](../src/Attribute/Entity/ActionRoute.php)                 | Allows to define custom routes for various actions.<ul><li>The `route` argument defines the custom route name. If skipped, the action name uses instead.</li><li>The `parameters` argument specifies the parameter names used in the route, with values taken from the factory's route parameters (see [Optional Factory Arguments](optional-factory-arguments.md)) or from the current route. |
-| [AdvancedFilter](../src/Attribute/Entity/AdvancedFilter.php)           | Enables the advanced filter feature.                                                                                                                                                                                                                                                                                                                                                           |
-| [ExportAction](../src/Attribute/Entity/ExportAction.php)               | Provides a simple export feature. Takes applied filters into account. Triggers [ExportEvent](../src/Event/ExportEvent.php). Does nothing by default.                                                                                                                                                                                                                                           |
-| [Fieldset](../src/Attribute/Entity/Fieldset.php)                       | Groups fields on default form and view pages.                                                                                                                                                                                                                                                                                                                                                  |
-| [FormThemes](../src/Attribute/Entity/FormThemes.php)                   | Overrides form themes.                                                                                                                                                                                                                                                                                                                                                                         |
-| [HasCustomAction](../src/Attribute/Entity/HasCustomAction.php)         | This is needed when you added custom actions in grid without standard actions                                                                                                                                                                                                                                                                                                                  |
-| [HtmlClass](../src/Attribute/Entity/HtmlClass.php)                     | Sets HTML classes for the grid table.                                                                                                                                                                                                                                                                                                                                                          |
-| [MassAction](../src/Attribute/Entity/MassAction.php)                   | Provides a simple mass-action feature. Triggers [MassEvent](../src/Event/MassEvent.php). Does nothing by default.                                                                                                                                                                                                                                                                              |
-| [PageLimits](../src/Attribute/Entity/PageLimits.php)                   | Customizes the page limits select buttons.                                                                                                                                                                                                                                                                                                                                                     |
-| [RedirectOnSubmit](../src/Attribute/Entity/RedirectOnSubmit.php)       | Defines the redirect action name after creating or updating a form.                                                                                                                                                                                                                                                                                                                            |
-| [Template](../src/Attribute/Entity/Template.php)                       | Allows overriding any default template.                                                                                                                                                                                                                                                                                                                                                        |
-| [Title](../src/Attribute/Entity/Title.php)                             | Sets the title for your entity.                                                                                                                                                                                                                                                                                                                                                                |
-
-## Entity access attributes
-
-| Attribute                                                                            | Description                                                                        |
-|--------------------------------------------------------------------------------------|------------------------------------------------------------------------------------|
-| [DisallowActionsByDefault](../src/Attribute/Permission/DisallowActionsByDefault.php) | Inverts permissions for all AutoGrid actions. By default, all actions are allowed. |
-| [DisallowFieldsByDefault](../src/Attribute/Permission/DisallowFieldsByDefault.php)   | Inverts permissions for all AutoGrid fields. By default, all fields are allowed.   |
-| [Permission](../src/Attribute/Permission.php)                                       | Allows or disallows specific actions, with an optional role and grid context. Use `#[Permission(action: 'delete', allow: false)]` to forbid an action globally. Use `#[Permission(action: 'edit', gridId: 'my_grid')]` for grid-specific rules. |
-
-## Entity property (field) attributes
-
-| Attribute                                                           | Description                                                                                                                          |
-|---------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------|
-| [AddToFieldset](../src/Attribute/EntityField/AddToFieldset.php)     | Adds a field to a group defined in [Fieldset](../src/Attribute/Entity/Fieldset.php), allowing better organization of related fields. |
-| [AssociatedField](../src/Attribute/EntityField/AssociatedField.php) | Creates "virtual" fields from associated entities (relations).                                                                       |
-| [Filterable](../src/Attribute/EntityField/Filterable.php)           | Enables filtering for this field. Accepts optional `condition`, `formType`, and `formOptions` to customize filter behavior. See [Filterable in depth](#filterable-in-depth). |
-| [Sortable](../src/Attribute/EntityField/Sortable.php)               | Makes a column sortable. The `direction` (`asc` or `desc`) and `priority` arguments can be used to set the default sort order.       |
-| [ColumnHtmlClass](../src/Attribute/EntityField/ColumnHtmlClass.php) | Adds HTML classes to the grid table column for styling purposes.                                                                     |
-| [FieldTemplate](../src/Attribute/EntityField/FieldTemplate.php)     | Overrides the field template for custom rendering.                                                                                   |
-| [FormOptions](../src/Attribute/EntityField/FormOptions.php)         | Overrides form options for the form field.                                                                                           |
-| [FormType](../src/Attribute/EntityField/FormType.php)               | Overrides the form type for the form field.                                                                                          |
-| [GridTruncate](../src/Attribute/EntityField/GridTruncate.php)       | Sets the maximum number of characters displayed in the grid cell.                                                                    |
-| [Label](../src/Attribute/EntityField/Label.php)                     | Overrides the field label.                                                                                                           |
-| [Position](../src/Attribute/EntityField/Position.php)               | Sets the field position, which can be positive or negative. Default is `0` for all fields.                                           |
-| [ValuePrefix](../src/Attribute/EntityField/ValuePrefix.php)         | Adds a prefix to displayed values.                                                                                                   |
-| [ValueSuffix](../src/Attribute/EntityField/ValueSuffix.php)         | Adds a suffix to displayed values.                                                                                                   |
-
-## Filterable in depth
-
-`#[Filterable]` enables filtering for a field and auto-guesses the filter form type and condition from Doctrine metadata.
+Can be used on Class (for actions) or Property (for fields).
 
 ```php
-#[Filterable]
-private ?string $name = null;
+// Only admins can delete
+#[Attribute\Permission(action: 'delete', roles: ['ROLE_ADMIN'])]
+// Hide this field in 'public_grid'
+#[Attribute\Permission(gridId: 'public_grid', allow: false)]
+private ?string $internalNote = null;
 ```
+</details>
 
-### Parameters
+## Property Level Attributes
 
-| Parameter     | Type      | Default | Description                                                                                              |
-|---------------|-----------|---------|----------------------------------------------------------------------------------------------------------|
-| `enabled`     | `bool`    | `true`  | Enable or disable filtering for this field.                                                              |
-| `condition`   | `?string` | `null`  | Filter condition class (implements `FilterConditionInterface`). Auto-guessed from field type if `null`.  |
-| `formType`    | `?string` | `null`  | Override the filter form type class. Auto-guessed if `null`.                                             |
-| `formOptions` | `array`   | `[]`    | Override the filter form options. Merged on top of auto-guessed options when `formType` is also set.     |
+<details>
+<summary><strong>AddToFieldset</strong>: Assign a field to a defined group.</summary>
 
-### Built-in filter conditions
-
-| Class                                                                      | Behavior                                                                               | Auto-guessed for                              |
-|----------------------------------------------------------------------------|----------------------------------------------------------------------------------------|-----------------------------------------------|
-| [ExactCondition](../src/Condition/ExactCondition.php)                      | `column = :value`                                                                      | integers, booleans, enums, and most types     |
-| [StartsWithCondition](../src/Condition/StartsWithCondition.php)            | `column LIKE 'value%'`                                                                 | `string` columns                              |
-| [ContainsCondition](../src/Condition/ContainsCondition.php)                | `column LIKE '%value%'` — supports arrays (OR of LIKE per value)                       | `text`, `json`, `array` columns               |
-| [InCondition](../src/Condition/InCondition.php)                            | `column IN (:values)` — for multi-select on scalar/relation fields                     | not auto-guessed; use explicitly              |
-| [RangeCondition](../src/Condition/RangeCondition.php)                      | `column >= :from AND column <= :to` — renders two inputs                               | date/time columns when `form_date_as_range` is enabled |
-| [AssociationCondition](../src/Condition/AssociationCondition.php)          | `IN` with `innerJoin` for ToMany relations                                             | association fields                            |
-
-### Examples
-
-**Range filter on a date field:**
 ```php
-use F0ska\AutoGridBundle\Condition\RangeCondition;
+#[AddToFieldset('Settings')]
+private ?bool $notificationsEnabled = null;
+```
+</details>
 
+<details>
+<summary><strong>AssociatedField</strong>: Pull specific fields from a related entity.</summary>
+
+This attribute is repeatable, allowing you to show multiple fields from the same relation. 
+Note: The main related entity is displayed by default; use `#[Permission(allow: false)]` on the property if you only want the virtual associated fields. Permissions for these fields are inherited from the target entity.
+
+```php
+#[ORM\ManyToOne]
+#[AssociatedField(name: 'username', label: 'Author Name')]
+#[AssociatedField(name: 'email', label: 'Author Email')]
+#[Permission(allow: false)] // Hide the author ID/object itself
+private ?User $author = null;
+```
+</details>
+
+<details>
+<summary><strong>ColumnHtmlClass</strong>: Add CSS classes to the table column.</summary>
+
+```php
+#[ColumnHtmlClass("text-end font-monospace")]
+private ?float $amount = null;
+```
+</details>
+
+<details>
+<summary><strong>FieldTemplate</strong>: Use a custom Twig template to render this field.</summary>
+
+```php
+#[FieldTemplate('admin/user/_avatar_cell.html.twig')]
+private ?string $avatarPath = null;
+```
+</details>
+
+<details>
+<summary><strong>Filterable</strong>: Enables searching/filtering for this field.</summary>
+
+Auto-detects logic from Doctrine, but can be overridden.
+
+**Conditions:**
+- `ExactCondition`: `column = :value` (IDs, Enums)
+- `StartsWithCondition`: `LIKE 'val%'` (Strings)
+- `ContainsCondition`: `LIKE '%val%'` (Text)
+- `InCondition`: `column IN (...)` (Multi-select)
+- `RangeCondition`: Between two values (Dates, Numbers)
+
+```php
 #[Filterable(condition: RangeCondition::class)]
-private ?\DateTimeImmutable $publishAt = null;
-```
-
-**Multi-select filter using a choice field:**
-```php
-use F0ska\AutoGridBundle\Condition\InCondition;
+private ?DateTime $createdAt = null;
 
 #[Filterable(condition: InCondition::class, formOptions: ['multiple' => true])]
 private ?string $status = null;
 ```
+</details>
 
-**Custom form type for the filter:**
+<details>
+<summary><strong>FormType / FormOptions</strong>: Customize the Symfony Form field used for this property.</summary>
+
 ```php
-use App\Form\MyCustomFilterType;
-
-#[Filterable(formType: MyCustomFilterType::class, formOptions: ['required' => false])]
-private ?string $category = null;
+#[FormType(PasswordType::class)]
+#[FormOptions(['help' => 'Minimum 8 characters'])]
+private ?string $plainPassword = null;
 ```
+</details>
 
-**Custom filter condition (see [Customization](customization.md)):**
+<details>
+<summary><strong>GridTruncate</strong>: Limits text length in the grid view.</summary>
+
 ```php
-use App\Filter\MyCustomCondition;
-
-#[Filterable(condition: MyCustomCondition::class)]
-private ?string $tags = null;
+#[GridTruncate(100)]
+private ?string $content = null;
 ```
+</details>
 
-## Entity property access attributes
+<details>
+<summary><strong>Label</strong>: Override the automatically generated field label.</summary>
 
-| Attribute                                              | Description                                                                             |
-|--------------------------------------------------------|-----------------------------------------------------------------------------------------|
-| [Permission](../src/Attribute/Permission.php)         | Allows or disallows access to this field for specific actions, with optional role and grid context. |
+```php
+#[Label("E-mail Address")]
+private ?string $email = null;
+```
+</details>
+
+<details>
+<summary><strong>Position</strong>: Change the display order of fields (lower numbers appear first).</summary>
+
+```php
+#[Position(-10)] // Move to the very beginning
+private ?int $id = null;
+```
+</details>
+
+<details>
+<summary><strong>Sortable</strong>: Enables column sorting.</summary>
+
+```php
+#[Sortable(direction: 'desc', priority: 1)]
+private ?int $id = null;
+```
+</details>
+
+<details>
+<summary><strong>ValuePrefix / ValueSuffix</strong>: Add text before or after the value.</summary>
+
+```php
+#[ValuePrefix("$ ")]
+private ?float $price = null;
+
+#[ValueSuffix(" kg")]
+private ?float $weight = null;
+```
+</details>
 
 ---
 
-Check documentation for more possibilities
-------------------------------------------
-
-- [Optional Factory Arguments](./optional-factory-arguments.md)
-- [Global Configuration](./global-configuration.md)
-- [Customization](./customization.md)
+[Optional Factory Arguments](./optional-factory-arguments.md) | [Templates](./templates.md) | [Customization](./customization.md)

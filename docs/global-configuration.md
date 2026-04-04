@@ -1,11 +1,8 @@
-[Index](./index.md) | [Installation](./installation.md) | **Configuration** | [Attributes](./attributes.md) | [Optional Factory Arguments](./optional-factory-arguments.md) | [Customization](./customization.md)
+[Index](./index.md) | [Installation](./installation.md) | **Configuration** | [Attributes](./attributes.md) | [Optional Factory Arguments](./optional-factory-arguments.md) | [Templates](./templates.md) | [Customization](./customization.md)
 
-Global Configuration
-====================
+# Global Configuration
 
-AutoGrid is highly configurable using a standard Symfony configuration file. To change the default settings, create a new file named `f0ska_auto_grid.yaml` inside your project's `config/packages/` directory.
-
-Below is the complete default configuration. You can copy any part of this structure into your own `f0ska_auto_grid.yaml` file and modify the values to suit your needs.
+AutoGrid is highly configurable via a standard Symfony YAML configuration. To change default settings, create `config/packages/f0ska_auto_grid.yaml`.
 
 ## Default Configuration Reference
 
@@ -61,38 +58,28 @@ f0ska_auto_grid:
 
     # --- View & Display Settings ---
     view:
-        friendly_id: 'autogrid'       # Used for frontend container id, class and link fragment generation.
+        friendly_id: 'autogrid'       # Container ID, class, and link fragment.
         show_entity_title: true       # Display a default title for the grid.
         field_formats:
             date: 'Y-m-d'
             time: 'H:i'
             datetime: 'Y-m-d H:i'
-            interval: '%%Yy, %%mm, %%dd' # Note: Use '%%' to escape the '%' character in YAML
+            interval: '%%Yy, %%mm, %%dd'
 
     # --- Grid Behavior ---
     grid:
-        truncate_text: 55             # Max content length in a grid cell. Set to 0 to disable.
-        pagination_limits:
-            - 10
-            - 50
-            - 100
+        truncate_text: 55             # Max cell content length. Set to 0 to disable.
+        pagination_limits: [10, 50, 100]
 
     # --- Default Button Visibility ---
     buttons:
-        view:
-            display_in_grid: true
-            display_in_edit: true
-        edit:
-            display_in_grid: true
-            display_in_view: true
-        delete:
-            display_in_grid: true
-            display_in_view: true
-            display_in_edit: true
+        view: { display_in_grid: true, display_in_edit: true }
+        edit: { display_in_grid: true, display_in_view: true }
+        delete: { display_in_grid: true, display_in_view: true, display_in_edit: true }
 
     # --- Request Parameter Settings ---
     request:
-        single_parameter_mode: false  # If true, all grid parameters are encoded into a single URL parameter.
+        single_parameter_mode: false  # Encode all parameters into one URL param.
         single_parameter_code: '_ag'
         parameter_codes:
             id: 'agId'
@@ -101,35 +88,21 @@ f0ska_auto_grid:
 
     # --- Session Settings ---
     session:
-        store_navigation: true        # Remember pagination, sorting, and filters when navigating away and back.
+        store_navigation: true        # Remember filters/sort when navigating away.
 
     # --- Form Behavior ---
     form:
-        default_boolean_as_select: false # If true, boolean fields in forms default to a select box.
-        default_date_filter_range: true  # If true, date filters default to a "from/to" range filter.
-        relation_label_candidates:       # When guessing a label for an entity relation, check for these properties in order.
-            - 'title'
-            - 'label'
-            - 'name'
-            - 'code'
-            - 'subject'
-            - 'model'
-            - 'sku'
-
+        default_boolean_as_select: false # Use select box for booleans.
+        default_date_filter_range: true  # Use from/to range for date filters.
+        relation_label_candidates: [title, label, name, code, subject, model, sku]
 ```
 
 ## Route Parameters
-You can also override the theme and form themes on a per-route basis by defining parameters in your route definition:
+Override global settings on a per-route basis in your routing config:
 
 - `_autogrid_theme`: Overrides the global `template.theme`.
 - `_autogrid_form_themes`: Overrides the global `template.form_themes`.
 
-These parameters can be useful if you have a project with multiple design themes.
-
 ---
 
-Check documentation for more possibilities
-------------------------------------------
-- [Optional Factory Arguments](./optional-factory-arguments.md)
-- [Attributes](./attributes.md)
-- [Customization](./customization.md)
+[Attributes](./attributes.md) | [Templates](./templates.md) | [Customization](./customization.md)
