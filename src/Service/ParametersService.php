@@ -239,7 +239,7 @@ class ParametersService
     {
         $name = $field->subName ?? $field->name;
         $metadata = $this->metaDataService->getMetadata($agId);
-        $hasIndex = $metadata->isIndexed($name) || $metadata->isIdentifier($name) || $metadata->isUniqueField($name);
+        $hasIndex = $this->hasIndex($metadata, $name);
         $field->fieldMapping = $metadata->getFieldMapping($name);
 
         $attributes = $this->metaDataService->getEntityFieldAttributes($agId, $name);
@@ -262,6 +262,33 @@ class ParametersService
 
         $this->guesserService->guessFieldFormType($field, $agId);
         $this->guesserService->guessFilterCondition($field);
+    }
+
+    private function hasIndex(ClassMetadata $metadata, string $fieldName): bool
+    {
+        if ($metadata->isIndexed($fieldName) || $metadata->isIdentifier($fieldName) || $metadata->isUniqueField($fieldName)) {
+            return true;
+        }
+
+        // Check class-level indexes
+        $table = $metadata->table;
+        if (!empty($table['indexes'])) {
+            foreach ($table['indexes'] as $index) {
+                if (in_array($fieldName, $index['columns'])) {
+                    return true;
+                }
+            }
+        }
+
+        if (!empty($table['uniqueConstraints'])) {
+            foreach ($table['uniqueConstraints'] as $constraint) {
+                if (in_array($fieldName, $constraint['columns'])) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     private function buildAssociated(FieldParameter $field, string $agId): void
