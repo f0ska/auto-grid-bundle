@@ -132,7 +132,7 @@ class User { ... }
 <details>
 <summary><strong>Template</strong>: Override specific AutoGrid template areas.</summary>
 
-Available template areas are defined in `TemplateArea.php` (e.g., `action.grid`, `grid.row_class`, `fieldset.view`).
+Available template areas are defined in [**TemplateArea.php**](../src/ValueObject/TemplateArea.php) (e.g., `action.grid`, `grid.row_class`, `fieldset.view`).
 
 ```php
 use F0ska\AutoGridBundle\ValueObject\TemplateArea;
