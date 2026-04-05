@@ -283,7 +283,7 @@ private ?string $avatarPath = null;
 
 Auto-detects logic from Doctrine, but can be overridden.
 
-If you define `#[FormType]` and `#[FormOptions]` on the same property, the filter will automatically inherit these settings.
+**Automatic Filter Configuration:** If you define `#[FormType]` and `#[FormOptions]` on the same property, the filter will automatically inherit these settings.
 
 **Conditions:**
 - `ExactCondition`: `column = :value` (IDs, Enums, Choices)
@@ -303,7 +303,7 @@ private ?string $name = null;
 #[Filterable(condition: ContainsCondition::class)]
 private ?string $description = null;
 
-// 3. Choice fallback: Inherits ChoiceType and options automatically
+// 3. Choice inheritance: Inherits ChoiceType and options automatically
 #[FormType(ChoiceType::class)]
 #[FormOptions(['choices' => ['Active' => 'a', 'Pending' => 'p']])]
 #[Filterable] 
