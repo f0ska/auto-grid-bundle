@@ -23,7 +23,6 @@ services:
         resource: '../src/Condition/*'
         tags: [ 'autogrid.filter_condition' ]
         autowire: true
-        public: true
 
     F0ska\AutoGridBundle\ActionParameter\:
         resource: '../src/ActionParameter/*'
