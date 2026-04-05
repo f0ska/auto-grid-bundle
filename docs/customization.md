@@ -64,7 +64,7 @@ private ?string $avatarPath = null;
 <summary><strong>Custom Filter Conditions</strong>: Control how filters apply to the QueryBuilder.</summary>
 
 1. Implement `FilterConditionInterface`.
-2. Register as a tagged service (`autogrid.filter_condition`).
+2. Register as a service.
 3. Use in `#[Filterable(condition: MyCondition::class)]`.
 
 ```php
@@ -94,40 +94,35 @@ Refer to [services.yaml](../config/services.yaml) for core implementations.
 <details>
 <summary><strong>Handling Events</strong>: Hook into the CRUD lifecycle.</summary>
 
-AutoGrid dispatches events for key actions. Register a listener or subscriber to handle them.
+AutoGrid dispatches events for key lifecycle moments. Register a listener or subscriber to handle them.
 
-**Example: Handling a Mass Action**
+### Dynamic Event Naming
+All events are dispatched with an optional `.{gridId}` suffix, allowing you to target a specific grid instance.
+Additionally, `MassEvent` and `ExportEvent` include a `.{code}` suffix to target specific action codes.
+
+**Example: Specific Save Action**
 ```php
-#[AsEventListener(event: 'f0ska.autogrid.mass_action')]
-public function onMassAction(MassEvent $event): void
-{
-    $entities = $event->getEntities();
-    $action = $event->getAction(); // e.g., 'delete', 'activate'
-    
-    foreach ($entities as $entity) {
-        // Your logic here
-    }
-}
+// Listen only to 'save' on the 'article_grid'
+#[AsEventListener(event: 'f0ska.autogrid.entity.save.article_grid')]
+public function onArticleSave(SaveEvent $event): void { ... }
 ```
 
-**Example: Handling an Export Action**
+**Example: Specific Export Code**
 ```php
-#[AsEventListener(event: 'f0ska.autogrid.export_action')]
-public function onExport(ExportEvent $event): void
-{
-    $queryBuilder = $event->getQueryBuilder();
-    // Use your favorite library (PhpSpreadsheet, etc.) to generate the file
-    // and set the response in the event if needed.
-}
+// Listen only to the 'csv_export' action
+#[AsEventListener(event: 'f0ska.autogrid.export_action.csv_export')]
+public function onCsvExport(ExportEvent $event): void { ... }
 ```
 
-| Event Name | Purpose |
+### Event Lifecycle Table
+
+| Event Name | Dispatched When... |
 | :--- | :--- |
-| `f0ska.autogrid.entity.save` | Before/after entity persistence. |
-| `f0ska.autogrid.entity.delete` | Before/after entity removal. |
-| `f0ska.autogrid.entity.view` | When an entity is loaded for viewing. |
+| `f0ska.autogrid.entity.save` | **Before** an entity is persisted/updated in the database. |
+| `f0ska.autogrid.entity.delete` | **Before** an entity is removed from the database. |
+| `f0ska.autogrid.entity.view` | When an entity is loaded for the view action. |
 | `f0ska.autogrid.mass_action` | When a bulk action is triggered. |
-| `f0ska.autogrid.export_action` | When the export button is clicked. |
+| `f0ska.autogrid.export_action` | When an export action is triggered. |
 | `f0ska.autogrid.error.show` | When an error occurs during processing. |
 
 </details>
