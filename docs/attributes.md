@@ -4,6 +4,8 @@
 
 Attributes are the primary way to configure **AutoGrid**. Use them on your Entity class or its properties.
 
+> **Note on Translation:** All user-facing strings (like `Title` and `Label`) are automatically passed through Symfony's Translator. You can provide translation keys or plain strings directly in these attributes.
+
 ## Class Level Attributes
 
 <details>
@@ -145,7 +147,7 @@ class User { ... }
 </details>
 
 <details>
-<summary><strong>Title</strong>: Sets the entity display name in the UI.</summary>
+<summary><strong>Title</strong>: Sets the entity display name in the UI (Translatable).</summary>
 
 ```php
 #[Attribute\Entity\Title("User Management")]
@@ -178,18 +180,46 @@ class User {
 </details>
 
 <details>
-<summary><strong>Permission</strong>: Granular access control based on Roles or Grid IDs.</summary>
+<summary><strong>Permission</strong>: Granular access control for Actions and Fields.</summary>
 
-Can be used on Class (for actions) or Property (for fields).
+This attribute is highly versatile and can be used on the **Class** (to control actions) or on **Properties** (to control field visibility). It is repeatable.
 
+### Parameters:
+- `action`: (string) The action to control (e.g., `grid`, `view`, `create`, `edit`, `delete`, `export`, `mass_action`). If null, it's a global rule.
+- `allow`: (bool) Set to `false` to deny access. Default is `true`.
+- `role`: (mixed) Restrict access to users with specific Symfony roles (string or array).
+- `gridId`: (string) Apply the rule only when the grid has a specific ID.
+
+### Common Use Cases:
+
+#### 1. Role-Based Action Control
 ```php
-// Only admins can delete
-#[Attribute\Permission(action: 'delete', roles: ['ROLE_ADMIN'])]
+// Only admins can delete entities
+#[Permission(action: 'delete', role: 'ROLE_ADMIN')]
+class User { ... }
+```
 
-// Hide a field specifically in a grid with ID 'articles'
-// This is useful for virtual fields from [AssociatedField]
-#[Attribute\Permission(action: 'grid', gridId: 'articles', allow: false)]
-private ?string $email = null;
+#### 2. Global Field Visibility
+```php
+// Hide a sensitive field from ALL AutoGrid views (grid, view, edit, etc.)
+#[Permission(allow: false)]
+private ?string $internalNote = null;
+```
+
+#### 3. Action-Specific Field Visibility
+```php
+// Show field in detailed view, but hide it in the main grid list
+#[Permission('grid', allow: false)]
+#[Permission('view', allow: true)]
+private ?string $longDescription = null;
+```
+
+#### 4. Context-Aware (gridId) Visibility
+```php
+// Hide a field only when displayed in a specific parent grid
+// Useful for virtual fields from [AssociatedField]
+#[Permission(gridId: 'article_list', allow: false)]
+private ?string $userEmail = null;
 ```
 </details>
 
@@ -209,14 +239,22 @@ private ?bool $notificationsEnabled = null;
 
 This attribute is repeatable, allowing you to show multiple fields from the same relation. 
 
+### Parameters:
+- `name`: (string) **Required**. The property name on the target entity.
+- `label`: (string) Custom label for the column (Translatable).
+- `position`: (int) Change the display order.
+- `canFilter`: (bool) Enable/disable filtering for this virtual column.
+- `canSort`: (bool) Enable/disable sorting for this virtual column.
+- `options`: (array) Additional parameters (passed to template or metadata).
+
 **Notes:**
 - The main related entity is displayed by default; use `#[Permission(allow: false)]` on the property to hide it. 
 - Permissions for associated fields are inherited from the target entity. To hide a specific associated field in a parent grid, use `#[Permission]` on the target entity's property with the parent's `gridId`.
 
 ```php
 #[ORM\ManyToOne]
-#[AssociatedField(name: 'username', label: 'Author Name')]
-#[AssociatedField(name: 'email', label: 'Author Email')]
+#[AssociatedField(name: 'username', label: 'Author Name', position: 10, canSort: true)]
+#[AssociatedField(name: 'email', label: 'Author Email', position: 11, canFilter: false)]
 #[Permission(allow: false)] // Hide the author ID/object itself
 private ?User $author = null;
 ```
@@ -245,7 +283,7 @@ private ?string $avatarPath = null;
 
 Auto-detects logic from Doctrine, but can be overridden.
 
-**Smart Fallback:** If you define `#[FormType]` and `#[FormOptions]` on the same property, the filter will automatically inherit these settings.
+If you define `#[FormType]` and `#[FormOptions]` on the same property, the filter will automatically inherit these settings.
 
 **Conditions:**
 - `ExactCondition`: `column = :value` (IDs, Enums, Choices)
@@ -253,6 +291,8 @@ Auto-detects logic from Doctrine, but can be overridden.
 - `ContainsCondition`: `LIKE '%val%'` (Text)
 - `InCondition`: `column IN (...)` (Multi-select)
 - `RangeCondition`: Between two values (Dates, Numbers)
+
+You can also define your own **Custom Filter Conditions**. See the [**Customization Section**](./customization.md#custom-filter-conditions) for more details.
 
 ```php
 // 1. Simple usage: Auto-guesses condition (e.g. StartsWith for strings)
@@ -266,7 +306,7 @@ private ?string $description = null;
 // 3. Choice fallback: Inherits ChoiceType and options automatically
 #[FormType(ChoiceType::class)]
 #[FormOptions(['choices' => ['Active' => 'a', 'Pending' => 'p']])]
-#[Filterable]
+#[Filterable] 
 private ?string $status = null;
 ```
 </details>
@@ -291,7 +331,7 @@ private ?string $content = null;
 </details>
 
 <details>
-<summary><strong>Label</strong>: Override the automatically generated field label.</summary>
+<summary><strong>Label</strong>: Override the automatically generated field label (Translatable).</summary>
 
 ```php
 #[Label("E-mail Address")]
@@ -325,7 +365,7 @@ private ?int $id = null;
 </details>
 
 <details>
-<summary><strong>ValuePrefix / ValueSuffix</strong>: Add text before or after the value.</summary>
+<summary><strong>ValuePrefix / ValueSuffix</strong>: Add text before or after the value (Translatable).</summary>
 
 ```php
 #[ValuePrefix("$ ")]
