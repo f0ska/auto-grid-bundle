@@ -13,9 +13,9 @@ declare(strict_types=1);
 namespace F0ska\AutoGridBundle\Attribute\Entity;
 
 use Attribute;
-use F0ska\AutoGridBundle\Attribute\Abstract\AbstractAttribute;
+use F0ska\AutoGridBundle\Attribute\AbstractAttribute;
 
-#[Attribute(Attribute::TARGET_ALL | Attribute::IS_REPEATABLE)]
+#[Attribute(Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
 class ActionButtonDisplay extends AbstractAttribute
 {
     /**
@@ -32,18 +32,16 @@ class ActionButtonDisplay extends AbstractAttribute
         ?bool $displayOnEdit = null,
         ?bool $displayOnView = null
     ) {
-        if ($displayOnGrid !== null) {
-            $this->value[$buttonAction]['display_on_grid'] = $displayOnGrid;
-        }
-        if ($displayOnCreate !== null) {
-            $this->value[$buttonAction]['display_on_create'] = $displayOnCreate;
-        }
-        if ($displayOnEdit !== null) {
-            $this->value[$buttonAction]['display_on_edit'] = $displayOnEdit;
-        }
-        if ($displayOnView !== null) {
-            $this->value[$buttonAction]['display_on_view'] = $displayOnView;
-        }
+        $value = [
+            $buttonAction => array_filter([
+                'display_on_grid' => $displayOnGrid,
+                'display_on_create' => $displayOnCreate,
+                'display_on_edit' => $displayOnEdit,
+                'display_on_view' => $displayOnView,
+            ], fn ($v) => $v !== null)
+        ];
+
+        parent::__construct($value);
     }
 
     public function getCode(): string

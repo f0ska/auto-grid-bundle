@@ -13,18 +13,22 @@ declare(strict_types=1);
 namespace F0ska\AutoGridBundle\Attribute\Entity;
 
 use Attribute;
-use F0ska\AutoGridBundle\Attribute\Abstract\AbstractAttribute;
+use F0ska\AutoGridBundle\Attribute\AbstractAttribute;
 
-#[Attribute(Attribute::TARGET_ALL | Attribute::IS_REPEATABLE)]
+#[Attribute(Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
 class MassAction extends AbstractAttribute
 {
+    private readonly string $code;
+
     public function __construct(string $name, ?string $code = null, ?string $role = null)
     {
-        $this->value = ['name' => $name, 'code' => $this->normalizeCode($code ?? $name), 'role' => $role];
+        $this->code = $this->normalizeCode($code ?? $name);
+        $value = ['name' => $name, 'code' => $this->code, 'role' => $role];
+        parent::__construct($value);
     }
 
     public function getCode(): string
     {
-        return 'mass_action.' . $this->value['code'];
+        return 'mass_action.' . $this->code;
     }
 }

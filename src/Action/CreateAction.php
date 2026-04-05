@@ -12,19 +12,27 @@ declare(strict_types=1);
 
 namespace F0ska\AutoGridBundle\Action;
 
+use F0ska\AutoGridBundle\Builder\EntityBuilder;
 use F0ska\AutoGridBundle\Model\AutoGrid;
 use F0ska\AutoGridBundle\Model\Parameters;
+use F0ska\AutoGridBundle\Service\FormProcessorService;
 
-class CreateAction extends EditAction
+class CreateAction extends AbstractAction
 {
-    public function isIdRequired(): bool
-    {
-        return false;
+    private EntityBuilder $entityBuilder;
+    private FormProcessorService $formProcessor;
+
+    public function __construct(
+        EntityBuilder $entityBuilder,
+        FormProcessorService $formProcessor
+    ) {
+        $this->entityBuilder = $entityBuilder;
+        $this->formProcessor = $formProcessor;
     }
 
     public function execute(AutoGrid $autoGrid, Parameters $parameters): void
     {
         $entity = $this->entityBuilder->getNewEntity($parameters);
-        $this->processForm($entity, $autoGrid, $parameters);
+        $this->formProcessor->process($entity, $autoGrid, $parameters);
     }
 }

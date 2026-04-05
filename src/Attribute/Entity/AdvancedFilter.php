@@ -13,13 +13,13 @@ declare(strict_types=1);
 namespace F0ska\AutoGridBundle\Attribute\Entity;
 
 use Attribute;
-use F0ska\AutoGridBundle\Attribute\Abstract\AbstractAttribute;
+use F0ska\AutoGridBundle\Attribute\AbstractAttribute;
 
 #[Attribute]
 class AdvancedFilter extends AbstractAttribute
 {
     public function __construct(bool $value)
     {
-        $this->value = $value;
+        parent::__construct($value);
     }
 }

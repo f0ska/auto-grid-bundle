@@ -12,8 +12,10 @@ declare(strict_types=1);
 
 namespace F0ska\AutoGridBundle\Service;
 
+use F0ska\AutoGridBundle\Action\ErrorAction;
 use F0ska\AutoGridBundle\Exception\RequestException;
 use F0ska\AutoGridBundle\Model\AutoGrid;
+use F0ska\AutoGridBundle\Model\RequestInfo;
 use Symfony\Component\DependencyInjection\Attribute\Lazy;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -21,23 +23,11 @@ use Symfony\Component\HttpFoundation\RequestStack;
 #[Lazy]
 class RequestService
 {
-    private const ERROR_ACTION = 'error';
-
-    private ?Request $request;
-    private ?string $agId = null;
-    private ?string $action = null;
-    private array $parameters = [];
-    private array $commonParameters = [];
-    private bool $badRequest = true;
-
     private RequestStack $requestStack;
     private ActionService $actionService;
     private EncoderService $encoderService;
     private ConfigurationService $configuration;
 
-    /**
-     * @throws RequestException
-     */
     public function __construct(
         RequestStack $requestStack,
         ActionService $actionService,
@@ -48,33 +38,44 @@ class RequestService
         $this->actionService = $actionService;
         $this->encoderService = $encoderService;
         $this->configuration = $configuration;
-        $this->init();
     }
 
     public function processRequest(AutoGrid $autoGrid): void
     {
-        $commonParameters = $this->commonParameters;
-        $commonParameters['route']['custom_prefix'] = $autoGrid->getRoutePrefix();
-        $commonParameters['route']['custom_params'] = $autoGrid->getRouteParameters();
+        $request = $this->requestStack->getCurrentRequest();
+        if (empty($request)) {
+            throw new RequestException('Request not found');
+        }
 
-        if ($this->badRequest) {
+        $requestInfo = $this->parseRequest($request);
+
+        $commonParameters = [
+            'route' => [
+                'name' => $request->attributes->get('_route'),
+                'params' => $request->attributes->get('_route_params'),
+                'custom_prefix' => $autoGrid->getRoutePrefix(),
+                'custom_params' => $autoGrid->getRouteParameters(),
+            ]
+        ];
+
+        if ($requestInfo->isBadRequest()) {
             $this->actionService->executeAction(
                 $autoGrid,
-                self::ERROR_ACTION,
+                ErrorAction::getActionCode(),
                 [],
                 $commonParameters + ['message' => 'Bad request']
             );
             return;
         }
 
-        if ($autoGrid->getId() === $this->agId) {
-            $this->storeNavigation();
-            $this->actionService->executeAction($autoGrid, $this->action, $this->parameters, $commonParameters);
+        if ($autoGrid->getId() === $requestInfo->getAgId()) {
+            $this->storeNavigation($requestInfo->getAgId(), $requestInfo->getAction(), $requestInfo->getParameters());
+            $this->actionService->executeAction($autoGrid, $requestInfo->getAction(), $requestInfo->getParameters(), $commonParameters);
             return;
         }
 
         $navigation = $this->restoreNavigation($autoGrid->getId());
-        if ($navigation && !empty($this->agId)) {
+        if ($navigation && !empty($requestInfo->getAgId())) {
             $this->actionService->executeAction(
                 $autoGrid,
                 reset($navigation),
@@ -92,73 +93,54 @@ class RequestService
         );
     }
 
-    private function init(): void
-    {
-        $this->request = $this->requestStack->getCurrentRequest();
-        if (empty($this->request)) {
-            throw new RequestException('Request not found');
-        }
-        $this->commonParameters['route'] = [
-            'name' => $this->request->attributes->get('_route'),
-            'params' => $this->request->attributes->get('_route_params'),
-        ];
-        $this->defineCurrentAction();
-    }
-
-    private function defineCurrentAction(): void
+    private function parseRequest(Request $request): RequestInfo
     {
         $isSingleParam = $this->configuration->isSingleParamRequest();
-        $action = $isSingleParam ? $this->getSingleParameterAction() : $this->getMultiParameterAction();
+        $actionData = $isSingleParam ? $this->getSingleParameterAction($request) : $this->getMultiParameterAction($request);
 
-        if (empty($action)) {
-            return;
+        if (empty($actionData)) {
+            return new RequestInfo(null, null, [], false);
         }
 
         if (
-            isset($action[0])
-            && is_string($action[0])
-            && isset($action[1])
-            && is_string($action[1])
-            && isset($action[2])
-            && is_array($action[2])
+            isset($actionData[0]) && is_string($actionData[0]) &&
+            isset($actionData[1]) && is_string($actionData[1]) &&
+            isset($actionData[2]) && is_array($actionData[2])
         ) {
-            $this->agId = $action[0];
-            $this->action = $action[1];
-            $this->parameters = $action[2];
-            $this->badRequest = false;
+            return new RequestInfo($actionData[0], $actionData[1], $actionData[2], false);
         }
+
+        return new RequestInfo(null, null, [], true);
     }
 
-    private function getSingleParameterAction(): ?array
+    private function getSingleParameterAction(Request $request): ?array
     {
-        $encodedAction = $this->getRequestString($this->configuration->getSingleParamRequestCode());
+        $encodedAction = $this->getRequestString($request, $this->configuration->getSingleParamRequestCode());
         if (empty($encodedAction)) {
-            $this->badRequest = false;
             return null;
         }
         return $this->encoderService->decodeAction($encodedAction);
     }
 
-    private function getMultiParameterAction(): ?array
+    private function getMultiParameterAction(Request $request): ?array
     {
-        $id = $this->getRequestString($this->configuration->getMultiParamRequestId());
-        $action = $this->getRequestString($this->configuration->getMultiParamRequestAction());
-        $params = $this->request->query->all($this->configuration->getMultiParamRequestParams());
+        $id = $this->getRequestString($request, $this->configuration->getMultiParamRequestId());
+        $action = $this->getRequestString($request, $this->configuration->getMultiParamRequestAction());
+        $params = $request->query->all($this->configuration->getMultiParamRequestParams());
 
         if (is_null($id) && is_null($action) && empty($params)) {
-            $this->badRequest = false;
             return null;
         }
         return [$id, $action, $params];
     }
 
-    private function storeNavigation(): void
+    private function storeNavigation(string $agId, string $action, array $parameters): void
     {
         if (!$this->configuration->canStoreNavigationInSession()) {
             return;
         }
-        $key = $this->getSessionKey($this->agId);
-        $this->requestStack->getSession()->set($key, [$this->action, $this->parameters]);
+        $key = $this->getSessionKey($agId);
+        $this->requestStack->getSession()->set($key, [$action, $parameters]);
     }
 
     private function restoreNavigation(string $agId): ?array
@@ -178,14 +160,14 @@ class RequestService
         return sprintf('autogrid_%s', $agId);
     }
 
-    private function getRequestString(string $name): ?string
+    private function getRequestString(Request $request, string $name): ?string
     {
-        $value = $this->request->query->get($name);
+        $value = $request->query->get($name);
         if (is_string($value) && !empty($value)) {
             return $value;
         }
 
-        $value = $this->request->attributes->get($name);
+        $value = $request->attributes->get($name);
         if (is_string($value) && !empty($value)) {
             return $value;
         }

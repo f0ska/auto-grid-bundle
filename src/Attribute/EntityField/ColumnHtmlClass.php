@@ -13,16 +13,18 @@ declare(strict_types=1);
 namespace F0ska\AutoGridBundle\Attribute\EntityField;
 
 use Attribute;
-use F0ska\AutoGridBundle\Attribute\Abstract\AbstractAttribute;
+use F0ska\AutoGridBundle\Attribute\AbstractAttribute;
 
 #[Attribute]
 class ColumnHtmlClass extends AbstractAttribute
 {
     public function __construct(?string $headerClass = null, ?string $valueClass = null)
     {
-        $this->value = [
+        $value = array_filter([
             'header' => $headerClass,
             'value' => $valueClass,
-        ];
+        ], fn ($v) => $v !== null);
+
+        parent::__construct($value);
     }
 }

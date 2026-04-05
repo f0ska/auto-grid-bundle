@@ -31,11 +31,6 @@ class ErrorAction extends AbstractAction
         return false;
     }
 
-    public function isIdRequired(): bool
-    {
-        return false;
-    }
-
     public function execute(AutoGrid $autoGrid, Parameters $parameters): void
     {
         $event = new ErrorEvent($parameters);

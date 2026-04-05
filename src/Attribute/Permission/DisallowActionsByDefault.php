@@ -13,14 +13,14 @@ declare(strict_types=1);
 namespace F0ska\AutoGridBundle\Attribute\Permission;
 
 use Attribute;
-use F0ska\AutoGridBundle\Attribute\Abstract\AbstractAttribute;
+use F0ska\AutoGridBundle\Attribute\AbstractAttribute;
 
-#[Attribute]
+#[Attribute(Attribute::TARGET_CLASS)]
 class DisallowActionsByDefault extends AbstractAttribute
 {
     public function __construct()
     {
-        $this->value = true;
+        parent::__construct(true);
     }
 
     public function getCode(): string

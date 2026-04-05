@@ -46,4 +46,9 @@ class DeleteAction extends AbstractAction
         $this->entityManager->flush();
         $autoGrid->setResponse(new RedirectResponse($parameters->actionUrl('grid')));
     }
+
+    public function isIdRequired(): bool
+    {
+        return true;
+    }
 }

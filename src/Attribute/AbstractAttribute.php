@@ -10,14 +10,16 @@
 
 declare(strict_types=1);
 
-namespace F0ska\AutoGridBundle\Attribute\Abstract;
+namespace F0ska\AutoGridBundle\Attribute;
 
-use F0ska\AutoGridBundle\Attribute\AttributeInterface;
 use function Symfony\Component\String\u;
 
 abstract class AbstractAttribute implements AttributeInterface
 {
-    protected mixed $value;
+    public function __construct(
+        public readonly mixed $value
+    ) {
+    }
 
     public function getCode(): string
     {
@@ -32,5 +34,10 @@ abstract class AbstractAttribute implements AttributeInterface
     protected function normalizeCode(string $code): string
     {
         return u($code)->snake()->toString();
+    }
+
+    protected function normalizeId(string $id): string
+    {
+        return u($id)->normalize()->lower()->replace('_', '-')->toString();
     }
 }

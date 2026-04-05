@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace F0ska\AutoGridBundle\Service;
 
 use F0ska\AutoGridBundle\Action\ActionInterface;
+use F0ska\AutoGridBundle\Action\ErrorAction;
 use F0ska\AutoGridBundle\Exception\ActionException;
 
 class ActionListService
@@ -37,11 +38,19 @@ class ActionListService
 
     public function getErrorAction(): ActionInterface
     {
-        return $this->actions['error'];
+        return $this->actions[ErrorAction::getActionCode()];
     }
 
     public function getAction(string $action): ActionInterface
     {
         return $this->actions[$action] ?? throw new ActionException('Undefined action');
+    }
+
+    /**
+     * @return ActionInterface[]
+     */
+    public function getActions(): array
+    {
+        return $this->actions;
     }
 }

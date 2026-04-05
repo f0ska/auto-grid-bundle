@@ -13,21 +13,21 @@ declare(strict_types=1);
 namespace F0ska\AutoGridBundle\Attribute\Entity;
 
 use Attribute;
-use F0ska\AutoGridBundle\Attribute\Abstract\AbstractAttribute;
+use F0ska\AutoGridBundle\Attribute\AbstractAttribute;
 
 #[Attribute(Attribute::TARGET_ALL | Attribute::IS_REPEATABLE)]
 class Template extends AbstractAttribute
 {
-    private string $code;
+    private string $area;
 
-    public function __construct(string $code, string $templatePath)
+    public function __construct(string $area, string $templatePath)
     {
-        $this->code = $code;
-        $this->value = $templatePath;
+        $this->area = $area;
+        parent::__construct($templatePath);
     }
 
     public function getCode(): string
     {
-        return 'template.' . $this->code;
+        return 'template.' . $this->area;
     }
 }

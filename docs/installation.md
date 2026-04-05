@@ -1,43 +1,47 @@
-[Index](./index.md) | **Installation** | [Configuration](./global-configuration.md) | [Attributes](./attributes.md) | [Optional Factory Arguments](./optional-factory-arguments.md) | [Customization](./customization.md)
+[Index](./index.md) | **Installation** | [Configuration](./global-configuration.md) | [Attributes](./attributes.md) | [Optional Factory Arguments](./optional-factory-arguments.md) | [Templates](./templates.md) | [Customization](./customization.md)
 
-Bundle Installation
-===================
+# Installation
 
-Make sure Composer is installed globally, as explained in the
-[installation chapter](https://getcomposer.org/doc/00-intro.md)
-of the Composer documentation.
+Install the bundle using Composer:
 
-Applications that use Symfony Flex
-----------------------------------
-
-Open a command console, enter your project directory and execute:
-
-```console
+```bash
 composer require f0ska/auto-grid-bundle
 ```
 
-Applications that don't use Symfony Flex
-----------------------------------------
+## Basic Setup
 
-### Step 1: Download the Bundle
-
-Open a command console, enter your project directory and execute the
-following command to download the latest stable version of this bundle:
-
-```console
-composer require f0ska/auto-grid-bundle
-```
-
-### Step 2: Enable the Bundle
-
-Then, enable the bundle by adding it to the list of registered bundles
-in the `config/bundles.php` file of your project:
+### 1. Bundle Registration
+If you are using Symfony Flex, the bundle will be registered automatically.
+If not, add it to your `config/bundles.php`:
 
 ```php
-// config/bundles.php
-
 return [
     // ...
     F0ska\AutoGridBundle\F0skaAutoGridBundle::class => ['all' => true],
 ];
 ```
+
+### 2. Assets (Bootstrap 5)
+AutoGrid uses Bootstrap 5 and Bootstrap Icons for its default UI. 
+If your project doesn't already include them, you can add them via CDN or Webpack Encore.
+
+```html
+<!-- In your base.html.twig -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+```
+
+### 3. Usage
+You're ready! Start creating grids in your controllers.
+
+```php
+public function list(AutoGridFactory $factory): Response
+{
+    $grid = $factory->create(User::class);
+    return $grid->getResponse() ?? $this->render('admin/user.html.twig', ['grid' => $grid]);
+}
+```
+
+---
+
+[Configuration](./global-configuration.md) | [Attributes](./attributes.md) | [Customization](./customization.md)

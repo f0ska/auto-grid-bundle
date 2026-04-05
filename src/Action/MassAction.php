@@ -12,27 +12,27 @@ declare(strict_types=1);
 
 namespace F0ska\AutoGridBundle\Action;
 
-use F0ska\AutoGridBundle\Builder\FormBuilder;
 use F0ska\AutoGridBundle\Event\MassEvent;
 use F0ska\AutoGridBundle\Exception\ActionException;
 use F0ska\AutoGridBundle\Model\AutoGrid;
 use F0ska\AutoGridBundle\Model\Parameters;
+use F0ska\AutoGridBundle\Service\FormFacade;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class MassAction extends AbstractAction
 {
-    private FormBuilder $formBuilder;
+    private FormFacade $formFacade;
     private RequestStack $requestStack;
     private EventDispatcherInterface $dispatcher;
 
     public function __construct(
-        FormBuilder $formBuilder,
+        FormFacade $formFacade,
         RequestStack $requestStack,
         EventDispatcherInterface $dispatcher
     ) {
-        $this->formBuilder = $formBuilder;
+        $this->formFacade = $formFacade;
         $this->requestStack = $requestStack;
         $this->dispatcher = $dispatcher;
     }
@@ -40,7 +40,7 @@ class MassAction extends AbstractAction
     public function execute(AutoGrid $autoGrid, Parameters $parameters): void
     {
         $request = $this->requestStack->getCurrentRequest();
-        $form = $this->formBuilder->buildMassActionForm($parameters);
+        $form = $this->formFacade->buildMassActionForm($parameters);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -56,10 +56,5 @@ class MassAction extends AbstractAction
         }
 
         throw new ActionException('Not Allowed');
-    }
-
-    public function isIdRequired(): bool
-    {
-        return false;
     }
 }

@@ -18,6 +18,4 @@ use F0ska\AutoGridBundle\Model\Parameters;
 interface CustomizationInterface
 {
     public function execute(AutoGrid $autoGrid, Parameters $parameters): void;
-
-    public static function getPriority(): int;
 }

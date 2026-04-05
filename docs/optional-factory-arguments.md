@@ -1,98 +1,85 @@
-[Index](./index.md) | [Installation](./installation.md) | [Configuration](./global-configuration.md) | [Attributes](./attributes.md) | **Optional Factory Arguments** | [Customization](./customization.md)
+[Index](./index.md) | [Installation](./installation.md) | [Configuration](./global-configuration.md) | [Attributes](./attributes.md) | **Optional Factory Arguments** | [Templates](./templates.md) | [Customization](./customization.md)
 
-Optional Factory arguments
-==========================
-There are several optional arguments you can provide to `AutoGridFactory::create`
-method to modify AutoGrid behavior.
+# Optional Factory Arguments
 
-### `gridId`
+These optional arguments can be passed to `AutoGridFactory::create()` to modify the grid's behavior.
 
-This parameter changes the internal ID of the grid.
-The value should be unique and will visually alter the grid ID parameter in the URL
-(by default, this is an automatically generated hash).
-It is not required if the default behavior meets your needs.
+<details>
+<summary><strong>gridId</strong>: Changes the internal ID of the grid.</summary>
+
+The value must be unique. It replaces the automatically generated hash in the URL.
 
 ```php
-$autoGrid = $autoGridFactory->create(DemoOne::class, gridId: 'my-grid');
+$autoGrid = $autoGridFactory->create(User::class, gridId: 'user-management-grid');
 ```
+</details>
 
-### `queryExpression` and `queryParameters`
+<details>
+<summary><strong>queryExpression</strong> & <strong>queryParameters</strong>: Add custom DQL conditions to the grid query.</summary>
 
-These parameters allow you to add additional conditions to the grid query.
-You must provide the same arguments as you would for Doctrine’s `QueryBuilder::andWhere()`
-and `QueryBuilder::setParameters()`. The alias is always the name of your entity in camel case.
+Use these to filter the data source (e.g., show only items belonging to the current user). The entity alias is always the entity name in camelCase (e.g., `user`).
 
 ```php
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Query\Parameter;
+
 $autoGrid = $autoGridFactory->create(
-    DemoOne::class, 
-    queryExpression: 'demoOne.id = :user_id1 OR demoOne.id = :user_id2',
-    queryParameters: new ArrayCollection(
-        [
-            new Parameter('user_id1', 1),
-            new Parameter('user_id2', 2),
-        ]
-    )
+    User::class, 
+    queryExpression: 'user.owner = :current_user',
+    queryParameters: new ArrayCollection([
+        new Parameter('current_user', $this->getUser()),
+    ])
 );
 ```
+</details>
 
-### `initialAction` and `initialParameters`
+<details>
+<summary><strong>initialAction</strong> & <strong>initialParameters</strong>: Change the starting state of the grid.</summary>
 
-These arguments can be useful if you want to change the initial state of a grid.
-By default, AutoGrid will use the action `grid` with no parameters.
-You can provide any available action to load initially, and for some actions,
-you will need to provide an `id` in the parameters.
-
-```php
-$autoGrid1 = $autoGridFactory->create(DemoOne::class, initialAction: 'create');
-
-$autoGrid2 = $autoGridFactory->create(
-    DemoTwo::class, 
-    initialAction: 'edit',
-    initialParameters: ['id' => 5]
-);
-```
-
-You can also predefine initial filters or order, which can be changed or reset by the user.
-If you need persistent filters, use the`queryExpression` argument.
-For default order, refer to the [Attributes documentation](./attributes.md).
+By default, the grid loads the `grid` action. You can force it to start in `create`, `edit` (requires `id`), or with predefined filters/sorting.
 
 ```php
+// Start directly on the create form
+$autoGrid = $autoGridFactory->create(User::class, initialAction: 'create');
+
+// Start with a specific filter applied
 $autoGrid = $autoGridFactory->create(
-    DemoOne::class, 
+    User::class, 
     initialParameters: [
-        'filter' => ['id' => '11'],
-        'order' => ['name' => 'asc'],
+        'filter' => ['status' => 'active'],
+        'order' => ['createdAt' => 'desc'],
     ]
 );
 ```
+</details>
 
-### `routePrefix` and `routeParameters`
+<details>
+<summary><strong>routePrefix</strong> & <strong>routeParameters</strong>: Configure routing for custom controllers.</summary>
 
-These arguments can be particularly beneficial if you decide to use custom controllers for specific actions.
-They work in conjunction with `Route*` [attributes](./attributes.md) to specify how your routes should be configured.
-The `routePrefix` parameter adds a static prefix to the route name defined in the `Route*` attribute.
-The `routeParameters` parameter allows you to include additional parameters as needed for your route.
-Note that only the `id` parameter is automatically provided by the `Route*` attribute,
-representing a unique identifier for an entity.
+Used alongside `ActionRoute` attributes. `routePrefix` is prepended to the route name, and `routeParameters` are passed to the route generator.
 
 ```php
 $autoGrid = $autoGridFactory->create(
-    DemoOne::class, 
-    routePrefix: 'my_custom_route_',
-    routeParameters: ['userId' => $this->getUser()->getId()]
+    User::class, 
+    routePrefix: 'admin_',
+    routeParameters: ['section' => 'users']
 );
 ```
+</details>
 
-### `customization`
+<details>
+<summary><strong>customization</strong>: Pass arbitrary data to your custom extensions.</summary>
 
-This argument can be used to provide your specific parameters to your own [customizations](./customization.md).
-This parameter is not used by AutoGrid natively.
+This parameter is not used by AutoGrid natively but is available in your [customizations](./customization.md).
+
+```php
+$autoGrid = $autoGridFactory->create(
+    User::class, 
+    customization: ['theme_color' => 'blue']
+);
+```
+</details>
 
 ---
 
-Check documentation for more possibilities
-------------------------------------------
-
-- [Attributes](./attributes.md)
-- [Global Configuration](./global-configuration.md)
-- [Customization](./customization.md)
+[Attributes](./attributes.md) | [Templates](./templates.md) | [Customization](./customization.md)

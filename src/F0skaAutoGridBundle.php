@@ -12,15 +12,13 @@ declare(strict_types=1);
 
 namespace F0ska\AutoGridBundle;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+use F0ska\AutoGridBundle\DependencyInjection\F0skaAutoGridExtension;
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 
 class F0skaAutoGridBundle extends AbstractBundle
 {
-    public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
+    public function getContainerExtension(): F0skaAutoGridExtension
     {
-        $container->import('../config/parameters.yaml');
-        $container->import('../config/services.yaml');
+        return new F0skaAutoGridExtension();
     }
 }

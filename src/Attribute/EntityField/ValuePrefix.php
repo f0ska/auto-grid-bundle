@@ -13,13 +13,13 @@ declare(strict_types=1);
 namespace F0ska\AutoGridBundle\Attribute\EntityField;
 
 use Attribute;
-use F0ska\AutoGridBundle\Attribute\Abstract\AbstractAttribute;
+use F0ska\AutoGridBundle\Attribute\AbstractAttribute;
 
 #[Attribute]
 class ValuePrefix extends AbstractAttribute
 {
     public function __construct(string $value)
     {
-        $this->value = $value;
+        parent::__construct($value);
     }
 }

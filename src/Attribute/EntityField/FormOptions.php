@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace F0ska\AutoGridBundle\Attribute\EntityField;
 
 use Attribute;
-use F0ska\AutoGridBundle\Attribute\Abstract\AbstractAttribute;
+use F0ska\AutoGridBundle\Attribute\AbstractAttribute;
 
 #[Attribute]
 class FormOptions extends AbstractAttribute
@@ -23,7 +23,7 @@ class FormOptions extends AbstractAttribute
      */
     public function __construct(array $value)
     {
-        $this->value = $value;
+        parent::__construct($value);
     }
 
     public function getCode(): string

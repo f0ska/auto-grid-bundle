@@ -1,2 +1,4 @@
-{{ dump(agFieldValue(entity, field)) }}
-{{ dump(field) }}
+{% block autogrid_field_debug_content %}
+    {{ dump(agFieldValue(entity, field)) }}
+    {{ dump(field) }}
+{% endblock %}

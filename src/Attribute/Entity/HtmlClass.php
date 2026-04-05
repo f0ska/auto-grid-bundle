@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace F0ska\AutoGridBundle\Attribute\Entity;
 
 use Attribute;
-use F0ska\AutoGridBundle\Attribute\Abstract\AbstractAttribute;
+use F0ska\AutoGridBundle\Attribute\AbstractAttribute;
 
 #[Attribute]
 class HtmlClass extends AbstractAttribute
@@ -34,7 +34,7 @@ class HtmlClass extends AbstractAttribute
         ?string $actionColumnHeader = null,
         ?string $massActionColumnHeader = null
     ) {
-        $this->value = array_filter(
+        $value = array_filter(
             [
                 'table' => $table,
                 'thead' => $thead,
@@ -52,5 +52,7 @@ class HtmlClass extends AbstractAttribute
                 'mass_action_column_header' => $massActionColumnHeader,
             ]
         );
+
+        parent::__construct($value);
     }
 }

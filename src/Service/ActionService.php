@@ -18,7 +18,6 @@ use F0ska\AutoGridBundle\Model\AutoGrid;
 
 class ActionService
 {
-    private AttributeService $attributeService;
     private ViewService $viewService;
     private ActionListService $actionList;
     private ActionParametersListService $actionParametersList;
@@ -26,14 +25,12 @@ class ActionService
     private CustomizationService $customizationService;
 
     public function __construct(
-        AttributeService $attributeService,
         ViewService $viewService,
         ActionListService $actionList,
         ActionParametersListService $actionParametersList,
         ParametersService $parametersService,
         CustomizationService $customizationService
     ) {
-        $this->attributeService = $attributeService;
         $this->viewService = $viewService;
         $this->actionList = $actionList;
         $this->actionParametersList = $actionParametersList;
@@ -54,23 +51,29 @@ class ActionService
                     'expression' => $autoGrid->getQueryExpression(),
                     'parameters' => $autoGrid->getQueryParameters(),
                 ],
+                'customization' => $autoGrid->getCustomizationParameters(),
             ]
         );
 
-        $this->attributeService->buildAttributes($parameters);
+        if (isset($commonParameters['message'])) {
+            $parameters->message = $commonParameters['message'];
+        }
 
         if (!$this->actionList->hasAction($action)) {
             $parameters->message = 'Unknown Action';
             $this->actionList->getErrorAction()->execute($autoGrid, $parameters);
             return;
         }
+
+        $actionObject = $this->actionList->getAction($action);
+
         if (!$parameters->isAllowed($action)) {
             $parameters->message = 'Not Allowed';
             $this->actionList->getErrorAction()->execute($autoGrid, $parameters);
             return;
         }
         if (
-            $this->actionList->getAction($action)->isIdRequired()
+            $actionObject->isIdRequired()
             && !$this->actionParametersList->hasParameter('id')
         ) {
             $parameters->message = 'Bad Request';
@@ -78,7 +81,7 @@ class ActionService
             return;
         }
 
-        $parameters->action = $this->actionList->getAction($action)->getCode();
+        $parameters->action = $actionObject->getCode();
 
         foreach ($requestParameters as $key => $value) {
             try {
@@ -93,7 +96,7 @@ class ActionService
 
         try {
             $this->customizationService->executeCustomizations($autoGrid, $parameters);
-            $this->actionList->getAction($action)->execute($autoGrid, $parameters);
+            $actionObject->execute($autoGrid, $parameters);
         } catch (ActionException $exception) {
             $parameters->message = $exception->getMessage();
             $this->actionList->getErrorAction()->execute($autoGrid, $parameters);

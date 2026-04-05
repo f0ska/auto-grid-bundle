@@ -17,8 +17,8 @@ use Doctrine\Common\Collections\Collection;
 use F0ska\AutoGridBundle\Exception\RenderException;
 use F0ska\AutoGridBundle\Model\AutoGrid;
 use F0ska\AutoGridBundle\Model\FieldParameter;
-use F0ska\AutoGridBundle\Service\AttributeService;
 use F0ska\AutoGridBundle\Service\ConfigurationService;
+use F0ska\AutoGridBundle\Service\ParametersService;
 use Symfony\Component\Form\ChoiceList\View\ChoiceView;
 use Symfony\Contracts\Translation\TranslatableInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -161,7 +161,7 @@ class Extension extends AbstractExtension
     {
         $object = $entity;
         $property = $field->name;
-        if ($field->mappingType === AttributeService::MAPPING_VIRTUAL) {
+        if ($field->mappingType === ParametersService::MAPPING_VIRTUAL) {
             $object = $entity->{"get$field->subObject"}();
             $property = $field->subName;
         }

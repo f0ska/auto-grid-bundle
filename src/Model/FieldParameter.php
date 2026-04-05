@@ -27,6 +27,8 @@ class FieldParameter
     public ?AssociationMapping $associationMapping = null;
     public bool $canFilter = false;
     public bool $canSort = false;
+    public bool $canEdit = true;
+    public ?string $filterCondition = null;
     public array $permissions = [];
     public array $view = [];
     public array $attributes = [];

@@ -12,23 +12,27 @@ declare(strict_types=1);
 
 namespace F0ska\AutoGridBundle\Service;
 
-use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class ConfigurationService
 {
-    private ContainerBagInterface $params;
+    private array $config;
     private RequestStack $requestStack;
 
-    public function __construct(ContainerBagInterface $params, RequestStack $requestStack)
+    public function __construct(array $config, RequestStack $requestStack)
     {
-        $this->params = $params;
+        $this->config = $config;
         $this->requestStack = $requestStack;
     }
 
     public function getTemplate(string $templateCode): string
     {
-        $template = $this->params->get('f0ska.autogrid.template.' . $templateCode);
+        $path = explode('.', $templateCode);
+        $template = $this->config['template'];
+        foreach ($path as $node) {
+            $template = $template[$node];
+        }
+
         if (str_starts_with($template, '@')) {
             return $template;
         }
@@ -42,104 +46,88 @@ class ConfigurationService
 
     public function getFieldFormat(string $type): string
     {
-        return $this->params->get('f0ska.autogrid.view.field.format.' . $type);
+        return $this->config['view']['field_formats'][$type];
     }
 
     public function getPaginationLimits(): array
     {
-        return $this->params->get('f0ska.autogrid.grid.pagination_limits');
+        return $this->config['grid']['pagination_limits'];
     }
 
     public function getGridTextTruncate(): int
     {
-        return $this->params->get('f0ska.autogrid.grid.text.truncate');
+        return $this->config['grid']['truncate_text'];
     }
 
     public function canStoreNavigationInSession(): bool
     {
-        return $this->params->get('f0ska.autogrid.store_navigation_in_session');
+        return $this->config['session']['store_navigation'];
     }
 
     public function getFriendlyId(): string
     {
-        return $this->params->get('f0ska.autogrid.view.friendly_id');
+        return $this->config['view']['friendly_id'];
     }
 
     public function isSingleParamRequest(): bool
     {
-        return $this->params->get('f0ska.autogrid.request.single_parameter_mode');
+        return $this->config['request']['single_parameter_mode'];
     }
 
     public function getSingleParamRequestCode(): string
     {
-        return $this->params->get('f0ska.autogrid.request.single_parameter_code');
+        return $this->config['request']['single_parameter_code'];
     }
 
     public function getMultiParamRequestId(): string
     {
-        return $this->params->get('f0ska.autogrid.request.parameter_code.id');
+        return $this->config['request']['parameter_codes']['id'];
     }
 
     public function getMultiParamRequestAction(): string
     {
-        return $this->params->get('f0ska.autogrid.request.parameter_code.action');
+        return $this->config['request']['parameter_codes']['action'];
     }
 
     public function getMultiParamRequestParams(): string
     {
-        return $this->params->get('f0ska.autogrid.request.parameter_code.params');
+        return $this->config['request']['parameter_codes']['params'];
     }
 
     public function getTheme(): string
     {
-        $default = $this->params->get('f0ska.autogrid.template.theme');
         $override = $this->requestStack->getCurrentRequest()->attributes->get('_autogrid_theme');
-        return $override ?? $default;
+        return $override ?? $this->config['template']['theme'];
     }
 
     public function getFormThemes(): ?array
     {
-        $default = $this->params->get('f0ska.autogrid.template.form_themes');
         $override = $this->requestStack->getCurrentRequest()->attributes->get('_autogrid_form_themes');
-        return $override ?? $default;
+        return $override ?? $this->config['template']['form_themes'];
     }
 
     public function getDefaultButtonsPositions(): array
     {
-        return [
-            'view' => [
-                'display_in_grid' => $this->params->get('f0ska.autogrid.button.view.display_in_grid'),
-                'display_in_edit' => $this->params->get('f0ska.autogrid.button.view.display_in_edit'),
-            ],
-            'edit' => [
-                'display_in_grid' => $this->params->get('f0ska.autogrid.button.edit.display_in_grid'),
-                'display_in_view' => $this->params->get('f0ska.autogrid.button.edit.display_in_view'),
-            ],
-            'delete' => [
-                'display_in_grid' => $this->params->get('f0ska.autogrid.button.delete.display_in_grid'),
-                'display_in_view' => $this->params->get('f0ska.autogrid.button.delete.display_in_view'),
-                'display_in_edit' => $this->params->get('f0ska.autogrid.button.delete.display_in_edit'),
-            ],
-        ];
+        return $this->config['buttons'];
     }
 
     public function formBooleanAsSelect(): bool
     {
-        return $this->params->get('f0ska.autogrid.form.default_boolean_as_select');
+        return $this->config['form']['default_boolean_as_select'];
     }
 
     public function showEntityTitle(): bool
     {
-        return $this->params->get('f0ska.autogrid.common.show_entity_title');
+        return $this->config['view']['show_entity_title'];
     }
 
     public function formDateAsRange(): bool
     {
-        return $this->params->get('f0ska.autogrid.form.default_date_filter_range');
+        return $this->config['form']['default_date_filter_range'];
     }
 
     public function getRelationLabelCandidates(): array
     {
-        return $this->params->get('f0ska.autogrid.form.relation_label_candidates');
+        return $this->config['form']['relation_label_candidates'];
     }
 }

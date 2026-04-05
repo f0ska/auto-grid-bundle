@@ -1,49 +1,137 @@
-[Index](./index.md) | [Installation](./installation.md) | [Configuration](./global-configuration.md) | [Attributes](./attributes.md) | [Optional Factory Arguments](./optional-factory-arguments.md) | **Customization**
+[Index](./index.md) | [Installation](./installation.md) | [Configuration](./global-configuration.md) | [Attributes](./attributes.md) | [Optional Factory Arguments](./optional-factory-arguments.md) | [Templates](./templates.md) | **Customization**
 
-Customization
-=============
-Refer to the [Global Configuration](./global-configuration.md) and [Attributes](./attributes.md)
-documentation if you are looking for templates and forms customization.
+# Customization
 
-**This is an advanced section. Please review the bundle code and ensure you understand how it works.**
+AutoGrid is built to be extended. You can override everything from a single icon to the entire rendering logic.
 
-## Services
+## Overriding Templates
 
-**AutoGrid** is designed to be extendable.
-You can not only provide custom templates and form
-but also add new attributes, actions and action parameters to AutoGrid.
-See [services.yaml](../config/services.yaml) file to understand how to do this.
+There are five ways to customize the UI, from global defaults to specific fields:
 
-Possible scenarios:
+### 1. Global Configuration
+Set the default theme and base templates for all grids in `f0ska_auto_grid.yaml`.
 
-- **Attributes**: implement the [AttributeInterface](../src/Attribute/AttributeInterface.php)
-- **Actions**: implement the [ActionInterface](../src/Action/ActionInterface.php)
-  and add your actions to the `autogrid.action` tag, making them public.
-- **Action parameters**: implement the [ActionParameterInterface](../src/ActionParameter/ActionParameterInterface.php)
-  and add your actions to the `autogrid.action.parameter` tag, making them public.
-- **Customization Services**: implement the [CustomizationInterface](../src/Customization/CustomizationInterface.php)
-  and add your customization services to the `autogrid.customization` tag, making them public.
-  It allows you to impact AutoGrid internal parameters directly.
-  You can use the `customization` array parameter within the [Parameters](../src/Model/Parameters.php)
-  and [FieldParameter](../src/Model/FieldParameter.php) models, as well as pass an optional `customization` argument
-  to the [AutoGridFactory](../src/Factory/AutoGridFactory.php) to persist your customization data if needed.
+```yaml
+f0ska_auto_grid:
+    template:
+        theme: '@@F0skaAutoGrid/bootstrap_5'
+        base: 'base.html.twig'
+        form_themes: ['bootstrap_5_layout.html.twig']
+```
 
-## Events
+### 2. File-based Overrides
+Override bundle templates by creating files in `templates/bundles/F0skaAutoGridBundle/`.
+For example, to change the grid layout, create `templates/bundles/F0skaAutoGridBundle/grid/grid.html.twig`.
 
-| Event Name                     | Event Object                                |
-|--------------------------------|---------------------------------------------|
-| `f0ska.autogrid.entity.delete` | [DeleteEvent](../src/Event/DeleteEvent.php) |
-| `f0ska.autogrid.error.show`    | [ErrorEvent](../src/Event/ErrorEvent.php)   |
-| `f0ska.autogrid.entity.save`   | [SaveEvent](../src/Event/SaveEvent.php)     |
-| `f0ska.autogrid.entity.view`   | [ViewEvent](../src/Event/ViewEvent.php)     |
-| `f0ska.autogrid.mass_action`   | [MassEvent](../src/Event/MassEvent.php)     |
-| `f0ska.autogrid.export_action` | [ExportEvent](../src/Event/ExportEvent.php) |
+### 3. Route Parameters
+Override the theme for a specific route in your routing configuration.
+
+```yaml
+# config/routes.yaml
+admin_users:
+    path: /admin/users
+    controller: App\Controller\AdminController::users
+    defaults:
+        _autogrid_theme: '@@App/autogrid/custom_theme'
+        _autogrid_form_themes: ['custom_form_layout.html.twig']
+```
+
+### 4. Entity Level Attributes
+Use the `#[Template]` attribute on your Entity class to override specific template areas for that entity only.
+
+```php
+use F0ska\AutoGridBundle\ValueObject\TemplateArea;
+
+#[Attribute\Entity\Template([
+    TemplateArea::ACTION_GRID => 'admin/user/custom_grid.html.twig'
+])]
+class User { ... }
+```
+
+### 5. Field Level Attributes
+Use the `#[FieldTemplate]` attribute to change how a single property is rendered in the grid.
+
+```php
+#[FieldTemplate('admin/user/_avatar_cell.html.twig')]
+private ?string $avatarPath = null;
+```
 
 ---
 
-Check documentation for more possibilities
-------------------------------------------
+## Advanced Customization
 
-- [Optional Factory Arguments](./optional-factory-arguments.md)
-- [Attributes](./attributes.md)
-- [Global Configuration](./global-configuration.md)
+<details>
+<summary><strong>Custom Filter Conditions</strong>: Control how filters apply to the QueryBuilder.</summary>
+
+1. Implement `FilterConditionInterface`.
+2. Register as a tagged service (`autogrid.filter_condition`).
+3. Use in `#[Filterable(condition: MyCondition::class)]`.
+
+```php
+class MyCustomCondition implements FilterConditionInterface
+{
+    public function apply(QueryBuilder $qb, string $column, FieldParameter $field, mixed $value): void
+    {
+        $alias = uniqid('p');
+        $qb->andWhere("$column > :$alias")->setParameter($alias, $value);
+    }
+}
+```
+</details>
+
+<details>
+<summary><strong>Services & Tags</strong>: Extend the core logic.</summary>
+
+You can register custom services using these tags:
+- `autogrid.action`: New grid actions.
+- `autogrid.action.parameter`: Custom parameters for actions.
+- `autogrid.filter_condition`: Custom search logic.
+- `autogrid.customization`: Global grid logic modifiers.
+
+Refer to [services.yaml](../config/services.yaml) for core implementations.
+</details>
+
+<details>
+<summary><strong>Handling Events</strong>: Hook into the CRUD lifecycle.</summary>
+
+AutoGrid dispatches events for key actions. Register a listener or subscriber to handle them.
+
+**Example: Handling a Mass Action**
+```php
+#[AsEventListener(event: 'f0ska.autogrid.mass_action')]
+public function onMassAction(MassEvent $event): void
+{
+    $entities = $event->getEntities();
+    $action = $event->getAction(); // e.g., 'delete', 'activate'
+    
+    foreach ($entities as $entity) {
+        // Your logic here
+    }
+}
+```
+
+**Example: Handling an Export Action**
+```php
+#[AsEventListener(event: 'f0ska.autogrid.export_action')]
+public function onExport(ExportEvent $event): void
+{
+    $queryBuilder = $event->getQueryBuilder();
+    // Use your favorite library (PhpSpreadsheet, etc.) to generate the file
+    // and set the response in the event if needed.
+}
+```
+
+| Event Name | Purpose |
+| :--- | :--- |
+| `f0ska.autogrid.entity.save` | Before/after entity persistence. |
+| `f0ska.autogrid.entity.delete` | Before/after entity removal. |
+| `f0ska.autogrid.entity.view` | When an entity is loaded for viewing. |
+| `f0ska.autogrid.mass_action` | When a bulk action is triggered. |
+| `f0ska.autogrid.export_action` | When the export button is clicked. |
+| `f0ska.autogrid.error.show` | When an error occurs during processing. |
+
+</details>
+
+---
+
+[Index](./index.md) | [Installation](./installation.md) | [Configuration](./global-configuration.md) | [Attributes](./attributes.md) | [Templates](./templates.md)

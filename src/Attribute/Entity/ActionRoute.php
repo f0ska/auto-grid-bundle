@@ -13,9 +13,9 @@ declare(strict_types=1);
 namespace F0ska\AutoGridBundle\Attribute\Entity;
 
 use Attribute;
-use F0ska\AutoGridBundle\Attribute\Abstract\AbstractAttribute;
+use F0ska\AutoGridBundle\Attribute\AbstractAttribute;
 
-#[Attribute(Attribute::TARGET_ALL | Attribute::IS_REPEATABLE)]
+#[Attribute(Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
 class ActionRoute extends AbstractAttribute
 {
     private string $action;
@@ -28,10 +28,11 @@ class ActionRoute extends AbstractAttribute
     public function __construct(string $action, ?string $route = null, array $parameters = [])
     {
         $this->action = $action;
-        $this->value = [
+        $value = [
             'route' => $route,
             'parameters' => $parameters,
         ];
+        parent::__construct($value);
     }
 
     public function getCode(): string

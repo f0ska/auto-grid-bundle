@@ -13,7 +13,8 @@ declare(strict_types=1);
 namespace F0ska\AutoGridBundle\Attribute\EntityField;
 
 use Attribute;
-use F0ska\AutoGridBundle\Attribute\Abstract\AbstractAttribute;
+use F0ska\AutoGridBundle\Attribute\AbstractAttribute;
+
 use function Symfony\Component\String\u;
 
 #[Attribute]
@@ -21,6 +22,7 @@ class AddToFieldset extends AbstractAttribute
 {
     public function __construct(string $nameOrCode)
     {
-        $this->value = u($nameOrCode)->ascii()->snake()->toString();
+        $value = u($nameOrCode)->ascii()->snake()->toString();
+        parent::__construct($value);
     }
 }

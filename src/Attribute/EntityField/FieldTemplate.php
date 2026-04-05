@@ -13,13 +13,13 @@ declare(strict_types=1);
 namespace F0ska\AutoGridBundle\Attribute\EntityField;
 
 use Attribute;
-use F0ska\AutoGridBundle\Attribute\Abstract\AbstractAttribute;
+use F0ska\AutoGridBundle\Attribute\AbstractAttribute;
 
 #[Attribute]
 class FieldTemplate extends AbstractAttribute
 {
     public function __construct(string $templatePath)
     {
-        $this->value = $templatePath;
+        parent::__construct($templatePath);
     }
 }

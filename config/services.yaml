@@ -5,13 +5,8 @@ services:
         autoconfigure: false
 
     F0ska\AutoGridBundle\:
-        resource: '../src/{Builder/*,Service/*}'
+        resource: '../src/{Builder/*,Service/*,Factory/*}'
         autowire: true
-
-    F0ska\AutoGridBundle\Factory\:
-        resource: '../src/Factory/*'
-        autowire: true
-        lazy: true
 
     F0ska\AutoGridBundle\Twig\:
         resource: '../src/Twig/*'
@@ -24,10 +19,20 @@ services:
         tags: [ 'autogrid.action' ]
         autowire: true
 
+    F0ska\AutoGridBundle\Condition\:
+        resource: '../src/Condition/*'
+        tags: [ 'autogrid.filter_condition' ]
+        autowire: true
+
     F0ska\AutoGridBundle\ActionParameter\:
         resource: '../src/ActionParameter/*'
         tags: [ 'autogrid.action.parameter' ]
         autowire: true
+
+    F0ska\AutoGridBundle\Service\ConfigurationService:
+        autowire: true
+        arguments:
+            $config: '%f0ska_auto_grid.config%'
 
     F0ska\AutoGridBundle\Service\ActionListService:
         autowire: true
@@ -44,11 +49,15 @@ services:
     F0ska\AutoGridBundle\Service\PermissionService:
         autowire: true
         lazy: true
+
+    F0ska\AutoGridBundle\Service\FilterConditionListService:
+        autowire: true
+        lazy: true
         arguments:
-            $actions: !tagged_iterator 'autogrid.action'
+            $conditions: !tagged_iterator 'autogrid.filter_condition'
 
     F0ska\AutoGridBundle\Service\CustomizationService:
         autowire: true
         lazy: true
         arguments:
-            $customizations: !tagged_iterator { tag: 'autogrid.customization', default_priority_method: getPriority }
+            $customizations: !tagged_iterator 'autogrid.customization'
