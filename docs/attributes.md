@@ -160,9 +160,11 @@ class User { ... }
 <details>
 <summary><strong>DisallowActionsByDefault</strong>: Deny all actions unless explicitly allowed.</summary>
 
+Use this for a "Secure by Default" approach. All actions (`grid`, `view`, `edit`, `delete`, etc.) will be hidden and restricted until you add explicit `#[Permission]` attributes.
+
 ```php
 #[DisallowActionsByDefault]
-#[Permission('view')] // Only 'view' is allowed now
+#[Permission(action: 'grid')] // Only 'grid' is allowed now
 class User { ... }
 ```
 </details>
@@ -173,7 +175,7 @@ class User { ... }
 ```php
 #[DisallowFieldsByDefault]
 class User {
-    #[Permission] // Explicitly show this field
+    #[Permission] // Explicitly show this field in all views
     private ?string $name = null;
 }
 ```
@@ -185,36 +187,52 @@ class User {
 This attribute is highly versatile and can be used on the **Class** (to control actions) or on **Properties** (to control field visibility). It is repeatable.
 
 ### Parameters:
-- `action`: (string) The action to control (e.g., `grid`, `view`, `create`, `edit`, `delete`, `export`, `mass_action`). If null, it's a global rule.
+- `action`: (string) The action to control (e.g., `grid`, `view`, `create`, `edit`, `delete`, `export`, `mass`). If null, it's a global rule.
 - `allow`: (bool) Set to `false` to deny access. Default is `true`.
 - `role`: (mixed) Restrict access to users with specific Symfony roles (string or array).
 - `gridId`: (string) Apply the rule only when the grid has a specific ID.
 
+### Understanding Permission Logic:
+Permissions are resolved in order. If a `role` is specified:
+1.  If the user **has** the role, the `allow` value is used directly.
+2.  If the user **does NOT** have the role, the **inverse** of `allow` is used.
+
+> **Tip:** To create a strict "Admins Only" rule, use two attributes: one to deny everyone, and one to allow admins.
+
 ### Common Use Cases:
 
-#### 1. Role-Based Action Control
+#### 1. Role-Based Action Control (Admins Only)
 ```php
-// Only admins can delete entities
-#[Permission(action: 'delete', role: 'ROLE_ADMIN')]
+// 1. Deny 'delete' for everyone
+#[Permission(action: 'delete', allow: false)]
+// 2. Explicitly allow 'delete' for admins
+#[Permission(action: 'delete', role: 'ROLE_ADMIN', allow: true)]
 class User { ... }
 ```
 
-#### 2. Global Field Visibility
+#### 2. Simple Role Restriction
 ```php
-// Hide a sensitive field from ALL AutoGrid views (grid, view, edit, etc.)
+// Only users with ROLE_MANAGER (or higher) can use the export action
+#[Permission(action: 'export', role: 'ROLE_MANAGER', allow: true)]
+class User { ... }
+```
+
+#### 3. Global Field Visibility
+```php
+// Hide a sensitive field from ALL AutoGrid views (grid, view, edit, etc.) for everyone
 #[Permission(allow: false)]
 private ?string $internalNote = null;
 ```
 
-#### 3. Action-Specific Field Visibility
+#### 4. Action-Specific Field Visibility
 ```php
 // Show field in detailed view, but hide it in the main grid list
-#[Permission('grid', allow: false)]
-#[Permission('view', allow: true)]
+#[Permission(action: 'grid', allow: false)]
+#[Permission(action: 'view', allow: true)]
 private ?string $longDescription = null;
 ```
 
-#### 4. Context-Aware (gridId) Visibility
+#### 5. Context-Aware (gridId) Visibility
 ```php
 // Hide a field only when displayed in a specific parent grid
 // Useful for virtual fields from [AssociatedField]
