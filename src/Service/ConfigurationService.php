@@ -103,7 +103,14 @@ class ConfigurationService
     public function getFormThemes(): ?array
     {
         $override = $this->requestStack->getCurrentRequest()->attributes->get('_autogrid_form_themes');
-        return $override ?? $this->config['template']['form_themes'];
+        if ($override) {
+            return $override;
+        }
+
+        $themes = $this->config['template']['form_themes'];
+        $themes[] = $this->getTemplate('form.layout');
+
+        return $themes;
     }
 
     public function getDefaultButtonsPositions(): array

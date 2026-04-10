@@ -17,6 +17,9 @@ f0ska_auto_grid:
         form_themes:
             - 'bootstrap_5_layout.html.twig'
 
+    # Note: `template.form_themes` are merged with the theme's `form.layout` 
+    # template (e.g. '@F0skaAutoGrid/bootstrap_5/form/layout.html.twig').
+
         # Templates for core actions
         action:
             grid: 'action/grid.html.twig'
@@ -40,6 +43,10 @@ f0ska_auto_grid:
         fieldset:
             view: 'fieldset/view.html.twig'
             form: 'fieldset/form.html.twig'
+
+        # Templates for form customization
+        form:
+            layout: 'form/layout.html.twig'
 
         # Templates for individual grid components
         grid:
