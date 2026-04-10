@@ -1,0 +1,86 @@
+{% if view.advancedFilterFormView and agRun(agIsAllowed, 'advanced_filter') %}
+    {% block autogrid_grid_advanced_filter_modal %}
+        <div id="adv{{ agId }}" class="modal">
+            {% block autogrid_grid_advanced_filter_dialog %}
+                <div class="modal-background" onclick="document.getElementById('adv{{ agId }}').classList.remove('is-active');"></div>
+                <div class="modal-card">
+                    {% block autogrid_grid_advanced_filter_content %}
+                        <header class="modal-card-head">
+                            {% block autogrid_grid_advanced_filter_header %}
+                                <p class="modal-card-title" id="adv{{ agId }}Label">
+                                    <i class="bi bi-search mr-1"></i>
+                                    {% if attributes.title is not empty %}
+                                        {{ attributes.title|trans }}
+                                    {% endif %}
+                                </p>
+                                <button class="delete" aria-label="close" onclick="document.getElementById('adv{{ agId }}').classList.remove('is-active');"></button>
+                            {% endblock %}
+                        </header>
+                        <section class="modal-card-body">
+                            {% block autogrid_grid_advanced_filter_body %}
+                                {% if view.formThemes is not empty %}
+                                    {% form_theme view.advancedFilterFormView with view.formThemes %}
+                                {% endif %}
+                                {% block autogrid_grid_advanced_filter_form %}
+                                    {{ form_start(view.advancedFilterFormView) }}
+                                    <div class="columns is-multiline">
+                                        {% for field in fields %}
+                                            {% if field.canFilter %}
+                                                {% set formField = attribute(view.advancedFilterFormView, field.name) %}
+                                                {% block autogrid_grid_advanced_filter_field %}
+                                                    <div class="column is-4">
+                                                        {% if formField.children|length %}
+                                                            {% for child in formField.children %}
+                                                                <div class="field">
+                                                                    <label class="label is-small">{{ field_label(formField) }}
+                                                                        - {{ field_label(child) }}</label>
+                                                                    {{ form_widget(child) }}
+                                                                </div>
+                                                            {% endfor %}
+                                                        {% else %}
+                                                            <div class="field">
+                                                                <label class="label is-small">{{ field_label(formField) }}</label>
+                                                                {{ form_widget(formField) }}
+                                                            </div>
+                                                        {% endif %}
+                                                    </div>
+                                                {% endblock %}
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                    {{ form_rest(view.advancedFilterFormView) }}
+                                    {{ form_end(view.advancedFilterFormView) }}
+                                {% endblock %}
+                            {% endblock %}
+                        </section>
+                        <footer class="modal-card-foot">
+                            {% block autogrid_grid_advanced_filter_footer %}
+                                <div class="field is-grouped">
+                                    <div class="control">
+                                        {% block autogrid_grid_advanced_filter_submit_button %}
+                                            <button type="submit"
+                                                    form="{{ view.advancedFilterFormView.vars.attr.id }}"
+                                                    class="button is-primary"
+                                            >
+                                                {{- 'f0ska.autogrid.button.submit'|trans -}}
+                                            </button>
+                                        {% endblock %}
+                                    </div>
+                                    <div class="control">
+                                        {% block autogrid_grid_advanced_filter_reset_button %}
+                                            <a class="button is-light {% if request.filter is not defined %}is-static{% endif %}"
+                                               href="{{ agRun(agActionUrl, 'grid', {'filter': null}) }}"
+                                            >
+                                                {{- 'f0ska.autogrid.button.reset'|trans -}}
+                                            </a>
+                                        {% endblock %}
+                                    </div>
+                                </div>
+                            {% endblock %}
+                        </footer>
+                    {% endblock %}
+                </div>
+            {% endblock %}
+        </div>
+    {% endblock %}
+{% endif %}

@@ -1,0 +1,43 @@
+{% if view.massActionFormView %}
+    {% set btnClass = attributes.html_class.thead_btn|default('is-small') %}
+    {% block autogrid_grid_column_header_massaction %}
+        <th class="{{ attributes.html_class.mass_action_column_header|default('has-text-centered') }}">
+            {{ form_start(view.massActionFormView) }}
+            {% block autogrid_grid_column_header_massaction_dropdown %}
+                <div class="dropdown is-hoverable is-right">
+                    <div class="dropdown-trigger">
+                        <button class="button {{ btnClass }}" aria-haspopup="true">
+                            <i class="bi bi-chevron-down"></i>
+                        </button>
+                    </div>
+                    <div class="dropdown-menu" role="menu">
+                        <div class="dropdown-content">
+                            {% block autogrid_grid_column_header_massaction_choices %}
+                                {% for label,code in view.massActionChoices %}
+                                    <button
+                                        class="dropdown-item"
+                                        type="submit"
+                                        form="{{ view.massActionFormView.vars.attr.id }}"
+                                        name="{{ field_name(view.massActionFormView.code) }}"
+                                        value="{{ code }}"
+                                    >{{ label|trans }}</button>
+                                {% endfor %}
+                            {% endblock %}
+                            <hr class="dropdown-divider">
+                            {% block autogrid_grid_column_header_massaction_select_all %}
+                                <label class="dropdown-item">
+                                    <input type="checkbox"
+                                           autocomplete="off"
+                                           onchange="document.querySelectorAll('[name={{ ('"' ~ field_name(view.massActionFormView.ids) ~ '[]"')|escape('html_attr') }}]').forEach(checkbox => { checkbox.checked = this.checked; })"
+                                    >
+                                    {{ 'f0ska.autogrid.action.select_all'|trans }}
+                                </label>
+                            {% endblock %}
+                        </div>
+                    </div>
+                </div>
+            {% endblock %}
+            {{ form_end(view.massActionFormView) }}
+        </th>
+    {% endblock %}
+{% endif %}

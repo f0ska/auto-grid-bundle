@@ -1,0 +1,50 @@
+{% set isFilterActive = (attribute(request.filter ?? {}, field.name) is defined) and attribute(request.filter, field.name) is not same as null %}
+{% set linkClass = attributes.html_class.thead_link|default('text-gray-500 hover:text-gray-700') %}
+{% set linkClassActive = attributes.html_class.thead_link_active|default('text-blue-600 hover:text-blue-800') %}
+{% block autogrid_grid_column_header_filter %}
+    <span class="relative inline-block group">
+        {% block autogrid_grid_column_header_filter_icon %}
+            <a class="{{ isFilterActive ? linkClassActive : linkClass }}"
+               role="button"
+               data-dropdown-toggle="filter{{ agId }}{{ field.name }}"
+               aria-expanded="false"
+            ><small><i class="bi bi-funnel{{ isFilterActive ? '-fill' }}"></i></small></a>
+        {% endblock %}
+        {% block autogrid_grid_column_header_filter_dropdown %}
+            <div id="filter{{ agId }}{{ field.name }}" class="hidden z-10 bg-white rounded-lg shadow-lg absolute right-0 border border-gray-200 p-3 w-64">
+                {% set form = attribute(view.filterFormViews, field.name) %}
+                {% if view.formThemes is not empty %}
+                    {% form_theme form with view.formThemes %}
+                {% endif %}
+                {{ form_start(form) }}
+                {% block autogrid_grid_column_header_filter_form_fields %}
+                    {% if field.attributes.range_filter is defined %}
+                        {% for searchField in attribute(form, field.name).children %}
+                            {{ form_widget(searchField, {'attr': {'placeholder': field_label(searchField), 'class': 'w-full px-3 py-2 mb-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500'}}) }}
+                            {{ loop.first ? '<div class="mb-2"></div>' }}
+                        {% endfor %}
+                    {% else %}
+                        {{ form_widget(attribute(form, field.name), {'attr': {'class': 'w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500'}}) }}
+                    {% endif %}
+                {% endblock %}
+                {{ form_rest(form) }}
+                {{ form_end(form) }}
+                {% block autogrid_grid_column_header_filter_buttons %}
+                    <div class="flex mt-3 space-x-2">
+                        <button type="submit"
+                                form="{{ form.vars.attr.id }}"
+                                class="flex-1 px-3 py-1.5 text-white bg-blue-700 rounded-lg hover:bg-blue-800"
+                        >
+                            {{- 'f0ska.autogrid.button.submit'|trans -}}
+                        </button>
+                        <a class="flex-1 px-3 py-1.5 text-center text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 {% if not isFilterActive %}opacity-50 cursor-not-allowed{% endif %}"
+                           href="{{ agRun(agActionUrl, 'grid', {'filter': {(field.name): null}}) }}"
+                        >
+                            {{- 'f0ska.autogrid.button.reset'|trans -}}
+                        </a>
+                    </div>
+                {% endblock %}
+            </div>
+        {% endblock %}
+    </span>
+{% endblock %}

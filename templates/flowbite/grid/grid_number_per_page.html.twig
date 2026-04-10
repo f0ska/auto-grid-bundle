@@ -1,0 +1,22 @@
+{% if view.pagination.limits|length > 1 %}
+    {% set btnClass = attributes.html_class.tfoot_btn|default('px-3 py-1 text-gray-600 bg-white border border-gray-300 rounded hover:bg-gray-100') %}
+    {% block autogrid_grid_limit %}
+        <div class="inline-flex rounded-lg overflow-hidden border border-gray-300">
+            {% for pageLimit in view.pagination.limits %}
+                {% if pageLimit == view.pagination.limit %}
+                    {% block autogrid_grid_limit_active %}
+                        <span class="{{ btnClass }} bg-blue-700 text-white">{{ pageLimit }}</span>
+                    {% endblock %}
+                {% else %}
+                    {% block autogrid_grid_limit_button %}
+                        {% set calcOffset = (view.pagination.count > view.pagination.limit ? view.pagination.limit : view.pagination.count) * (view.pagination.page - 1) + 1 %}
+                        {% set toPage = (calcOffset / pageLimit)|round(0, 'ceil')|agToInt %}
+                        <a type="button"
+                           href="{{ agRun(agActionUrl, 'grid', {'limit': pageLimit, 'page': toPage}) }}"
+                           class="{{ btnClass }}">{{ pageLimit }}</a>
+                    {% endblock %}
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endblock %}
+{% endif %}

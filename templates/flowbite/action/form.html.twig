@@ -1,0 +1,93 @@
+{% extends attributes.template.base|default(agTemplate('base')) %}
+{% block autogrid %}
+    <div class="{{ attributes.html_class.table|default('w-full overflow-x-auto rounded-lg shadow-sm') }}">
+        {% block autogrid_form_caption %}
+            {% if attributes.title is not empty %}
+                <div class="text-center text-secondary h4 mb-3">
+                    {{ attributes.title|trans }}
+                </div>
+            {% endif %}
+        {% endblock %}
+
+        {% block autogrid_form_header %}
+            {% set btnClass = attributes.html_class.thead_btn|default('text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-gray-100') %}
+            <div class="{{ attributes.html_class.thead|default('flex items-center justify-between px-6 py-3 bg-gray-50 border-b') }}">
+                <div class="flex items-center space-x-2">
+                    {% block autogrid_form_header_back_button %}
+                        {% if agRun(agIsAllowed, 'grid') %}
+                            <a class="{{ btnClass }} px-3 py-1" href="{{ agRun(agActionUrl, 'grid') }}">
+                                <i class="bi bi-chevron-left"></i>
+                                {{ 'f0ska.autogrid.button.back'|trans }}
+                            </a>
+                        {% endif %}
+                    {% endblock %}
+                    {% block autogrid_form_header_view_button %}
+                        {% if action is not same as 'create' and agRun(agIsAllowed, 'view') and attributes.button.view.display_in_edit %}
+                            <a class="{{ btnClass }} px-3 py-1"
+                               href="{{ agRun(agActionUrl, 'view', {'id': entity.id}) }}"
+                            >
+                                <i class="bi bi-eye"></i>
+                                {{ 'f0ska.autogrid.button.view'|trans }}
+                            </a>
+                        {% endif %}
+                    {% endblock %}
+                </div>
+                <div class="flex items-center">
+                    {% block autogrid_form_header_title %}
+                        <span class="px-3 py-1 text-gray-600 bg-gray-100 rounded-lg text-sm font-normal">
+                            {{ ('f0ska.autogrid.action.' ~ action)|trans }}
+                            {% if action is not same as 'create' %}
+                                <i class="bi bi-hash"></i>{{ entity.id }}
+                            {% endif %}
+                        </span>
+                    {% endblock %}
+                </div>
+                <div class="flex items-center space-x-2">
+                    {% block autogrid_form_header_submit_button %}
+                        <button class="{{ btnClass }} px-3 py-1" type="submit"
+                                form="{{ form.vars.attr.id }}">
+                            <i class="bi bi-save"></i>
+                            {{ 'f0ska.autogrid.button.submit'|trans }}
+                        </button>
+                    {% endblock %}
+                    {% block autogrid_form_header_delete_button %}
+                        {% if action is not same as 'create' and agRun(agIsAllowed, 'delete') and attributes.button.delete.display_in_edit %}
+                            <a class="text-white bg-red-600 rounded-lg hover:bg-red-700 px-3 py-1"
+                               href="{{ agRun(agActionUrl, 'delete', {'id': entity.id}) }}"
+                               onclick="return confirm('{{ 'f0ska.autogrid.dialog.delete_confirm'|trans }}');"
+                            >
+                                <i class="bi bi-trash"></i>
+                                {{ 'f0ska.autogrid.button.delete'|trans }}
+                            </a>
+                        {% endif %}
+                    {% endblock %}
+                </div>
+            </div>
+        {% endblock %}
+
+        {% block autogrid_form_footer %}
+            <div class="{{ attributes.html_class.tfoot|default('flex justify-end px-6 py-3 bg-gray-50 border-t') }}">
+                <a class="{{ attributes.html_class.tfoot_btn|default('px-3 py-1 text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-gray-50') }}"
+                   href="#{{ attributes.container_id }}"
+                ><i class="bi bi-chevron-up"></i></a>
+            </div>
+        {% endblock %}
+
+        {% block autogrid_form_body %}
+            <div class="{{ attributes.html_class.tbody|default('bg-white border-b') }}">
+                {% block autogrid_form_form %}
+                    {% if view.formThemes is not empty %}
+                        {% form_theme form with view.formThemes %}
+                    {% endif %}
+                    {% if view.fieldset.defined %}
+                        {{ include(attributes.template.fieldset.form|default(agTemplate('fieldset.form'))) }}
+                    {% else %}
+                        <div class="px-6 py-4">
+                            {{ form(form) }}
+                        </div>
+                    {% endif %}
+                {% endblock %}
+            </div>
+        {% endblock %}
+    </div>
+{% endblock %}

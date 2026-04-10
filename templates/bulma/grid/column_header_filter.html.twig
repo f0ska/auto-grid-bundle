@@ -1,0 +1,54 @@
+{% set isFilterActive = (attribute(request.filter ?? {}, field.name) is defined) and attribute(request.filter, field.name) is not same as null %}
+{% set linkClass = attributes.html_class.thead_link|default('has-text-grey') %}
+{% set linkClassActive = attributes.html_class.thead_link_active|default('has-text-info') %}
+{% block autogrid_grid_column_header_filter %}
+    <span class="dropdown is-hoverable is-right">
+        {% block autogrid_grid_column_header_filter_icon %}
+            <a class="{{ isFilterActive ? linkClassActive : linkClass }} dropdown-trigger"
+               role="button"
+            ><small><i class="bi bi-funnel{{ isFilterActive ? '-fill' }}"></i></small></a>
+        {% endblock %}
+        {% block autogrid_grid_column_header_filter_dropdown %}
+            <div class="dropdown-menu" role="menu">
+                <div class="dropdown-content p-3">
+                    {% set form = attribute(view.filterFormViews, field.name) %}
+                    {% if view.formThemes is not empty %}
+                        {% form_theme form with view.formThemes %}
+                    {% endif %}
+                    {{ form_start(form) }}
+                    {% block autogrid_grid_column_header_filter_form_fields %}
+                        {% if field.attributes.range_filter is defined %}
+                            {% for searchField in attribute(form, field.name).children %}
+                                {{ form_widget(searchField, {'attr': {'placeholder': field_label(searchField)}}) }}
+                                {{ loop.first ? '<div class="mb-2"></div>' }}
+                            {% endfor %}
+                        {% else %}
+                            {{ form_widget(attribute(form, field.name)) }}
+                        {% endif %}
+                    {% endblock %}
+                    {{ form_rest(form) }}
+                    {{ form_end(form) }}
+                    {% block autogrid_grid_column_header_filter_buttons %}
+                        <div class="field is-grouped mt-2">
+                            <div class="control is-expanded">
+                                <button type="submit"
+                                        form="{{ form.vars.attr.id }}"
+                                        class="button is-small is-primary is-fullwidth"
+                                >
+                                    {{- 'f0ska.autogrid.button.submit'|trans -}}
+                                </button>
+                            </div>
+                            <div class="control is-expanded">
+                                <a class="button is-small is-fullwidth {% if not isFilterActive %}is-static{% endif %}"
+                                   href="{{ agRun(agActionUrl, 'grid', {'filter': {(field.name): null}}) }}"
+                                >
+                                    {{- 'f0ska.autogrid.button.reset'|trans -}}
+                                </a>
+                            </div>
+                        </div>
+                    {% endblock %}
+                </div>
+            </div>
+        {% endblock %}
+    </span>
+{% endblock %}

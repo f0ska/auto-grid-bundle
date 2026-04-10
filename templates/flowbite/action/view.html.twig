@@ -1,0 +1,96 @@
+{% extends attributes.template.base|default(agTemplate('base')) %}
+{% block autogrid %}
+    <div class="{{ attributes.html_class.table|default('w-full overflow-x-auto rounded-lg shadow-sm') }}">
+        {% block autogrid_view_caption %}
+            {% if attributes.title is not empty %}
+                <div class="text-center text-secondary h4 mb-3">
+                    {{ attributes.title|trans }}
+                </div>
+            {% endif %}
+        {% endblock %}
+
+        {% block autogrid_view_header %}
+            {% set btnClass = attributes.html_class.thead_btn|default('text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-gray-100') %}
+            <div class="{{ attributes.html_class.thead|default('flex items-center justify-between px-6 py-3 bg-gray-50 border-b') }}">
+                <div class="flex items-center">
+                    {% block autogrid_view_header_back_button %}
+                        {% if agRun(agIsAllowed, 'grid') %}
+                            <a class="{{ btnClass }} px-3 py-1" href="{{ agRun(agActionUrl, 'grid') }}">
+                                <i class="bi bi-chevron-left"></i>
+                                {{ 'f0ska.autogrid.button.back'|trans }}
+                            </a>
+                        {% endif %}
+                    {% endblock %}
+                </div>
+                <div class="flex items-center">
+                    {% block autogrid_view_header_title %}
+                        <span class="px-3 py-1 text-gray-600 bg-gray-100 rounded-lg text-sm font-normal">
+                            {{ ('f0ska.autogrid.action.' ~ action)|trans }}
+                            <i class="bi bi-hash"></i>{{ entity.id }}
+                        </span>
+                    {% endblock %}
+                </div>
+                <div class="flex items-center space-x-2">
+                    {% block autogrid_view_header_edit_button %}
+                        {% if agRun(agIsAllowed, 'edit') and attributes.button.edit.display_in_view %}
+                            <a class="{{ btnClass }} px-3 py-1" href="{{ agRun(agActionUrl, 'edit') }}">
+                                <i class="bi bi-pencil-square"></i>
+                                {{ 'f0ska.autogrid.button.modify'|trans }}
+                            </a>
+                        {% endif %}
+                    {% endblock %}
+                    {% block autogrid_view_header_delete_button %}
+                        {% if agRun(agIsAllowed, 'delete') and attributes.button.delete.display_in_grid %}
+                            <a class="text-white bg-red-600 rounded-lg hover:bg-red-700 px-3 py-1"
+                               href="{{ agRun(agActionUrl, 'delete', {'id': entity.id}) }}"
+                               onclick="return confirm('{{ 'f0ska.autogrid.dialog.delete_confirm'|trans }}');"
+                            >
+                                <i class="bi bi-trash"></i>
+                                {{ 'f0ska.autogrid.button.delete'|trans }}
+                            </a>
+                        {% endif %}
+                    {% endblock %}
+                </div>
+            </div>
+        {% endblock %}
+
+        {% block autogrid_view_footer %}
+            <div class="{{ attributes.html_class.tfoot|default('flex justify-end px-6 py-3 bg-gray-50 border-t') }}">
+                <a class="{{ attributes.html_class.tfoot_btn|default('px-3 py-1 text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-gray-50') }}"
+                   href="#{{ attributes.container_id }}"
+                ><i class="bi bi-chevron-up"></i></a>
+            </div>
+        {% endblock %}
+
+        {% block autogrid_view_body %}
+            <div class="{{ attributes.html_class.tbody|default('bg-white') }}">
+                {% if view.fieldset.defined %}
+                    {{ include(attributes.template.fieldset.view|default(agTemplate('fieldset.view'))) }}
+                {% else %}
+                    <table class="w-full text-sm text-left text-gray-500">
+                        <tbody class="bg-white border-b">
+                            {% for field in fields %}
+                                {% if field.permissions.view %}
+                                    {% block autogrid_view_body_row %}
+                                        <tr class="hover:bg-gray-50">
+                                            {% block autogrid_view_body_row_label %}
+                                                <th class="px-6 py-3 text-right text-xs text-gray-700 uppercase bg-gray-50 w-1/3">
+                                                    {{ field.attributes.label|trans }}
+                                                </th>
+                                            {% endblock %}
+                                            {% block autogrid_view_body_row_value %}
+                                                <td class="px-6 py-3">
+                                                    {{ include(field.view.template) }}
+                                                </td>
+                                            {% endblock %}
+                                        </tr>
+                                    {% endblock %}
+                                {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% endif %}
+            </div>
+        {% endblock %}
+    </div>
+{% endblock %}

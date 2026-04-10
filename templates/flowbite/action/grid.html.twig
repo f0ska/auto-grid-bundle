@@ -1,0 +1,68 @@
+{% extends attributes.template.base|default(agTemplate('base')) %}
+{% block autogrid %}
+    {{ include(attributes.template.grid.advanced_filter|default(agTemplate('grid.advanced_filter'))) }}
+    {% set columnsCount = (fields|length) + (agRun(agIsAnyAllowed) ? 1 : 0) + (view.massActionFormView ? 1 : 0) %}
+    <div class="{{ attributes.html_class.table|default('w-full overflow-x-auto rounded-lg shadow-sm') }}">
+        {% block autogrid_grid_caption %}
+            {% if attributes.title is not empty %}
+                <div class="text-center text-secondary h4 mb-3">
+                    {{ attributes.title|trans }}
+                </div>
+            {% endif %}
+        {% endblock %}
+
+        {% block autogrid_grid_header %}
+            <table class="{{ attributes.html_class.table|default('w-full text-sm text-left text-gray-500') }}">
+                <thead class="{{ attributes.html_class.thead|default('text-xs text-gray-700 uppercase bg-gray-50') }}">
+                    <tr>
+                        {{ include(attributes.template.grid.column_header_massaction|default(agTemplate('grid.column_header_massaction'))) }}
+                        {% for field in fields %}
+                            {{ include(attributes.template.grid.column_header|default(agTemplate('grid.column_header'))) }}
+                        {% endfor %}
+                        {{ include(attributes.template.grid.column_header_action|default(agTemplate('grid.column_header_action'))) }}
+                    </tr>
+                </thead>
+        {% endblock %}
+
+        {% block autogrid_grid_body %}
+                <tbody class="{{ attributes.html_class.tbody|default('bg-white border-b') }}">
+                {% if rows is empty %}
+                    {% block autogrid_grid_body_empty %}
+                        <tr>
+                            <td class="text-gray-500 px-6 py-4" colspan="{{ columnsCount }}">
+                                {{ 'f0ska.autogrid.empty'|trans }}
+                            </td>
+                        </tr>
+                    {% endblock %}
+                {% endif %}
+                {% for entity in rows %}
+                    {% block autogrid_grid_row %}
+                        <tr class="{{ include(attributes.template.grid.row_class|default(agTemplate('grid.row_class'))) }} hover:bg-gray-50">
+                            {{ include(attributes.template.grid.column_value_massaction|default(agTemplate('grid.column_value_massaction'))) }}
+                            {% for field in fields %}
+                                {{ include(attributes.template.grid.column_value|default(agTemplate('grid.column_value'))) }}
+                            {% endfor %}
+                            {{ include(attributes.template.grid.column_value_action|default(agTemplate('grid.column_value_action'))) }}
+                        </tr>
+                    {% endblock %}
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endblock %}
+
+        {% block autogrid_grid_footer %}
+            <div class="{{ attributes.html_class.tfoot|default('flex items-center justify-between px-6 py-3 bg-gray-50 border-t') }}">
+                <div class="text-sm text-gray-600">
+                    <b>{{ 'f0ska.autogrid.total'|trans }}: {{ view.pagination.count }}</b>
+                </div>
+                <div class="flex items-center space-x-2">
+                    {{ include(attributes.template.grid.grid_number_per_page|default(agTemplate('grid.grid_number_per_page'))) }}
+                    {{ include(attributes.template.grid.grid_pagination|default(agTemplate('grid.grid_pagination'))) }}
+                    <a class="{{ attributes.html_class.tfoot_btn|default('px-3 py-1 text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-gray-50') }}"
+                       href="#{{ attributes.container_id }}"
+                    ><i class="bi bi-chevron-up"></i></a>
+                </div>
+            </div>
+        {% endblock %}
+    </div>
+{% endblock %}

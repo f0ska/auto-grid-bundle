@@ -1,0 +1,119 @@
+{% extends attributes.template.base|default(agTemplate('base')) %}
+{% block autogrid %}
+    <table class="table">
+        {% block autogrid_form_caption %}
+            {% if attributes.title is not empty %}
+                <caption class="text-center h4 text-secondary">
+                    {{ attributes.title|trans }}
+                </caption>
+            {% endif %}
+        {% endblock %}
+
+        {% block autogrid_form_header %}
+            {% set btnClass = attributes.html_class.thead_btn|default('btn-outline-secondary') %}
+            <thead class="{{ attributes.html_class.thead|default('') }}">
+            <tr>
+                <td class="text-nowrap h4 align-middle pl-0 pr-0">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col col-4 text-start">
+                                {% block autogrid_form_header_back_button %}
+                                    {% if agRun(agIsAllowed, 'grid') %}
+                                        <a class="btn btn-sm {{ btnClass }}" href="{{ agRun(agActionUrl, 'grid') }}">
+                                            <i class="bi bi-chevron-left"></i>
+                                            {{ 'f0ska.autogrid.button.back'|trans }}
+                                        </a>
+                                    {% endif %}
+                                {% endblock %}
+                                {% block autogrid_form_header_view_button %}
+                                    {% if action is not same as 'create' and agRun(agIsAllowed, 'view') and attributes.button.view.display_in_edit %}
+                                        <a class="btn btn-sm {{ btnClass }}"
+                                           href="{{ agRun(agActionUrl, 'view', {'id': entity.id}) }}"
+                                        >
+                                            <i class="bi bi-eye"></i>
+                                            {{ 'f0ska.autogrid.button.view'|trans }}
+                                        </a>
+                                    {% endif %}
+                                {% endblock %}
+                            </div>
+                            <div class="col col-4 text-center">
+                                {% block autogrid_form_header_title %}
+                                    <span class="badge badge-pill badge-light text-dark fw-normal">
+                                        {{ ('f0ska.autogrid.action.' ~ action)|trans }}
+                                        {% if action is not same as 'create' %}
+                                            <i class="bi bi-hash"></i>{{ entity.id }}
+                                        {% endif %}
+                                    </span>
+                                {% endblock %}
+                            </div>
+                            <div class="col col-4 text-end">
+                                {% block autogrid_form_header_submit_button %}
+                                    <button class="btn btn-sm btn-outline-secondary" type="submit"
+                                            form="{{ form.vars.attr.id }}">
+                                        <i class="bi bi-save"></i>
+                                        {{ 'f0ska.autogrid.button.submit'|trans }}
+                                    </button>
+                                {% endblock %}
+                                {% block autogrid_form_header_delete_button %}
+                                    {% if action is not same as 'create' and agRun(agIsAllowed, 'delete') and attributes.button.delete.display_in_edit %}
+                                        <a class="btn btn-sm btn-outline-danger"
+                                           href="{{ agRun(agActionUrl, 'delete', {'id': entity.id}) }}"
+                                           onclick="return confirm('{{ 'f0ska.autogrid.dialog.delete_confirm'|trans }}');"
+                                        >
+                                            <i class="bi bi-trash"></i>
+                                            {{ 'f0ska.autogrid.button.delete'|trans }}
+                                        </a>
+                                    {% endif %}
+                                {% endblock %}
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            </thead>
+        {% endblock %}
+
+        {% block autogrid_form_footer %}
+            <tfoot class="{{ attributes.html_class.tfoot|default('') }}">
+            <tr>
+                <td class="pl-0 pr-0">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col text-end">
+                                <a class="btn btn-sm {{ attributes.html_class.tfoot_btn|default('btn-outline-secondary') }}"
+                                   href="#{{ attributes.container_id }}"
+                                ><i class="bi bi-chevron-up"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            </tfoot>
+        {% endblock %}
+
+        {% block autogrid_form_body %}
+            <tbody class="{{ attributes.html_class.tbody|default('') }}">
+            <tr>
+                <td class="pl-0 pr-0">
+                    {% block autogrid_form_form %}
+                        {% if view.formThemes is not empty %}
+                            {% form_theme form with view.formThemes %}
+                        {% endif %}
+                        {% if view.fieldset.defined %}
+                            {{ include(attributes.template.fieldset.form|default(agTemplate('fieldset.form'))) }}
+                        {% else %}
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col">
+                                        {{ form(form) }}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endblock %}
+                </td>
+            </tr>
+            </tbody>
+        {% endblock %}
+    </table>
+{% endblock %}

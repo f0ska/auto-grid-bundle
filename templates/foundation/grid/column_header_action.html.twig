@@ -1,0 +1,53 @@
+{% if (agRun(agIsAnyAllowed)) or attributes.has_custom_action is defined %}
+    {% set btnClass = attributes.html_class.thead_btn|default('button small secondary') %}
+    {% set btnClassActive = attributes.html_class.thead_btn_active|default('button small primary') %}
+    <th class="{{ attributes.html_class.action_column_header|default('text-right') }}">
+        <div class="button-group">
+            {% block autogrid_grid_header_action_clear_filter %}
+                {% if request.filter is defined and agRun(agIsAllowed, 'filter') %}
+                    <a class="button small alert" href="{{ agRun(agActionUrl, 'grid', {'filter': null}) }}">
+                        <i class="bi bi-x-lg"></i>
+                    </a>
+                {% endif %}
+            {% endblock %}
+            {% block autogrid_grid_header_action_advanced_filter %}
+                {% if view.advancedFilterFormView and agRun(agIsAllowed, 'advanced_filter') %}
+                    <button class="button small {{ request.filter is defined ? 'primary' : 'secondary' }}"
+                            data-open="adv{{ agId }}"
+                    ><i class="bi bi-search"></i></button>
+                {% endif %}
+            {% endblock %}
+            {% block autogrid_grid_header_action_export %}
+                {% if view.exportActionFormView and view.pagination.count %}
+                    <div class="dropdown-pane" data-dropdown id="exp{{ agId }}">
+                        {% for label,code in view.exportActionChoices %}
+                            <button
+                                class="button small expanded"
+                                type="submit"
+                                form="{{ view.exportActionFormView.vars.attr.id }}"
+                                name="{{ field_name(view.exportActionFormView.code) }}"
+                                value="{{ code }}"
+                            >{{ label|trans }}</button>
+                        {% endfor %}
+                    </div>
+                    <button class="button small secondary dropdown"
+                            data-toggle="exp{{ agId }}"
+                            aria-expanded="false"
+                            id="exp{{ agId }}Btn"
+                    ></button>
+                    {{ form(view.exportActionFormView) }}
+                {% endif %}
+            {% endblock %}
+        </div>
+
+        {% block autogrid_grid_header_action_create %}
+            {% if (agRun(agIsAllowed, 'create')) %}
+                <a class="button small {{ btnClass }}" href="{{ agRun(agActionUrl, 'create') }}">
+                    <i class="bi bi-plus-lg"></i>
+                </a>
+            {% endif %}
+        {% endblock %}
+
+        {% block autogrid_grid_header_custom_action %}{% endblock %}
+    </th>
+{% endif %}

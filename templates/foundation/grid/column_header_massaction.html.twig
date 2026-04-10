@@ -1,0 +1,35 @@
+{% if view.massActionFormView %}
+    {% set btnClass = attributes.html_class.thead_btn|default('button small secondary') %}
+    {% block autogrid_grid_column_header_massaction %}
+        <th class="{{ attributes.html_class.mass_action_column_header|default('text-center') }}">
+            {{ form_start(view.massActionFormView) }}
+            {% block autogrid_grid_column_header_massaction_dropdown %}
+                <div class="dropdown-pane" data-dropdown id="mass{{ agId }}">
+                    {% block autogrid_grid_column_header_massaction_choices %}
+                        {% for label,code in view.massActionChoices %}
+                            <button
+                                class="button small expanded"
+                                type="submit"
+                                form="{{ view.massActionFormView.vars.attr.id }}"
+                                name="{{ field_name(view.massActionFormView.code) }}"
+                                value="{{ code }}"
+                            >{{ label|trans }}</button>
+                        {% endfor %}
+                    {% endblock %}
+                    <hr>
+                    {% block autogrid_grid_column_header_massaction_select_all %}
+                        <label class="button small secondary expanded">
+                            <input type="checkbox"
+                                   autocomplete="off"
+                                   onchange="document.querySelectorAll('[name={{ ('"' ~ field_name(view.massActionFormView.ids) ~ '[]"')|escape('html_attr') }}]').forEach(checkbox => { checkbox.checked = this.checked; })"
+                            >
+                            {{ 'f0ska.autogrid.action.select_all'|trans }}
+                        </label>
+                    {% endblock %}
+                </div>
+                <button type="button" class="{{ btnClass }} dropdown" data-toggle="mass{{ agId }}"></button>
+            {% endblock %}
+            {{ form_end(view.massActionFormView) }}
+        </th>
+    {% endblock %}
+{% endif %}

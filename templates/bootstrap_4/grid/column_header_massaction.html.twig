@@ -1,0 +1,48 @@
+{% if view.massActionFormView %}
+    {% set btnClass = attributes.html_class.thead_btn|default('btn-outline-secondary') %}
+    {% block autogrid_grid_column_header_massaction %}
+        <th class="{{ attributes.html_class.mass_action_column_header|default('align-middle') }}">
+            {{ form_start(view.massActionFormView) }}
+            {% block autogrid_grid_column_header_massaction_dropdown %}
+                <div class="input-group">
+                    <button type="button"
+                            class="btn btn-sm {{ btnClass }} dropdown-toggle"
+                            data-toggle="dropdown"
+                            aria-expanded="false"
+                    ></button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        {% block autogrid_grid_column_header_massaction_choices %}
+                            {% for label,code in view.massActionChoices %}
+                                <li>
+                                    <button
+                                        class="dropdown-item"
+                                        type="submit"
+                                        form="{{ view.massActionFormView.vars.attr.id }}"
+                                        name="{{ field_name(view.massActionFormView.code) }}"
+                                        value="{{ code }}"
+                                    >{{ label|trans }}</button>
+                                </li>
+                            {% endfor %}
+                        {% endblock %}
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        {% block autogrid_grid_column_header_massaction_select_all %}
+                            <li>
+                                <label class="form-check-label dropdown-item">
+                                    <input class="form-check-input mr-1"
+                                           type="checkbox"
+                                           autocomplete="off"
+                                           onchange="document.querySelectorAll('[name={{ ('"' ~ field_name(view.massActionFormView.ids) ~ '[]"')|escape('html_attr') }}]').forEach(checkbox => { checkbox.checked = this.checked; })"
+                                    >
+                                    {{ 'f0ska.autogrid.action.select_all'|trans }}
+                                </label>
+                            </li>
+                        {% endblock %}
+                    </ul>
+                </div>
+            {% endblock %}
+            {{ form_end(view.massActionFormView) }}
+        </th>
+    {% endblock %}
+{% endif %}

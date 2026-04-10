@@ -1,0 +1,17 @@
+{% block autogrid_field_choice_content %}
+    {% set value = agFieldValue(entity, field) %}
+    {% set labels = agChoiceLabels(value, field) %}
+    {% if (labels is empty) %}
+        -
+    {% elseif (action is same as 'grid') %}
+        {{ labels|join(', ')|agTruncate(field.view.grid_truncate) }}
+    {% elseif labels|length > 1 %}
+        <ul class="no-bullet">
+            {% for item in labels %}
+                <li>{{ item }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        {{ labels|first }}
+    {% endif %}
+{% endblock %}

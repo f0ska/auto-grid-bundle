@@ -1,0 +1,10 @@
+{% block autogrid_field_boolean_content %}
+    {% set value = agFieldValue(entity, field) %}
+    <span class="icon">
+        {% if value %}
+            <i class="bi bi-check-lg has-text-success"></i>
+        {% else %}
+            <i class="bi bi-dash has-text-grey"></i>
+        {% endif %}
+    </span>
+{% endblock %}

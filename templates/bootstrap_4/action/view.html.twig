@@ -1,0 +1,114 @@
+{% extends attributes.template.base|default(agTemplate('base')) %}
+{% block autogrid %}
+    <table class="table">
+        {% block autogrid_view_caption %}
+            {% if attributes.title is not empty %}
+                <caption class="text-center h4 text-secondary">
+                    {{ attributes.title|trans }}
+                </caption>
+            {% endif %}
+        {% endblock %}
+
+        {% block autogrid_view_header %}
+            {% set btnClass = attributes.html_class.thead_btn|default('btn-outline-secondary') %}
+            <thead class="{{ attributes.html_class.thead|default('') }}">
+            <tr>
+                <td class="text-nowrap h4 align-middle pl-0 pr-0" colspan="2">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col col-4 text-start">
+                                {% block autogrid_view_header_back_button %}
+                                    {% if agRun(agIsAllowed, 'grid') %}
+                                        <a class="btn btn-sm {{ btnClass }}" href="{{ agRun(agActionUrl, 'grid') }}">
+                                            <i class="bi bi-chevron-left"></i>
+                                            {{ 'f0ska.autogrid.button.back'|trans }}
+                                        </a>
+                                    {% endif %}
+                                {% endblock %}
+                            </div>
+                            <div class="col col-4 text-center">
+                                {% block autogrid_view_header_title %}
+                                    <span class="badge rounded-pill bg-light text-dark fw-normal">
+                                        {{ ('f0ska.autogrid.action.' ~ action)|trans }}
+                                        <i class="bi bi-hash"></i>{{ entity.id }}
+                                    </span>
+                                {% endblock %}
+                            </div>
+                            <div class="col col-4 text-end">
+                                {% block autogrid_view_header_edit_button %}
+                                    {% if agRun(agIsAllowed, 'edit') and attributes.button.edit.display_in_view %}
+                                        <a class="btn btn-sm btn-outline-secondary" href="{{ agRun(agActionUrl, 'edit') }}">
+                                            <i class="bi bi-pencil-square"></i>
+                                            {{ 'f0ska.autogrid.button.modify'|trans }}
+                                        </a>
+                                    {% endif %}
+                                {% endblock %}
+                                {% block autogrid_view_header_delete_button %}
+                                    {% if agRun(agIsAllowed, 'delete') and attributes.button.delete.display_in_grid %}
+                                        <a class="btn btn-sm btn-outline-danger"
+                                           href="{{ agRun(agActionUrl, 'delete', {'id': entity.id}) }}"
+                                           onclick="return confirm('{{ 'f0ska.autogrid.dialog.delete_confirm'|trans }}');"
+                                        >
+                                            <i class="bi bi-trash"></i>
+                                            {{ 'f0ska.autogrid.button.delete'|trans }}
+                                        </a>
+                                    {% endif %}
+                                {% endblock %}
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            </thead>
+        {% endblock %}
+
+        {% block autogrid_view_footer %}
+            <tfoot class="{{ attributes.html_class.tfoot|default('') }}">
+            <tr>
+                <td colspan="2" class="pl-0 pr-0">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col text-end">
+                                <a class="btn btn-sm {{ attributes.html_class.tfoot_btn|default('btn-outline-secondary') }}"
+                                   href="#{{ attributes.container_id }}"
+                                ><i class="bi bi-chevron-up"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            </tfoot>
+        {% endblock %}
+
+        {% block autogrid_view_body %}
+            <tbody class="{{ attributes.html_class.tbody|default('') }}">
+            {% if view.fieldset.defined %}
+                <tr>
+                    <td colspan="2" class="pl-0 pr-0">
+                        {{ include(attributes.template.fieldset.view|default(agTemplate('fieldset.view'))) }}
+                    </td>
+                </tr>
+            {% else %}
+                {% for field in fields %}
+                    {% if field.permissions.view %}
+                        {% block autogrid_view_body_row %}
+                            <tr>
+                                {% block autogrid_view_body_row_label %}
+                                    <th class="col col-4 text-end table-light">
+                                        {{ field.attributes.label|trans }}
+                                    </th>
+                                {% endblock %}
+                                {% block autogrid_view_body_row_value %}
+                                    <td class="col col-8">
+                                        {{ include(field.view.template) }}
+                                    </td>
+                                {% endblock %}
+                            </tr>
+                        {% endblock %}
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+            </tbody>
+        {% endblock %}
+    </table>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% if view.massActionFormView %}
+    {% set btnClass = attributes.html_class.thead_btn|default('text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-gray-100') %}
+    {% block autogrid_grid_column_header_massaction %}
+        <th class="px-6 py-3 {{ attributes.html_class.mass_action_column_header|default('text-center') }}">
+            {{ form_start(view.massActionFormView) }}
+            {% block autogrid_grid_column_header_massaction_dropdown %}
+                <div class="relative inline-block">
+                    <button type="button"
+                            class="px-2 py-1 {{ btnClass }} dropdown-toggle"
+                            data-dropdown-toggle="mass{{ agId }}"
+                            aria-expanded="false"
+                    ></button>
+                    <div id="mass{{ agId }}" class="hidden z-10 bg-white rounded-lg shadow-lg absolute right-0 border border-gray-200 py-1 min-w-40">
+                        {% block autogrid_grid_column_header_massaction_choices %}
+                            {% for label,code in view.massActionChoices %}
+                                <button
+                                    class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                    type="submit"
+                                    form="{{ view.massActionFormView.vars.attr.id }}"
+                                    name="{{ field_name(view.massActionFormView.code) }}"
+                                    value="{{ code }}"
+                                >{{ label|trans }}</button>
+                            {% endfor %}
+                        {% endblock %}
+                        <hr class="my-1 border-gray-200">
+                        {% block autogrid_grid_column_header_massaction_select_all %}
+                            <label class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">
+                                <input class="w-4 h-4 mr-2 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                       type="checkbox"
+                                       autocomplete="off"
+                                       onchange="document.querySelectorAll('[name={{ ('"' ~ field_name(view.massActionFormView.ids) ~ '[]"')|escape('html_attr') }}]').forEach(checkbox => { checkbox.checked = this.checked; })"
+                                >
+                                {{ 'f0ska.autogrid.action.select_all'|trans }}
+                            </label>
+                        {% endblock %}
+                    </div>
+                </div>
+            {% endblock %}
+            {{ form_end(view.massActionFormView) }}
+        </th>
+    {% endblock %}
+{% endif %}

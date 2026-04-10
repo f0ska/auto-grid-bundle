@@ -1,0 +1,14 @@
+{% block autogrid_field_text_content %}
+    {% set value = agFieldValue(entity, field) %}
+    {% if (value is null or value is same as '') %}
+        -
+    {% else %}
+        {%- if field.attributes.value_prefix is defined %}<span class="has-text-grey-light">{{ field.attributes.value_prefix|trans }}</span>{% endif %}
+        {%- if action is same as 'grid' %}
+            {{- value|agTruncate(field.view.grid_truncate) -}}
+        {%- else %}
+            {{- value -}}
+        {% endif -%}
+        {% if field.attributes.value_suffix is defined %}<span class="has-text-grey-light">{{ field.attributes.value_suffix|trans }}</span>{% endif -%}
+    {% endif %}
+{% endblock %}

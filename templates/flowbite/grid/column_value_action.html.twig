@@ -1,0 +1,30 @@
+{% if agRun(agIsAnyAllowed) or attributes.has_custom_action is defined %}
+    {% set btnClass = attributes.html_class.tbody_btn|default('text-gray-600 bg-white border border-gray-300 rounded hover:bg-gray-100') %}
+    <td class="px-6 py-3 {{ attributes.html_class.action_column|default('text-right whitespace-nowrap') }}">
+        <div class="flex items-center justify-end space-x-1">
+            {% block autogrid_grid_row_action_view %}
+                {% if agRun(agIsAllowed, 'view') and attributes.button.view.display_in_grid %}
+                    <a class="p-1.5 {{ btnClass }}"
+                       href="{{ agRun(agActionUrl, 'view', {'id': entity.id}) }}"
+                    ><i class="bi bi-eye"></i></a>
+                {% endif %}
+            {% endblock %}
+            {% block autogrid_grid_row_action_edit %}
+                {% if agRun(agIsAllowed, 'edit') and attributes.button.edit.display_in_grid %}
+                    <a class="p-1.5 {{ btnClass }}"
+                       href="{{ agRun(agActionUrl, 'edit', {'id': entity.id}) }}"
+                    ><i class="bi bi-pencil-square"></i></a>
+                {% endif %}
+            {% endblock %}
+            {% block autogrid_grid_row_action_delete %}
+                {% if agRun(agIsAllowed, 'delete') and attributes.button.delete.display_in_grid %}
+                    <a class="p-1.5 text-red-600 bg-white border border-red-300 rounded hover:bg-red-50"
+                       href="{{ agRun(agActionUrl, 'delete', {'id': entity.id}) }}"
+                       onclick="return confirm('{{ 'f0ska.autogrid.dialog.delete_confirm'|trans }}');"
+                    ><i class="bi bi-trash"></i></a>
+                {% endif %}
+            {% endblock %}
+            {% block autogrid_grid_row_custom_action %}{% endblock %}
+        </div>
+    </td>
+{% endif %}

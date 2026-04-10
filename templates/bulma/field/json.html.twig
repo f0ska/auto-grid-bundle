@@ -1,0 +1,10 @@
+{% block autogrid_field_json_content %}
+    {% set value = agFieldValue(entity, field) %}
+    {% if (value is null or value is same as '') %}
+        -
+    {% elseif (action is same as 'grid') %}
+        {{ value|json_encode|agTruncate(field.view.grid_truncate) }}
+    {% else %}
+        <pre class="has-background-light p-2">{{ value|json_encode(constant('JSON_PRETTY_PRINT')) }}</pre>
+    {% endif %}
+{% endblock %}

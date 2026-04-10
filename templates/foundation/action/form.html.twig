@@ -1,0 +1,95 @@
+{% extends attributes.template.base|default(agTemplate('base')) %}
+{% block autogrid %}
+    <div class="{{ attributes.html_class.table|default('grid-container') }}">
+        {% block autogrid_form_caption %}
+            {% if attributes.title is not empty %}
+                <div class="text-center text-secondary h4 mb-3">
+                    {{ attributes.title|trans }}
+                </div>
+            {% endif %}
+        {% endblock %}
+
+        {% block autogrid_form_header %}
+            {% set btnClass = attributes.html_class.thead_btn|default('button small') %}
+            <div class="{{ attributes.html_class.thead|default('grid-x grid-padding-x grid-margin-x') }}" style="align-items: center;">
+                <div class="cell small-4 text-left">
+                    {% block autogrid_form_header_back_button %}
+                        {% if agRun(agIsAllowed, 'grid') %}
+                            <a class="{{ btnClass }}" href="{{ agRun(agActionUrl, 'grid') }}">
+                                <i class="bi bi-chevron-left"></i>
+                                {{ 'f0ska.autogrid.button.back'|trans }}
+                            </a>
+                        {% endif %}
+                    {% endblock %}
+                    {% block autogrid_form_header_view_button %}
+                        {% if action is not same as 'create' and agRun(agIsAllowed, 'view') and attributes.button.view.display_in_edit %}
+                            <a class="{{ btnClass }}"
+                               href="{{ agRun(agActionUrl, 'view', {'id': entity.id}) }}"
+                            >
+                                <i class="bi bi-eye"></i>
+                                {{ 'f0ska.autogrid.button.view'|trans }}
+                            </a>
+                        {% endif %}
+                    {% endblock %}
+                </div>
+                <div class="cell small-4 text-center">
+                    {% block autogrid_form_header_title %}
+                        <span class="label secondary">
+                            {{ ('f0ska.autogrid.action.' ~ action)|trans }}
+                            {% if action is not same as 'create' %}
+                                <i class="bi bi-hash"></i>{{ entity.id }}
+                            {% endif %}
+                        </span>
+                    {% endblock %}
+                </div>
+                <div class="cell small-4 text-right">
+                    {% block autogrid_form_header_submit_button %}
+                        <button class="{{ btnClass }}" type="submit"
+                                form="{{ form.vars.attr.id }}">
+                            <i class="bi bi-save"></i>
+                            {{ 'f0ska.autogrid.button.submit'|trans }}
+                        </button>
+                    {% endblock %}
+                    {% block autogrid_form_header_delete_button %}
+                        {% if action is not same as 'create' and agRun(agIsAllowed, 'delete') and attributes.button.delete.display_in_edit %}
+                            <a class="button small alert"
+                               href="{{ agRun(agActionUrl, 'delete', {'id': entity.id}) }}"
+                               onclick="return confirm('{{ 'f0ska.autogrid.dialog.delete_confirm'|trans }}');"
+                            >
+                                <i class="bi bi-trash"></i>
+                                {{ 'f0ska.autogrid.button.delete'|trans }}
+                            </a>
+                        {% endif %}
+                    {% endblock %}
+                </div>
+            </div>
+        {% endblock %}
+
+        {% block autogrid_form_footer %}
+            <div class="{{ attributes.html_class.tfoot|default('grid-x grid-padding-x') }}">
+                <div class="cell text-right">
+                    <a class="{{ attributes.html_class.tfoot_btn|default('button small') }}"
+                       href="#{{ attributes.container_id }}"
+                    ><i class="bi bi-chevron-up"></i></a>
+                </div>
+            </div>
+        {% endblock %}
+
+        {% block autogrid_form_body %}
+            <div class="{{ attributes.html_class.tbody|default('') }}">
+                {% block autogrid_form_form %}
+                    {% if view.formThemes is not empty %}
+                        {% form_theme form with view.formThemes %}
+                    {% endif %}
+                    {% if view.fieldset.defined %}
+                        {{ include(attributes.template.fieldset.form|default(agTemplate('fieldset.form'))) }}
+                    {% else %}
+                        <div class="grid-container">
+                            {{ form(form) }}
+                        </div>
+                    {% endif %}
+                {% endblock %}
+            </div>
+        {% endblock %}
+    </div>
+{% endblock %}
