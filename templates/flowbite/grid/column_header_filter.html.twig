@@ -2,17 +2,19 @@
 {% set linkClass = attributes.html_class.thead_link|default('text-gray-500 hover:text-gray-700') %}
 {% set linkClassActive = attributes.html_class.thead_link_active|default('text-blue-600 hover:text-blue-800') %}
 {% block autogrid_grid_column_header_filter %}
-    <span class="relative inline-block group">
+    <span>
         {% block autogrid_grid_column_header_filter_icon %}
             <a class="{{ isFilterActive ? linkClassActive : linkClass }}"
                role="button"
-               data-dropdown-toggle="filter{{ agId }}{{ field.name }}"
+               onclick="var d=document.getElementById('filter{{ agId }}{{ field.name }}');d.style.display=d.style.display=='none'?'block':'none';event.stopPropagation();"
                aria-expanded="false"
-               onclick="event.stopPropagation();"
-            ><small>{{ ag_icon(isFilterActive ? 'filter-active' : 'filter')|raw }}</small></a>
+            >{{ ag_icon(isFilterActive ? 'filter-active' : 'filter')|raw }}</a>
         {% endblock %}
         {% block autogrid_grid_column_header_filter_dropdown %}
-            <div id="filter{{ agId }}{{ field.name }}" class="hidden z-10 bg-white rounded-lg shadow-lg absolute left-0 border border-gray-200 p-3 w-64 text-left" onclick="event.stopPropagation();">
+            <div id="filter{{ agId }}{{ field.name }}" 
+                 class="z-10 bg-white rounded-lg shadow-lg absolute left-0 top-full mt-1 border border-gray-200 p-3 w-64 text-left" 
+                 style="display: none;"
+                 onclick="event.stopPropagation();">
                 {% set form = attribute(view.filterFormViews, field.name) %}
                 {% if view.formThemes is not empty %}
                     {% form_theme form with view.formThemes %}

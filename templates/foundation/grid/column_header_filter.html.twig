@@ -3,14 +3,14 @@
 {% set linkClassActive = attributes.html_class.thead_link_active|default('text-primary') %}
 {% set dropdownId = 'filterDropdown' ~ agId ~ field.name %}
 {% block autogrid_grid_column_header_filter %}
-    <span style="position: relative; display: inline-block;">
+    <span>
         <a class="{{ isFilterActive ? linkClassActive : linkClass }}"
            role="button"
            aria-expanded="false"
            href="javascript:void(0);"
-           onclick="var d=document.getElementById('{{ dropdownId }}');d.style.display=d.style.display=='none'?'block':'none';"
-        ><small>{{ ag_icon(isFilterActive ? 'filter-active' : 'filter')|raw }}</small></a>
-        <div id="{{ dropdownId }}" style="display: none; position: absolute; left: -50px; z-index: 1000; background: white; border: 1px solid #ccc; padding: 10px; min-width: 200px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
+           onclick="var d=document.getElementById('{{ dropdownId }}');d.style.display=d.style.display=='none'?'block':'none'; event.stopPropagation();"
+        >{{ ag_icon(isFilterActive ? 'filter-active' : 'filter')|raw }}</a>
+        <div id="{{ dropdownId }}" style="display: none; position: absolute; left: 0; top: 100%; z-index: 1000; background: white; border: 1px solid #ccc; padding: 10px; min-width: 250px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);" onclick="event.stopPropagation();">
             {% set form = attribute(view.filterFormViews, field.name) %}
             {% if view.formThemes is not empty %}
                 {% form_theme form with view.formThemes %}

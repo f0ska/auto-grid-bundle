@@ -1,8 +1,8 @@
 {% if (agRun(agIsAnyAllowed)) or attributes.has_custom_action is defined %}
     {% set btnClass = attributes.html_class.thead_btn|default('is-small') %}
     {% set btnClassActive = attributes.html_class.thead_btn_active|default('is-primary') %}
-    <th class="{{ attributes.html_class.action_column_header|default('has-text-right') }}" style="white-space: nowrap;">
-        <div class="buttons are-small is-right" style="display: inline-block;">
+    <th class="{{ attributes.html_class.action_column_header|default('has-text-right') }}" style="white-space: nowrap; position: relative;">
+        <div class="buttons are-small is-right" style="justify-content: flex-end;">
             {% block autogrid_grid_header_action_clear_filter %}
                 {% if request.filter is defined and agRun(agIsAllowed, 'filter') %}
                     <a class="button is-danger" href="{{ agRun(agActionUrl, 'grid', {'filter': null}) }}">
@@ -18,42 +18,40 @@
                     >{{ ag_icon('search')|raw }}</a>
                 {% endif %}
             {% endblock %}
-        </div>
 
-        {% block autogrid_grid_header_action_export %}
-            {% if view.exportActionFormView and view.pagination.count %}
-                <div class="dropdown is-right" style="display: inline-block;">
-                    <div class="dropdown-trigger">
-                        <button class="button is-info is-small" aria-haspopup="true" onclick="this.parentElement.parentElement.classList.toggle('is-active'); event.stopPropagation();">
+            {% block autogrid_grid_header_action_export %}
+                {% if view.exportActionFormView and view.pagination.count %}
+                    <div class="control" style="position: static;">
+                        <button class="button is-info" type="button" aria-haspopup="true" onclick="var d=document.getElementById('exp{{ agId }}');d.style.display=d.style.display=='none'?'block':'none'; event.stopPropagation();">
                             {{ ag_icon('export')|raw }}
                         </button>
-                    </div>
-                    <div class="dropdown-menu" role="menu">
-                        <div class="dropdown-content">
-                            {% for label,code in view.exportActionChoices %}
-                                <button
-                                    class="dropdown-item"
-                                    type="submit"
-                                    form="{{ view.exportActionFormView.vars.attr.id }}"
-                                    name="{{ field_name(view.exportActionFormView.code) }}"
-                                    value="{{ code }}"
-                                >{{ label|trans }}</button>
-                            {% endfor %}
+                        <div id="exp{{ agId }}" class="dropdown-menu" role="menu" style="position: absolute; left: auto !important; right: 0 !important; top: 100%; min-width: 200px; display: none; background: white; z-index: 1000; box-shadow: 0 2px 3px rgba(10,10,10,0.1), 0 0 0 1px rgba(10,10,10,0.1); border-radius: 4px;" onclick="event.stopPropagation();">
+                            <div class="dropdown-content" style="background: white;">
+                                {% for label,code in view.exportActionChoices %}
+                                    <button
+                                        class="dropdown-item"
+                                        type="submit"
+                                        form="{{ view.exportActionFormView.vars.attr.id }}"
+                                        name="{{ field_name(view.exportActionFormView.code) }}"
+                                        value="{{ code }}"
+                                    >{{ label|trans }}</button>
+                                {% endfor %}
+                            </div>
                         </div>
                     </div>
-                </div>
-            {% endif %}
-        {% endblock %}
+                {% endif %}
+            {% endblock %}
 
-        {% block autogrid_grid_header_action_create %}
-            {% if (agRun(agIsAllowed, 'create')) %}
-                <a class="button is-success is-small" href="{{ agRun(agActionUrl, 'create') }}">
-                    {{ ag_icon('add')|raw }}
-                </a>
-            {% endif %}
-        {% endblock %}
+            {% block autogrid_grid_header_action_create %}
+                {% if (agRun(agIsAllowed, 'create')) %}
+                    <a class="button is-success" href="{{ agRun(agActionUrl, 'create') }}">
+                        {{ ag_icon('add')|raw }}
+                    </a>
+                {% endif %}
+            {% endblock %}
+            {% block autogrid_grid_header_custom_action %}{% endblock %}
+        </div>
 
-        {% block autogrid_grid_header_custom_action %}{% endblock %}
         {% if view.exportActionFormView is defined and view.exportActionFormView %}
             {{ form(view.exportActionFormView) }}
         {% endif %}

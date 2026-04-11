@@ -10,7 +10,7 @@
            data-toggle="dropdown"
            aria-expanded="false"
            data-reference="parent"
-        ><small>{{ ag_icon(isFilterActive ? 'filter-active' : 'filter')|raw }}</small></a>
+        >{{ ag_icon(isFilterActive ? 'filter-active' : 'filter')|raw }}</a>
     {% endblock %}
     {% block autogrid_grid_column_header_filter_dropdown %}
         <div class="dropdown-menu p-2 fw-normal" onclick="event.stopPropagation();">

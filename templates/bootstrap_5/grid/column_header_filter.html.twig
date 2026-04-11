@@ -9,7 +9,7 @@
                data-bs-toggle="dropdown"
                aria-expanded="false"
                data-bs-auto-close="outside"
-            ><small>{{ ag_icon(isFilterActive ? 'filter-active' : 'filter')|raw }}</small></a>
+            >{{ ag_icon(isFilterActive ? 'filter-active' : 'filter')|raw }}</a>
         {% endblock %}
         {% block autogrid_grid_column_header_filter_dropdown %}
             <span class="dropdown-menu p-2 fw-normal">

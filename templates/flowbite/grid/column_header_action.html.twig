@@ -1,7 +1,7 @@
 {% if (agRun(agIsAnyAllowed)) or attributes.has_custom_action is defined %}
     {% set btnClass = 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-900 font-medium leading-5 text-sm px-3 py-2 focus:outline-none rounded-base' %}
     {% set btnClassActive = 'text-white bg-blue-700 hover:bg-blue-800 font-medium leading-5 text-sm px-3 py-2 focus:outline-none rounded-base' %}
-    <th class="px-6 py-3 {{ attributes.html_class.action_column_header|default('text-right') }}" style="white-space: nowrap;">
+    <th class="px-6 py-3 relative {{ attributes.html_class.action_column_header|default('text-right') }}" style="white-space: nowrap;">
         <div style="display: inline-flex; gap: 0;">
             {% block autogrid_grid_header_action_clear_filter %}
                 {% if request.filter is defined and agRun(agIsAllowed, 'filter') %}
@@ -20,12 +20,15 @@
             {% endblock %}
             {% block autogrid_grid_header_action_export %}
                 {% if view.exportActionFormView and view.pagination.count %}
-                    <span style="position: relative; display: inline-block;">
+                    <span>
                         <button class="{{ btnClass }} rounded-e-base"
                                 onclick="var d=document.getElementById('exp{{ agId }}');d.style.display=d.style.display=='none'?'block':'none';event.stopPropagation();"
                                 style="margin-bottom: 0;"
                         >{{ ag_icon('export')|raw }}</button>
-                        <div id="exp{{ agId }}" style="display: none; position: absolute; right: 0; z-index: 1000; background: white; border: 1px solid #e5e7eb; padding: 8px; min-width: 120px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border-radius: 0.5rem;">
+                        <div id="exp{{ agId }}" 
+                             class="bg-white border border-gray-200 shadow-lg p-2 rounded-lg absolute right-0 top-full mt-1"
+                             style="display: none; z-index: 1000; min-width: 120px;" 
+                             onclick="event.stopPropagation();">
                             {% for label,code in view.exportActionChoices %}
                                 <button
                                     class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded"
