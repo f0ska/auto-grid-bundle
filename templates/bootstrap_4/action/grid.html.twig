@@ -5,7 +5,7 @@
     <table class="table {{ attributes.html_class.table|default('') }}">
         {% block autogrid_grid_caption %}
             {% if attributes.title is not empty %}
-                <caption class="text-center h4 text-secondary">
+                <caption class="text-center h4 text-secondary" style="caption-side: top;">
                     {{ attributes.title|trans }}
                 </caption>
             {% endif %}
@@ -35,11 +35,11 @@
                             <div class="col col-6 text-center">
                                 {{ include(attributes.template.grid.grid_pagination|default(agTemplate('grid.grid_pagination'))) }}
                             </div>
-                            <div class="col col-3 text-end">
+                            <div class="col col-3 text-right">
                                 {{ include(attributes.template.grid.grid_number_per_page|default(agTemplate('grid.grid_number_per_page'))) }}
                                 <a class="btn btn-sm {{ attributes.html_class.tfoot_btn|default('btn-outline-secondary') }}"
                                    href="#{{ attributes.container_id }}"
-                                ><i class="bi bi-chevron-up"></i></a>
+                                 >{{ ag_icon('arrow-up')|raw }}</a>
                             </div>
                         </div>
                     </div>

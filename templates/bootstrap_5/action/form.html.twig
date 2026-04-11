@@ -20,8 +20,7 @@
                                 {% block autogrid_form_header_back_button %}
                                     {% if agRun(agIsAllowed, 'grid') %}
                                         <a class="btn btn-sm {{ btnClass }}" href="{{ agRun(agActionUrl, 'grid') }}">
-                                            <i class="bi bi-chevron-left"></i>
-                                            {{ 'f0ska.autogrid.button.back'|trans }}
+                                            {{ ag_icon('arrow-left')|raw }}&nbsp;{{ 'f0ska.autogrid.button.back'|trans }}
                                         </a>
                                     {% endif %}
                                 {% endblock %}
@@ -30,8 +29,7 @@
                                         <a class="btn btn-sm {{ btnClass }}"
                                            href="{{ agRun(agActionUrl, 'view', {'id': entity.id}) }}"
                                         >
-                                            <i class="bi bi-eye"></i>
-                                            {{ 'f0ska.autogrid.button.view'|trans }}
+                                            {{ ag_icon('view')|raw }}&nbsp;{{ 'f0ska.autogrid.button.view'|trans }}
                                         </a>
                                     {% endif %}
                                 {% endblock %}
@@ -41,7 +39,7 @@
                                     <span class="badge rounded-pill text-bg-light fw-normal">
                                         {{ ('f0ska.autogrid.action.' ~ action)|trans }}
                                         {% if action is not same as 'create' %}
-                                            <i class="bi bi-hash"></i>{{ entity.id }}
+                                            &nbsp;{{ ag_icon('id')|raw }}{{ entity.id }}
                                         {% endif %}
                                     </span>
                                 {% endblock %}
@@ -50,8 +48,7 @@
                                 {% block autogrid_form_header_submit_button %}
                                     <button class="btn btn-sm btn-outline-secondary" type="submit"
                                             form="{{ form.vars.attr.id }}">
-                                        <i class="bi bi-save"></i>
-                                        {{ 'f0ska.autogrid.button.submit'|trans }}
+                                        {{ ag_icon('save')|raw }}&nbsp;{{ 'f0ska.autogrid.button.submit'|trans }}
                                     </button>
                                 {% endblock %}
                                 {% block autogrid_form_header_delete_button %}
@@ -60,8 +57,7 @@
                                            href="{{ agRun(agActionUrl, 'delete', {'id': entity.id}) }}"
                                            onclick="return confirm('{{ 'f0ska.autogrid.dialog.delete_confirm'|trans }}');"
                                         >
-                                            <i class="bi bi-trash"></i>
-                                            {{ 'f0ska.autogrid.button.delete'|trans }}
+                                            {{ ag_icon('delete')|raw }}&nbsp;{{ 'f0ska.autogrid.button.delete'|trans }}
                                         </a>
                                     {% endif %}
                                 {% endblock %}
@@ -71,24 +67,6 @@
                 </td>
             </tr>
             </thead>
-        {% endblock %}
-
-        {% block autogrid_form_footer %}
-            <tfoot class="{{ attributes.html_class.tfoot|default('table-group-divider') }}">
-            <tr>
-                <td class="ps-0 pe-0">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col text-end">
-                                <a class="btn btn-sm {{ attributes.html_class.tfoot_btn|default('btn-outline-secondary') }}"
-                                   href="#{{ attributes.container_id }}"
-                                ><i class="bi bi-chevron-up"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-            </tfoot>
         {% endblock %}
 
         {% block autogrid_form_body %}
@@ -114,6 +92,24 @@
                 </td>
             </tr>
             </tbody>
+        {% endblock %}
+
+        {% block autogrid_form_footer %}
+            <tfoot class="{{ attributes.html_class.tfoot|default('table-group-divider') }}">
+            <tr>
+                <td class="ps-0 pe-0">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col text-end">
+                                <a class="btn btn-sm {{ attributes.html_class.tfoot_btn|default('btn-outline-secondary') }}"
+                                   href="#{{ attributes.container_id }}"
+                                >{{ ag_icon('arrow-up')|raw }}</a>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            </tfoot>
         {% endblock %}
     </table>
 {% endblock %}

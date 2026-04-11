@@ -6,19 +6,19 @@
         {% block autogrid_grid_column_header_sort_none %}
             <a class="{{ linkClass }}"
                href="{{ agRun(agActionUrl, 'grid', {'order': {(field.name): 'asc'}}) }}"
-            ><i class="bi bi-chevron-expand"></i></a>
+            >{{ ag_icon('sort-neutral')|raw }}</a>
         {% endblock %}
     {% elseif attribute(request.order, field.name) is same as 'asc' %}
         {% block autogrid_grid_column_header_sort_asc %}
             <a class="{{ linkClassActive }}"
                href="{{ agRun(agActionUrl, 'grid', {'order': {(field.name): 'desc'}}) }}"
-            ><i class="bi bi-caret-up-fill"></i></a>
+            >{{ ag_icon('sort-asc')|raw }}</a>
         {% endblock %}
     {% else %}
         {% block autogrid_grid_column_header_sort_desc %}
             <a class="{{ linkClassActive }}"
                href="{{ agRun(agActionUrl, 'grid', {'order': {(field.name): null}}) }}"
-            ><i class="bi bi-caret-down-fill"></i></a>
+            >{{ ag_icon('sort-desc')|raw }}</a>
         {% endblock %}
     {% endif %}
 {% endblock %}

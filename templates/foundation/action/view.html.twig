@@ -16,8 +16,7 @@
                     {% block autogrid_view_header_back_button %}
                         {% if agRun(agIsAllowed, 'grid') %}
                             <a class="{{ btnClass }}" href="{{ agRun(agActionUrl, 'grid') }}">
-                                <i class="bi bi-chevron-left"></i>
-                                {{ 'f0ska.autogrid.button.back'|trans }}
+                                {{ ag_icon('arrow-left')|raw }}&nbsp;{{ 'f0ska.autogrid.button.back'|trans }}
                             </a>
                         {% endif %}
                     {% endblock %}
@@ -25,8 +24,7 @@
                 <div class="cell small-4 text-center">
                     {% block autogrid_view_header_title %}
                         <span class="label secondary">
-                            {{ ('f0ska.autogrid.action.' ~ action)|trans }}
-                            <i class="bi bi-hash"></i>{{ entity.id }}
+                            {{ ('f0ska.autogrid.action.' ~ action)|trans }}&nbsp;{{ ag_icon('id')|raw }}{{ entity.id }}
                         </span>
                     {% endblock %}
                 </div>
@@ -34,8 +32,7 @@
                     {% block autogrid_view_header_edit_button %}
                         {% if agRun(agIsAllowed, 'edit') and attributes.button.edit.display_in_view %}
                             <a class="{{ btnClass }}" href="{{ agRun(agActionUrl, 'edit') }}">
-                                <i class="bi bi-pencil-square"></i>
-                                {{ 'f0ska.autogrid.button.modify'|trans }}
+                                {{ ag_icon('edit')|raw }}&nbsp;{{ 'f0ska.autogrid.button.modify'|trans }}
                             </a>
                         {% endif %}
                     {% endblock %}
@@ -45,21 +42,10 @@
                                href="{{ agRun(agActionUrl, 'delete', {'id': entity.id}) }}"
                                onclick="return confirm('{{ 'f0ska.autogrid.dialog.delete_confirm'|trans }}');"
                             >
-                                <i class="bi bi-trash"></i>
-                                {{ 'f0ska.autogrid.button.delete'|trans }}
+                                {{ ag_icon('delete')|raw }}&nbsp;{{ 'f0ska.autogrid.button.delete'|trans }}
                             </a>
                         {% endif %}
                     {% endblock %}
-                </div>
-            </div>
-        {% endblock %}
-
-        {% block autogrid_view_footer %}
-            <div class="{{ attributes.html_class.tfoot|default('grid-x grid-padding-x') }}">
-                <div class="cell text-right">
-                    <a class="{{ attributes.html_class.tfoot_btn|default('button small') }}"
-                       href="#{{ attributes.container_id }}"
-                    ><i class="bi bi-chevron-up"></i></a>
                 </div>
             </div>
         {% endblock %}
@@ -92,6 +78,16 @@
                         </tbody>
                     </table>
                 {% endif %}
+            </div>
+        {% endblock %}
+
+        {% block autogrid_view_footer %}
+            <div class="{{ attributes.html_class.tfoot|default('grid-x grid-padding-x') }}">
+                <div class="cell text-right">
+                    <a class="{{ attributes.html_class.tfoot_btn|default('button small') }}"
+                       href="#{{ attributes.container_id }}"
+                    >{{ ag_icon('arrow-up')|raw }}</a>
+                </div>
             </div>
         {% endblock %}
     </div>

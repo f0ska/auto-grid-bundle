@@ -3,12 +3,18 @@
         <div id="adv{{ agId }}" class="modal">
             {% block autogrid_grid_advanced_filter_dialog %}
                 <div class="modal-background" onclick="document.getElementById('adv{{ agId }}').classList.remove('is-active');"></div>
+                <style>
+                    #adv{{ agId }} .modal-card {
+                        max-width: 90vw;
+                        width: 1200px;
+                    }
+                </style>
                 <div class="modal-card">
                     {% block autogrid_grid_advanced_filter_content %}
                         <header class="modal-card-head">
                             {% block autogrid_grid_advanced_filter_header %}
                                 <p class="modal-card-title" id="adv{{ agId }}Label">
-                                    <i class="bi bi-search mr-1"></i>
+                                    {{ ag_icon('search')|raw }}
                                     {% if attributes.title is not empty %}
                                         {{ attributes.title|trans }}
                                     {% endif %}

@@ -6,7 +6,7 @@
             {% block autogrid_grid_header_action_clear_filter %}
                 {% if request.filter is defined and agRun(agIsAllowed, 'filter') %}
                     <a class="btn btn-sm btn-outline-danger" href="{{ agRun(agActionUrl, 'grid', {'filter': null}) }}">
-                        <i class="bi bi-x-lg"></i>
+                        {{ ag_icon('filter-reset')|raw }}
                     </a>
                 {% endif %}
             {% endblock %}
@@ -16,7 +16,7 @@
                             data-bs-toggle="modal"
                             data-bs-target="#adv{{ agId }}"
                             data-bs-backdrop="false"
-                    ><i class="bi bi-search"></i></button>
+                    >{{ ag_icon('search')|raw }}</button>
                 {% endif %}
             {% endblock %}
             {% block autogrid_grid_header_action_export %}
@@ -47,7 +47,7 @@
         {% block autogrid_grid_header_action_create %}
             {% if (agRun(agIsAllowed, 'create')) %}
                 <a class="btn btn-sm {{ btnClass }}" href="{{ agRun(agActionUrl, 'create') }}">
-                    <i class="bi bi-plus-lg"></i>
+                    {{ ag_icon('add')|raw }}
                 </a>
             {% endif %}
         {% endblock %}

@@ -14,7 +14,7 @@
                             {% block autogrid_grid_advanced_filter_header %}
                                 <div class="modal-header">
                                     <h1 class="modal-title h5" id="adv{{ agId }}Label">
-                                        <i class="bi bi-search mr-1"></i>
+                                        {{ ag_icon('search')|raw }}
                                         {% if attributes.title is not empty %}
                                             {{ attributes.title|trans }}
                                         {% endif %}

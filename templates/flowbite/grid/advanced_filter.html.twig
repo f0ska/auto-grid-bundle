@@ -8,13 +8,13 @@
                             <div class="flex justify-between items-start p-4 rounded-t border-b">
                                 {% block autogrid_grid_advanced_filter_header %}
                                     <h3 class="text-xl font-semibold text-gray-900" id="adv{{ agId }}Label">
-                                        <i class="bi bi-search mr-1"></i>
+                                        {{ ag_icon('search')|raw }}
                                         {% if attributes.title is not empty %}
                                             {{ attributes.title|trans }}
                                         {% endif %}
                                     </h3>
                                     <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center" data-modal-toggle="adv{{ agId }}">
-                                        <i class="bi bi-x-lg"></i>
+                                        {{ ag_icon('filter-reset')|raw }}
                                     </button>
                                 {% endblock %}
                             </div>

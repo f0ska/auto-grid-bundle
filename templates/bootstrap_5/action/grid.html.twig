@@ -39,7 +39,7 @@
                                 {{ include(attributes.template.grid.grid_number_per_page|default(agTemplate('grid.grid_number_per_page'))) }}
                                 <a class="btn btn-sm {{ attributes.html_class.tfoot_btn|default('btn-outline-secondary') }}"
                                    href="#{{ attributes.container_id }}"
-                                ><i class="bi bi-chevron-up"></i></a>
+                                 >{{ ag_icon('arrow-up')|raw }}</a>
                             </div>
                         </div>
                     </div>

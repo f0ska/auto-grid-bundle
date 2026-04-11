@@ -11,13 +11,12 @@
 
         {% block autogrid_form_header %}
             {% set btnClass = attributes.html_class.thead_btn|default('is-small') %}
-            <div class="{{ attributes.html_class.thead|default('is-flex is-justify-content-space-between is-align-items-center mb-4') }}">
+            <div class="{{ attributes.html_class.thead|default('is-flex is-justify-content-space-between is-align-items-center') }}">
                 <div class="buttons">
                     {% block autogrid_form_header_back_button %}
                         {% if agRun(agIsAllowed, 'grid') %}
                             <a class="button {{ btnClass }}" href="{{ agRun(agActionUrl, 'grid') }}">
-                                <i class="bi bi-chevron-left"></i>
-                                {{ 'f0ska.autogrid.button.back'|trans }}
+                                {{ ag_icon('arrow-left')|raw }}&nbsp;{{ 'f0ska.autogrid.button.back'|trans }}
                             </a>
                         {% endif %}
                     {% endblock %}
@@ -26,8 +25,7 @@
                             <a class="button {{ btnClass }}"
                                href="{{ agRun(agActionUrl, 'view', {'id': entity.id}) }}"
                             >
-                                <i class="bi bi-eye"></i>
-                                {{ 'f0ska.autogrid.button.view'|trans }}
+                                {{ ag_icon('view')|raw }}&nbsp;{{ 'f0ska.autogrid.button.view'|trans }}
                             </a>
                         {% endif %}
                     {% endblock %}
@@ -37,7 +35,7 @@
                         <span class="tag is-light is-medium">
                             {{ ('f0ska.autogrid.action.' ~ action)|trans }}
                             {% if action is not same as 'create' %}
-                                <i class="bi bi-hash"></i>{{ entity.id }}
+                                &nbsp;{{ ag_icon('id')|raw }}{{ entity.id }}
                             {% endif %}
                         </span>
                     {% endblock %}
@@ -46,8 +44,7 @@
                     {% block autogrid_form_header_submit_button %}
                         <button class="button is-success {{ btnClass }}" type="submit"
                                 form="{{ form.vars.attr.id }}">
-                            <i class="bi bi-save"></i>
-                            {{ 'f0ska.autogrid.button.submit'|trans }}
+                            {{ ag_icon('save')|raw }}&nbsp;{{ 'f0ska.autogrid.button.submit'|trans }}
                         </button>
                     {% endblock %}
                     {% block autogrid_form_header_delete_button %}
@@ -56,20 +53,11 @@
                                href="{{ agRun(agActionUrl, 'delete', {'id': entity.id}) }}"
                                onclick="return confirm('{{ 'f0ska.autogrid.dialog.delete_confirm'|trans }}');"
                             >
-                                <i class="bi bi-trash"></i>
-                                {{ 'f0ska.autogrid.button.delete'|trans }}
+                                {{ ag_icon('delete')|raw }}&nbsp;{{ 'f0ska.autogrid.button.delete'|trans }}
                             </a>
                         {% endif %}
                     {% endblock %}
                 </div>
-            </div>
-        {% endblock %}
-
-        {% block autogrid_form_footer %}
-            <div class="{{ attributes.html_class.tfoot|default('is-flex is-justify-content-flex-end') }}">
-                <a class="{{ attributes.html_class.tfoot_btn|default('button is-small') }}"
-                   href="#{{ attributes.container_id }}"
-                ><i class="bi bi-chevron-up"></i></a>
             </div>
         {% endblock %}
 
@@ -87,6 +75,14 @@
                         </div>
                     {% endif %}
                 {% endblock %}
+            </div>
+        {% endblock %}
+
+        {% block autogrid_form_footer %}
+            <div class="{{ attributes.html_class.tfoot|default('is-flex is-justify-content-flex-end') }}">
+                <a class="{{ attributes.html_class.tfoot_btn|default('button is-small') }}"
+                   href="#{{ attributes.container_id }}"
+                >{{ ag_icon('arrow-up')|raw }}</a>
             </div>
         {% endblock %}
     </div>

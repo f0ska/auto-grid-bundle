@@ -2,16 +2,17 @@
 {% set linkClass = attributes.html_class.thead_link|default('link-secondary') %}
 {% set linkClassActive = attributes.html_class.thead_link_active|default('link-primary') %}
 {% block autogrid_grid_column_header_filter %}
-    <span>
+    <span class="dropdown">
         {% block autogrid_grid_column_header_filter_icon %}
             <a class="{{ isFilterActive ? linkClassActive : linkClass }} dropdown-toggle"
+               href="#"
                role="button"
                data-toggle="dropdown"
                aria-expanded="false"
-            ><small><i class="bi bi-funnel{{ isFilterActive ? '-fill' }}"></i></small></a>
+            ><small>{{ ag_icon(isFilterActive ? 'filter-active' : 'filter')|raw }}</small></a>
         {% endblock %}
         {% block autogrid_grid_column_header_filter_dropdown %}
-            <span class="dropdown-menu p-2 fw-normal">
+            <div class="dropdown-menu p-2 fw-normal" onclick="event.stopPropagation();">
                 {% set form = attribute(view.filterFormViews, field.name) %}
                 {% if view.formThemes is not empty %}
                     {% form_theme form with view.formThemes %}
@@ -44,7 +45,7 @@
                         </a>
                     </div>
                 {% endblock %}
-            </span>
+            </div>
         {% endblock %}
     </span>
 {% endblock %}

@@ -14,7 +14,7 @@
                                 {% for fieldName in fieldset.fields %}
                                     {% set field = attribute(fields, fieldName) %}
                                     <tr>
-                                        <th class="col col-4 text-end table-light {{ loop.last ? 'border-bottom-0' }}">
+                                        <th class="col col-4 text-right table-light {{ loop.last ? 'border-bottom-0' }}">
                                             {{ field.attributes.label|trans }}
                                         </th>
                                         <td class="col col-8 {{ loop.last ? 'border-bottom-0' }}">
@@ -35,7 +35,7 @@
                         {% for fieldName in view.fieldset.not_defined %}
                             {% set field = attribute(fields, fieldName) %}
                             <tr>
-                                <th class="col col-4 text-end table-light {{ loop.last ? 'border-bottom-0' }}">
+                                <th class="col col-4 text-right table-light {{ loop.last ? 'border-bottom-0' }}">
                                     {{ field.attributes.label|trans }}
                                 </th>
                                 <td class="col col-8 {{ loop.last ? 'border-bottom-0' }}">

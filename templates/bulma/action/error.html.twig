@@ -2,7 +2,7 @@
 {% block autogrid %}
     {% block autogrid_error_content %}
         <div class="notification is-danger is-light has-text-centered">
-            <i class="bi bi-exclamation-triangle"></i>
+            {{ ag_icon('warning')|raw }}
             {{ message }}
         </div>
     {% endblock %}

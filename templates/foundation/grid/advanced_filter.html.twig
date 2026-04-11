@@ -8,7 +8,7 @@
                             {% block autogrid_grid_advanced_filter_header %}
                                 <div class="cell">
                                     <h3 id="adv{{ agId }}Label">
-                                        <i class="bi bi-search mr-1"></i>
+                                        {{ ag_icon('search')|raw }}
                                         {% if attributes.title is not empty %}
                                             {{ attributes.title|trans }}
                                         {% endif %}

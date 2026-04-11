@@ -4,14 +4,14 @@
         <th class="{{ attributes.html_class.mass_action_column_header|default('has-text-centered') }}">
             {{ form_start(view.massActionFormView) }}
             {% block autogrid_grid_column_header_massaction_dropdown %}
-                <div class="dropdown is-hoverable is-right">
+                <div class="dropdown" style="display: inline-block;">
                     <div class="dropdown-trigger">
-                        <button class="button {{ btnClass }}" aria-haspopup="true">
-                            <i class="bi bi-chevron-down"></i>
+                        <button type="button" class="button {{ btnClass }}" aria-haspopup="true" onclick="this.parentElement.parentElement.classList.toggle('is-active');">
+                            {{ ag_icon('chevron-down')|raw }}
                         </button>
                     </div>
-                    <div class="dropdown-menu" role="menu">
-                        <div class="dropdown-content">
+                    <div class="dropdown-menu" style="left: 0; min-width: 100%;">
+                        <div class="dropdown-content" style="text-align: left;">
                             {% block autogrid_grid_column_header_massaction_choices %}
                                 {% for label,code in view.massActionChoices %}
                                     <button
@@ -25,7 +25,7 @@
                             {% endblock %}
                             <hr class="dropdown-divider">
                             {% block autogrid_grid_column_header_massaction_select_all %}
-                                <label class="dropdown-item">
+                                <label class="dropdown-item" style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
                                     <input type="checkbox"
                                            autocomplete="off"
                                            onchange="document.querySelectorAll('[name={{ ('"' ~ field_name(view.massActionFormView.ids) ~ '[]"')|escape('html_attr') }}]').forEach(checkbox => { checkbox.checked = this.checked; })"

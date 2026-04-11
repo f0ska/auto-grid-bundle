@@ -2,15 +2,25 @@
 {% set linkClass = attributes.html_class.thead_link|default('has-text-grey') %}
 {% set linkClassActive = attributes.html_class.thead_link_active|default('has-text-info') %}
 {% block autogrid_grid_column_header_filter %}
-    <span class="dropdown is-hoverable is-right">
+    <span class="dropdown">
         {% block autogrid_grid_column_header_filter_icon %}
             <a class="{{ isFilterActive ? linkClassActive : linkClass }} dropdown-trigger"
                role="button"
-            ><small><i class="bi bi-funnel{{ isFilterActive ? '-fill' }}"></i></small></a>
+               onclick="event.stopPropagation(); this.closest('.dropdown').classList.toggle('is-active');"
+            ><small>{{ ag_icon(isFilterActive ? 'filter-active' : 'filter')|raw }}</small></a>
         {% endblock %}
         {% block autogrid_grid_column_header_filter_dropdown %}
-            <div class="dropdown-menu" role="menu">
-                <div class="dropdown-content p-3">
+            <div class="dropdown-menu" role="menu" style="min-width: 250px; left: -50px;" onclick="event.stopPropagation();">
+                <div class="dropdown-content p-3" onclick="event.stopPropagation();" style="min-width: 200px;">
+                    <style>
+                        .dropdown-menu .checkbox, .dropdown-menu .radio {
+                            display: flex !important;
+                            align-items: center;
+                            gap: 0.5rem;
+                            cursor: pointer;
+                            margin-bottom: 0.25rem;
+                        }
+                    </style>
                     {% set form = attribute(view.filterFormViews, field.name) %}
                     {% if view.formThemes is not empty %}
                         {% form_theme form with view.formThemes %}

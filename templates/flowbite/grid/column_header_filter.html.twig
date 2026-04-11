@@ -8,10 +8,11 @@
                role="button"
                data-dropdown-toggle="filter{{ agId }}{{ field.name }}"
                aria-expanded="false"
-            ><small><i class="bi bi-funnel{{ isFilterActive ? '-fill' }}"></i></small></a>
+               onclick="event.stopPropagation();"
+            ><small>{{ ag_icon(isFilterActive ? 'filter-active' : 'filter')|raw }}</small></a>
         {% endblock %}
         {% block autogrid_grid_column_header_filter_dropdown %}
-            <div id="filter{{ agId }}{{ field.name }}" class="hidden z-10 bg-white rounded-lg shadow-lg absolute right-0 border border-gray-200 p-3 w-64">
+            <div id="filter{{ agId }}{{ field.name }}" class="hidden z-10 bg-white rounded-lg shadow-lg absolute right-0 border border-gray-200 p-3 w-64" onclick="event.stopPropagation();">
                 {% set form = attribute(view.filterFormViews, field.name) %}
                 {% if view.formThemes is not empty %}
                     {% form_theme form with view.formThemes %}

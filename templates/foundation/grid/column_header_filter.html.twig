@@ -2,12 +2,14 @@
 {% set linkClass = attributes.html_class.thead_link|default('text-secondary') %}
 {% set linkClassActive = attributes.html_class.thead_link_active|default('text-primary') %}
 {% block autogrid_grid_column_header_filter %}
-    <span class="dropdown-pane" id="filter{{ agId }}{{ field.name }}" data-dropdown data-auto-focus="true">
+    <span class="dropdown-pane" id="filter{{ agId }}{{ field.name }}" data-dropdown data-auto-focus="true" onclick="event.stopPropagation();">
         {% block autogrid_grid_column_header_filter_icon %}
             <a class="{{ isFilterActive ? linkClassActive : linkClass }}"
                role="button"
                aria-expanded="false"
-            ><small><i class="bi bi-funnel{{ isFilterActive ? '-fill' }}"></i></small></a>
+               data-toggle="dropdown"
+               data-options="close_on_click:false"
+            ><small>{{ ag_icon(isFilterActive ? 'filter-active' : 'filter')|raw }}</small></a>
         {% endblock %}
         {% block autogrid_grid_column_header_filter_dropdown %}
             {% set form = attribute(view.filterFormViews, field.name) %}
