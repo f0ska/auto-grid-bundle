@@ -1,6 +1,6 @@
 {% if field.permissions.grid %}
     {% block autogrid_grid_column_header_cell %}
-        <th class="{{ field.attributes.column_html_class.header|default('text-right') }}">
+        <th class="{{ field.attributes.column_html_class.header|default('text-left') }}">
             {% block autogrid_grid_column_header_sort %}
                 {% if (field.canSort) %}
                     {{ include(attributes.template.grid.column_header_sort|default(agTemplate('grid.column_header_sort'))) }}

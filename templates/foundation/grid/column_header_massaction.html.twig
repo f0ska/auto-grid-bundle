@@ -4,7 +4,9 @@
         <th class="{{ attributes.html_class.mass_action_column_header|default('text-center') }}">
             {{ form_start(view.massActionFormView) }}
             {% block autogrid_grid_column_header_massaction_dropdown %}
-                <div class="dropdown-pane" data-dropdown id="mass{{ agId }}">
+            <span style="position: relative; display: inline-block;">
+                <button type="button" class="{{ btnClass }}" onclick="var d=document.getElementById('mass{{ agId }}');d.style.display=d.style.display=='none'?'block':'none';" style="margin-bottom: 0;">{{ ag_icon('chevron-down')|raw }}</button>
+                <div id="mass{{ agId }}" style="display: none; position: absolute; left: 0; z-index: 1000; background: white; border: 1px solid #ccc; padding: 10px; min-width: 300px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); text-align: left;">
                     {% block autogrid_grid_column_header_massaction_choices %}
                         {% for label,code in view.massActionChoices %}
                             <button
@@ -13,22 +15,24 @@
                                 form="{{ view.massActionFormView.vars.attr.id }}"
                                 name="{{ field_name(view.massActionFormView.code) }}"
                                 value="{{ code }}"
+                                style="margin-bottom: 4px;"
                             >{{ label|trans }}</button>
                         {% endfor %}
                     {% endblock %}
-                    <hr>
+                    <hr style="margin: 8px 0;">
                     {% block autogrid_grid_column_header_massaction_select_all %}
-                        <label class="button small secondary expanded">
+                        <label class="button small secondary expanded" style="margin-bottom: 0;">
                             <input type="checkbox"
                                    autocomplete="off"
+                                   style="margin-bottom: 0;"
                                    onchange="document.querySelectorAll('[name={{ ('"' ~ field_name(view.massActionFormView.ids) ~ '[]"')|escape('html_attr') }}]').forEach(checkbox => { checkbox.checked = this.checked; })"
                             >
                             {{ 'f0ska.autogrid.action.select_all'|trans }}
                         </label>
                     {% endblock %}
                 </div>
-                <button type="button" class="{{ btnClass }} dropdown" data-toggle="mass{{ agId }}"></button>
-            {% endblock %}
+            </span>
+        {% endblock %}
             {{ form_end(view.massActionFormView) }}
         </th>
     {% endblock %}

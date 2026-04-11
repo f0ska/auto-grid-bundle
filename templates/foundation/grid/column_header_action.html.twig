@@ -1,11 +1,11 @@
 {% if (agRun(agIsAnyAllowed)) or attributes.has_custom_action is defined %}
     {% set btnClass = attributes.html_class.thead_btn|default('button small secondary') %}
     {% set btnClassActive = attributes.html_class.thead_btn_active|default('button small primary') %}
-    <th class="{{ attributes.html_class.action_column_header|default('text-right') }}">
-        <div class="button-group">
+    <th class="{{ attributes.html_class.action_column_header|default('text-right') }}" style="white-space: nowrap;">
+        <div style="display: inline-flex; gap: 0; float: right;">
             {% block autogrid_grid_header_action_clear_filter %}
                 {% if request.filter is defined and agRun(agIsAllowed, 'filter') %}
-                    <a class="button small alert" href="{{ agRun(agActionUrl, 'grid', {'filter': null}) }}">
+                    <a class="button small alert" href="{{ agRun(agActionUrl, 'grid', {'filter': null}) }}" style="margin-bottom: 0;">
                         {{ ag_icon('filter-reset')|raw }}
                     </a>
                 {% endif %}
@@ -13,41 +13,49 @@
             {% block autogrid_grid_header_action_advanced_filter %}
                 {% if view.advancedFilterFormView and agRun(agIsAllowed, 'advanced_filter') %}
                     <button class="button small {{ request.filter is defined ? 'primary' : 'secondary' }}"
-                            data-open="adv{{ agId }}"
+                            style="margin-bottom: 0;"
+                            onclick="var d=document.getElementById('adv{{ agId }}');d.style.display=d.style.display=='none'?'block':'none';"
                     >{{ ag_icon('search')|raw }}</button>
                 {% endif %}
             {% endblock %}
             {% block autogrid_grid_header_action_export %}
                 {% if view.exportActionFormView and view.pagination.count %}
-                    <div class="dropdown-pane" data-dropdown id="exp{{ agId }}">
-                        {% for label,code in view.exportActionChoices %}
-                            <button
-                                class="button small expanded"
-                                type="submit"
-                                form="{{ view.exportActionFormView.vars.attr.id }}"
-                                name="{{ field_name(view.exportActionFormView.code) }}"
-                                value="{{ code }}"
-                            >{{ label|trans }}</button>
-                        {% endfor %}
-                    </div>
-                    <button class="button small secondary dropdown"
-                            data-toggle="exp{{ agId }}"
-                            aria-expanded="false"
-                            id="exp{{ agId }}Btn"
-                    ></button>
+                    <span style="position: relative; display: inline-block;">
+                        <button class="button small secondary"
+                                onclick="var d=document.getElementById('exp{{ agId }}');d.style.display=d.style.display=='none'?'block':'none';"
+                                style="margin-bottom: 0;"
+                        >{{ ag_icon('export')|raw }}</button>
+                        <div id="exp{{ agId }}" style="display: none; position: absolute; right: 0; z-index: 1000; background: white; border: 1px solid #ccc; padding: 10px; min-width: 300px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
+                            {% for label,code in view.exportActionChoices %}
+                                <button
+                                    class="button small expanded"
+                                    type="submit"
+                                    form="{{ view.exportActionFormView.vars.attr.id }}"
+                                    name="{{ field_name(view.exportActionFormView.code) }}"
+                                    value="{{ code }}"
+                                    style="margin-bottom: 4px;"
+                                >{{ label|trans }}</button>
+                            {% endfor %}
+                        </div>
+                    </span>
+                {% endif %}
+            {% endblock %}
+
+            {% block autogrid_grid_header_action_export_form %}
+                {% if view.exportActionFormView and view.pagination.count %}
                     {{ form(view.exportActionFormView) }}
                 {% endif %}
             {% endblock %}
+
+            {% block autogrid_grid_header_action_create %}
+                {% if (agRun(agIsAllowed, 'create')) %}
+                    <a class="button small success" href="{{ agRun(agActionUrl, 'create') }}" style="margin-bottom: 0;">
+                        {{ ag_icon('add')|raw }}
+                    </a>
+                {% endif %}
+            {% endblock %}
+
+            {% block autogrid_grid_header_custom_action %}{% endblock %}
         </div>
-
-        {% block autogrid_grid_header_action_create %}
-            {% if (agRun(agIsAllowed, 'create')) %}
-                <a class="button small {{ btnClass }}" href="{{ agRun(agActionUrl, 'create') }}">
-                    {{ ag_icon('add')|raw }}
-                </a>
-            {% endif %}
-        {% endblock %}
-
-        {% block autogrid_grid_header_custom_action %}{% endblock %}
     </th>
 {% endif %}

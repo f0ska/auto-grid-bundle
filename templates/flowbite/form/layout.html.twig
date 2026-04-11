@@ -1,1 +1,138 @@
-{% extends 'tailwind_2_layout.html.twig' %}
+{% use 'tailwind_2_layout.html.twig' %}
+
+{%- block form_row -%}
+<div class="mb-5">
+    {{ form_label(form) }}
+    {{ form_widget(form) }}
+    {{ form_errors(form) }}
+    {{ form_help(form) }}
+</div>
+{%- endblock form_row -%}
+
+{%- block checkbox_row -%}
+    {%- set row_attr = row_attr|merge({class: row_attr.class|default(row_class|default('mb-5'))}) -%}
+    {%- set widget_attr = {} -%}
+    {%- if help -%}
+        {%- set widget_attr = {attr: {'aria-describedby': id ~ '_help'}} -%}
+    {%- endif -%}
+    <div{% with {attr: row_attr} %}{{ block('attributes') }}{% endwith %}>
+        {{- form_errors(form) -}}
+        <div class="inline-flex items-center">
+            {{- form_widget(form, widget_attr) -}}
+            {{- form_label(form) -}}
+        </div>
+        {{- form_help(form) -}}
+    </div>
+{%- endblock checkbox_row -%}
+
+{%- block radio_row -%}
+    {%- set row_attr = row_attr|merge({class: row_attr.class|default(row_class|default('mb-5'))}) -%}
+    {%- set widget_attr = {} -%}
+    {%- if help -%}
+        {%- set widget_attr = {attr: {'aria-describedby': id ~ '_help'}} -%}
+    {%- endif -%}
+    <div{% with {attr: row_attr} %}{{ block('attributes') }}{% endwith %}>
+        {{- form_errors(form) -}}
+        <div class="inline-flex items-center">
+            {{- form_widget(form, widget_attr) -}}
+            {{- form_label(form) -}}
+        </div>
+        {{- form_help(form) -}}
+    </div>
+{%- endblock radio_row -%}
+
+{%- block submit_row -%}
+<div class="mb-5">
+    {% set submit_classes = 'text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center focus:outline-none dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800' %}
+    {{ form_widget(form, {attr: {class: submit_classes}}) }}
+</div>
+{%- endblock submit_row -%}
+
+{%- block reset_row -%}
+<div class="mb-5">
+    {% set reset_classes = 'text-gray-900 bg-white border border-gray-300 hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center focus:outline-none dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700' %}
+    {{ form_widget(form, {attr: {class: reset_classes}}) }}
+</div>
+{%- endblock reset_row -%}
+
+{%- block button_row -%}
+<div class="mb-5">
+    {{ form_widget(form) }}
+</div>
+{%- endblock button_row -%}
+
+{%- block form_label -%}
+    {%- set label_attr = label_attr|merge({class: label_attr.class|default(label_class|default('ms-2 text-sm font-medium text-heading'))}) -%}
+    {{- parent() -}}
+{%- endblock form_label -%}
+
+{%- block widget_attributes -%}
+{% if form.vars.checked is defined and form.vars.expanded is defined and form.vars.expanded %}
+{% set extra_class = 'w-4 h-4 border border-gray-300 rounded-full bg-gray-50 focus:ring-2 focus:ring-blue-300 dark:border-gray-600 dark:bg-gray-700 dark:focus:ring-blue-600' %}
+{% elseif form.vars.checked is defined %}
+{% set extra_class = 'w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-2 focus:ring-blue-300 dark:border-gray-600 dark:bg-gray-700 dark:focus:ring-blue-600' %}
+{% elseif attr.type is defined and attr.type == 'file' %}
+{% set extra_class = 'cursor-pointer bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500' %}
+{% elseif disabled %}
+{% set extra_class = 'bg-gray-100 border border-gray-300 text-gray-500 text-sm rounded-lg block w-full p-2.5 cursor-not-allowed dark:bg-gray-700 dark:border-gray-600 dark:text-gray-400' %}
+{% elseif attr.readonly is defined and attr.readonly %}
+{% set extra_class = 'bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300' %}
+{% elseif errors|length > 0 %}
+{% set extra_class = 'bg-red-50 border border-red-500 text-red-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5 dark:bg-red-900/20 dark:text-red-400 dark:border-red-400' %}
+{% else %}
+{% set extra_class = 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500' %}
+{% endif %}
+{% set attr = attr|merge({class: (attr.class|default('') ~ ' ' ~ extra_class)|trim}) %}
+{{ parent() }}
+{%- endblock widget_attributes -%}
+
+{%- block form_errors -%}
+{%- if errors|length > 0 -%}
+<ul class="mt-1.5 text-sm text-red-600 dark:text-red-400">
+    {%- for error in errors -%}
+    <li>{{ error.message }}</li>
+    {%- endfor -%}
+</ul>
+{%- endif -%}
+{%- endblock form_errors -%}
+
+{%- block form_help -%}
+{%- if help is not empty -%}
+<p class="mt-2 text-sm text-gray-500 dark:text-gray-400">{{ help }}</p>
+{%- endif -%}
+{%- endblock form_help -%}
+
+{%- block choice_widget_expanded -%}
+    {%- set attr = attr|merge({class: attr.class|default('mt-2 space-y-2')}) -%}
+    <div {{ block('widget_container_attributes') }}>
+        {%- for child in form %}
+            <div class="flex items-center">
+                {{- form_widget(child) -}}
+                {{- form_label(child, null, {translation_domain: choice_translation_domain}) -}}
+            </div>
+        {% endfor -%}
+    </div>
+{%- endblock choice_widget_expanded -%}
+
+{%- block choice_widget_collapsed -%}
+<div class="relative">
+    <select {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %} class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+        {%- if placeholder is not none -%}
+        <option value=""{% if required and value is empty %} selected="selected"{% endif %}>{{ placeholder != '' ? (translation_domain is same as(false) ? placeholder : placeholder|trans({}, translation_domain)) }}</option>
+        {%- endif -%}
+        {%- if preferred_choices|length > 0 -%}
+        {% set options = preferred_choices %}
+        {{- block('choice_widget_options') -}}
+        {%- if choices|length > 0 and separator is not none -%}
+        <option disabled="disabled">{{ separator }}</option>
+        {%- endif -%}
+        {%- endif -%}
+        {% set options = choices %}
+        {{- block('choice_widget_options') -}}
+    </select>
+</div>
+{%- endblock choice_widget_collapsed -%}
+
+{%- block textarea_widget -%}
+<textarea {{ block('widget_attributes') }} class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500">{{ value }}</textarea>
+{%- endblock textarea_widget -%}

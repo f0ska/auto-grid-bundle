@@ -1,5 +1,5 @@
 {% block autogrid_grid_pagination %}
-    <ul class="pagination" role="navigation">
+    <div class="button-group" role="navigation" style="display: inline-flex;">
         {% set leftCount = 1 %}
         {% set rightCount = 1 %}
         {% set innerCount = 4 %}
@@ -41,23 +41,21 @@
             {% if canRender %}
                 {% if view.pagination.page == i %}
                     {% block autogrid_grid_pagination_page_active %}
-                        <li class="current">{{ i }}</li>
+                        <span class="button small primary">{{ i }}</span>
                     {% endblock %}
                 {% else %}
                     {% block autogrid_grid_pagination_page %}
-                        <li>
-                            <a type="button"
-                               href="{{ agRun(agActionUrl, 'grid', {'page': i|agToInt}) }}"
-                               class="{{ btnClass }}">{{ i }}</a>
-                        </li>
+                        <a type="button"
+                           href="{{ agRun(agActionUrl, 'grid', {'page': i|agToInt}) }}"
+                           class="button small secondary">{{ i }}</a>
                     {% endblock %}
                 {% endif %}
             {% elseif gap %}
                 {% set gap = false %}
                 {% block autogrid_grid_pagination_gap %}
-                    <li class="ellipsis"></li>
+                    <span class="button small secondary disabled">...</span>
                 {% endblock %}
             {% endif %}
         {% endfor %}
-    </ul>
+    </div>
 {% endblock %}

@@ -1,24 +1,29 @@
 {% if view.pagination.limits|length > 1 %}
     {% set btnClass = attributes.html_class.tfoot_btn|default('button small secondary') %}
     {% block autogrid_grid_limit %}
-        <ul class="button-group">
+        <div class="button-group" style="display: inline-flex;">
             {% for pageLimit in view.pagination.limits %}
                 {% if pageLimit == view.pagination.limit %}
                     {% block autogrid_grid_limit_active %}
-                        <li><span class="{{ btnClass }}">{{ pageLimit }}</span></li>
+                        <span class="button small primary">{{ pageLimit }}</span>
                     {% endblock %}
                 {% else %}
                     {% block autogrid_grid_limit_button %}
                         {% set calcOffset = (view.pagination.count > view.pagination.limit ? view.pagination.limit : view.pagination.count) * (view.pagination.page - 1) + 1 %}
                         {% set toPage = (calcOffset / pageLimit)|round(0, 'ceil')|agToInt %}
-                        <li>
-                            <a type="button"
-                               href="{{ agRun(agActionUrl, 'grid', {'limit': pageLimit, 'page': toPage}) }}"
-                               class="{{ btnClass }}">{{ pageLimit }}</a>
-                        </li>
+                        <a type="button"
+                           href="{{ agRun(agActionUrl, 'grid', {'limit': pageLimit, 'page': toPage}) }}"
+                           class="button small secondary">{{ pageLimit }}</a>
                     {% endblock %}
                 {% endif %}
             {% endfor %}
-        </ul>
+            <a class="button small secondary"
+               href="#{{ attributes.container_id }}"
+            >{{ ag_icon('arrow-up')|raw }}</a>
+        </div>
     {% endblock %}
+{% else %}
+    <a class="button small secondary"
+       href="#{{ attributes.container_id }}"
+    >{{ ag_icon('arrow-up')|raw }}</a>
 {% endif %}

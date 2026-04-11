@@ -1,17 +1,16 @@
 {% set isFilterActive = (attribute(request.filter ?? {}, field.name) is defined) and attribute(request.filter, field.name) is not same as null %}
 {% set linkClass = attributes.html_class.thead_link|default('text-secondary') %}
 {% set linkClassActive = attributes.html_class.thead_link_active|default('text-primary') %}
+{% set dropdownId = 'filterDropdown' ~ agId ~ field.name %}
 {% block autogrid_grid_column_header_filter %}
-    <span class="dropdown-pane" id="filter{{ agId }}{{ field.name }}" data-dropdown data-auto-focus="true" onclick="event.stopPropagation();">
-        {% block autogrid_grid_column_header_filter_icon %}
-            <a class="{{ isFilterActive ? linkClassActive : linkClass }}"
-               role="button"
-               aria-expanded="false"
-               data-toggle="dropdown"
-               data-options="close_on_click:false"
-            ><small>{{ ag_icon(isFilterActive ? 'filter-active' : 'filter')|raw }}</small></a>
-        {% endblock %}
-        {% block autogrid_grid_column_header_filter_dropdown %}
+    <span style="position: relative; display: inline-block;">
+        <a class="{{ isFilterActive ? linkClassActive : linkClass }}"
+           role="button"
+           aria-expanded="false"
+           href="javascript:void(0);"
+           onclick="var d=document.getElementById('{{ dropdownId }}');d.style.display=d.style.display=='none'?'block':'none';"
+        ><small>{{ ag_icon(isFilterActive ? 'filter-active' : 'filter')|raw }}</small></a>
+        <div id="{{ dropdownId }}" style="display: none; position: absolute; left: -50px; z-index: 1000; background: white; border: 1px solid #ccc; padding: 10px; min-width: 200px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
             {% set form = attribute(view.filterFormViews, field.name) %}
             {% if view.formThemes is not empty %}
                 {% form_theme form with view.formThemes %}
@@ -31,23 +30,25 @@
             {{ form_end(form) }}
             {% block autogrid_grid_column_header_filter_buttons %}
                 <div class="grid-x grid-margin-x mt-2">
-                    <div class="cell small-6">
-                        <button type="submit"
-                                form="{{ form.vars.attr.id }}"
-                                class="button small expanded"
-                        >
-                            {{- 'f0ska.autogrid.button.submit'|trans -}}
-                        </button>
-                    </div>
-                    <div class="cell small-6">
-                        <a class="button small secondary expanded {% if not isFilterActive %}disabled{% endif %}"
-                           href="{{ agRun(agActionUrl, 'grid', {'filter': {(field.name): null}}) }}"
-                        >
-                            {{- 'f0ska.autogrid.button.reset'|trans -}}
-                        </a>
-                    </div>
+<div class="cell small-6">
+                            <button type="submit"
+                                    form="{{ form.vars.attr.id }}"
+                                    class="button small expanded"
+                                    style="margin-bottom: 0;"
+                            >
+                                {{- 'f0ska.autogrid.button.submit'|trans -}}
+                            </button>
+                        </div>
+                        <div class="cell small-6">
+                            <a class="button small secondary expanded {% if not isFilterActive %}disabled{% endif %}"
+                               href="{{ agRun(agActionUrl, 'grid', {'filter': {(field.name): null}}) }}"
+                               style="margin-bottom: 0;"
+                            >
+                                {{- 'f0ska.autogrid.button.reset'|trans -}}
+                            </a>
+                        </div>
                 </div>
             {% endblock %}
-        {% endblock %}
+        </div>
     </span>
 {% endblock %}

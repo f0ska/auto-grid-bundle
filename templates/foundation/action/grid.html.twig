@@ -53,17 +53,14 @@
                 <tr>
                     <td colspan="{{ columnsCount }}">
                         <div class="grid-x grid-padding-x align-middle" style="align-items: center;">
-                            <div class="cell small-4 text-left">
+                            <div class="cell small-3 text-left">
                                 <b>{{ 'f0ska.autogrid.total'|trans }}: {{ view.pagination.count }}</b>
                             </div>
-                            <div class="cell small-4 text-center">
+                            <div class="cell small-6 text-center">
                                 {{ include(attributes.template.grid.grid_pagination|default(agTemplate('grid.grid_pagination'))) }}
                             </div>
-                            <div class="cell small-4 text-right">
+                            <div class="cell small-3 text-right">
                                 {{ include(attributes.template.grid.grid_number_per_page|default(agTemplate('grid.grid_number_per_page'))) }}
-                                <a class="{{ attributes.html_class.tfoot_btn|default('button small') }}"
-                                   href="#{{ attributes.container_id }}"
-                                  >{{ ag_icon('arrow-up')|raw }}</a>
                             </div>
                         </div>
                     </td>

@@ -1,34 +1,34 @@
 {% if (agRun(agIsAnyAllowed)) or attributes.has_custom_action is defined %}
-    {% set btnClass = attributes.html_class.thead_btn|default('text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-gray-100') %}
-    {% set btnClassActive = attributes.html_class.thead_btn_active|default('text-white bg-blue-700 rounded-lg hover:bg-blue-800') %}
-    <th class="px-6 py-3 {{ attributes.html_class.action_column_header|default('text-right') }}">
-        <div class="flex items-center justify-end space-x-1">
+    {% set btnClass = 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-900 font-medium leading-5 text-sm px-3 py-2 focus:outline-none rounded-base' %}
+    {% set btnClassActive = 'text-white bg-blue-700 hover:bg-blue-800 font-medium leading-5 text-sm px-3 py-2 focus:outline-none rounded-base' %}
+    <th class="px-6 py-3 {{ attributes.html_class.action_column_header|default('text-right') }}" style="white-space: nowrap;">
+        <div style="display: inline-flex; gap: 0;">
             {% block autogrid_grid_header_action_clear_filter %}
                 {% if request.filter is defined and agRun(agIsAllowed, 'filter') %}
-                    <a class="px-2 py-1 text-red-600 bg-white border border-red-300 rounded-lg hover:bg-red-50" href="{{ agRun(agActionUrl, 'grid', {'filter': null}) }}">
+                    <a class="{{ btnClass }} text-red-700 hover:bg-red-50 rounded-s-base" href="{{ agRun(agActionUrl, 'grid', {'filter': null}) }}" style="margin-bottom: 0;">
                         {{ ag_icon('filter-reset')|raw }}
                     </a>
                 {% endif %}
             {% endblock %}
             {% block autogrid_grid_header_action_advanced_filter %}
                 {% if view.advancedFilterFormView and agRun(agIsAllowed, 'advanced_filter') %}
-                    <button class="px-2 py-1 {{ request.filter is defined ? btnClassActive : btnClass }}"
-                            data-modal-toggle="adv{{ agId }}"
+                    <button class="{{ request.filter is defined ? btnClassActive : btnClass }}"
+                            onclick="var d=document.getElementById('adv{{ agId }}');d.style.display=d.style.display=='none'?'flex':'none';"
+                            style="margin-bottom: 0;"
                     >{{ ag_icon('search')|raw }}</button>
                 {% endif %}
             {% endblock %}
             {% block autogrid_grid_header_action_export %}
                 {% if view.exportActionFormView and view.pagination.count %}
-                    <div class="relative">
-                        <button class="px-2 py-1 {{ btnClass }} dropdown-toggle"
-                                data-dropdown-toggle="exp{{ agId }}"
-                                aria-expanded="false"
-                                id="exp{{ agId }}"
-                        ></button>
-                        <div id="exp{{ agId }}" class="hidden z-10 bg-white rounded-lg shadow-lg absolute right-0 border border-gray-200 py-1 min-w-32">
+                    <span style="position: relative; display: inline-block;">
+                        <button class="{{ btnClass }} rounded-e-base"
+                                onclick="var d=document.getElementById('exp{{ agId }}');d.style.display=d.style.display=='none'?'block':'none';event.stopPropagation();"
+                                style="margin-bottom: 0;"
+                        >{{ ag_icon('export')|raw }}</button>
+                        <div id="exp{{ agId }}" style="display: none; position: absolute; right: 0; z-index: 1000; background: white; border: 1px solid #e5e7eb; padding: 8px; min-width: 120px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border-radius: 0.5rem;">
                             {% for label,code in view.exportActionChoices %}
                                 <button
-                                    class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                    class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded"
                                     type="submit"
                                     form="{{ view.exportActionFormView.vars.attr.id }}"
                                     name="{{ field_name(view.exportActionFormView.code) }}"
@@ -36,20 +36,18 @@
                                 >{{ label|trans }}</button>
                             {% endfor %}
                         </div>
-                    </div>
+                    </span>
                     {{ form(view.exportActionFormView) }}
                 {% endif %}
             {% endblock %}
+            {% block autogrid_grid_header_action_create %}
+                {% if (agRun(agIsAllowed, 'create')) %}
+                    <a class="{{ btnClass }} rounded-e-base" href="{{ agRun(agActionUrl, 'create') }}" style="margin-bottom: 0;">
+                        {{ ag_icon('add')|raw }}
+                    </a>
+                {% endif %}
+            {% endblock %}
+            {% block autogrid_grid_header_custom_action %}{% endblock %}
         </div>
-
-        {% block autogrid_grid_header_action_create %}
-            {% if (agRun(agIsAllowed, 'create')) %}
-                <a class="ml-1 px-2 py-1 {{ btnClass }}" href="{{ agRun(agActionUrl, 'create') }}">
-                    {{ ag_icon('add')|raw }}
-                </a>
-            {% endif %}
-        {% endblock %}
-
-        {% block autogrid_grid_header_custom_action %}{% endblock %}
     </th>
 {% endif %}

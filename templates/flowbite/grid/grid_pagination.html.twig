@@ -1,12 +1,14 @@
 {% block autogrid_grid_pagination %}
-    <div class="inline-flex rounded-l-lg rounded-r-lg overflow-hidden border border-gray-300">
+    <div class="inline-flex rounded-base shadow-xs -space-x-px" role="group">
         {% set leftCount = 1 %}
         {% set rightCount = 1 %}
         {% set innerCount = 4 %}
 
         {% set firstPage = 1 %}
         {% set lastPage = (view.pagination.count / view.pagination.limit)|round(0, 'ceil') ?: 1 %}
-        {% set btnClass = attributes.html_class.tfoot_btn|default('px-3 py-1 text-gray-600 bg-white hover:bg-gray-100') %}
+        {% set baseBtnClass = 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-900 focus:ring-2 focus:ring-gray-200 font-medium leading-5 text-sm px-3 py-2 focus:outline-none' %}
+        {% set firstBtnClass = 'rounded-s-base' %}
+        {% set lastBtnClass = 'rounded-e-base' %}
 
         {% if view.pagination.page <= (leftCount + innerCount) %}
             {% set leftCount = innerCount * 2 + leftCount %}
@@ -17,8 +19,10 @@
         {% endif %}
 
         {% set gap = false %}
+        {% set pageIndex = 0 %}
         {% for i in firstPage..lastPage %}
             {% set canRender = false %}
+            {% set pageIndex = pageIndex + 1 %}
 
             {% if i >= firstPage and i <= (firstPage + leftCount - 1) %}
                 {% set canRender = true %}
@@ -41,19 +45,19 @@
             {% if canRender %}
                 {% if view.pagination.page == i %}
                     {% block autogrid_grid_pagination_page_active %}
-                        <span class="{{ btnClass }} bg-blue-700 text-white">{{ i }}</span>
+                        <button type="button" class="{{ baseBtnClass }} text-blue-600 bg-blue-50 hover:bg-blue-100 hover:text-blue-600 focus:ring-2 focus:ring-blue-200">{{ i }}</button>
                     {% endblock %}
                 {% else %}
                     {% block autogrid_grid_pagination_page %}
-                        <a type="button"
-                           href="{{ agRun(agActionUrl, 'grid', {'page': i|agToInt}) }}"
-                           class="{{ btnClass }}">{{ i }}</a>
+                        <button type="button" 
+                                onclick="window.location.href='{{ agRun(agActionUrl, 'grid', {'page': i|agToInt}) }}'"
+                                class="{{ baseBtnClass }}{% if pageIndex == 1 %} {{ firstBtnClass }}{% endif %}{% if (lastPage > 1 and i == lastPage) %} {{ lastBtnClass }}{% endif %}">{{ i }}</button>
                     {% endblock %}
                 {% endif %}
             {% elseif gap %}
                 {% set gap = false %}
                 {% block autogrid_grid_pagination_gap %}
-                    <span class="px-3 py-1 text-gray-400 bg-white border-l border-gray-300">{{ '...' }}</span>
+                    <span class="text-gray-400 bg-white border border-gray-300 px-2 py-2">...</span>
                 {% endblock %}
             {% endif %}
         {% endfor %}
