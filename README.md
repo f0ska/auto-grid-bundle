@@ -12,7 +12,7 @@ Automate the CRUD layer in Symfony by generating grids, forms, and filters direc
 *   **Metadata-driven UI**: Advanced form and filter detection using Doctrine metadata.
 *   **Automatic Filtering**: Integrated search and sorting based on database schema.
 *   **Attribute Configuration**: Fine-tune UI behavior directly in your Entity classes.
-*   **Bootstrap 5 Integration**: Default templates use Bootstrap 5 CSS and Icons.
+*   **Multi-theme Support**: Default support for Bootstrap 5, with experimental support for Bootstrap 4, Bulma, Flowbite, and Foundation.
 
 ---
 
@@ -42,8 +42,9 @@ public function list(AutoGridFactory $factory): Response
 ## Technical Requirements
 *   **PHP 8.1+**
 *   **Symfony 6.4+**
-*   **UI Framework**: Default templates require **Bootstrap 5**. For other frameworks, [template overrides](./docs/customization.md) are required.
+*   **UI Framework**: Default templates use **Bootstrap 5**. The bundle now includes experimental support for **Bootstrap 4**, **Bulma**, **Flowbite**, and **Foundation**. For custom frameworks or deep overrides, see [template documentation](./docs/templates.md).
 
 ---
+
 
 [Documentation Index](./docs/index.md) | [Installation](./docs/installation.md) | [Attributes](./attributes.md)
