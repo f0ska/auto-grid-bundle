@@ -1,9 +1,9 @@
 {% block autogrid_field_array_content %}
-    {% set value = agFieldValue(entity, field) %}
+    {% set value = ag_field_value(entity, field) %}
     {% if (value is null or value is empty) %}
         -
     {% elseif (action is same as 'grid') %}
-        {{ value|join(', ')|agTruncate(field.view.grid_truncate) }}
+        {{ value|join(', ')|ag_truncate(field.view.grid_truncate) }}
     {% else %}
         <ul>
             {% for item in value %}

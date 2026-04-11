@@ -10,9 +10,9 @@
                 {% else %}
                     {% block autogrid_grid_limit_button %}
                         {% set calcOffset = (view.pagination.count > view.pagination.limit ? view.pagination.limit : view.pagination.count) * (view.pagination.page - 1) + 1 %}
-                        {% set toPage = (calcOffset / pageLimit)|round(0, 'ceil')|agToInt %}
+                        {% set toPage = (calcOffset / pageLimit)|round(0, 'ceil')|ag_to_int %}
                         <a type="button"
-                           href="{{ agRun(agActionUrl, 'grid', {'limit': pageLimit, 'page': toPage}) }}"
+                           href="{{ ag_run(agActionUrl, 'grid', {'limit': pageLimit, 'page': toPage}) }}"
                            class="button small secondary">{{ pageLimit }}</a>
                     {% endblock %}
                 {% endif %}

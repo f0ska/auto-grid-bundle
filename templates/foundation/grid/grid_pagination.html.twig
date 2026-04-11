@@ -46,7 +46,7 @@
                 {% else %}
                     {% block autogrid_grid_pagination_page %}
                         <a type="button"
-                           href="{{ agRun(agActionUrl, 'grid', {'page': i|agToInt}) }}"
+                           href="{{ ag_run(agActionUrl, 'grid', {'page': i|ag_to_int}) }}"
                            class="button small secondary">{{ i }}</a>
                     {% endblock %}
                 {% endif %}

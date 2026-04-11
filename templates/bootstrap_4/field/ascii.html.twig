@@ -1,9 +1,9 @@
 {% block autogrid_field_ascii_content %}
-    {% set value = agFieldValue(entity, field) %}
+    {% set value = ag_field_value(entity, field) %}
     {% if (value is null or value is same as '') %}
         -
     {% elseif (action is same as 'grid') %}
-        {{ value|convert_encoding('ASCII', 'UTF-8')|agTruncate(field.view.grid_truncate) }}
+        {{ value|convert_encoding('ASCII', 'UTF-8')|ag_truncate(field.view.grid_truncate) }}
     {% else %}
         {{ value|convert_encoding('ASCII', 'UTF-8') }}
     {% endif %}

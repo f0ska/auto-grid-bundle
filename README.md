@@ -31,7 +31,7 @@ public function list(AutoGridFactory $factory): Response
 
 ### 2. Twig
 ```html
-{{ agRender(grid) }}
+{{ ag_render(grid) }}
 ```
 
 ### 3. Default UI

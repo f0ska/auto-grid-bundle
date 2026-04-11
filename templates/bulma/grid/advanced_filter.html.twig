@@ -1,4 +1,4 @@
-{% if view.advancedFilterFormView and agRun(agIsAllowed, 'advanced_filter') %}
+{% if view.advancedFilterFormView and ag_run(agIsAllowed, 'advanced_filter') %}
     {% block autogrid_grid_advanced_filter_modal %}
         <div id="adv{{ agId }}" class="modal">
             {% block autogrid_grid_advanced_filter_dialog %}
@@ -75,7 +75,7 @@
                                     <div class="control">
                                         {% block autogrid_grid_advanced_filter_reset_button %}
                                             <a class="button is-light {% if request.filter is not defined %}is-static{% endif %}"
-                                               href="{{ agRun(agActionUrl, 'grid', {'filter': null}) }}"
+                                               href="{{ ag_run(agActionUrl, 'grid', {'filter': null}) }}"
                                             >
                                                 {{- 'f0ska.autogrid.button.reset'|trans -}}
                                             </a>

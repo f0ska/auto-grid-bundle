@@ -1,11 +1,11 @@
 {% block autogrid_field_text_content %}
-    {% set value = agFieldValue(entity, field) %}
+    {% set value = ag_field_value(entity, field) %}
     {% if (value is null or value is same as '') %}
         -
     {% else %}
         {%- if field.attributes.value_prefix is defined %}<span class="text-muted">{{ field.attributes.value_prefix|trans }}</span>{% endif %}
         {%- if action is same as 'grid' %}
-            {{- value|agTruncate(field.view.grid_truncate) -}}
+            {{- value|ag_truncate(field.view.grid_truncate) -}}
         {%- else %}
             {{- value -}}
         {% endif -%}

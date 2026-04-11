@@ -1,9 +1,9 @@
 {% block autogrid_field_json_content %}
-    {% set value = agFieldValue(entity, field) %}
+    {% set value = ag_field_value(entity, field) %}
     {% if (value is null or value is same as '') %}
         -
     {% elseif (action is same as 'grid') %}
-        {{ value|json_encode|agTruncate(field.view.grid_truncate) }}
+        {{ value|json_encode|ag_truncate(field.view.grid_truncate) }}
     {% else %}
         <pre>{{ value|json_encode(constant('JSON_PRETTY_PRINT')) }}</pre>
     {% endif %}

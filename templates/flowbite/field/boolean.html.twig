@@ -1,5 +1,5 @@
 {% block autogrid_field_boolean_content %}
-    {% set value = agFieldValue(entity, field) %}
+    {% set value = ag_field_value(entity, field) %}
     <span class="inline-flex items-center justify-center w-6 h-6">
         {{ ag_icon(value ? 'boolean-true' : 'boolean-false')|raw }}
     </span>

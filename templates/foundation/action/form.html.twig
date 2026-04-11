@@ -1,4 +1,4 @@
-{% extends attributes.template.base|default(agTemplate('base')) %}
+{% extends attributes.template.base|default(ag_template('base')) %}
 {% block autogrid %}
     <div class="{{ attributes.html_class.table|default('grid-container') }}">
         {% block autogrid_form_caption %}
@@ -14,16 +14,16 @@
             <div class="{{ attributes.html_class.thead|default('grid-x grid-padding-x grid-margin-x') }}" style="align-items: center;">
                 <div class="cell small-4 text-left">
                     {% block autogrid_form_header_back_button %}
-                        {% if agRun(agIsAllowed, 'grid') %}
-                            <a class="{{ btnClass }}" href="{{ agRun(agActionUrl, 'grid') }}">
+                        {% if ag_run(agIsAllowed, 'grid') %}
+                            <a class="{{ btnClass }}" href="{{ ag_run(agActionUrl, 'grid') }}">
                                 {{ ag_icon('arrow-left')|raw }}&nbsp;{{ 'f0ska.autogrid.button.back'|trans }}
                             </a>
                         {% endif %}
                     {% endblock %}
                     {% block autogrid_form_header_view_button %}
-                        {% if action is not same as 'create' and agRun(agIsAllowed, 'view') and attributes.button.view.display_in_edit %}
+                        {% if action is not same as 'create' and ag_run(agIsAllowed, 'view') and attributes.button.view.display_in_edit %}
                             <a class="{{ btnClass }}"
-                               href="{{ agRun(agActionUrl, 'view', {'id': entity.id}) }}"
+                               href="{{ ag_run(agActionUrl, 'view', {'id': entity.id}) }}"
                             >
                                 {{ ag_icon('view')|raw }}&nbsp;{{ 'f0ska.autogrid.button.view'|trans }}
                             </a>
@@ -48,9 +48,9 @@
                         </button>
                     {% endblock %}
                     {% block autogrid_form_header_delete_button %}
-                        {% if action is not same as 'create' and agRun(agIsAllowed, 'delete') and attributes.button.delete.display_in_edit %}
+                        {% if action is not same as 'create' and ag_run(agIsAllowed, 'delete') and attributes.button.delete.display_in_edit %}
                             <a class="button small alert"
-                               href="{{ agRun(agActionUrl, 'delete', {'id': entity.id}) }}"
+                               href="{{ ag_run(agActionUrl, 'delete', {'id': entity.id}) }}"
                                onclick="return confirm('{{ 'f0ska.autogrid.dialog.delete_confirm'|trans }}');"
                             >
                                 {{ ag_icon('delete')|raw }}&nbsp;{{ 'f0ska.autogrid.button.delete'|trans }}
@@ -68,7 +68,7 @@
                         {% form_theme form with view.formThemes %}
                     {% endif %}
                     {% if view.fieldset.defined %}
-                        {{ include(attributes.template.fieldset.form|default(agTemplate('fieldset.form'))) }}
+                        {{ include(attributes.template.fieldset.form|default(ag_template('fieldset.form'))) }}
                     {% else %}
                         <div class="grid-container">
                             {{ form(form) }}

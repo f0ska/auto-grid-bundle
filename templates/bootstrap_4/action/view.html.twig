@@ -1,4 +1,4 @@
-{% extends attributes.template.base|default(agTemplate('base')) %}
+{% extends attributes.template.base|default(ag_template('base')) %}
 {% block autogrid %}
     <table class="table">
         {% block autogrid_view_caption %}
@@ -18,8 +18,8 @@
                         <div class="row">
                             <div class="col col-4 text-start">
                                 {% block autogrid_view_header_back_button %}
-                                    {% if agRun(agIsAllowed, 'grid') %}
-                                        <a class="btn btn-sm {{ btnClass }}" href="{{ agRun(agActionUrl, 'grid') }}">
+                                    {% if ag_run(agIsAllowed, 'grid') %}
+                                        <a class="btn btn-sm {{ btnClass }}" href="{{ ag_run(agActionUrl, 'grid') }}">
                                             {{ ag_icon('arrow-left')|raw }}&nbsp;{{ 'f0ska.autogrid.button.back'|trans }}
                                         </a>
                                     {% endif %}
@@ -34,16 +34,16 @@
                             </div>
                             <div class="col col-4 text-right">
                                 {% block autogrid_view_header_edit_button %}
-                                    {% if agRun(agIsAllowed, 'edit') and attributes.button.edit.display_in_view %}
-                                        <a class="btn btn-sm btn-outline-secondary" href="{{ agRun(agActionUrl, 'edit') }}">
+                                    {% if ag_run(agIsAllowed, 'edit') and attributes.button.edit.display_in_view %}
+                                        <a class="btn btn-sm btn-outline-secondary" href="{{ ag_run(agActionUrl, 'edit') }}">
                                             {{ ag_icon('edit')|raw }}&nbsp;{{ 'f0ska.autogrid.button.modify'|trans }}
                                         </a>
                                     {% endif %}
                                 {% endblock %}
                                 {% block autogrid_view_header_delete_button %}
-                                    {% if agRun(agIsAllowed, 'delete') and attributes.button.delete.display_in_grid %}
+                                    {% if ag_run(agIsAllowed, 'delete') and attributes.button.delete.display_in_grid %}
                                         <a class="btn btn-sm btn-outline-danger"
-                                           href="{{ agRun(agActionUrl, 'delete', {'id': entity.id}) }}"
+                                           href="{{ ag_run(agActionUrl, 'delete', {'id': entity.id}) }}"
                                            onclick="return confirm('{{ 'f0ska.autogrid.dialog.delete_confirm'|trans }}');"
                                         >
                                             {{ ag_icon('delete')|raw }}&nbsp;{{ 'f0ska.autogrid.button.delete'|trans }}
@@ -63,7 +63,7 @@
             {% if view.fieldset.defined %}
                 <tr>
                     <td colspan="2" class="pl-0 pr-0">
-                        {{ include(attributes.template.fieldset.view|default(agTemplate('fieldset.view'))) }}
+                        {{ include(attributes.template.fieldset.view|default(ag_template('fieldset.view'))) }}
                     </td>
                 </tr>
             {% else %}

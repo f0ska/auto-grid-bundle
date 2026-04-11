@@ -50,7 +50,7 @@
                 {% else %}
                     {% block autogrid_grid_pagination_page %}
                         <button type="button" 
-                                onclick="window.location.href='{{ agRun(agActionUrl, 'grid', {'page': i|agToInt}) }}'"
+                                onclick="window.location.href='{{ ag_run(agActionUrl, 'grid', {'page': i|ag_to_int}) }}'"
                                 class="{{ baseBtnClass }}{% if pageIndex == 1 %} {{ firstBtnClass }}{% endif %}{% if (lastPage > 1 and i == lastPage) %} {{ lastBtnClass }}{% endif %}">{{ i }}</button>
                     {% endblock %}
                 {% endif %}

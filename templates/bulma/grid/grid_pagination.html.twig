@@ -32,7 +32,7 @@
 {%- if view.pagination.page == i -%}
 <span class="{{ btnClass }} is-primary">{{- i -}}</span>
 {%- else -%}
-<a class="{{ btnClass }}" href="{{ agRun(agActionUrl, 'grid', {'page': i|agToInt}) }}">{{- i -}}</a>
+<a class="{{ btnClass }}" href="{{ ag_run(agActionUrl, 'grid', {'page': i|ag_to_int}) }}">{{- i -}}</a>
 {%- endif -%}
 {%- elseif gap -%}
 {%- set gap = false -%}

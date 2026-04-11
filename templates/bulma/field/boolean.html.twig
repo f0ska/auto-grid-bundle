@@ -1,5 +1,5 @@
 {% block autogrid_field_boolean_content %}
-    {% set value = agFieldValue(entity, field) %}
+    {% set value = ag_field_value(entity, field) %}
     <span class="icon-text">
         {% if value %}
             <span class="icon has-text-success">{{ ag_icon('boolean-true')|raw }}</span>

@@ -39,7 +39,7 @@
                             {{- 'f0ska.autogrid.button.submit'|trans -}}
                         </button>
                         <a class="btn btn-sm btn-outline-secondary w-50 {% if not isFilterActive %}disabled{% endif %}"
-                           href="{{ agRun(agActionUrl, 'grid', {'filter': {(field.name): null}}) }}"
+                           href="{{ ag_run(agActionUrl, 'grid', {'filter': {(field.name): null}}) }}"
                         >
                             {{- 'f0ska.autogrid.button.reset'|trans -}}
                         </a>

@@ -3,7 +3,7 @@
         <th class="px-6 py-3 relative {{ field.attributes.column_html_class.header|default('text-left') }}">
             {% block autogrid_grid_column_header_sort %}
                 {% if (field.canSort) %}
-                    {{ include(attributes.template.grid.column_header_sort|default(agTemplate('grid.column_header_sort'))) }}
+                    {{ include(attributes.template.grid.column_header_sort|default(ag_template('grid.column_header_sort'))) }}
                 {% endif %}
             {% endblock %}
 
@@ -12,8 +12,8 @@
             {% endblock %}
 
             {% block autogrid_grid_column_header_filter %}
-                {% if (field.canFilter and agRun(agIsAllowed, 'filter')) %}
-                    {{ include(attributes.template.grid.column_header_filter|default(agTemplate('grid.column_header_filter'))) }}
+                {% if (field.canFilter and ag_run(agIsAllowed, 'filter')) %}
+                    {{ include(attributes.template.grid.column_header_filter|default(ag_template('grid.column_header_filter'))) }}
                 {% endif %}
             {% endblock %}
         </th>

@@ -54,14 +54,22 @@ class Extension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('agRender', $this->agRender(...)),
-            new TwigFunction('agRun', $this->agRun(...)),
-            new TwigFunction('agChoiceLabels', $this->agChoiceLabels(...)),
-            new TwigFunction('agChoiceValues', $this->agChoiceValues(...)),
-            new TwigFunction('agFieldValue', $this->agFieldValue(...)),
-            new TwigFunction('agBinarySize', $this->agBinarySize(...)),
-            new TwigFunction('agTemplate', $this->agTemplate(...)),
+            new TwigFunction('ag_render', $this->agRender(...)),
+            new TwigFunction('ag_run', $this->agRun(...)),
+            new TwigFunction('ag_choice_labels', $this->agChoiceLabels(...)),
+            new TwigFunction('ag_choice_values', $this->agChoiceValues(...)),
+            new TwigFunction('ag_field_value', $this->agFieldValue(...)),
+            new TwigFunction('ag_binary_size', $this->agBinarySize(...)),
+            new TwigFunction('ag_template', $this->agTemplate(...)),
             new TwigFunction('ag_icon', $this->getIcon(...)),
+        ];
+    }
+
+    public function getFilters(): array
+    {
+        return [
+            new TwigFilter('ag_to_int', $this->agToInt(...)),
+            new TwigFilter('ag_truncate', $this->agTruncate(...)),
         ];
     }
 
@@ -94,22 +102,6 @@ class Extension extends AbstractExtension
         return $icons[$name] ?? '';
     }
 
-
-    public function getFilters(): array
-    {
-        return [
-            new TwigFilter('agToInt', $this->agToInt(...)),
-            new TwigFilter('agTruncate', $this->agTruncate(...)),
-        ];
-    }
-
-    /**
-     * @param AutoGrid $ui
-     * @throws LoaderError
-     * @throws RenderException
-     * @throws RuntimeError
-     * @throws SyntaxError
-     */
     public function agRender(AutoGrid $ui): void
     {
         echo $this->twig->render($ui->getTemplate(), $ui->getContext());
