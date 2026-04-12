@@ -1,0 +1,40 @@
+{{ form_start(form) }}
+<div class="is-fullwidth mb-5">
+    <div class="columns is-multiline">
+        {% for fieldset in view.fieldset.defined %}
+            {% block autogrid_fieldset_form_card %}
+                <div class="column {{ fieldset.class|default('is-full') }}">
+                    <div class="box">
+                        {% block autogrid_fieldset_form_header %}
+                            <p class="title is-5 mb-3">{{ fieldset.name|trans }}</p>
+                        {% endblock %}
+                        {% block autogrid_fieldset_form_body %}
+                            {% for fieldName in fieldset.fields %}
+                                {% if attribute(form, fieldName) is defined %}
+                                    <div class="field">
+                                        {{ form_row(attribute(form, fieldName)) }}
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        {% endblock %}
+                    </div>
+                </div>
+            {% endblock %}
+        {% endfor %}
+        {% if view.fieldset.not_defined %}
+            {% block autogrid_fieldset_form_no_fieldset %}
+                <div class="column is-full">
+                    {% for fieldName in view.fieldset.not_defined %}
+                        {% if attribute(form, fieldName) is defined %}
+                            <div class="field">
+                                {{ form_row(attribute(form, fieldName)) }}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endblock %}
+        {% endif %}
+    </div>
+</div>
+
+{{ form_end(form) }}

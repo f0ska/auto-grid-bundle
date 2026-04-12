@@ -18,9 +18,10 @@ use F0ska\AutoGridBundle\Attribute\AbstractAttribute;
 #[Attribute]
 class ColumnHtmlClass extends AbstractAttribute
 {
-    public function __construct(?string $headerClass = null, ?string $valueClass = null)
+    public function __construct(?string $columnClass = null, ?string $headerClass = null, ?string $valueClass = null)
     {
         $value = array_filter([
+            'column' => $columnClass,
             'header' => $headerClass,
             'value' => $valueClass,
         ], fn ($v) => $v !== null);

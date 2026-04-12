@@ -1,4 +1,4 @@
-{% if view.advancedFilterFormView and agRun(agIsAllowed, 'advanced_filter') %}
+{% if view.advancedFilterFormView and ag_run(agIsAllowed, 'advanced_filter') %}
     {% block autogrid_grid_advanced_filter_modal %}
         <div class="modal fade"
              id="adv{{ agId }}"
@@ -14,7 +14,7 @@
                             {% block autogrid_grid_advanced_filter_header %}
                                 <div class="modal-header">
                                     <h1 class="modal-title fs-5" id="adv{{ agId }}Label">
-                                        <i class="bi bi-search mr-1"></i>
+                                        {{ ag_icon('search')|raw }}
                                         {% if attributes.title is not empty %}
                                             {{ attributes.title|trans }}
                                         {% endif %}
@@ -78,7 +78,7 @@
                                             <div class="col col-6">
                                                 {% block autogrid_grid_advanced_filter_reset_button %}
                                                     <a class="btn btn-outline-secondary w-100 m-0 {% if request.filter is not defined %}disabled{% endif %}"
-                                                       href="{{ agRun(agActionUrl, 'grid', {'filter': null}) }}"
+                                                       href="{{ ag_run(agActionUrl, 'grid', {'filter': null}) }}"
                                                     >
                                                         {{- 'f0ska.autogrid.button.reset'|trans -}}
                                                     </a>

@@ -67,6 +67,7 @@ class Configuration implements ConfigurationInterface
                             ->addDefaultsIfNotSet()
                             ->children()
                                 ->scalarNode('advanced_filter')->defaultValue('grid/advanced_filter.html.twig')->end()
+                                ->scalarNode('colgroup')->defaultValue('grid/colgroup.html.twig')->end()
                                 ->scalarNode('column_header')->defaultValue('grid/column_header.html.twig')->end()
                                 ->scalarNode('column_header_action')->defaultValue('grid/column_header_action.html.twig')->end()
                                 ->scalarNode('column_header_filter')->defaultValue('grid/column_header_filter.html.twig')->end()

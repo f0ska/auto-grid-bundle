@@ -1,0 +1,17 @@
+{% block autogrid_grid_colgroup %}
+    <colgroup>
+        {% if view.massActionFormView %}
+            <col class="{{ attributes.html_class.mass_action_column|default('') }}">
+        {% endif %}
+        {% if fields is not empty %}
+            {% for field in fields %}
+                {% if field.permissions.grid %}
+                    <col class="{{ field.attributes.column_html_class.column|default('') }}">
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+        {% if ag_run(agIsAnyAllowed) or attributes.has_custom_action is defined %}
+            <col class="{{ attributes.html_class.action_column|default('') }}">
+        {% endif %}
+    </colgroup>
+{% endblock autogrid_grid_colgroup %}

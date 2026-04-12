@@ -1,0 +1,23 @@
+{%- if ag_run(agIsAnyAllowed) or attributes.has_custom_action is defined -%}
+{%- set btnClass = attributes.html_class.tbody_btn|default('is-small') -%}
+<td class="{{ attributes.html_class.action_column_value|default('has-text-right') }}">
+<div class="buttons has-addons are-small is-right" style="flex-wrap: nowrap;">
+{%- block autogrid_grid_row_action_view -%}
+{%- if ag_run(agIsAllowed, 'view') and attributes.button.view.display_in_grid -%}
+<a class="button {{ btnClass }}" href="{{ ag_run(agActionUrl, 'view', {'id': entity.id}) }}">{{ ag_icon('view')|raw }}</a>
+{%- endif -%}
+{%- endblock -%}
+{%- block autogrid_grid_row_action_edit -%}
+{%- if ag_run(agIsAllowed, 'edit') and attributes.button.edit.display_in_grid -%}
+<a class="button {{ btnClass }}" href="{{ ag_run(agActionUrl, 'edit', {'id': entity.id}) }}">{{ ag_icon('edit')|raw }}</a>
+{%- endif -%}
+{%- endblock -%}
+{%- block autogrid_grid_row_action_delete -%}
+{%- if ag_run(agIsAllowed, 'delete') and attributes.button.delete.display_in_grid -%}
+<a class="button {{ btnClass }} is-danger" href="{{ ag_run(agActionUrl, 'delete', {'id': entity.id}) }}" onclick="return confirm('{{ 'f0ska.autogrid.dialog.delete_confirm'|trans }}');">{{ ag_icon('delete')|raw }}</a>
+{%- endif -%}
+{%- endblock -%}
+{%- block autogrid_grid_row_custom_action %}{% endblock -%}
+</div>
+</td>
+{%- endif -%}

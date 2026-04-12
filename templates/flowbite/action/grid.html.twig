@@ -1,0 +1,78 @@
+{% extends attributes.template.base|default(ag_template('base')) %}
+{% block autogrid %}
+    {{ include(attributes.template.grid.advanced_filter|default(ag_template('grid.advanced_filter'))) }}
+    {% set columnsCount = (fields|length) + (ag_run(agIsAnyAllowed) ? 1 : 0) + (view.massActionFormView ? 1 : 0) %}
+    <table class="w-full {{ attributes.html_class.table|default('text-sm text-left text-gray-500') }}" id="{{ attributes.container_id }}">
+        {% block autogrid_grid_caption %}
+            {% if attributes.title is not empty %}
+                <caption class="text-center text-secondary h4 mb-3  text-xl">
+                    {{ attributes.title|trans }}
+                </caption>
+            {% endif %}
+        {% endblock %}
+
+        {{ include(attributes.template.grid.colgroup|default(ag_template('grid.colgroup'))) }}
+
+        {% block autogrid_grid_header %}
+            <thead class="{{ attributes.html_class.thead|default('text-xs text-gray-700 uppercase bg-gray-50') }}">
+                <tr>
+                    {{ include(attributes.template.grid.column_header_massaction|default(ag_template('grid.column_header_massaction'))) }}
+                    {% for field in fields %}
+                        {{ include(attributes.template.grid.column_header|default(ag_template('grid.column_header'))) }}
+                    {% endfor %}
+                    {{ include(attributes.template.grid.column_header_action|default(ag_template('grid.column_header_action'))) }}
+                </tr>
+            </thead>
+        {% endblock %}
+
+        {% block autogrid_grid_body %}
+            <tbody class="{{ attributes.html_class.tbody|default('bg-white border-b') }}">
+            {% if rows is empty %}
+                {% block autogrid_grid_body_empty %}
+                    <tr>
+                        <td class="text-gray-500 px-6 py-4" colspan="{{ columnsCount }}">
+                            {{ 'f0ska.autogrid.empty'|trans }}
+                        </td>
+                    </tr>
+                {% endblock %}
+            {% endif %}
+            {% for entity in rows %}
+                {% block autogrid_grid_row %}
+                    <tr class="{{ include(attributes.template.grid.row_class|default(ag_template('grid.row_class'))) }} hover:bg-gray-50">
+                        {{ include(attributes.template.grid.column_value_massaction|default(ag_template('grid.column_value_massaction'))) }}
+                        {% for field in fields %}
+                            {{ include(attributes.template.grid.column_value|default(ag_template('grid.column_value'))) }}
+                        {% endfor %}
+                        {{ include(attributes.template.grid.column_value_action|default(ag_template('grid.column_value_action'))) }}
+                    </tr>
+                {% endblock %}
+            {% endfor %}
+            </tbody>
+        {% endblock %}
+
+        {% block autogrid_grid_footer %}
+            <tfoot class="{{ attributes.html_class.tfoot|default('') }}">
+                <tr>
+                    <td colspan="{{ columnsCount }}">
+                        <div class="flex items-center justify-between px-6 py-3 bg-gray-50 border-t">
+                            <div class="text-sm text-gray-600">
+                                <b>{{ 'f0ska.autogrid.total'|trans }}: {{ view.pagination.count }}</b>
+                            </div>
+                            <div>
+                                {{ include(attributes.template.grid.grid_pagination|default(ag_template('grid.grid_pagination'))) }}
+                            </div>
+                            <div class="inline-flex rounded-base shadow-xs -space-x-px" role="group">
+                                {{ include(attributes.template.grid.grid_number_per_page|default(ag_template('grid.grid_number_per_page'))) }}
+                                <a class="text-gray-700 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-900 font-medium leading-5 text-sm px-3 py-2 focus:outline-none rounded-e-base"
+                                   href="#{{ attributes.container_id }}"
+                                   >{{ ag_icon('arrow-up')|raw }}</a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tfoot>
+        {% endblock %}
+    </table>
+    <template id="tpl-ag-close-{{ agId }}"><script>document.addEventListener('click', function(e) { var g = document.getElementById('{{ attributes.container_id }}'); if (!g || (!g.contains(e.target)) || (!e.target.closest('[id^="exp"]') && !e.target.closest('[id^="mass"]'))) { if (g) g.querySelectorAll('div[id^="exp"], div[id^="mass"]').forEach(function(d){d.style.display='none'}); } });</script></template>
+    <script>document.currentScript.outerHTML = document.getElementById('tpl-ag-close-{{ agId }}').innerHTML;</script>
+{% endblock %}

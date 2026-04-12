@@ -1,0 +1,65 @@
+{% set isFilterActive = (attribute(request.filter ?? {}, field.name) is defined) and attribute(request.filter, field.name) is not same as null %}
+{% set linkClass = attributes.html_class.thead_link|default('has-text-grey') %}
+{% set linkClassActive = attributes.html_class.thead_link_active|default('has-text-info') %}
+{% set dropdownId = 'filterDropdown' ~ agId ~ field.name %}
+{% block autogrid_grid_column_header_filter %}
+    <span>
+        {% block autogrid_grid_column_header_filter_icon %}
+            <a class="{{ isFilterActive ? linkClassActive : linkClass }}"
+               role="button"
+               onclick="var d=document.getElementById('{{ dropdownId }}');d.style.display=d.style.display=='none'?'block':'none'; event.stopPropagation();"
+            >{{ ag_icon(isFilterActive ? 'filter-active' : 'filter')|raw }}</a>
+        {% endblock %}
+        {% block autogrid_grid_column_header_filter_dropdown %}
+            <div id="{{ dropdownId }}" class="dropdown-menu" role="menu" style="min-width: 250px; position: absolute; left: 0; top: 100%; display: none; background: white; z-index: 1000; box-shadow: 0 2px 3px rgba(10,10,10,0.1), 0 0 0 1px rgba(10,10,10,0.1); border-radius: 4px;" onclick="event.stopPropagation();">
+                <div class="dropdown-content p-3" style="min-width: 200px; background: white;">
+                    <style>
+                        .dropdown-menu .checkbox, .dropdown-menu .radio {
+                            display: flex !important;
+                            align-items: center;
+                            gap: 0.5rem;
+                            cursor: pointer;
+                            margin-bottom: 0.25rem;
+                        }
+                    </style>
+                    {% set form = attribute(view.filterFormViews, field.name) %}
+                    {% if view.formThemes is not empty %}
+                        {% form_theme form with view.formThemes %}
+                    {% endif %}
+                    {{ form_start(form) }}
+                    {% block autogrid_grid_column_header_filter_form_fields %}
+                        {% if field.attributes.range_filter is defined %}
+                            {% for searchField in attribute(form, field.name).children %}
+                                {{ form_widget(searchField, {'attr': {'placeholder': field_label(searchField)}}) }}
+                                {{ loop.first ? '<div class="mb-2"></div>' }}
+                            {% endfor %}
+                        {% else %}
+                            {{ form_widget(attribute(form, field.name)) }}
+                        {% endif %}
+                    {% endblock %}
+                    {{ form_rest(form) }}
+                    {{ form_end(form) }}
+                    {% block autogrid_grid_column_header_filter_buttons %}
+                        <div class="field is-grouped mt-2">
+                            <div class="control is-expanded">
+                                <button type="submit"
+                                        form="{{ form.vars.attr.id }}"
+                                        class="button is-small is-primary is-fullwidth"
+                                >
+                                    {{- 'f0ska.autogrid.button.submit'|trans -}}
+                                </button>
+                            </div>
+                            <div class="control is-expanded">
+                                <a class="button is-small is-fullwidth {% if not isFilterActive %}is-static{% endif %}"
+                                   href="{{ ag_run(agActionUrl, 'grid', {'filter': {(field.name): null}}) }}"
+                                >
+                                    {{- 'f0ska.autogrid.button.reset'|trans -}}
+                                </a>
+                            </div>
+                        </div>
+                    {% endblock %}
+                </div>
+            </div>
+        {% endblock %}
+    </span>
+{% endblock %}

@@ -1,0 +1,9 @@
+{% extends attributes.template.base|default(ag_template('base')) %}
+{% block autogrid %}
+    {% block autogrid_error_content %}
+        <div class="notification is-danger is-light has-text-centered">
+            {{ ag_icon('warning')|raw }}
+            {{ message }}
+        </div>
+    {% endblock %}
+{% endblock %}

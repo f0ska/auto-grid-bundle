@@ -1,0 +1,40 @@
+{{ form_start(form) }}
+<div class="grid-container">
+    <div class="grid-x grid-padding-x">
+        {% for fieldset in view.fieldset.defined %}
+            {% block autogrid_fieldset_form_card %}
+                <div class="cell {{ fieldset.class }}">
+                    <div class="card">
+                        {% block autogrid_fieldset_form_header %}
+                            <div class="card-divider">
+                                <h5>{{ fieldset.name|trans }}</h5>
+                            </div>
+                        {% endblock %}
+                        {% block autogrid_fieldset_form_body %}
+                            <div class="card-section">
+                                {% for fieldName in fieldset.fields %}
+                                    {% if attribute(form, fieldName) is defined %}
+                                        {{ form_row(attribute(form, fieldName)) }}
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        {% endblock %}
+                    </div>
+                </div>
+            {% endblock %}
+        {% endfor %}
+        {% if view.fieldset.not_defined %}
+            {% block autogrid_fieldset_form_no_fieldset %}
+                <div class="cell">
+                    {% for fieldName in view.fieldset.not_defined %}
+                        {% if attribute(form, fieldName) is defined %}
+                            {{ form_row(attribute(form, fieldName)) }}
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endblock %}
+        {% endif %}
+    </div>
+</div>
+
+{{ form_end(form) }}

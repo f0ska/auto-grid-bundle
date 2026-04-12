@@ -37,6 +37,7 @@ final class TemplateArea
 
     // Grid Templates
     public const GRID_ADVANCED_FILTER = 'grid.advanced_filter';
+    public const GRID_COLGROUP = 'grid.colgroup';
     public const GRID_COLUMN_HEADER = 'grid.column_header';
     public const GRID_COLUMN_HEADER_ACTION = 'grid.column_header_action';
     public const GRID_COLUMN_HEADER_FILTER = 'grid.column_header_filter';

@@ -1,0 +1,99 @@
+{% if view.advancedFilterFormView and ag_run(agIsAllowed, 'advanced_filter') %}
+    {% block autogrid_grid_advanced_filter_modal %}
+        <div class="modal fade"
+             id="adv{{ agId }}"
+             tabindex="-1"
+             aria-labelledby="adv{{ agId }}Label"
+             aria-hidden="true"
+             data-backdrop="static"
+        >
+            {% block autogrid_grid_advanced_filter_dialog %}
+                <div class="modal-dialog modal-xl">
+                    {% block autogrid_grid_advanced_filter_content %}
+                        <div class="modal-content text-left">
+                            {% block autogrid_grid_advanced_filter_header %}
+                                <div class="modal-header">
+                                    <h1 class="modal-title h5" id="adv{{ agId }}Label">
+                                        {{ ag_icon('search')|raw }}
+                                        {% if attributes.title is not empty %}
+                                            {{ attributes.title|trans }}
+                                        {% endif %}
+                                    </h1>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            {% endblock %}
+
+                            {% block autogrid_grid_advanced_filter_body %}
+                                <div class="modal-body">
+                                    <div class="container-fluid">
+                                        {% if view.formThemes is not empty %}
+                                            {% form_theme view.advancedFilterFormView with view.formThemes %}
+                                        {% endif %}
+                                        {% block autogrid_grid_advanced_filter_form %}
+                                            {{ form_start(view.advancedFilterFormView) }}
+                                            <div class="row">
+                                                {% for field in fields %}
+                                                    {% if field.canFilter %}
+                                                        {% set formField = attribute(view.advancedFilterFormView, field.name) %}
+                                                        {% block autogrid_grid_advanced_filter_field %}
+                                                            {% if formField.children|length %}
+                                                                {% for child in formField.children %}
+                                                                    <div class="col col-12 col-xl-4 col-lg-6 mb-3">
+                                                                        <label class="form-label">{{ field_label(formField) }}
+                                                                            - {{ field_label(child) }}</label>
+                                                                        {{ form_widget(child) }}
+                                                                    </div>
+                                                                {% endfor %}
+                                                            {% else %}
+                                                                <div class="col col-12 col-xl-4 col-lg-6 mb-3">
+                                                                    <label class="form-label">{{ field_label(formField) }}</label>
+                                                                    {{ form_widget(formField) }}
+                                                                </div>
+                                                            {% endif %}
+                                                        {% endblock %}
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+                                            {{ form_rest(view.advancedFilterFormView) }}
+                                            {{ form_end(view.advancedFilterFormView) }}
+                                        {% endblock %}
+                                    </div>
+                                </div>
+                            {% endblock %}
+
+                            {% block autogrid_grid_advanced_filter_footer %}
+                                <div class="modal-footer">
+                                    <div class="container-fluid">
+                                        <div class="row">
+                                            <div class="col col-6">
+                                                {% block autogrid_grid_advanced_filter_submit_button %}
+                                                    <button type="submit"
+                                                            form="{{ view.advancedFilterFormView.vars.attr.id }}"
+                                                            class="btn btn-outline-primary w-100 m-0"
+                                                    >
+                                                        {{- 'f0ska.autogrid.button.submit'|trans -}}
+                                                    </button>
+                                                {% endblock %}
+                                            </div>
+                                            <div class="col col-6">
+                                                {% block autogrid_grid_advanced_filter_reset_button %}
+                                                    <a class="btn btn-outline-secondary w-100 m-0 {% if request.filter is not defined %}disabled{% endif %}"
+                                                       href="{{ ag_run(agActionUrl, 'grid', {'filter': null}) }}"
+                                                    >
+                                                        {{- 'f0ska.autogrid.button.reset'|trans -}}
+                                                    </a>
+                                                {% endblock %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endblock %}
+                        </div>
+                    {% endblock %}
+                </div>
+            {% endblock %}
+        </div>
+    {% endblock %}
+{% endif %}

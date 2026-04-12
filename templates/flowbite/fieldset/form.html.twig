@@ -1,0 +1,44 @@
+{{ form_start(form) }}
+<div class="px-6 py-4">
+    <div class="grid auto-cols-auto gap-4">
+        {% for fieldset in view.fieldset.defined %}
+            {% block autogrid_fieldset_form_card %}
+                <div class="{{ fieldset.class|default('col-auto') }}">
+                    <div class="bg-white rounded-lg shadow border border-gray-200">
+                        {% block autogrid_fieldset_form_header %}
+                            <h5 class="px-4 py-3 text-gray-900 font-medium bg-gray-50 rounded-t-lg border-b border-gray-200">
+                                {{ fieldset.name|trans }}
+                            </h5>
+                        {% endblock %}
+                        {% block autogrid_fieldset_form_body %}
+                            <div class="p-4 space-y-4">
+                                {% for fieldName in fieldset.fields %}
+                                    {% if attribute(form, fieldName) is defined %}
+                                        <div>
+                                            {{ form_row(attribute(form, fieldName)) }}
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        {% endblock %}
+                    </div>
+                </div>
+            {% endblock %}
+        {% endfor %}
+        {% if view.fieldset.not_defined %}
+            {% block autogrid_fieldset_form_no_fieldset %}
+                <div class="col-span-2">
+                    {% for fieldName in view.fieldset.not_defined %}
+                        {% if attribute(form, fieldName) is defined %}
+                            <div class="mb-4">
+                                {{ form_row(attribute(form, fieldName)) }}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endblock %}
+        {% endif %}
+    </div>
+</div>
+
+{{ form_end(form) }}

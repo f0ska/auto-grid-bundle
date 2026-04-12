@@ -30,7 +30,7 @@ Render the grid with a single line.
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    {{ agRender(grid) }}
+    {{ ag_render(grid) }}
 {% endblock %}
 ```
 

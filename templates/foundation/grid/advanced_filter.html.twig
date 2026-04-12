@@ -1,0 +1,66 @@
+{% if view.advancedFilterFormView and ag_run(agIsAllowed, 'advanced_filter') %}
+<div id="adv{{ agId }}" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2000; background: rgba(0,0,0,0.5);">
+    <div style="position: relative; max-width: 900px; margin: 100px auto; background: white; border-radius: 4px; padding: 20px;">
+        <div class="grid-x grid-padding-x">
+            <div class="cell">
+                <h3>
+                    {{ ag_icon('search')|raw }}
+                    {% if attributes.title is not empty %}
+                        {{ attributes.title|trans }}
+                    {% endif %}
+                </h3>
+                <button class="close-button" aria-label="Close modal" type="button" onclick="document.getElementById('adv{{ agId }}').style.display='none';">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="cell">
+                {% if view.formThemes is not empty %}
+                    {% form_theme view.advancedFilterFormView with view.formThemes %}
+                {% endif %}
+                {{ form_start(view.advancedFilterFormView) }}
+                <div class="grid-x grid-padding-x">
+                    {% for field in fields %}
+                        {% if field.canFilter %}
+                            {% set formField = attribute(view.advancedFilterFormView, field.name) %}
+                            {% if formField.children|length %}
+                                {% for child in formField.children %}
+                                    <div class="cell medium-4 mb-3">
+                                        <label>{{ field_label(formField) }} - {{ field_label(child) }}</label>
+                                        {{ form_widget(child) }}
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                <div class="cell medium-4 mb-3">
+                                    <label>{{ field_label(formField) }}</label>
+                                    {{ form_widget(formField) }}
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                {{ form_rest(view.advancedFilterFormView) }}
+                {{ form_end(view.advancedFilterFormView) }}
+            </div>
+            <div class="cell">
+                <div class="grid-x grid-padding-x">
+                    <div class="cell medium-6">
+                        <button type="submit"
+                                form="{{ view.advancedFilterFormView.vars.attr.id }}"
+                                class="button primary expanded"
+                        >
+                            {{- 'f0ska.autogrid.button.submit'|trans -}}
+                        </button>
+                    </div>
+                    <div class="cell medium-6">
+                        <a class="button secondary expanded {% if request.filter is not defined %}disabled{% endif %}"
+                           href="{{ ag_run(agActionUrl, 'grid', {'filter': null}) }}"
+                        >
+                            {{- 'f0ska.autogrid.button.reset'|trans -}}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}

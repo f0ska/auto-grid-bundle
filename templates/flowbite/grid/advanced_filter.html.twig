@@ -1,0 +1,86 @@
+{% if view.advancedFilterFormView and ag_run(agIsAllowed, 'advanced_filter') %}
+    {% block autogrid_grid_advanced_filter_modal %}
+        <div id="adv{{ agId }}" tabindex="-1" aria-hidden="true" style="display: none; overflow-y: auto; overflow-x: hidden; position: fixed; top: 0; right: 0; left: 0; z-index: 50; justify-content: center; align-items: center; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5);">
+            <div class="relative p-4 w-full max-w-4xl h-full md:h-auto">
+                {% block autogrid_grid_advanced_filter_dialog %}
+                    <div class="relative bg-white rounded-lg shadow">
+                        {% block autogrid_grid_advanced_filter_content %}
+                            <div class="flex justify-between items-start p-4 rounded-t border-b">
+                                {% block autogrid_grid_advanced_filter_header %}
+                                    <h3 class="text-xl font-semibold text-gray-900">
+                                        {{ ag_icon('search')|raw }}
+                                        {% if attributes.title is not empty %}
+                                            {{ attributes.title|trans }}
+                                        {% endif %}
+                                    </h3>
+                                    <button type="button" onclick="document.getElementById('adv{{ agId }}').style.display='none';" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center">
+                                        ✕
+                                    </button>
+                                {% endblock %}
+                            </div>
+
+                            {% block autogrid_grid_advanced_filter_body %}
+                                <div class="p-6 space-y-6">
+                                    {% if view.formThemes is not empty %}
+                                        {% form_theme view.advancedFilterFormView with view.formThemes %}
+                                    {% endif %}
+                                    {% block autogrid_grid_advanced_filter_form %}
+                                        {{ form_start(view.advancedFilterFormView) }}
+                                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                            {% for field in fields %}
+                                                {% if field.canFilter %}
+                                                    {% set formField = attribute(view.advancedFilterFormView, field.name) %}
+                                                    {% block autogrid_grid_advanced_filter_field %}
+                                                        {% if formField.children|length %}
+                                                            {% for child in formField.children %}
+                                                                <div class="mb-4">
+                                                                    <label class="block mb-2 text-sm font-medium text-gray-900">{{ field_label(formField) }} - {{ field_label(child) }}</label>
+                                                                    {{ form_widget(child, {'attr': {'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5'}}) }}
+                                                                </div>
+                                                            {% endfor %}
+                                                        {% else %}
+                                                            <div class="mb-4">
+                                                                <label class="block mb-2 text-sm font-medium text-gray-900">{{ field_label(formField) }}</label>
+                                                                {{ form_widget(formField, {'attr': {'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5'}}) }}
+                                                            </div>
+                                                        {% endif %}
+                                                    {% endblock %}
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                        {{ form_rest(view.advancedFilterFormView) }}
+                                        {{ form_end(view.advancedFilterFormView) }}
+                                    {% endblock %}
+                                </div>
+                            {% endblock %}
+
+                            {% block autogrid_grid_advanced_filter_footer %}
+                                <div class="flex items-center p-6 space-x-2 rounded-b border-t border-gray-200">
+                                    <div class="flex-1">
+                                        {% block autogrid_grid_advanced_filter_submit_button %}
+                                            <button type="submit"
+                                                    form="{{ view.advancedFilterFormView.vars.attr.id }}"
+                                                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center w-full"
+                                            >
+                                                {{- 'f0ska.autogrid.button.submit'|trans -}}
+                                            </button>
+                                        {% endblock %}
+                                    </div>
+                                    <div class="flex-1">
+                                        {% block autogrid_grid_advanced_filter_reset_button %}
+                                            <a class="{% if request.filter is not defined %}opacity-50 cursor-not-allowed {% endif %}text-gray-900 bg-white border border-gray-300 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg text-sm font-medium px-5 py-2.5 text-center w-full block"
+                                               href="{{ ag_run(agActionUrl, 'grid', {'filter': null}) }}"
+                                            >
+                                                {{- 'f0ska.autogrid.button.reset'|trans -}}
+                                            </a>
+                                        {% endblock %}
+                                    </div>
+                                </div>
+                            {% endblock %}
+                        {% endblock %}
+                    </div>
+                {% endblock %}
+            </div>
+        </div>
+    {% endblock %}
+{% endif %}

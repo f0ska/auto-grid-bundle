@@ -1,0 +1,10 @@
+<div id="{{ attributes.container_id }}" class="{{ attributes.container_class }} instance-{{ agId }}">
+    {% block autogrid %}{% endblock %}
+</div>
+<script>
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.dropdown')) {
+            document.querySelectorAll('.dropdown.is-active').forEach(d => d.classList.remove('is-active'));
+        }
+    });
+</script>

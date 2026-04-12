@@ -1,0 +1,12 @@
+{% extends attributes.template.base|default(ag_template('base')) %}
+{% block autogrid %}
+    {% block autogrid_error_content %}
+        <div class="alert callout text-center h4" data-closable>
+            {{ ag_icon('warning')|raw }}
+            {{ message }}
+            <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    {% endblock %}
+{% endblock %}

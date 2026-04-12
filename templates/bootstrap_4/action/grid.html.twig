@@ -1,0 +1,78 @@
+{% extends attributes.template.base|default(ag_template('base')) %}
+{% block autogrid %}
+    {{ include(attributes.template.grid.advanced_filter|default(ag_template('grid.advanced_filter'))) }}
+    {% set columnsCount = (fields|length) + (ag_run(agIsAnyAllowed) ? 1 : 0) + (view.massActionFormView ? 1 : 0) %}
+    <table class="table {{ attributes.html_class.table|default('table-hover') }}">
+        {% block autogrid_grid_caption %}
+            {% if attributes.title is not empty %}
+                <caption class="text-center h4 text-secondary" style="caption-side: top;">
+                    {{ attributes.title|trans }}
+                </caption>
+            {% endif %}
+        {% endblock %}
+
+        {{ include(attributes.template.grid.colgroup|default(ag_template('grid.colgroup'))) }}
+
+        {% block autogrid_grid_header %}
+            <thead class="{{ attributes.html_class.thead|default('') }}">
+            <tr>
+                {{ include(attributes.template.grid.column_header_massaction|default(ag_template('grid.column_header_massaction'))) }}
+                {% for field in fields %}
+                    {{ include(attributes.template.grid.column_header|default(ag_template('grid.column_header'))) }}
+                {% endfor %}
+                {{ include(attributes.template.grid.column_header_action|default(ag_template('grid.column_header_action'))) }}
+            </tr>
+            </thead>
+        {% endblock %}
+
+        {% block autogrid_grid_footer %}
+            <tfoot class="{{ attributes.html_class.tfoot|default('') }}">
+            <tr>
+                <td colspan="{{ columnsCount }}" class="pl-0 pr-0">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col col-3 text-start align-middle pt-1">
+                                <b>{{ 'f0ska.autogrid.total'|trans }}: {{ view.pagination.count }}</b>
+                            </div>
+                            <div class="col col-6 text-center">
+                                {{ include(attributes.template.grid.grid_pagination|default(ag_template('grid.grid_pagination'))) }}
+                            </div>
+                            <div class="col col-3 text-right">
+                                {{ include(attributes.template.grid.grid_number_per_page|default(ag_template('grid.grid_number_per_page'))) }}
+                                <a class="btn btn-sm {{ attributes.html_class.tfoot_btn|default('btn-outline-secondary') }}"
+                                   href="#{{ attributes.container_id }}"
+                                 >{{ ag_icon('arrow-up')|raw }}</a>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            </tfoot>
+        {% endblock %}
+
+        {% block autogrid_grid_body %}
+            <tbody class="{{ attributes.html_class.tbody|default('') }}">
+            {% if rows is empty %}
+                {% block autogrid_grid_body_empty %}
+                    <tr>
+                        <td class="text-muted" colspan="{{ columnsCount }}">
+                            {{ 'f0ska.autogrid.empty'|trans }}
+                        </td>
+                    </tr>
+                {% endblock %}
+            {% endif %}
+            {% for entity in rows %}
+                {% block autogrid_grid_row %}
+                    <tr class="{{ include(attributes.template.grid.row_class|default(ag_template('grid.row_class'))) }}">
+                        {{ include(attributes.template.grid.column_value_massaction|default(ag_template('grid.column_value_massaction'))) }}
+                        {% for field in fields %}
+                            {{ include(attributes.template.grid.column_value|default(ag_template('grid.column_value'))) }}
+                        {% endfor %}
+                        {{ include(attributes.template.grid.column_value_action|default(ag_template('grid.column_value_action'))) }}
+                    </tr>
+                {% endblock %}
+            {% endfor %}
+            </tbody>
+        {% endblock %}
+    </table>
+{% endblock %}

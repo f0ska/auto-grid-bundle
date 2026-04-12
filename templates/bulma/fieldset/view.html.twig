@@ -1,0 +1,49 @@
+<div class="is-fullwidth mb-5">
+    <div class="columns is-multiline">
+        {% for fieldset in view.fieldset.defined %}
+            {% block autogrid_fieldset_view_card %}
+                <div class="column {{ fieldset.class|default('is-full') }}">
+                    <div class="box">
+                        {% block autogrid_fieldset_view_header %}
+                            <p class="title is-5 mb-3">{{ fieldset.name|trans }}</p>
+                        {% endblock %}
+                        {% block autogrid_fieldset_view_body %}
+                            <table class="table is-fullwidth mb-0">
+                                {% for fieldName in fieldset.fields %}
+                                    {% set field = attribute(fields, fieldName) %}
+                                    <tr class="{{ loop.last ? 'is-borderless' : '' }}">
+                                        <td class="has-text-right has-text-grey-light has-background-light" style="width: 33%;">
+                                            {{ field.attributes.label|trans }}
+                                        </td>
+                                        <td class="{{ loop.last ? 'is-borderless' : '' }}">
+                                            {{ include(field.view.template) }}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        {% endblock %}
+                    </div>
+                </div>
+            {% endblock %}
+        {% endfor %}
+        {% if view.fieldset.not_defined %}
+            {% block autogrid_fieldset_view_no_fieldset %}
+                <div class="column is-full">
+                    <table class="table is-fullwidth">
+                        {% for fieldName in view.fieldset.not_defined %}
+                            {% set field = attribute(fields, fieldName) %}
+                            <tr class="{{ loop.last ? 'is-borderless' : '' }}">
+                                <td class="has-text-right has-text-grey-light has-background-light" style="width: 33%;">
+                                    {{ field.attributes.label|trans }}
+                                </td>
+                                <td class="{{ loop.last ? 'is-borderless' : '' }}">
+                                    {{ include(field.view.template) }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            {% endblock %}
+        {% endif %}
+    </div>
+</div>

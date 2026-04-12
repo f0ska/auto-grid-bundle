@@ -1,0 +1,9 @@
+{% if field.permissions.grid %}
+    {% block autogrid_grid_column_value_cell %}
+        <td class="{{ field.attributes.column_html_class.value|default('') }}">
+            {% block autogrid_grid_column_value_content %}
+                {{ include(field.view.template) }}
+            {% endblock %}
+        </td>
+    {% endblock %}
+{% endif %}

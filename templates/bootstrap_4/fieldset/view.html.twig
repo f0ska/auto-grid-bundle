@@ -1,0 +1,51 @@
+<div class="container-fluid">
+    <div class="row">
+        {% for fieldset in view.fieldset.defined %}
+            {% block autogrid_fieldset_view_card %}
+                <div class="col {{ fieldset.class|default('col-12') }}">
+                    <div class="card mt-3">
+                        {% block autogrid_fieldset_view_header %}
+                            <h5 class="card-header">
+                                {{ fieldset.name|trans }}
+                            </h5>
+                        {% endblock %}
+                        {% block autogrid_fieldset_view_body %}
+                            <table class="table mb-1">
+                                {% for fieldName in fieldset.fields %}
+                                    {% set field = attribute(fields, fieldName) %}
+                                    <tr>
+                                        <th class="col col-4 text-right table-light {{ loop.last ? 'border-bottom-0' }}">
+                                            {{ field.attributes.label|trans }}
+                                        </th>
+                                        <td class="col col-8 {{ loop.last ? 'border-bottom-0' }}">
+                                            {{ include(field.view.template) }}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        {% endblock %}
+                    </div>
+                </div>
+            {% endblock %}
+        {% endfor %}
+        {% if view.fieldset.not_defined %}
+            {% block autogrid_fieldset_view_no_fieldset %}
+                <div class="col">
+                    <table class="table mt-4 mb-0">
+                        {% for fieldName in view.fieldset.not_defined %}
+                            {% set field = attribute(fields, fieldName) %}
+                            <tr>
+                                <th class="col col-4 text-right table-light {{ loop.last ? 'border-bottom-0' }}">
+                                    {{ field.attributes.label|trans }}
+                                </th>
+                                <td class="col col-8 {{ loop.last ? 'border-bottom-0' }}">
+                                    {{ include(field.view.template) }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            {% endblock %}
+        {% endif %}
+    </div>
+</div>

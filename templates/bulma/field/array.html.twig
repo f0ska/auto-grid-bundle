@@ -1,0 +1,14 @@
+{% block autogrid_field_array_content %}
+    {% set value = ag_field_value(entity, field) %}
+    {% if (value is null or value is empty) %}
+        -
+    {% elseif (action is same as 'grid') %}
+        {{ value|join(', ')|ag_truncate(field.view.grid_truncate) }}
+    {% else %}
+        <ul class="ml-4">
+            {% for item in value %}
+                <li>{{ item }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}

@@ -1,8 +1,8 @@
-{% extends attributes.template.base|default(agTemplate('base')) %}
+{% extends attributes.template.base|default(ag_template('base')) %}
 {% block autogrid %}
-    {{ include(attributes.template.grid.advanced_filter|default(agTemplate('grid.advanced_filter'))) }}
-    {% set columnsCount = (fields|length) + (agRun(agIsAnyAllowed) ? 1 : 0) + (view.massActionFormView ? 1 : 0) %}
-    <table class="table caption-top {{ attributes.html_class.table|default('') }}">
+    {{ include(attributes.template.grid.advanced_filter|default(ag_template('grid.advanced_filter'))) }}
+    {% set columnsCount = (fields|length) + (ag_run(agIsAnyAllowed) ? 1 : 0) + (view.massActionFormView ? 1 : 0) %}
+    <table class="table caption-top {{ attributes.html_class.table|default('table-hover') }}">
         {% block autogrid_grid_caption %}
             {% if attributes.title is not empty %}
                 <caption class="text-center h4 text-secondary">
@@ -11,14 +11,16 @@
             {% endif %}
         {% endblock %}
 
+        {{ include(attributes.template.grid.colgroup|default(ag_template('grid.colgroup'))) }}
+
         {% block autogrid_grid_header %}
             <thead class="{{ attributes.html_class.thead|default('') }}">
             <tr>
-                {{ include(attributes.template.grid.column_header_massaction|default(agTemplate('grid.column_header_massaction'))) }}
+                {{ include(attributes.template.grid.column_header_massaction|default(ag_template('grid.column_header_massaction'))) }}
                 {% for field in fields %}
-                    {{ include(attributes.template.grid.column_header|default(agTemplate('grid.column_header'))) }}
+                    {{ include(attributes.template.grid.column_header|default(ag_template('grid.column_header'))) }}
                 {% endfor %}
-                {{ include(attributes.template.grid.column_header_action|default(agTemplate('grid.column_header_action'))) }}
+                {{ include(attributes.template.grid.column_header_action|default(ag_template('grid.column_header_action'))) }}
             </tr>
             </thead>
         {% endblock %}
@@ -33,13 +35,13 @@
                                 <b>{{ 'f0ska.autogrid.total'|trans }}: {{ view.pagination.count }}</b>
                             </div>
                             <div class="col col-6 text-center">
-                                {{ include(attributes.template.grid.grid_pagination|default(agTemplate('grid.grid_pagination'))) }}
+                                {{ include(attributes.template.grid.grid_pagination|default(ag_template('grid.grid_pagination'))) }}
                             </div>
                             <div class="col col-3 text-end">
-                                {{ include(attributes.template.grid.grid_number_per_page|default(agTemplate('grid.grid_number_per_page'))) }}
+                                {{ include(attributes.template.grid.grid_number_per_page|default(ag_template('grid.grid_number_per_page'))) }}
                                 <a class="btn btn-sm {{ attributes.html_class.tfoot_btn|default('btn-outline-secondary') }}"
                                    href="#{{ attributes.container_id }}"
-                                ><i class="bi bi-chevron-up"></i></a>
+                                 >{{ ag_icon('arrow-up')|raw }}</a>
                             </div>
                         </div>
                     </div>
@@ -61,12 +63,12 @@
             {% endif %}
             {% for entity in rows %}
                 {% block autogrid_grid_row %}
-                    <tr class="{{ include(attributes.template.grid.row_class|default(agTemplate('grid.row_class'))) }}">
-                        {{ include(attributes.template.grid.column_value_massaction|default(agTemplate('grid.column_value_massaction'))) }}
+                    <tr class="{{ include(attributes.template.grid.row_class|default(ag_template('grid.row_class'))) }}">
+                        {{ include(attributes.template.grid.column_value_massaction|default(ag_template('grid.column_value_massaction'))) }}
                         {% for field in fields %}
-                            {{ include(attributes.template.grid.column_value|default(agTemplate('grid.column_value'))) }}
+                            {{ include(attributes.template.grid.column_value|default(ag_template('grid.column_value'))) }}
                         {% endfor %}
-                        {{ include(attributes.template.grid.column_value_action|default(agTemplate('grid.column_value_action'))) }}
+                        {{ include(attributes.template.grid.column_value_action|default(ag_template('grid.column_value_action'))) }}
                     </tr>
                 {% endblock %}
             {% endfor %}

@@ -1,0 +1,24 @@
+{% set linkClass = attributes.html_class.thead_link|default('text-gray-500 hover:text-gray-700') %}
+{% set linkClassActive = attributes.html_class.thead_link_active|default('text-blue-600 hover:text-blue-800') %}
+
+{% block autogrid_grid_column_header_sort %}
+    {% if (attribute(request.order ?? {}, field.name) is not defined) or attribute(request.order, field.name) is same as null %}
+        {% block autogrid_grid_column_header_sort_none %}
+            <a class="{{ linkClass }}"
+               href="{{ ag_run(agActionUrl, 'grid', {'order': {(field.name): 'asc'}}) }}"
+            >{{ ag_icon('sort-neutral')|raw }}</a>
+        {% endblock %}
+    {% elseif attribute(request.order, field.name) is same as 'asc' %}
+        {% block autogrid_grid_column_header_sort_asc %}
+            <a class="{{ linkClassActive }}"
+               href="{{ ag_run(agActionUrl, 'grid', {'order': {(field.name): 'desc'}}) }}"
+            >{{ ag_icon('sort-asc')|raw }}</a>
+        {% endblock %}
+    {% else %}
+        {% block autogrid_grid_column_header_sort_desc %}
+            <a class="{{ linkClassActive }}"
+               href="{{ ag_run(agActionUrl, 'grid', {'order': {(field.name): null}}) }}"
+            >{{ ag_icon('sort-desc')|raw }}</a>
+        {% endblock %}
+    {% endif %}
+{% endblock %}

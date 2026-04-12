@@ -1,0 +1,73 @@
+{% extends attributes.template.base|default(ag_template('base')) %}
+{% block autogrid %}
+    {{ include(attributes.template.grid.advanced_filter|default(ag_template('grid.advanced_filter'))) }}
+    {% set columnsCount = (fields|length) + (ag_run(agIsAnyAllowed) ? 1 : 0) + (view.massActionFormView ? 1 : 0) %}
+    <table class="{{ attributes.html_class.table|default('hover') }}">
+        {% block autogrid_grid_caption %}
+            {% if attributes.title is not empty %}
+                <caption class="text-center text-secondary h4 mb-3">
+                    {{ attributes.title|trans }}
+                </caption>
+            {% endif %}
+        {% endblock %}
+
+        {{ include(attributes.template.grid.colgroup|default(ag_template('grid.colgroup'))) }}
+
+        {% block autogrid_grid_header %}
+            <thead class="{{ attributes.html_class.thead|default('') }}">
+                <tr>
+                    {{ include(attributes.template.grid.column_header_massaction|default(ag_template('grid.column_header_massaction'))) }}
+                    {% for field in fields %}
+                        {{ include(attributes.template.grid.column_header|default(ag_template('grid.column_header'))) }}
+                    {% endfor %}
+                    {{ include(attributes.template.grid.column_header_action|default(ag_template('grid.column_header_action'))) }}
+                </tr>
+            </thead>
+        {% endblock %}
+
+        {% block autogrid_grid_body %}
+            <tbody class="{{ attributes.html_class.tbody|default('') }}">
+            {% if rows is empty %}
+                {% block autogrid_grid_body_empty %}
+                    <tr>
+                        <td class="text-gray-500 text-center p-3" colspan="{{ columnsCount }}">
+                            {{ 'f0ska.autogrid.empty'|trans }}
+                        </td>
+                    </tr>
+                {% endblock %}
+            {% endif %}
+            {% for entity in rows %}
+                {% block autogrid_grid_row %}
+                    <tr class="{{ include(attributes.template.grid.row_class|default(ag_template('grid.row_class'))) }}">
+                        {{ include(attributes.template.grid.column_value_massaction|default(ag_template('grid.column_value_massaction'))) }}
+                        {% for field in fields %}
+                            {{ include(attributes.template.grid.column_value|default(ag_template('grid.column_value'))) }}
+                        {% endfor %}
+                        {{ include(attributes.template.grid.column_value_action|default(ag_template('grid.column_value_action'))) }}
+                    </tr>
+                {% endblock %}
+            {% endfor %}
+            </tbody>
+        {% endblock %}
+
+        {% block autogrid_grid_footer %}
+            <tfoot class="{{ attributes.html_class.tfoot|default('') }}">
+                <tr>
+                    <td colspan="{{ columnsCount }}">
+                        <div class="grid-x grid-padding-x align-middle" style="align-items: center;">
+                            <div class="cell small-3 text-left">
+                                <b>{{ 'f0ska.autogrid.total'|trans }}: {{ view.pagination.count }}</b>
+                            </div>
+                            <div class="cell small-6 text-center">
+                                {{ include(attributes.template.grid.grid_pagination|default(ag_template('grid.grid_pagination'))) }}
+                            </div>
+                            <div class="cell small-3 text-right">
+                                {{ include(attributes.template.grid.grid_number_per_page|default(ag_template('grid.grid_number_per_page'))) }}
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tfoot>
+        {% endblock %}
+    </table>
+{% endblock %}

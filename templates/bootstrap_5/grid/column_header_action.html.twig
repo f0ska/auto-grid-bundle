@@ -1,22 +1,22 @@
-{% if (agRun(agIsAnyAllowed)) or attributes.has_custom_action is defined %}
+{% if (ag_run(agIsAnyAllowed)) or attributes.has_custom_action is defined %}
     {% set btnClass = attributes.html_class.thead_btn|default('btn-outline-secondary') %}
     {% set btnClassActive = attributes.html_class.thead_btn_active|default('btn-primary') %}
     <th class="{{ attributes.html_class.action_column_header|default('text-end text-nowrap align-middle') }}">
         <span class="btn-group">
             {% block autogrid_grid_header_action_clear_filter %}
-                {% if request.filter is defined and agRun(agIsAllowed, 'filter') %}
-                    <a class="btn btn-sm btn-outline-danger" href="{{ agRun(agActionUrl, 'grid', {'filter': null}) }}">
-                        <i class="bi bi-x-lg"></i>
+                {% if request.filter is defined and ag_run(agIsAllowed, 'filter') %}
+                    <a class="btn btn-sm btn-outline-danger" href="{{ ag_run(agActionUrl, 'grid', {'filter': null}) }}">
+                        {{ ag_icon('filter-reset')|raw }}
                     </a>
                 {% endif %}
             {% endblock %}
             {% block autogrid_grid_header_action_advanced_filter %}
-                {% if view.advancedFilterFormView and agRun(agIsAllowed, 'advanced_filter') %}
+                {% if view.advancedFilterFormView and ag_run(agIsAllowed, 'advanced_filter') %}
                     <button class="btn btn-sm {{ request.filter is defined ? btnClassActive : btnClass }}"
                             data-bs-toggle="modal"
                             data-bs-target="#adv{{ agId }}"
                             data-bs-backdrop="false"
-                    ><i class="bi bi-search"></i></button>
+                    >{{ ag_icon('search')|raw }}</button>
                 {% endif %}
             {% endblock %}
             {% block autogrid_grid_header_action_export %}
@@ -45,9 +45,9 @@
         </span>
 
         {% block autogrid_grid_header_action_create %}
-            {% if (agRun(agIsAllowed, 'create')) %}
-                <a class="btn btn-sm {{ btnClass }}" href="{{ agRun(agActionUrl, 'create') }}">
-                    <i class="bi bi-plus-lg"></i>
+            {% if (ag_run(agIsAllowed, 'create')) %}
+                <a class="btn btn-sm {{ btnClass }}" href="{{ ag_run(agActionUrl, 'create') }}">
+                    {{ ag_icon('add')|raw }}
                 </a>
             {% endif %}
         {% endblock %}

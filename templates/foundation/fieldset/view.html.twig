@@ -1,0 +1,51 @@
+<div class="grid-container">
+    <div class="grid-x grid-padding-x">
+        {% for fieldset in view.fieldset.defined %}
+            {% block autogrid_fieldset_view_card %}
+                <div class="cell {{ fieldset.class }}">
+                    <div class="card">
+                        {% block autogrid_fieldset_view_header %}
+                            <div class="card-divider">
+                                <h5>{{ fieldset.name|trans }}</h5>
+                            </div>
+                        {% endblock %}
+                        {% block autogrid_fieldset_view_body %}
+                            <table class="hover mb-0">
+                                {% for fieldName in fieldset.fields %}
+                                    {% set field = attribute(fields, fieldName) %}
+                                    <tr>
+                                        <th class="text-right width-33 secondary {{ loop.last ? 'border-0' : '' }}">
+                                            {{ field.attributes.label|trans }}
+                                        </th>
+                                        <td class="{{ loop.last ? 'border-0' : '' }}">
+                                            {{ include(field.view.template) }}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        {% endblock %}
+                    </div>
+                </div>
+            {% endblock %}
+        {% endfor %}
+        {% if view.fieldset.not_defined %}
+            {% block autogrid_fieldset_view_no_fieldset %}
+                <div class="cell">
+                    <table class="hover">
+                        {% for fieldName in view.fieldset.not_defined %}
+                            {% set field = attribute(fields, fieldName) %}
+                            <tr>
+                                <th class="text-right width-33 secondary {{ loop.last ? 'border-0' : '' }}">
+                                    {{ field.attributes.label|trans }}
+                                </th>
+                                <td class="{{ loop.last ? 'border-0' : '' }}">
+                                    {{ include(field.view.template) }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            {% endblock %}
+        {% endif %}
+    </div>
+</div>

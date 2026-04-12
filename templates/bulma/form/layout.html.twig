@@ -1,0 +1,108 @@
+{% extends 'form_div_layout.html.twig' %}
+
+{# Widgets #}
+{%- block form_widget_simple -%}
+    {%- set attr = attr|merge({class: (attr.class|default('') ~ ' input')|trim}) -%}
+    {{- parent() -}}
+{%- endblock form_widget_simple -%}
+
+{%- block textarea_widget -%}
+    {%- set attr = attr|merge({class: (attr.class|default('') ~ ' textarea' ~ (errors|length > 0 ? ' is-danger' : ''))|trim}) -%}
+    {%- set attr = attr|merge({rows: attr.rows|default(3)}) -%}
+    {{- parent() -}}
+{%- endblock textarea_widget -%}
+
+{%- block choice_widget_expanded -%}
+    <div {{ block('widget_container_attributes') }} class="columns is-multiline">
+        {%- for child in form -%}
+            <div class="control column is-12">
+                <label class="{{ child.vars.block_prefixes.1 == 'checkbox' ? 'checkbox' : 'radio' }}" style="display: flex; align-items: center; gap: 0.5rem;">
+                    {{- form_widget(child) -}}
+                    <span>{{- form_label(child, null, {translation_domain: choice_translation_domain}) -}}</span>
+                </label>
+            </div>
+        {% endfor -%}
+    </div>
+{%- endblock choice_widget_expanded -%}
+
+{%- block choice_widget_collapsed -%}
+    <div class="select is-fullwidth{% if errors|length > 0 %} is-danger{% endif %}{% if multiple %} is-multiple{% endif %}">
+        {{- parent() -}}
+    </div>
+{%- endblock choice_widget_collapsed -%}
+
+{%- block checkbox_widget -%}
+    {%- set attr = attr|merge({class: (attr.class|default('') ~ ' checkbox')|trim}) -%}
+    {{- parent() -}}
+{%- endblock checkbox_widget -%}
+
+{%- block radio_widget -%}
+    {%- set attr = attr|merge({class: (attr.class|default('') ~ ' radio')|trim}) -%}
+    {{- parent() -}}
+{%- endblock radio_widget -%}
+
+{# Rows #}
+{%- block form_row -%}
+    <div class="field">
+        {{- form_label(form) -}}
+        <div class="control">
+            {{- form_widget(form) -}}
+        </div>
+        {{- form_errors(form) -}}
+        {{- form_help(form) -}}
+    </div>
+{%- endblock form_row -%}
+
+{%- block checkbox_row -%}
+    <div class="field">
+        <div class="control">
+            <label class="checkbox">
+                {{- form_widget(form, {attr: {style: 'margin-right: 0.5rem'}}) -}}
+                {{- label -}}
+            </label>
+        </div>
+        {{- form_errors(form) -}}
+        {{- form_help(form) -}}
+    </div>
+{%- endblock checkbox_row -%}
+
+{%- block radio_row -%}
+    <div class="field">
+        <div class="control">
+            <label class="radio">
+                {{- form_widget(form, {attr: {style: 'margin-right: 0.5rem'}}) -}}
+                {{- label -}}
+            </label>
+        </div>
+        {{- form_errors(form) -}}
+        {{- form_help(form) -}}
+    </div>
+{%- endblock radio_row -%}
+
+{# Buttons #}
+{%- block button_widget -%}
+    <div class="control">
+        {%- set attr = attr|merge({class: (attr.class|default('') ~ ' button')|trim}) -%}
+        {{- parent() -}}
+    </div>
+{%- endblock button_widget -%}
+
+{# Errors #}
+{%- block form_errors -%}
+    {%- if errors|length > 0 -%}
+        <div class="notification is-danger is-light mt-1">
+            <button class="delete" type="button" onclick="this.parentElement.remove()"></button>
+            {%- for error in errors -%}
+                <p>{{ error.message }}</p>
+            {%- endfor -%}
+        </div>
+    {%- endif -%}
+{%- endblock form_errors -%}
+
+{# Help #}
+{%- block form_help -%}
+    {%- if help is not empty -%}
+        {%- set help_attr = help_attr|merge({class: (help_attr.class|default('') ~ ' help')|trim}) -%}
+        {{- parent() -}}
+    {%- endif -%}
+{%- endblock form_help -%}
