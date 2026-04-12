@@ -104,8 +104,8 @@ You can also target specific columns in the grid:
 
 ```php
 #[Attribute\Entity\HtmlClass(
-    actionColumn: "text-end",             // Action column
-    massActionColumn: "text-center",      // Mass action column header
+    actionColumn: "col-2",          // Action column
+    massActionColumn: "col-1",      // Mass action column
 )]
 class User { ... }
 ```
