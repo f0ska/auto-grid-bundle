@@ -6,7 +6,7 @@
 
         {% set firstPage = 1 %}
         {% set lastPage = (view.pagination.count / view.pagination.limit)|round(0, 'ceil') ?: 1 %}
-        {% set baseBtnClass = 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-900 focus:ring-2 focus:ring-gray-200 font-medium leading-5 text-sm px-3 py-2 focus:outline-none' %}
+        {% set baseBtnClass = 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-900 focus:ring-2 focus:ring-gray-200 font-medium leading-5 text-sm px-3 py-1.5 focus:outline-none cursor-pointer' %}
         {% set firstBtnClass = 'rounded-s-base' %}
         {% set lastBtnClass = 'rounded-e-base' %}
 
@@ -49,7 +49,7 @@
                     {% endblock %}
                 {% else %}
                     {% block autogrid_grid_pagination_page %}
-                        <button type="button" 
+                        <button type="button"
                                 onclick="window.location.href='{{ ag_run(agActionUrl, 'grid', {'page': i|ag_to_int}) }}'"
                                 class="{{ baseBtnClass }}{% if pageIndex == 1 %} {{ firstBtnClass }}{% endif %}{% if (lastPage > 1 and i == lastPage) %} {{ lastBtnClass }}{% endif %}">{{ i }}</button>
                     {% endblock %}
@@ -57,7 +57,7 @@
             {% elseif gap %}
                 {% set gap = false %}
                 {% block autogrid_grid_pagination_gap %}
-                    <span class="text-gray-400 bg-white border border-gray-300 px-2 py-2">...</span>
+                    <span class="text-gray-400 bg-white border border-gray-300 px-2 py-1.5">...</span>
                 {% endblock %}
             {% endif %}
         {% endfor %}

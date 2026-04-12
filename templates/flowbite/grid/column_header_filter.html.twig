@@ -6,13 +6,13 @@
         {% block autogrid_grid_column_header_filter_icon %}
             <a class="{{ isFilterActive ? linkClassActive : linkClass }}"
                role="button"
-               onclick="var d=document.getElementById('filter{{ agId }}{{ field.name }}');d.style.display=d.style.display=='none'?'block':'none';event.stopPropagation();"
+               onclick="var d=document.getElementById('filter{{ agId }}{{ field.name }}');d.style.display=d.style.display==='none'?'block':'none';event.stopPropagation();"
                aria-expanded="false"
             >{{ ag_icon(isFilterActive ? 'filter-active' : 'filter')|raw }}</a>
         {% endblock %}
         {% block autogrid_grid_column_header_filter_dropdown %}
-            <div id="filter{{ agId }}{{ field.name }}" 
-                 class="z-10 bg-white rounded-lg shadow-lg absolute left-0 top-full mt-1 border border-gray-200 p-3 w-64 text-left" 
+            <div id="filter{{ agId }}{{ field.name }}"
+                 class="z-10 bg-white rounded-lg shadow-lg absolute left-0 top-full mt-1 border border-gray-200 p-3 w-64 text-left"
                  style="display: none;"
                  onclick="event.stopPropagation();">
                 {% set form = attribute(view.filterFormViews, field.name) %}
@@ -36,11 +36,11 @@
                     <div class="flex mt-3 space-x-2">
                         <button type="submit"
                                 form="{{ form.vars.attr.id }}"
-                                class="flex-1 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-2 focus:outline-none"
+                                class="flex-1 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-1.5 focus:outline-none"
                         >
                             {{- 'f0ska.autogrid.button.submit'|trans -}}
                         </button>
-                        <a class="flex-1 text-center text-gray-900 bg-white border border-gray-300 hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-2 focus:outline-none{% if not isFilterActive %} opacity-50 cursor-not-allowed{% endif %}"
+                        <a class="flex-1 text-center text-gray-900 bg-white border border-gray-300 hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 focus:outline-none{% if not isFilterActive %} opacity-50 cursor-not-allowed{% endif %}"
                            href="{{ ag_run(agActionUrl, 'grid', {'filter': {(field.name): null}}) }}"
                         >
                             {{- 'f0ska.autogrid.button.reset'|trans -}}

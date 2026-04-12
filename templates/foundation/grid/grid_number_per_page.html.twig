@@ -1,7 +1,7 @@
 {% if view.pagination.limits|length > 1 %}
     {% set btnClass = attributes.html_class.tfoot_btn|default('button small secondary') %}
     {% block autogrid_grid_limit %}
-        <div class="button-group" style="display: inline-flex;">
+        <div class="button-group small" style="display: inline-flex;">
             {% for pageLimit in view.pagination.limits %}
                 {% if pageLimit == view.pagination.limit %}
                     {% block autogrid_grid_limit_active %}

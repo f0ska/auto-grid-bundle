@@ -1,7 +1,7 @@
 {% if ag_run(agIsAnyAllowed) or attributes.has_custom_action is defined %}
     {% set btnClass = attributes.html_class.tbody_btn|default('button small secondary') %}
     <td class="{{ attributes.html_class.action_column_value|default('text-right') }}" style="white-space: nowrap;">
-        <div class="button-group" style="display: inline-flex; margin-bottom: 0; gap: 0; flex-wrap: nowrap;">
+        <div class="button-group small" style="display: inline-flex; margin-bottom: 0; gap: 0; flex-wrap: nowrap;">
             {% block autogrid_grid_row_action_view %}
                 {% if ag_run(agIsAllowed, 'view') and attributes.button.view.display_in_grid %}
                     <a class="{{ btnClass }}"

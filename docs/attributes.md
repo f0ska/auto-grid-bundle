@@ -95,7 +95,7 @@ class User { ... }
 <summary><strong>HtmlClass</strong>: Add CSS classes to the grid table and specific columns.</summary>
 
 ```php
-#[Attribute\Entity\HtmlClass("table table-striped table-hover")]
+#[Attribute\Entity\HtmlClass("table-striped table-hover")]
 class User { ... }
 ```
 

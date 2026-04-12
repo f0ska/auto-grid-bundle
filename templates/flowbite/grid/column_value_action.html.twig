@@ -1,6 +1,6 @@
 {% if ag_run(agIsAnyAllowed) or attributes.has_custom_action is defined %}
-    {% set btnClass = 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-900 font-medium leading-5 text-sm px-3 py-2 focus:outline-none' %}
-    {% set btnDelClass = 'text-red-700 bg-white border border-gray-300 hover:bg-red-50 hover:text-red-900 font-medium leading-5 text-sm px-3 py-2 focus:outline-none' %}
+    {% set btnClass = 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-900 font-medium leading-5 text-sm px-3 py-1.5 focus:outline-none' %}
+    {% set btnDelClass = 'text-red-700 bg-white border border-gray-300 hover:bg-red-50 hover:text-red-900 font-medium leading-5 text-sm px-3 py-1.5 focus:outline-none' %}
     {% set hasView = ag_run(agIsAllowed, 'view') and attributes.button.view.display_in_grid %}
     {% set hasEdit = ag_run(agIsAllowed, 'edit') and attributes.button.edit.display_in_grid %}
     {% set hasDelete = ag_run(agIsAllowed, 'delete') and attributes.button.delete.display_in_grid %}

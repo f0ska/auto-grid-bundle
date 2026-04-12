@@ -3,7 +3,7 @@
     <div class="{{ attributes.html_class.table|default('w-full overflow-x-auto rounded-lg shadow-sm') }}">
         {% block autogrid_form_caption %}
             {% if attributes.title is not empty %}
-                <div class="text-center text-secondary h4 mb-3">
+                <div class="text-center text-secondary h4 mb-3 text-xl">
                     {{ attributes.title|trans }}
                 </div>
             {% endif %}
