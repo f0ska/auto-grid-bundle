@@ -2,7 +2,7 @@
     <div class="row">
         {% for fieldset in view.fieldset.defined %}
             {% block autogrid_fieldset_view_card %}
-                <div class="col {{ fieldset.class }}">
+                <div class="col {{ fieldset.class|default('col-12') }}">
                     <div class="card mt-3">
                         {% block autogrid_fieldset_view_header %}
                             <h5 class="card-header">
