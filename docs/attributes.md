@@ -92,10 +92,21 @@ class User { ... }
 </details>
 
 <details>
-<summary><strong>HtmlClass</strong>: Add CSS classes to the grid table.</summary>
+<summary><strong>HtmlClass</strong>: Add CSS classes to the grid table and specific columns.</summary>
 
 ```php
-#[Attribute\Entity\HtmlClass("table-striped table-hover")]
+#[Attribute\Entity\HtmlClass("table table-striped table-hover")]
+class User { ... }
+```
+
+### Column-Specific Classes:
+You can also target specific columns in the grid:
+
+```php
+#[Attribute\Entity\HtmlClass(
+    actionColumn: "text-end",             // Action column
+    massActionColumn: "text-center",      // Mass action column header
+)]
 class User { ... }
 ```
 </details>
@@ -279,10 +290,20 @@ private ?User $author = null;
 </details>
 
 <details>
-<summary><strong>ColumnHtmlClass</strong>: Add CSS classes to the table header and cell.</summary>
+<summary><strong>ColumnHtmlClass</strong>: Add CSS classes to the table header, cell, and column.</summary>
 
 ```php
 #[ColumnHtmlClass(headerClass: "text-center", valueClass: "fw-bold")]
+private ?string $status = null;
+```
+
+### Available Parameters:
+- `columnClass`: CSS class for the `<col>` element in `<colgroup>`. Useful for setting column width.
+- `headerClass`: CSS class for the `<th>` column header cell.
+- `valueClass`: CSS class for the `<td>` cell in each row.
+
+```php
+#[ColumnHtmlClass(columnClass: "w-25", headerClass: "text-center", valueClass: "fw-bold")]
 private ?string $status = null;
 ```
 </details>

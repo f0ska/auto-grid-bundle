@@ -32,7 +32,9 @@ class HtmlClass extends AbstractAttribute
         ?string $actionColumn = null,
         ?string $massActionColumn = null,
         ?string $actionColumnHeader = null,
-        ?string $massActionColumnHeader = null
+        ?string $massActionColumnHeader = null,
+        ?string $actionColumnValue = null,
+        ?string $massActionColumnValue = null
     ) {
         $value = array_filter(
             [
@@ -50,6 +52,8 @@ class HtmlClass extends AbstractAttribute
                 'mass_action_column' => $massActionColumn,
                 'action_column_header' => $actionColumnHeader,
                 'mass_action_column_header' => $massActionColumnHeader,
+                'action_column_value' => $actionColumnValue,
+                'mass_action_column_value' => $massActionColumnValue,
             ]
         );
 

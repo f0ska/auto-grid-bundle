@@ -51,6 +51,7 @@ f0ska_auto_grid:
         # Templates for individual grid components
         grid:
             advanced_filter: 'grid/advanced_filter.html.twig'
+            colgroup: 'grid/colgroup.html.twig'
             column_header: 'grid/column_header.html.twig'
             column_header_action: 'grid/column_header_action.html.twig'
             column_header_filter: 'grid/column_header_filter.html.twig'

@@ -11,6 +11,8 @@
             {% endif %}
         {% endblock %}
 
+        {{ include(attributes.template.grid.colgroup|default(ag_template('grid.colgroup'))) }}
+
         {% block autogrid_grid_header %}
             <thead class="{{ attributes.html_class.thead|default('') }}">
             <tr>

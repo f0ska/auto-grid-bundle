@@ -6,7 +6,7 @@
     {% set hasDelete = ag_run(agIsAllowed, 'delete') and attributes.button.delete.display_in_grid %}
     {% set hasCustom = attributes.has_custom_action is defined %}
     {% set totalBtns = (hasView ? 1 : 0) + (hasEdit ? 1 : 0) + (hasDelete ? 1 : 0) + (hasCustom ? 1 : 0) %}
-    <td class="px-6 py-3 {{ attributes.html_class.action_column|default('text-right whitespace-nowrap') }}">
+    <td class="px-6 py-3 {{ attributes.html_class.action_column_value|default('text-right whitespace-nowrap') }}">
         {% if totalBtns > 0 %}
         <div class="inline-flex rounded-base shadow-xs -space-x-px" role="group">
             {% set btnIndex = 0 %}

@@ -28,6 +28,7 @@ Extend the default templates and override these blocks to customize your UI.
 | :--- | :--- |
 | `autogrid` | Wraps the entire grid component. |
 | `autogrid_grid_caption` | Grid title/header area. |
+| `autogrid_grid_colgroup` | The `<colgroup>` section for column styling. |
 | `autogrid_grid_header` | The `<thead>` section. |
 | `autogrid_grid_body` | The `<tbody>` section. |
 | `autogrid_grid_body_empty` | Shown when no results are found. |

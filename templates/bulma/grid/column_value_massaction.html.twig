@@ -1,6 +1,6 @@
 {% if view.massActionFormView %}
     {% block autogrid_grid_column_value_massaction %}
-        <td class="{{ attributes.html_class.mass_action_column|default('has-text-centered') }}">
+        <td class="{{ attributes.html_class.mass_action_column_value|default('has-text-centered') }}">
             {% block autogrid_grid_column_value_massaction_checkbox %}
                 <label>
                     <input type="checkbox"
