@@ -1,5 +1,4 @@
 {% block autogrid_field_json_content %}
-    {% set value = ag_field_value(entity, field) %}
     {% if (value is null or value is same as '') %}
         -
     {% elseif (action is same as 'grid') %}

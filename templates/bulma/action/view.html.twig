@@ -68,7 +68,7 @@
                                             {% endblock %}
                                             {% block autogrid_view_body_row_value %}
                                                 <td class="is-vcentered">
-                                                    {{ include(field.view.template) }}
+                                                    {% set agView = field|ag_prepare(entity) %}{{ include(agView.template, agView.variables) }}
                                                 </td>
                                             {% endblock %}
                                         </tr>

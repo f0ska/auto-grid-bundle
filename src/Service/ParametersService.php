@@ -141,6 +141,7 @@ class ParametersService
         $this->initFields($parameters);
         $this->initAssociations($parameters);
         foreach ($parameters->fields as $field) {
+            $field->parameters = $parameters;
             $this->buildFieldPermissions($field, $agId);
             $this->buildFieldAttributes($field, $agId);
         }

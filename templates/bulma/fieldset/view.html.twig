@@ -16,7 +16,7 @@
                                             {{ field.attributes.label|trans }}
                                         </td>
                                         <td class="{{ loop.last ? 'is-borderless' : '' }}">
-                                            {{ include(field.view.template) }}
+                                            {% set agView = field|ag_prepare(entity) %}{{ include(agView.template, agView.variables) }}
                                         </td>
                                     </tr>
                                 {% endfor %}
@@ -37,7 +37,7 @@
                                     {{ field.attributes.label|trans }}
                                 </td>
                                 <td class="{{ loop.last ? 'is-borderless' : '' }}">
-                                    {{ include(field.view.template) }}
+                                    {% set agView = field|ag_prepare(entity) %}{{ include(agView.template, agView.variables) }}
                                 </td>
                             </tr>
                         {% endfor %}

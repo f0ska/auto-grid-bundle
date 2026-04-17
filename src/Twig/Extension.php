@@ -13,19 +13,12 @@ declare(strict_types=1);
 namespace F0ska\AutoGridBundle\Twig;
 
 use Closure;
-use Doctrine\Common\Collections\Collection;
-use F0ska\AutoGridBundle\Exception\RenderException;
 use F0ska\AutoGridBundle\Model\AutoGrid;
 use F0ska\AutoGridBundle\Model\FieldParameter;
 use F0ska\AutoGridBundle\Service\ConfigurationService;
-use F0ska\AutoGridBundle\Service\ParametersService;
-use Symfony\Component\Form\ChoiceList\View\ChoiceView;
-use Symfony\Contracts\Translation\TranslatableInterface;
+use F0ska\AutoGridBundle\View\ViewServiceRegistry;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment as TwigEnvironment;
-use Twig\Error\LoaderError;
-use Twig\Error\RuntimeError;
-use Twig\Error\SyntaxError;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -35,17 +28,17 @@ use function Symfony\Component\String\u;
 class Extension extends AbstractExtension
 {
     private TwigEnvironment $twig;
-    private TranslatorInterface $translator;
     private ConfigurationService $configurationService;
+    private ViewServiceRegistry $viewServiceRegistry;
 
     public function __construct(
         TwigEnvironment $twig,
-        TranslatorInterface $translator,
-        ConfigurationService $configurationService
+        ConfigurationService $configurationService,
+        ViewServiceRegistry $viewServiceRegistry
     ) {
         $this->twig = $twig;
-        $this->translator = $translator;
         $this->configurationService = $configurationService;
+        $this->viewServiceRegistry = $viewServiceRegistry;
     }
 
     /**
@@ -56,10 +49,6 @@ class Extension extends AbstractExtension
         return [
             new TwigFunction('ag_render', $this->agRender(...)),
             new TwigFunction('ag_run', $this->agRun(...)),
-            new TwigFunction('ag_choice_labels', $this->agChoiceLabels(...)),
-            new TwigFunction('ag_choice_values', $this->agChoiceValues(...)),
-            new TwigFunction('ag_field_value', $this->agFieldValue(...)),
-            new TwigFunction('ag_binary_size', $this->agBinarySize(...)),
             new TwigFunction('ag_template', $this->agTemplate(...)),
             new TwigFunction('ag_icon', $this->getIcon(...)),
         ];
@@ -70,6 +59,17 @@ class Extension extends AbstractExtension
         return [
             new TwigFilter('ag_to_int', $this->agToInt(...)),
             new TwigFilter('ag_truncate', $this->agTruncate(...)),
+            new TwigFilter('ag_prepare', $this->agPrepare(...)),
+        ];
+    }
+
+    public function agPrepare(FieldParameter $field, object $entity): array
+    {
+        $service = $this->viewServiceRegistry->get($field->view['service']);
+
+        return [
+            'template' => $field->view['template'],
+            'variables' => $service->prepare($entity, $field),
         ];
     }
 
@@ -128,119 +128,5 @@ class Extension extends AbstractExtension
     public function agTemplate(string $templateCode): string
     {
         return $this->configurationService->getTemplate($templateCode);
-    }
-
-    public function agChoiceLabels(mixed $values, FieldParameter $field): array
-    {
-        if ($values === null) {
-            return [];
-        }
-        if (!is_iterable($values)) {
-            $values = [$values];
-        }
-        if (empty($values)) {
-            return [];
-        }
-        $result = [];
-        foreach ($values as $value) {
-            $key = $value;
-            if (is_object($value)) {
-                $key = enum_exists($value::class) ? $value->value : $value->getId();
-            }
-            $choice = $this->getSelectedChoice($field, $key);
-            if ($choice) {
-                $label = $choice->label;
-                if ($label instanceof TranslatableInterface) {
-                    $label = $label->trans($this->translator);
-                } elseif (is_string($label)) {
-                    $label = $this->translator->trans($label);
-                }
-                $result[] = $label;
-            }
-        }
-        return $result;
-    }
-
-    public function agChoiceValues(mixed $values, FieldParameter $field): array
-    {
-        if (!is_iterable($values)) {
-            $values = [$values];
-        }
-        $result = [];
-        foreach ($values as $value) {
-            $key = $value;
-            if (is_object($value)) {
-                $key = enum_exists($value::class) ? $value->value : $value->getId();
-            }
-            $choice = $this->getSelectedChoice($field, $key);
-            if ($choice) {
-                $result[] = $choice->value;
-            }
-        }
-        return $result;
-    }
-
-    public function agFieldValue(object $entity, FieldParameter $field): mixed
-    {
-        $object = $entity;
-        $property = $field->name;
-        if ($field->mappingType === ParametersService::MAPPING_VIRTUAL) {
-            $object = $entity->{"get$field->subObject"}();
-            $property = $field->subName;
-        }
-        if ($object instanceof Collection) {
-            $result = [];
-            foreach ($object as $item) {
-                $result[] = $this->getPropertyValue($item, $property);
-            }
-            return implode(', ', $result);
-        }
-        return $this->getPropertyValue($object, $property);
-    }
-
-    public function agBinarySize(mixed $binaryString): string
-    {
-        switch (gettype($binaryString)) {
-            case 'string':
-                $size = strlen($binaryString);
-                break;
-            case 'resource':
-                $size = fstat($binaryString)['size'];
-                break;
-            default:
-                return '-';
-        }
-
-        foreach (['B', 'KB', 'MB', 'GB'] as $suffix) {
-            if ($size <= 1024) {
-                break;
-            }
-            $size /= 1024;
-        }
-        return sprintf('%s %s', round($size, 2), $suffix);
-    }
-
-    private function getPropertyValue(object $object, string $property): mixed
-    {
-        if (method_exists($object, "get$property")) {
-            return $object->{"get$property"}();
-        }
-        if (method_exists($object, "is$property")) {
-            return $object->{"is$property"}();
-        }
-        throw new RenderException("Invalid property $property");
-    }
-
-    private function getSelectedChoice(FieldParameter $field, mixed $key): ?ChoiceView
-    {
-        $type = gettype($key);
-        foreach ($field->view['choices'] ?? [] as $choice) {
-            $value = $choice->value;
-            settype($value, $type);
-            if ($value === $key) {
-                return $choice;
-            }
-        }
-        return null;
     }
 }

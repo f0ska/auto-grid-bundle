@@ -78,7 +78,7 @@
                                 {% endblock %}
                                 {% block autogrid_view_body_row_value %}
                                     <td class="col col-8">
-                                        {{ include(field.view.template) }}
+                                        {% set agView = field|ag_prepare(entity) %}{{ include(agView.template, agView.variables) }}
                                     </td>
                                 {% endblock %}
                             </tr>

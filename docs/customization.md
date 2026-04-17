@@ -49,10 +49,10 @@ class User { ... }
 ```
 
 ### 5. Field Level Attributes
-Use the `#[FieldTemplate]` attribute to change how a single property is rendered in the grid.
+Use the `#[ViewTemplate]` attribute to change how a single property is rendered in the grid.
 
 ```php
-#[FieldTemplate('admin/user/_avatar_cell.html.twig')]
+#[ViewTemplate('admin/user/_avatar_cell.html.twig')]
 private ?string $avatarPath = null;
 ```
 
@@ -74,6 +74,36 @@ class MyCustomCondition implements FilterConditionInterface
     {
         $alias = uniqid('p');
         $qb->andWhere("$column > :$alias")->setParameter($alias, $value);
+    }
+}
+```
+</details>
+
+<details>
+<summary><strong>Custom View Services</strong>: Encapsulate complex rendering logic in a Symfony service.</summary>
+
+1.  Implement `F0ska\AutoGridBundle\View\ViewServiceInterface`.
+2.  (Optional) Leverage Logic Providers (`FieldValueProvider`, `ChoiceProvider`, etc.).
+3.  Assign to a property using `#[ViewService(MyService::class)]`.
+
+```php
+namespace App\Service;
+
+use F0ska\AutoGridBundle\View\ViewServiceInterface;
+use F0ska\AutoGridBundle\Service\Provider\FieldValueProvider;
+
+class MyCustomViewService implements ViewServiceInterface
+{
+    public function __construct(private FieldValueProvider $valueProvider) {}
+
+    public function prepare(array $context): array
+    {
+        $value = $this->valueProvider->getValue($context['entity'], $context['field']);
+        
+        return [
+            'value' => $value,
+            'extra_info' => $this->getSomeExternalData($value)
+        ];
     }
 }
 ```

@@ -41,12 +41,15 @@ Extend the default templates and override these blocks to customize your UI.
 | `autogrid_grid_column_header_label` | The text label of the column. |
 | `autogrid_grid_column_header_sort` | Sorting icons and links. |
 | `autogrid_grid_column_header_filter` | Filter dropdown icon and form. |
-
 ### Column Values (`grid/column_value.html.twig`)
-| Block | Description |
-| :--- | :--- |
-| `autogrid_grid_column_value_cell` | The `<td>` cell. |
-| `autogrid_grid_column_value_content` | The rendered value inside the cell. |
+The rendered value inside each cell is prepared **lazily** using the `ag_prepare` filter. This filter resolves the correct `ViewService` and template path for each property.
+
+| Block | Description                                                                                                                                    |
+| :--- |:-----------------------------------------------------------------------------------------------------------------------------------------------|
+| `autogrid_grid_column_value_cell` | The `<td>` cell.                                                                                                                               |
+| `autogrid_grid_column_value_content` | Prepares field data and includes the template: `{% set agView = field\|ag_prepare(entity) %}{{ include(agView.template, agView.variables) }}`. |
+
+---
 
 ### Action Buttons (`grid/column_value_action.html.twig`)
 | Block | Description |

@@ -29,6 +29,20 @@ services:
         tags: [ 'autogrid.action.parameter' ]
         autowire: true
 
+    F0ska\AutoGridBundle\View\:
+        resource: '../src/View/*'
+        tags: [ 'autogrid.view_service' ]
+        autowire: true
+
+    F0ska\AutoGridBundle\Service\Provider\:
+        resource: '../src/Service/Provider/*'
+        autowire: true
+
+    F0ska\AutoGridBundle\View\ViewServiceRegistry:
+        autowire: true
+        arguments:
+            $services: !tagged_iterator 'autogrid.view_service'
+
     F0ska\AutoGridBundle\Service\ConfigurationService:
         autowire: true
         arguments:

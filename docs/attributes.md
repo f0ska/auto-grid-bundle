@@ -309,15 +309,6 @@ private ?string $status = null;
 </details>
 
 <details>
-<summary><strong>FieldTemplate</strong>: Use a custom Twig template to render this field.</summary>
-
-```php
-#[FieldTemplate('admin/user/_avatar_cell.html.twig')]
-private ?string $avatarPath = null;
-```
-</details>
-
-<details>
 <summary><strong>Filterable</strong>: Enables searching/filtering for this field.</summary>
 
 Auto-detects logic from Doctrine, but can be overridden.
@@ -412,6 +403,28 @@ private ?float $price = null;
 
 #[ValueSuffix(" kg")]
 private ?float $weight = null;
+```
+</details>
+
+<details>
+<summary><strong>ViewService</strong>: Specify a custom service to prepare data for this field.</summary>
+
+Encapsulates complex formatting, data transformation, or conditional logic that is too heavy for Twig. The service must implement `ViewServiceInterface`.
+
+```php
+#[ViewService(App\Service\StatusBadgeService::class)]
+private ?string $status = null;
+```
+</details>
+
+<details>
+<summary><strong>ViewTemplate</strong>: Specify a custom Twig template for rendering this field.</summary>
+
+Overrides the default template guessed by AutoGrid for this specific property. It has higher precedence than entity-level template overrides.
+
+```php
+#[ViewTemplate('admin/user/_avatar_cell.html.twig')]
+private ?string $avatarPath = null;
 ```
 </details>
 

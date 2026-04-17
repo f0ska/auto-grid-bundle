@@ -33,6 +33,7 @@ class FieldParameter
     public array $view = [];
     public array $attributes = [];
     public array $customization = [];
+    public ?Parameters $parameters = null;
 
     public function __construct(array $initialData)
     {

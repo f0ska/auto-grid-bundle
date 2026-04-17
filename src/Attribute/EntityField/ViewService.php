@@ -15,11 +15,11 @@ namespace F0ska\AutoGridBundle\Attribute\EntityField;
 use Attribute;
 use F0ska\AutoGridBundle\Attribute\AbstractAttribute;
 
-#[Attribute]
-class FieldTemplate extends AbstractAttribute
+#[Attribute(Attribute::TARGET_PROPERTY)]
+class ViewService extends AbstractAttribute
 {
-    public function __construct(string $templatePath)
+    public function __construct(public string $service)
     {
-        parent::__construct($templatePath);
+        parent::__construct($service);
     }
 }
