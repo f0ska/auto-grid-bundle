@@ -1,0 +1,41 @@
+{% macro _ag_icon_style_default() %}width:1em;height:1em;margin-bottom:-0.15em;vertical-align:baseline;display:inline-block;{% endmacro %}
+
+{% macro arrow_up() %}<i><svg style="{{ _context.ag_icon_style|default(_self._ag_icon_style_default) }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg></i>{% endmacro %}
+
+{% macro chevron_down() %}<i><svg style="{{ _context.ag_icon_style|default(_self._ag_icon_style_default) }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></i>{% endmacro %}
+
+{% macro arrow_left() %}<i><svg style="{{ _context.ag_icon_style|default(_self._ag_icon_style_default) }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg></i>{% endmacro %}
+
+{% macro sort_neutral() %}<i><svg style="{{ _context.ag_icon_style|default(_self._ag_icon_style_default) }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l7-6 7 6"></path><path d="M5 15l7 6 7-6"></path></svg></i>{% endmacro %}
+
+{% macro sort_asc() %}<i><svg style="{{ _context.ag_icon_style|default(_self._ag_icon_style_default) }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7l7-5 7 5"></path><path d="M5 16l7-5 7 5"></path></svg></i>{% endmacro %}
+
+{% macro sort_desc() %}<i><svg style="{{ _context.ag_icon_style|default(_self._ag_icon_style_default) }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17l7 5 7-5"></path><path d="M5 8l7 5 7-5"></path></svg></i>{% endmacro %}
+
+{% macro filter() %}<i><svg style="{{ _context.ag_icon_style|default(_self._ag_icon_style_default) }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg></i>{% endmacro %}
+
+{% macro filter_active() %}<i><svg style="{{ _context.ag_icon_style|default(_self._ag_icon_style_default) }}" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg></i>{% endmacro %}
+
+{% macro filter_reset() %}<i><svg style="{{ _context.ag_icon_style|default(_self._ag_icon_style_default) }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon><line x1="3" y1="12" x2="21" y2="12"></line></svg></i>{% endmacro %}
+
+{% macro view() %}<i><svg style="{{ _context.ag_icon_style|default(_self._ag_icon_style_default) }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></i>{% endmacro %}
+
+{% macro edit() %}<i><svg style="{{ _context.ag_icon_style|default(_self._ag_icon_style_default) }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></i>{% endmacro %}
+
+{% macro delete() %}<i><svg style="{{ _context.ag_icon_style|default(_self._ag_icon_style_default) }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></i>{% endmacro %}
+
+{% macro add() %}<i><svg style="{{ _context.ag_icon_style|default(_self._ag_icon_style_default) }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></i>{% endmacro %}
+
+{% macro search() %}<i><svg style="{{ _context.ag_icon_style|default(_self._ag_icon_style_default) }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></i>{% endmacro %}
+
+{% macro id() %}<i><svg style="{{ _context.ag_icon_style|default(_self._ag_icon_style_default) }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line></svg></i>{% endmacro %}
+
+{% macro save() %}<i><svg style="{{ _context.ag_icon_style|default(_self._ag_icon_style_default) }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg></i>{% endmacro %}
+
+{% macro export() %}<i><svg style="{{ _context.ag_icon_style|default(_self._ag_icon_style_default) }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg></i>{% endmacro %}
+
+{% macro warning() %}<i><svg style="{{ _context.ag_icon_style|default(_self._ag_icon_style_default) }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg></i>{% endmacro %}
+
+{% macro boolean_true() %}<i><svg style="{{ _context.ag_icon_style|default(_self._ag_icon_style_default) }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></i>{% endmacro %}
+
+{% macro boolean_false() %}<i><svg style="{{ _context.ag_icon_style|default(_self._ag_icon_style_default) }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg></i>{% endmacro %}

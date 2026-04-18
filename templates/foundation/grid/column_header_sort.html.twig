@@ -1,3 +1,4 @@
+{% import attributes.template.icons|default(ag_template('icons')) as ag_icons %}
 {% set linkClass = attributes.html_class.thead_link|default('text-secondary') %}
 {% set linkClassActive = attributes.html_class.thead_link_active|default('text-primary') %}
 
@@ -6,19 +7,19 @@
         {% block autogrid_grid_column_header_sort_none %}
             <a class="{{ linkClass }}"
                href="{{ ag_run(agActionUrl, 'grid', {'order': {(field.name): 'asc'}}) }}"
-            >{{ ag_icon('sort-neutral')|raw }}</a>
+            >{{ ag_icons.sort_neutral() }}</a>
         {% endblock %}
     {% elseif attribute(request.order, field.name) is same as 'asc' %}
         {% block autogrid_grid_column_header_sort_asc %}
             <a class="{{ linkClassActive }}"
                href="{{ ag_run(agActionUrl, 'grid', {'order': {(field.name): 'desc'}}) }}"
-            >{{ ag_icon('sort-asc')|raw }}</a>
+            >{{ ag_icons.sort_asc() }}</a>
         {% endblock %}
     {% else %}
         {% block autogrid_grid_column_header_sort_desc %}
             <a class="{{ linkClassActive }}"
                href="{{ ag_run(agActionUrl, 'grid', {'order': {(field.name): null}}) }}"
-            >{{ ag_icon('sort-desc')|raw }}</a>
+            >{{ ag_icons.sort_desc() }}</a>
         {% endblock %}
     {% endif %}
 {% endblock %}

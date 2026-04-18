@@ -29,6 +29,7 @@ class Configuration implements ConfigurationInterface
                     ->children()
                         ->scalarNode('theme')->defaultValue('@F0skaAutoGrid/bootstrap_5')->end()
                         ->scalarNode('base')->defaultValue('base.html.twig')->end()
+                        ->scalarNode('icons')->defaultValue('@F0skaAutoGrid/_icons.html.twig')->end()
                         ->arrayNode('form_themes')
                             ->prototype('scalar')->end()
                             ->defaultValue(['bootstrap_5_layout.html.twig'])

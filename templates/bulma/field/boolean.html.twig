@@ -1,9 +1,10 @@
+{% import attributes.template.icons|default(ag_template('icons')) as ag_icons %}
 {% block autogrid_field_boolean_content %}
     <span class="icon-text">
         {% if value %}
-            <span class="icon has-text-success">{{ ag_icon('boolean-true')|raw }}</span>
+            <span class="icon has-text-success">{{ ag_icons.boolean_true() }}</span>
         {% else %}
-            <span class="icon has-text-grey">{{ ag_icon('boolean-false')|raw }}</span>
+            <span class="icon has-text-grey">{{ ag_icons.boolean_false() }}</span>
         {% endif %}
     </span>
 {% endblock %}

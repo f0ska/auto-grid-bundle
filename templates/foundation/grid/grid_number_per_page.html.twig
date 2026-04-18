@@ -1,3 +1,4 @@
+{% import attributes.template.icons|default(ag_template('icons')) as ag_icons %}
 {% if view.pagination.limits|length > 1 %}
     {% set btnClass = attributes.html_class.tfoot_btn|default('button small secondary') %}
     {% block autogrid_grid_limit %}
@@ -19,11 +20,11 @@
             {% endfor %}
             <a class="button small secondary"
                href="#{{ attributes.container_id }}"
-            >{{ ag_icon('arrow-up')|raw }}</a>
+            >{{ ag_icons.arrow_up() }}</a>
         </div>
     {% endblock %}
 {% else %}
     <a class="button small secondary"
        href="#{{ attributes.container_id }}"
-    >{{ ag_icon('arrow-up')|raw }}</a>
+    >{{ ag_icons.arrow_up() }}</a>
 {% endif %}

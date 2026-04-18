@@ -1,4 +1,5 @@
 {% extends attributes.template.base|default(ag_template('base')) %}
+{% import attributes.template.icons|default(ag_template('icons')) as ag_icons %}
 {% block autogrid %}
     <table class="table">
         {% block autogrid_form_caption %}
@@ -20,7 +21,7 @@
                                 {% block autogrid_form_header_back_button %}
                                     {% if ag_run(agIsAllowed, 'grid') %}
                                         <a class="btn btn-sm {{ btnClass }}" href="{{ ag_run(agActionUrl, 'grid') }}">
-                                            {{ ag_icon('arrow-left')|raw }}&nbsp;{{ 'f0ska.autogrid.button.back'|trans }}
+                                            {{ ag_icons.arrow_left() }}&nbsp;{{ 'f0ska.autogrid.button.back'|trans }}
                                         </a>
                                     {% endif %}
                                 {% endblock %}
@@ -29,7 +30,7 @@
                                         <a class="btn btn-sm {{ btnClass }}"
                                            href="{{ ag_run(agActionUrl, 'view', {'id': entity.id}) }}"
                                         >
-                                            {{ ag_icon('view')|raw }}&nbsp;{{ 'f0ska.autogrid.button.view'|trans }}
+                                            {{ ag_icons.view() }}&nbsp;{{ 'f0ska.autogrid.button.view'|trans }}
                                         </a>
                                     {% endif %}
                                 {% endblock %}
@@ -39,7 +40,7 @@
                                     <span class="badge badge-pill badge-light text-dark fw-normal">
                                         {{ ('f0ska.autogrid.action.' ~ action)|trans }}
                                         {% if action is not same as 'create' %}
-                                            &nbsp;{{ ag_icon('id')|raw }}{{ entity.id }}
+                                            &nbsp;{{ ag_icons.id() }}{{ entity.id }}
                                         {% endif %}
                                     </span>
                                 {% endblock %}
@@ -48,7 +49,7 @@
                                 {% block autogrid_form_header_submit_button %}
                                     <button class="btn btn-sm btn-outline-secondary" type="submit"
                                             form="{{ form.vars.attr.id }}">
-                                        {{ ag_icon('save')|raw }}&nbsp;{{ 'f0ska.autogrid.button.submit'|trans }}
+                                        {{ ag_icons.save() }}&nbsp;{{ 'f0ska.autogrid.button.submit'|trans }}
                                     </button>
                                 {% endblock %}
                                 {% block autogrid_form_header_delete_button %}
@@ -57,7 +58,7 @@
                                            href="{{ ag_run(agActionUrl, 'delete', {'id': entity.id}) }}"
                                            onclick="return confirm('{{ 'f0ska.autogrid.dialog.delete_confirm'|trans }}');"
                                         >
-                                            {{ ag_icon('delete')|raw }}&nbsp;{{ 'f0ska.autogrid.button.delete'|trans }}
+                                            {{ ag_icons.delete() }}&nbsp;{{ 'f0ska.autogrid.button.delete'|trans }}
                                         </a>
                                     {% endif %}
                                 {% endblock %}
@@ -103,7 +104,7 @@
                             <div class="col text-right">
                                 <a class="btn btn-sm {{ attributes.html_class.tfoot_btn|default('btn-outline-secondary') }}"
                                    href="#{{ attributes.container_id }}"
-                                >{{ ag_icon('arrow-up')|raw }}</a>
+                                >{{ ag_icons.arrow_up() }}</a>
                             </div>
                         </div>
                     </div>

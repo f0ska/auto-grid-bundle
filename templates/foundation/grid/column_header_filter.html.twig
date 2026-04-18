@@ -1,3 +1,4 @@
+{% import attributes.template.icons|default(ag_template('icons')) as ag_icons %}
 {% set isFilterActive = (attribute(request.filter ?? {}, field.name) is defined) and attribute(request.filter, field.name) is not same as null %}
 {% set linkClass = attributes.html_class.thead_link|default('text-secondary') %}
 {% set linkClassActive = attributes.html_class.thead_link_active|default('text-primary') %}
@@ -9,7 +10,7 @@
            aria-expanded="false"
            href="javascript:void(0);"
            onclick="var d=document.getElementById('{{ dropdownId }}');d.style.display=d.style.display=='none'?'block':'none'; event.stopPropagation();"
-        >{{ ag_icon(isFilterActive ? 'filter-active' : 'filter')|raw }}</a>
+        >{{ isFilterActive ? ag_icons.filter_active() : ag_icons.filter() }}</a>
         <div id="{{ dropdownId }}" style="display: none; position: absolute; left: 0; top: 100%; z-index: 1000; background: white; border: 1px solid #ccc; padding: 10px; min-width: 250px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);" onclick="event.stopPropagation();">
             {% set form = attribute(view.filterFormViews, field.name) %}
             {% if view.formThemes is not empty %}

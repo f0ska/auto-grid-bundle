@@ -1,3 +1,4 @@
+{% import attributes.template.icons|default(ag_template('icons')) as ag_icons %}
 {% if ag_run(agIsAnyAllowed) or attributes.has_custom_action is defined %}
     {% set btnClass = 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-900 font-medium leading-5 text-sm px-3 py-1.5 focus:outline-none' %}
     {% set btnDelClass = 'text-red-700 bg-white border border-gray-300 hover:bg-red-50 hover:text-red-900 font-medium leading-5 text-sm px-3 py-1.5 focus:outline-none' %}
@@ -13,13 +14,13 @@
             {% set btnIndex = btnIndex + (hasView ? 1 : 0) %}
             {% block autogrid_grid_row_action_view %}
                 {% if hasView %}
-                    <a class="{{ btnClass }}{% if btnIndex == 1 %} rounded-s-base{% endif %}{% if btnIndex == totalBtns %} rounded-e-base{% endif %}" href="{{ ag_run(agActionUrl, 'view', {'id': entity.id}) }}">{{ ag_icon('view')|raw }}</a>
+                    <a class="{{ btnClass }}{% if btnIndex == 1 %} rounded-s-base{% endif %}{% if btnIndex == totalBtns %} rounded-e-base{% endif %}" href="{{ ag_run(agActionUrl, 'view', {'id': entity.id}) }}">{{ ag_icons.view() }}</a>
                 {% endif %}
             {% endblock %}
             {% set btnIndex = btnIndex + (hasEdit ? 1 : 0) %}
             {% block autogrid_grid_row_action_edit %}
                 {% if hasEdit %}
-                    <a class="{{ btnClass }}{% if btnIndex == 1 %} rounded-s-base{% endif %}{% if btnIndex == totalBtns %} rounded-e-base{% endif %}" href="{{ ag_run(agActionUrl, 'edit', {'id': entity.id}) }}">{{ ag_icon('edit')|raw }}</a>
+                    <a class="{{ btnClass }}{% if btnIndex == 1 %} rounded-s-base{% endif %}{% if btnIndex == totalBtns %} rounded-e-base{% endif %}" href="{{ ag_run(agActionUrl, 'edit', {'id': entity.id}) }}">{{ ag_icons.edit() }}</a>
                 {% endif %}
             {% endblock %}
             {% set btnIndex = btnIndex + (hasDelete ? 1 : 0) %}
@@ -28,7 +29,7 @@
                     <a class="{{ btnDelClass }}{% if btnIndex == 1 %} rounded-s-base{% endif %}{% if btnIndex == totalBtns %} rounded-e-base{% endif %}"
                        href="{{ ag_run(agActionUrl, 'delete', {'id': entity.id}) }}"
                        onclick="return confirm('{{ 'f0ska.autogrid.dialog.delete_confirm'|trans }}');"
-                    >{{ ag_icon('delete')|raw }}</a>
+                    >{{ ag_icons.delete() }}</a>
                 {% endif %}
             {% endblock %}
             {% set btnIndex = btnIndex + (hasCustom ? 1 : 0) %}

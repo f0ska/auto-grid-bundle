@@ -1,3 +1,4 @@
+{% import attributes.template.icons|default(ag_template('icons')) as ag_icons %}
 {% if view.advancedFilterFormView and ag_run(agIsAllowed, 'advanced_filter') %}
     {% block autogrid_grid_advanced_filter_modal %}
         <div id="adv{{ agId }}" tabindex="-1" aria-hidden="true" style="display: none; overflow-y: auto; overflow-x: hidden; position: fixed; top: 0; right: 0; left: 0; z-index: 50; justify-content: center; align-items: center; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5);">
@@ -8,7 +9,7 @@
                             <div class="flex justify-between items-start p-4 rounded-t border-b">
                                 {% block autogrid_grid_advanced_filter_header %}
                                     <h3 class="text-xl font-semibold text-gray-900">
-                                        {{ ag_icon('search')|raw }}
+                                        {{ ag_icons.search() }}
                                         {% if attributes.title is not empty %}
                                             {{ attributes.title|trans }}
                                         {% endif %}
