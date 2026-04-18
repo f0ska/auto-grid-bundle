@@ -124,7 +124,7 @@ Refer to [services.yaml](../config/services.yaml) for core implementations.
 <details>
 <summary><strong>Handling Events</strong>: Hook into the CRUD lifecycle.</summary>
 
-AutoGrid dispatches events for key lifecycle moments. Register a listener or subscriber to handle them.
+AutoGrid's event system provides powerful extension points throughout its lifecycle. This lets you add custom logic, modify data, or integrate with other services without changing AutoGrid's core. By subscribing to these events, you can react to critical moments like entity saves, deletions, grid data loading, mass actions, and exports.
 
 ### Dynamic Event Naming
 All events are dispatched with an optional `.{gridId}` suffix, allowing you to target a specific grid instance.
