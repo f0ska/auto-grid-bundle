@@ -113,6 +113,12 @@ class MetaDataService
         return $data;
     }
 
+    public function getPureVirtualFieldNames(string $agId): array
+    {
+        $collection = $this->instanceCache[$agId]['attributes'];
+        return $collection->getPureVirtualFieldNames();
+    }
+
     private function prepareAgId(ClassMetadata $metadata, int $instanceNumber): string
     {
         return base_convert(

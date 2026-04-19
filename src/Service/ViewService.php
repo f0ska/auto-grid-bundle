@@ -45,7 +45,7 @@ class ViewService
 
         foreach ($parameters->fields as $field) {
             $this->addViewParameters($displayFormView, $field);
-            $this->templateGuesserService->guess($field);
+            $this->templateGuesserService->guess($field, $parameters->attributes);
         }
 
         $filterData = $this->formFacade->buildFilterForms($parameters);
@@ -91,9 +91,9 @@ class ViewService
         }
         $parameters->view->pagination = [
             'limits' => $pageLimits,
-            'limit' => $limit,
-            'page' => $parameters->request['page'] ?? 1,
-            'count' => 0,
+            'limit'  => $limit,
+            'page'   => $parameters->request['page'] ?? 1,
+            'count'  => 0,
         ];
     }
 
@@ -107,7 +107,8 @@ class ViewService
             $parameters->view->massActionChoices = $choices;
             $parameters->view->massActionFormView = $this->formFacade
                 ->buildMassActionForm($parameters)
-                ->createView();
+                ->createView()
+            ;
         }
     }
 
@@ -121,7 +122,8 @@ class ViewService
             $parameters->view->exportActionChoices = $choices;
             $parameters->view->exportActionFormView = $this->formFacade
                 ->buildExportActionForm($parameters)
-                ->createView();
+                ->createView()
+            ;
         }
     }
 }

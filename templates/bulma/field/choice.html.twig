@@ -1,6 +1,4 @@
 {% block autogrid_field_choice_content %}
-    {% set value = ag_field_value(entity, field) %}
-    {% set labels = ag_choice_labels(value, field) %}
     {% if (labels is empty) %}
         -
     {% elseif (action is same as 'grid') %}

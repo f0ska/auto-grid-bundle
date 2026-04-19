@@ -16,11 +16,13 @@ class AttributeCollection
 {
     private array $entityAttributes;
     private array $fieldAttributes;
+    private array $pureVirtualFieldNames;
 
-    public function __construct(array $entityAttributes, array $fieldAttributes)
+    public function __construct(array $entityAttributes, array $fieldAttributes, array $pureVirtualFieldNames = [])
     {
         $this->entityAttributes = $entityAttributes;
         $this->fieldAttributes = $fieldAttributes;
+        $this->pureVirtualFieldNames = $pureVirtualFieldNames;
     }
 
     public function getEntityAttributes(): array
@@ -31,5 +33,10 @@ class AttributeCollection
     public function getFieldAttributes(): array
     {
         return $this->fieldAttributes;
+    }
+
+    public function getPureVirtualFieldNames(): array
+    {
+        return $this->pureVirtualFieldNames;
     }
 }

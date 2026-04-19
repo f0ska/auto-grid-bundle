@@ -15,6 +15,10 @@ namespace F0ska\AutoGridBundle\Service;
 use Doctrine\DBAL\Types\Types;
 use F0ska\AutoGridBundle\DBAL\TypesCompatibility;
 use F0ska\AutoGridBundle\Model\FieldParameter;
+use F0ska\AutoGridBundle\View\BinaryViewService;
+use F0ska\AutoGridBundle\View\ChoiceViewService;
+use F0ska\AutoGridBundle\View\DefaultViewService;
+use F0ska\AutoGridBundle\View\ViewServiceRegistry;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
@@ -22,48 +26,91 @@ class TemplateGuesserService
 {
     private array $templateByFormType = [
         CheckboxType::class => 'boolean',
-        EntityType::class => 'debug',
+        EntityType::class   => 'debug',
     ];
     private array $templateByDbalType = [
-        Types::SIMPLE_ARRAY => 'simple_array',
-        Types::JSON => 'json',
-        TypesCompatibility::TYPES_ARRAY => 'json',
+        Types::SIMPLE_ARRAY              => 'simple_array',
+        Types::JSON                      => 'json',
+        TypesCompatibility::TYPES_ARRAY  => 'json',
         TypesCompatibility::TYPES_OBJECT => 'json',
-        Types::ASCII_STRING => 'ascii_string',
-        Types::BINARY => 'binary',
-        Types::BLOB => 'binary',
+        Types::ASCII_STRING              => 'ascii_string',
+        Types::BINARY                    => 'binary',
+        Types::BLOB                      => 'binary',
     ];
     private array $dateFormats = [
-        Types::DATE_MUTABLE => 'date',
-        Types::DATE_IMMUTABLE => 'date',
-        Types::DATEINTERVAL => 'interval',
-        Types::DATETIME_MUTABLE => 'datetime',
-        Types::DATETIME_IMMUTABLE => 'datetime',
-        Types::DATETIMETZ_MUTABLE => 'datetime',
-        Types::DATETIMETZ_IMMUTABLE => 'datetime',
-        Types::TIME_MUTABLE => 'time',
-        Types::TIME_IMMUTABLE => 'time',
+        Types::DATE_MUTABLE                  => 'date',
+        Types::DATE_IMMUTABLE                => 'date',
+        Types::DATEINTERVAL                  => 'interval',
+        Types::DATETIME_MUTABLE              => 'datetime',
+        Types::DATETIME_IMMUTABLE            => 'datetime',
+        Types::DATETIMETZ_MUTABLE            => 'datetime',
+        Types::DATETIMETZ_IMMUTABLE          => 'datetime',
+        Types::TIME_MUTABLE                  => 'time',
+        Types::TIME_IMMUTABLE                => 'time',
         TypesCompatibility::TYPES_DATE_POINT => 'datetime',
-        TypesCompatibility::TYPES_DAY_POINT => 'date',
+        TypesCompatibility::TYPES_DAY_POINT  => 'date',
         TypesCompatibility::TYPES_TIME_POINT => 'time',
     ];
 
     private ConfigurationService $configuration;
+    private ViewServiceRegistry $viewServiceRegistry;
 
-    public function __construct(ConfigurationService $configuration)
-    {
+    public function __construct(
+        ConfigurationService $configuration,
+        ViewServiceRegistry $viewServiceRegistry
+    ) {
         $this->configuration = $configuration;
+        $this->viewServiceRegistry = $viewServiceRegistry;
     }
 
-    public function guess(FieldParameter $field): void
+    public function guess(FieldParameter $field, array $entityAttributes = []): void
     {
-        $field->view['template'] = $field->attributes['field_template'] ?? null;
+        $this->guessViewService($field);
 
         $this->setTruncate($field);
         $this->setFormat($field);
         $this->setFormExtra($field);
 
+        $this->guessTemplate($field, $entityAttributes);
+    }
+
+    private function guessViewService(FieldParameter $field): void
+    {
+        $serviceId = $field->attributes['view_service'] ?? null;
+
+        if ($serviceId && $this->viewServiceRegistry->has($serviceId)) {
+            $field->view['service'] = $serviceId;
+            return;
+        }
+
+        if (isset($field->view['choices'])) {
+            $field->view['service'] = ChoiceViewService::class;
+            return;
+        }
+
+        if (in_array($field->fieldMapping?->type, [Types::BINARY, Types::BLOB], true)) {
+            $field->view['service'] = BinaryViewService::class;
+            return;
+        }
+
+        $field->view['service'] = DefaultViewService::class;
+    }
+
+    private function guessTemplate(FieldParameter $field, array $entityAttributes): void
+    {
         if (!empty($field->view['template'])) {
+            return;
+        }
+
+        $template = $field->attributes['view_template'] ?? null;
+
+        if ($template) {
+            $field->view['template'] = $template;
+            return;
+        }
+
+        if (isset($entityAttributes['template']['grid']['column_value'])) {
+            $field->view['template'] = $entityAttributes['template']['grid']['column_value'];
             return;
         }
 
@@ -99,12 +146,14 @@ class TemplateGuesserService
 
     private function getFieldTemplate(FieldParameter $field): string
     {
-        $code = $this->templateByFormType[$field->attributes['form']['type']] ?? null;
+        $type = $field->attributes['form']['type'] ?? '';
+        $code = $this->templateByFormType[$type] ?? null;
         if ($code) {
             return $this->configuration->getFieldTemplate($code);
         }
 
-        $code = $this->templateByDbalType[$field->fieldMapping?->type] ?? null;
+        $dbalType = $field->fieldMapping->type ?? '';
+        $code = $this->templateByDbalType[$dbalType] ?? null;
         if ($code) {
             return $this->configuration->getFieldTemplate($code);
         }

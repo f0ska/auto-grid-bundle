@@ -1,10 +1,11 @@
+{% import attributes.template.icons|default(ag_template('icons')) as ag_icons %}
 {% if view.advancedFilterFormView and ag_run(agIsAllowed, 'advanced_filter') %}
 <div id="adv{{ agId }}" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2000; background: rgba(0,0,0,0.5);">
     <div style="position: relative; max-width: 900px; margin: 100px auto; background: white; border-radius: 4px; padding: 20px;">
         <div class="grid-x grid-padding-x">
             <div class="cell">
                 <h3>
-                    {{ ag_icon('search')|raw }}
+                    {{ ag_icons.search() }}
                     {% if attributes.title is not empty %}
                         {{ attributes.title|trans }}
                     {% endif %}

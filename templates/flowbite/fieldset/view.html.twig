@@ -18,7 +18,7 @@
                                             {{ field.attributes.label|trans }}
                                         </th>
                                         <td class="px-4 py-3 text-gray-900">
-                                            {{ include(field.view.template) }}
+                                            {% set agView = field|ag_prepare(entity) %}{{ include(agView.template, agView.variables) }}
                                         </td>
                                     </tr>
                                 {% endfor %}
@@ -39,7 +39,7 @@
                                     {{ field.attributes.label|trans }}
                                 </th>
                                 <td class="px-4 py-3 text-gray-900">
-                                    {{ include(field.view.template) }}
+                                    {% set agView = field|ag_prepare(entity) %}{{ include(agView.template, agView.variables) }}
                                 </td>
                             </tr>
                         {% endfor %}

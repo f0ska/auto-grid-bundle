@@ -15,6 +15,7 @@ namespace F0ska\AutoGridBundle\Service;
 use Doctrine\ORM\EntityManagerInterface;
 use F0ska\AutoGridBundle\Event\SaveEvent;
 use F0ska\AutoGridBundle\Model\AutoGrid;
+use F0ska\AutoGridBundle\Model\FormProcessResult;
 use F0ska\AutoGridBundle\Model\Parameters;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
@@ -25,23 +26,20 @@ class FormProcessorService
     private RequestStack $requestStack;
     private EntityManagerInterface $entityManager;
     private EventDispatcherInterface $dispatcher;
-    private RedirectService $redirectService;
 
     public function __construct(
         FormFacade $formFacade,
         RequestStack $requestStack,
         EntityManagerInterface $entityManager,
-        EventDispatcherInterface $dispatcher,
-        RedirectService $redirectService
+        EventDispatcherInterface $dispatcher
     ) {
         $this->formFacade = $formFacade;
         $this->requestStack = $requestStack;
         $this->entityManager = $entityManager;
         $this->dispatcher = $dispatcher;
-        $this->redirectService = $redirectService;
     }
 
-    public function process(object $entity, AutoGrid $autoGrid, Parameters $parameters): void
+    public function process(object $entity, AutoGrid $autoGrid, Parameters $parameters): FormProcessResult
     {
         $form = $this->formFacade->buildEntityForm($entity, $parameters);
         $form->handleRequest($this->requestStack->getCurrentRequest());
@@ -54,11 +52,9 @@ class FormProcessorService
             $this->entityManager->persist($entity);
             $this->entityManager->flush();
 
-            $autoGrid->setResponse($this->redirectService->getSubmitRedirect($form, $entity->getId(), $parameters));
-            return;
+            return new FormProcessResult(true, $entity, $form);
         }
 
-        $autoGrid->setTemplate($parameters->getActionTemplate('form'));
-        $autoGrid->setContext($parameters->render(['entity' => $entity, 'form' => $form->createView()]));
+        return new FormProcessResult(false, $entity, $form);
     }
 }

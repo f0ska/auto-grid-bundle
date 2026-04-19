@@ -1,3 +1,4 @@
+{% import attributes.template.icons|default(ag_template('icons')) as ag_icons %}
 {% set isFilterActive = (attribute(request.filter ?? {}, field.name) is defined) and attribute(request.filter, field.name) is not same as null %}
 {% set linkClass = attributes.html_class.thead_link|default('link-secondary') %}
 {% set linkClassActive = attributes.html_class.thead_link_active|default('link-primary') %}
@@ -9,7 +10,7 @@
                data-bs-toggle="dropdown"
                aria-expanded="false"
                data-bs-auto-close="outside"
-            >{{ ag_icon(isFilterActive ? 'filter-active' : 'filter')|raw }}</a>
+            >{{ isFilterActive ? ag_icons.filter_active() : ag_icons.filter() }}</a>
         {% endblock %}
         {% block autogrid_grid_column_header_filter_dropdown %}
             <span class="dropdown-menu p-2 fw-normal">

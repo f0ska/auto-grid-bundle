@@ -16,13 +16,15 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 use F0ska\AutoGridBundle\Model\FieldParameter;
 use F0ska\AutoGridBundle\Model\Parameters;
 use Symfony\Component\Routing\RouterInterface;
+
 use function Symfony\Component\String\u;
 
 class ParametersService
 {
-    public const MAPPING_FIELD = 'field';
-    public const MAPPING_ASSOC = 'associated';
-    public const MAPPING_VIRTUAL = 'virtual';
+    public const MAPPING_FIELD               = 'field';
+    public const MAPPING_ASSOC               = 'associated';
+    public const MAPPING_ASSOCIATED_SUBFIELD = 'associated_subfield';
+    public const MAPPING_PURE_VIRTUAL        = 'pure_virtual';
 
     private EncoderService $encoderService;
     private RouterInterface $router;
@@ -105,7 +107,7 @@ class ParametersService
         $agId = $parameters->agId;
         $metadata = $this->metaDataService->getMetadata($agId);
         $default = [
-            'title' => $this->buildEntityTitle($metadata),
+            'title'  => $this->buildEntityTitle($metadata),
             'entity' => $metadata->rootEntityName,
         ];
 
@@ -132,7 +134,8 @@ class ParametersService
             ->snake()
             ->replace('_', ' ')
             ->title(true)
-            ->toString();
+            ->toString()
+        ;
     }
 
     private function buildEntityFields(Parameters $parameters): void
@@ -141,8 +144,9 @@ class ParametersService
         $this->initFields($parameters);
         $this->initAssociations($parameters);
         foreach ($parameters->fields as $field) {
+            $field->parameters = $parameters;
             $this->buildFieldPermissions($field, $agId);
-            $this->buildFieldAttributes($field, $agId);
+            $this->buildFieldAttributes($field);
         }
         ksort($parameters->fields);
         $parameters->fields = array_combine(
@@ -155,11 +159,19 @@ class ParametersService
     {
         $metadata = $this->metaDataService->getMetadata($parameters->agId);
         foreach ($metadata->getFieldNames() as $key => $column) {
-            $position = $this->metaDataService->getEntityFieldAttribute($parameters->agId, $column, 'position') ?? 0;
-            $parameters->fields[sprintf('%d_%d', $position, $key)] = new FieldParameter(
-                ['name' => $column, 'mappingType' => self::MAPPING_FIELD]
-            );
+            $this->initField($parameters, $column, $key, self::MAPPING_FIELD);
         }
+        foreach ($this->metaDataService->getPureVirtualFieldNames($parameters->agId) as $key => $column) {
+            $this->initField($parameters, $column, $key, self::MAPPING_PURE_VIRTUAL);
+        }
+    }
+
+    private function initField(Parameters $parameters, string $column, $key, string $mappingType): void
+    {
+        $position = $this->metaDataService->getEntityFieldAttribute($parameters->agId, $column, 'position') ?? 0;
+        $parameters->fields[sprintf('%d_%d', $position, $key)] = new FieldParameter(
+            ['name' => $column, 'mappingType' => $mappingType, 'agId' => $parameters->agId]
+        );
     }
 
     private function initAssociations(Parameters $parameters): void
@@ -170,54 +182,58 @@ class ParametersService
             $agSubId = $this->metaDataService->add($metadata->getAssociationTargetClass($column), null, true);
             $parameters->fields[sprintf('%d_a%d', $position, $key)] = new FieldParameter(
                 [
-                    'name' => $column,
+                    'name'        => $column,
                     'mappingType' => self::MAPPING_ASSOC,
-                    'agSubId' => $agSubId,
+                    'agId'        => $parameters->agId,
+                    'agSubId'     => $agSubId,
                 ]
             );
-            $this->initVirtualFields($parameters, $column, $agSubId, $key);
+            $this->initAssociatedSubfields($parameters, $column, $agSubId, $key);
         }
     }
 
-    private function initVirtualFields(
+    private function initAssociatedSubfields(
         Parameters $parameters,
         string $column,
         string $agSubId,
         int $parentPosition
     ): void {
+        $key = 0;
         $fields = $this->metaDataService->getEntityFieldAttribute($parameters->agId, $column, 'fields');
+        $virtualFields = $this->metaDataService->getPureVirtualFieldNames($agSubId);
         if (!empty($fields)) {
-            $key = 0;
             foreach ($fields as $field) {
                 $subfield = sprintf('%s.%s', $column, $field['name']);
                 $position = $field['position'] ?? $this->metaDataService
                     ->getEntityFieldAttribute($parameters->agId, $subfield, 'position') ?? $parentPosition;
                 $index = sprintf('%d_v%d_%d', $position, $parentPosition, $key++);
+                $isVirtual = in_array($field['name'], $virtualFields);
                 $parameters->fields[$index] = new FieldParameter(
                     [
-                        'name' => sprintf('%s:%s', $column, $field['name']),
-                        'mappingType' => self::MAPPING_VIRTUAL,
-                        'agId' => $agSubId,
-                        'subName' => $field['name'],
-                        'subObject' => $column,
-                        'attributes' => $field,
+                        'name'        => sprintf('%s:%s', $column, $field['name']),
+                        'mappingType' => $isVirtual ? self::MAPPING_PURE_VIRTUAL : self::MAPPING_ASSOCIATED_SUBFIELD,
+                        'agId'        => $agSubId,
+                        'subName'     => $field['name'],
+                        'subObject'   => $column,
+                        'attributes'  => $field,
                     ]
                 );
             }
         }
     }
 
-    private function buildFieldAttributes(FieldParameter $field, string $agId): void
+    private function buildFieldAttributes(FieldParameter $field): void
     {
         switch ($field->mappingType) {
             case self::MAPPING_FIELD:
-                $this->buildField($field, $agId);
+            case self::MAPPING_ASSOCIATED_SUBFIELD:
+                $this->buildField($field);
                 break;
             case self::MAPPING_ASSOC:
-                $this->buildAssociated($field, $agId);
+                $this->buildAssociated($field);
                 break;
-            case self::MAPPING_VIRTUAL:
-                $this->buildField($field, $field->agId);
+            case self::MAPPING_PURE_VIRTUAL:
+                $this->buildVirtualField($field);
                 break;
         }
 
@@ -228,21 +244,25 @@ class ParametersService
 
     private function buildFieldPermissions(FieldParameter $field, string $agId): void
     {
-        if ($field->mappingType === self::MAPPING_VIRTUAL) {
-            $field->permissions = $this->permissionService->getEntityFieldActionPermissions($field->agId, $field->subName, $agId);
+        if ($field->mappingType === self::MAPPING_ASSOCIATED_SUBFIELD) {
+            $field->permissions = $this->permissionService->getEntityFieldActionPermissions(
+                $field->agId,
+                $field->subName,
+                $agId
+            );
             return;
         }
         $field->permissions = $this->permissionService->getEntityFieldActionPermissions($agId, $field->name);
     }
 
-    private function buildField(FieldParameter $field, string $agId): void
+    private function buildField(FieldParameter $field): void
     {
         $name = $field->subName ?? $field->name;
-        $metadata = $this->metaDataService->getMetadata($agId);
+        $metadata = $this->metaDataService->getMetadata($field->agId);
         $hasIndex = $this->hasIndex($metadata, $name);
         $field->fieldMapping = $metadata->getFieldMapping($name);
 
-        $attributes = $this->metaDataService->getEntityFieldAttributes($agId, $name);
+        $attributes = $this->metaDataService->getEntityFieldAttributes($field->agId, $name);
         foreach ($attributes as $key => $value) {
             if ($value !== null && !isset($field->{$key})) {
                 $field->attributes[$key] = $value;
@@ -260,13 +280,32 @@ class ParametersService
         $field->canFilter = $field->attributes['can_filter'] ?? $hasIndex;
         $field->filterCondition = $field->attributes['filterable']['condition'] ?? null;
 
-        $this->guesserService->guessFieldFormType($field, $agId);
+        $this->guesserService->guessFieldFormType($field, $field->agId);
         $this->guesserService->guessFilterCondition($field);
+    }
+
+    private function buildVirtualField(FieldParameter $field): void
+    {
+        $name = $field->subName ?? $field->name;
+        $attributes = $this->metaDataService->getEntityFieldAttributes($field->agId, $name);
+        foreach ($attributes as $key => $value) {
+            if ($value !== null && !isset($field->{$key})) {
+                $field->attributes[$key] = $value;
+            }
+        }
+
+        $field->canSort = false;
+        $field->canFilter = false;
+        $field->canEdit = false;
     }
 
     private function hasIndex(ClassMetadata $metadata, string $fieldName): bool
     {
-        if ($metadata->isIndexed($fieldName) || $metadata->isIdentifier($fieldName) || $metadata->isUniqueField($fieldName)) {
+        if (
+            $metadata->isIndexed($fieldName)
+            || $metadata->isIdentifier($fieldName)
+            || $metadata->isUniqueField($fieldName)
+        ) {
             return true;
         }
 
@@ -291,13 +330,13 @@ class ParametersService
         return false;
     }
 
-    private function buildAssociated(FieldParameter $field, string $agId): void
+    private function buildAssociated(FieldParameter $field): void
     {
         $name = $field->name;
-        $metadata = $this->metaDataService->getMetadata($agId);
+        $metadata = $this->metaDataService->getMetadata($field->agId);
         $field->associationMapping = $metadata->getAssociationMapping($name);
 
-        $attributes = $this->metaDataService->getEntityFieldAttributes($agId, $name);
+        $attributes = $this->metaDataService->getEntityFieldAttributes($field->agId, $name);
         foreach ($attributes as $key => $value) {
             if ($value !== null) {
                 $field->attributes[$key] = $value;
@@ -317,7 +356,8 @@ class ParametersService
         $result = ['_fragment' => $parameters->attributes['container_id']];
         if ($this->configuration->isSingleParamRequest()) {
             $result[$this->configuration->getSingleParamRequestCode()] = $this->encoderService
-                ->encodeAction($parameters->agId, $action, $params);
+                ->encodeAction($parameters->agId, $action, $params)
+            ;
             return $result;
         }
         $result[$this->configuration->getMultiParamRequestId()] = $parameters->agId;

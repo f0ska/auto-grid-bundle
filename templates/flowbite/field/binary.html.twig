@@ -1,8 +1,7 @@
 {% block autogrid_field_binary_content %}
-    {% set value = ag_field_value(entity, field) %}
     {% if (value is null or value is same as '') %}
         -
     {% else %}
-        {{ ag_binary_size(value) }}
+        {{ size }}
     {% endif %}
 {% endblock %}

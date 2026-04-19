@@ -1,4 +1,4 @@
-[Index](./index.md) | [Installation](./installation.md) | **Configuration** | [Attributes](./attributes.md) | [Optional Factory Arguments](./optional-factory-arguments.md) | [Templates](./templates.md) | [Customization](./customization.md)
+[Home](../README.md) | [Installation](./installation.md) | **Configuration** | [Attributes](./attributes.md) | [Optional Factory Arguments](./optional-factory-arguments.md) | [Templates](./templates.md) | [Customization](./customization.md)
 
 # Global Configuration
 

@@ -1,6 +1,6 @@
+{% import attributes.template.icons|default(ag_template('icons')) as ag_icons %}
 {% block autogrid_field_boolean_content %}
-    {% set value = ag_field_value(entity, field) %}
     <span class="h5 m-0">
-        {{ ag_icon(value ? 'boolean-true' : 'boolean-false')|raw }}
+        {{ value ? ag_icons.boolean_true() : ag_icons.boolean_false() }}
     </span>
 {% endblock %}

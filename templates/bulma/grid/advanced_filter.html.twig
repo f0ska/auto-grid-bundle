@@ -1,3 +1,4 @@
+{% import attributes.template.icons|default(ag_template('icons')) as ag_icons %}
 {% if view.advancedFilterFormView and ag_run(agIsAllowed, 'advanced_filter') %}
     {% block autogrid_grid_advanced_filter_modal %}
         <div id="adv{{ agId }}" class="modal">
@@ -14,7 +15,7 @@
                         <header class="modal-card-head">
                             {% block autogrid_grid_advanced_filter_header %}
                                 <p class="modal-card-title" id="adv{{ agId }}Label">
-                                    {{ ag_icon('search')|raw }}
+                                    {{ ag_icons.search() }}
                                     {% if attributes.title is not empty %}
                                         {{ attributes.title|trans }}
                                     {% endif %}

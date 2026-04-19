@@ -133,7 +133,7 @@ class EntityFormBuilder
                 }
                 if (
                     !empty($field->associationMapping->mappedBy)
-                    || $field->mappingType === ParametersService::MAPPING_VIRTUAL
+                    || $field->mappingType === ParametersService::MAPPING_ASSOCIATED_SUBFIELD
                 ) {
                     continue;
                 }

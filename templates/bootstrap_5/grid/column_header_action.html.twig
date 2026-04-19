@@ -1,3 +1,4 @@
+{% import attributes.template.icons|default(ag_template('icons')) as ag_icons %}
 {% if (ag_run(agIsAnyAllowed)) or attributes.has_custom_action is defined %}
     {% set btnClass = attributes.html_class.thead_btn|default('btn-outline-secondary') %}
     {% set btnClassActive = attributes.html_class.thead_btn_active|default('btn-primary') %}
@@ -6,7 +7,7 @@
             {% block autogrid_grid_header_action_clear_filter %}
                 {% if request.filter is defined and ag_run(agIsAllowed, 'filter') %}
                     <a class="btn btn-sm btn-outline-danger" href="{{ ag_run(agActionUrl, 'grid', {'filter': null}) }}">
-                        {{ ag_icon('filter-reset')|raw }}
+                        {{ ag_icons.filter_reset() }}
                     </a>
                 {% endif %}
             {% endblock %}
@@ -16,7 +17,7 @@
                             data-bs-toggle="modal"
                             data-bs-target="#adv{{ agId }}"
                             data-bs-backdrop="false"
-                    >{{ ag_icon('search')|raw }}</button>
+                    >{{ ag_icons.search() }}</button>
                 {% endif %}
             {% endblock %}
             {% block autogrid_grid_header_action_export %}
@@ -47,7 +48,7 @@
         {% block autogrid_grid_header_action_create %}
             {% if (ag_run(agIsAllowed, 'create')) %}
                 <a class="btn btn-sm {{ btnClass }}" href="{{ ag_run(agActionUrl, 'create') }}">
-                    {{ ag_icon('add')|raw }}
+                    {{ ag_icons.add() }}
                 </a>
             {% endif %}
         {% endblock %}

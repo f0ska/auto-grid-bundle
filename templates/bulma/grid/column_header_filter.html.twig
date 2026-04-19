@@ -1,3 +1,4 @@
+{% import attributes.template.icons|default(ag_template('icons')) as ag_icons %}
 {% set isFilterActive = (attribute(request.filter ?? {}, field.name) is defined) and attribute(request.filter, field.name) is not same as null %}
 {% set linkClass = attributes.html_class.thead_link|default('has-text-grey') %}
 {% set linkClassActive = attributes.html_class.thead_link_active|default('has-text-info') %}
@@ -8,7 +9,7 @@
             <a class="{{ isFilterActive ? linkClassActive : linkClass }}"
                role="button"
                onclick="var d=document.getElementById('{{ dropdownId }}');d.style.display=d.style.display=='none'?'block':'none'; event.stopPropagation();"
-            >{{ ag_icon(isFilterActive ? 'filter-active' : 'filter')|raw }}</a>
+            >{{ isFilterActive ? ag_icons.filter_active() : ag_icons.filter() }}</a>
         {% endblock %}
         {% block autogrid_grid_column_header_filter_dropdown %}
             <div id="{{ dropdownId }}" class="dropdown-menu" role="menu" style="min-width: 250px; position: absolute; left: 0; top: 100%; display: none; background: white; z-index: 1000; box-shadow: 0 2px 3px rgba(10,10,10,0.1), 0 0 0 1px rgba(10,10,10,0.1); border-radius: 4px;" onclick="event.stopPropagation();">
