@@ -1,15 +1,14 @@
-[Index](./index.md) | [Installation](./installation.md) | [Configuration](./global-configuration.md) | [Attributes](./attributes.md) | [Optional Factory Arguments](./optional-factory-arguments.md) | [Templates](./templates.md) | **Customization**
+[Home](../README.md) | [Installation](./installation.md) | [Configuration](./global-configuration.md) | [Attributes](./attributes.md) | [Templates](./templates.md) | **Customization**
 
 # Customization
 
-AutoGrid is built to be extended. You can override everything from a single icon to the entire rendering logic.
+AutoGrid is extendable at multiple levels, from template overrides to core service logic.
 
-## Overriding Templates
-
-There are five ways to customize the UI, from global defaults to specific fields:
+<details>
+<summary><strong>Overriding Templates</strong></summary>
 
 ### 1. Global Configuration
-Set the default theme and base templates for all grids in `f0ska_auto_grid.yaml`.
+Configure default themes in `f0ska_auto_grid.yaml`.
 
 ```yaml
 f0ska_auto_grid:
@@ -20,14 +19,12 @@ f0ska_auto_grid:
 ```
 
 ### 2. File-based Overrides
-Override bundle templates by creating files in `templates/bundles/F0skaAutoGridBundle/`.
-For example, to change the grid layout, create `templates/bundles/F0skaAutoGridBundle/grid/grid.html.twig`.
+Override templates by creating files in `templates/bundles/F0skaAutoGridBundle/`.
 
 ### 3. Route Parameters
 Override the theme for a specific route in your routing configuration.
 
 ```yaml
-# config/routes.yaml
 admin_users:
     path: /admin/users
     controller: App\Controller\AdminController::users
@@ -37,7 +34,7 @@ admin_users:
 ```
 
 ### 4. Entity Level Attributes
-Use the `#[Template]` attribute on your Entity class to override specific template areas for that entity only.
+Override template areas for specific entities using `#[Template]`.
 
 ```php
 use F0ska\AutoGridBundle\ValueObject\TemplateArea;
@@ -49,241 +46,157 @@ class User { ... }
 ```
 
 ### 5. Field Level Attributes
-Use the `#[ViewTemplate]` attribute to change how a single property is rendered in the grid.
+Use `#[ViewTemplate]` to render a specific property.
 
 ```php
 #[ViewTemplate('admin/user/_avatar_cell.html.twig')]
 private ?string $avatarPath = null;
 ```
-
----
-
-## Advanced Customization
+</details>
 
 <details>
-<summary><strong>Custom Filter Conditions</strong>: Control how filters apply to the QueryBuilder.</summary>
+<summary><strong>Custom Filter Conditions</strong></summary>
 
-1. Implement `FilterConditionInterface`.
-2. Register as a service.
+1. Implement [`FilterConditionInterface`](../src/Condition/FilterConditionInterface.php).
+2. Register as a service with the `autogrid.filter_condition` tag and set `public: true`.
 3. Use in `#[Filterable(condition: MyCondition::class)]`.
 
 ```php
-class MyCustomCondition implements FilterConditionInterface
-{
-    public function apply(QueryBuilder $qb, string $column, FieldParameter $field, mixed $value): void
-    {
-        $alias = uniqid('p');
-        $qb->andWhere("$column > :$alias")->setParameter($alias, $value);
-    }
-}
+// config/services.yaml
+App\Filter\MyCustomCondition:
+    tags: ['autogrid.filter_condition']
+    public: true
 ```
 </details>
 
 <details>
-<summary><strong>Custom View Services</strong>: Encapsulate complex rendering logic in a Symfony service.</summary>
+<summary><strong>Custom View Services</strong></summary>
 
-1.  Implement `F0ska\AutoGridBundle\View\ViewServiceInterface`.
-2.  (Optional) Leverage Logic Providers (`FieldValueProvider`, `ChoiceProvider`, etc.).
-3.  Assign to a property using `#[ViewService(MyService::class)]`.
+1. Implement [`ViewServiceInterface`](../src/View/ViewServiceInterface.php).
+2. Register as a service with the `autogrid.view_service` tag and set `public: true`.
+3. Use `#[ViewService(MyService::class)]`.
 
 ```php
-namespace App\Service;
+// config/services.yaml
+App\Service\MyCustomViewService:
+    tags: ['autogrid.view_service']
+    public: true
+```
+</details>
 
-use F0ska\AutoGridBundle\View\ViewServiceInterface;
-use F0ska\AutoGridBundle\Service\Provider\FieldValueProvider;
+<details>
+<summary><strong>Pure Virtual Columns</strong></summary>
 
-class MyCustomViewService implements ViewServiceInterface
+Pure virtual columns display data not directly mapped to Doctrine properties.
+
+**Important:**
+*   Pure virtual columns are **read-only** in the grid (not filterable, sortable, or editable).
+*   Avoid naming collisions with existing Doctrine-mapped properties.
+*   If using `GridEvent` to populate data, ensure calculations are efficient. `ViewService` is preferred for per-row rendering logic.
+
+**Implementation:**
+1. Declare a public property in your entity.
+2. Mark with `#[VirtualColumn]`.
+3. Provide data via `#[ViewService]` (recommended) or `GridEvent` listener.
+
+**Example (ViewService):**
+```php
+#[VirtualColumn]
+#[ViewService(MyFullNameViewService::class)]
+public ?string $fullName = null;
+```
+
+**Example (GridEvent):**
+```php
+class UserGridSubscriber implements EventSubscriberInterface
 {
-    public function __construct(private FieldValueProvider $valueProvider) {}
-
-    public function prepare(array $context): array
+    public static function getSubscribedEvents(): array
     {
-        $value = $this->valueProvider->getValue($context['entity'], $context['field']);
-        
-        return [
-            'value' => $value,
-            'extra_info' => $this->getSomeExternalData($value)
-        ];
+        return [GridEvent::EVENT_NAME => 'onGridEvent'];
+    }
+
+    public function onGridEvent(GridEvent $event): void
+    {
+        foreach ($event->getEntities() as $user) {
+            $user->fullName = $user->getFirstName() . ' ' . $user->getLastName();
+        }
     }
 }
 ```
 </details>
 
 <details>
-<summary><strong>Pure Virtual Columns</strong>: Display computed or non-Doctrine data on your root entity.</summary>
+<summary><strong>Service Tags</strong></summary>
 
-Pure virtual columns allow you to display data that is not directly mapped to your Doctrine entity properties. These can be calculated values, aggregated data, or information retrieved from other sources.
+You can extend core functionality by registering services with these tags:
 
-> **Important Note:** This section describes *pure virtual columns*, which are properties added to your entity solely for grid display and are not Doctrine-mapped. This is distinct from **associated subfields** (previously referred to as "virtual fields from associated entities"), which are specific properties pulled from a related, Doctrine-mapped entity using `#[AssociatedField]`. While both appear as non-standard columns in the grid, only pure virtual columns are truly non-Doctrine backed.
+| Tag | Interface |
+| :--- | :--- |
+| `autogrid.action` | [`ActionInterface`](../src/Action/ActionInterface.php) |
+| `autogrid.action.parameter` | [`ActionParameterInterface`](../src/ActionParameter/ActionParameterInterface.php) |
+| `autogrid.customization` | [`CustomizationInterface`](../src/Customization/CustomizationInterface.php) |
 
-**Key Characteristics:**
-*   Pure virtual columns are **not filterable, sortable, or editable**.
-*   They are defined on "dummy" properties within your entity class, which are not mapped by Doctrine.
+All such services must be registered with the tag and set to `public: true`:
 
-**Defining a Pure Virtual Column:**
+```yaml
+# config/services.yaml
+App\Service\MyCustomAction:
+    tags: ['autogrid.action']
+    public: true
+```
+</details>
 
-1.  **Add a Dummy Property**: In your entity class, declare a new public property that will hold the virtual column's value. Do *not* map this property with Doctrine (e.g., no `#[ORM\Column]` or `#[ORM\ManyToOne]`).
-2.  **Mark with `#[VirtualColumn]`**: Apply the `#[F0ska\AutoGridBundle\Attribute\VirtualColumn]` attribute to this dummy property. This tells AutoGrid to recognize it as a virtual field.
-3.  **Apply Existing AutoGrid Attributes**: Use other familiar AutoGrid attributes (like `#[Label]`, `#[ViewService]`, `#[Position]`, `#[ColumnHtmlClass]`, `#[FieldTemplate]`, `#[GridTruncate]`, `#[ValuePrefix]`, `#[ValueSuffix]`) on your virtual property to define its appearance and behavior, just like any other grid column.
+<details>
+<summary><strong>Custom Data Exchange</strong></summary>
 
-**Example:**
+The `customization` array is available throughout the AutoGrid lifecycle to store and retrieve arbitrary data. This is useful for passing information from your controller to `ViewServices`, Twig templates, or other customizations.
+
+### Where to use it:
+- **`AutoGridFactory`**: Pass data during grid creation:
+  ```php
+  $grid = $factory->create(User::class, customization: ['my_key' => 'my_value']);
+  ```
+- **`Parameters` Model**: Stores global grid-level custom data.
+- **`FieldParameter` Model**: Stores field-level custom data.
+
+### Accessing the data:
+Inside a `ViewService` or `FieldTemplate`, you can access this data via the `FieldParameter` object:
 
 ```php
-<?php
-
-namespace App\Entity;
-
-use F0ska\AutoGridBundle\Attribute as AutoGrid;
-use Doctrine\ORM\Mapping as ORM;
-
-#[ORM\Entity]
-class User
+// In a ViewService
+public function prepare(object $entity, FieldParameter $field): array
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
-
-    #[ORM\Column(length: 255)]
-    #[AutoGrid\Label('First Name')]
-    #[AutoGrid\Position(10)]
-    public ?string $firstName = null;
-
-    #[ORM\Column(length: 255)]
-    #[AutoGrid\Label('Last Name')]
-    #[AutoGrid\Position(20)]
-    public ?string $lastName = null;
-
-    // ... other Doctrine-mapped properties
-
-    /**
-     * Virtual column for user's full name.
-     * This property is not mapped by Doctrine.
-     */
-    #[AutoGrid\VirtualColumn]
-    #[AutoGrid\Label('Full Name')]
-    #[AutoGrid\Position(15)] // Display between first and last name
-    #[AutoGrid\ViewService(App\ViewService\UserFullNameViewService::class)]
-    #[AutoGrid\ColumnHtmlClass('font-weight-bold')]
-    public ?string $fullName = null;
+    $myValue = $field->parameters->customization['my_key'] ?? null;
+    
+    return ['value' => '...'];
 }
 ```
-
-**Populating Virtual Column Data:**
-
-*   **Recommended: Using a `ViewService`**:
-    The most straightforward way to provide data for a virtual column is by assigning a custom `ViewService` to it. The `ViewService` will receive the entity instance and the virtual field name, allowing you to compute or fetch the value dynamically.
-
-    ```php
-    <?php
-
-    namespace App\ViewService;
-
-    use F0ska\AutoGridBundle\Service\Provider\FieldValueProvider;
-    use F0ska\AutoGridBundle\View\ViewServiceInterface;
-
-    class UserFullNameViewService implements ViewServiceInterface
-    {
-        public function __construct(private FieldValueProvider $valueProvider) {}
-
-        public function prepare(array $context): array
-        {
-            $user = $context['entity']; // The User entity instance
-            // Assuming User entity has getFirstName() and getLastName() methods
-            $fullName = sprintf('%s %s', $user->getFirstName(), $user->getLastName());
-
-            return [
-                'value' => $fullName,
-                // Add any other context needed for the template if you use a custom FieldTemplate
-            ];
-        }
-    }
-    ```
-    Register your `UserFullNameViewService` as a service in Symfony's dependency injection container (e.g., `config/services.yaml`).
-
-*   **Advanced: Using a `GridEvent` Listener**:
-    For complex calculations, or when a virtual column's value depends on data not directly accessible from the single entity (e.g., aggregates across multiple entities), you can use a `GridEvent` listener. This listener would iterate through all entities retrieved by the grid and manually set the dummy property for each entity *before* the grid is rendered. This is particularly useful for performance if the calculation is expensive and needed for every row.
-
-    ```php
-    <?php
-
-    namespace App\EventSubscriber;
-
-    use F0ska\AutoGridBundle\Event\GridEvent;
-    use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-
-    class UserGridSubscriber implements EventSubscriberInterface
-    {
-        public static function getSubscribedEvents(): array
-        {
-            return [
-                GridEvent::EVENT_NAME => 'onGridEvent',
-                // Or target a specific grid: GridEvent::EVENT_NAME . '.your_grid_id' => 'onGridEvent',
-            ];
-        }
-
-        public function onGridEvent(GridEvent $event): void
-        {
-            foreach ($event->getEntities() as $user) {
-                // Assuming User entity has getFirstName() and getLastName() methods
-                $user->fullName = sprintf('%s %s', $user->getFirstName(), $user->getLastName());
-                // Perform other complex calculations or data fetching here
-            }
-        }
-    }
-    ```
-    Register your `UserGridSubscriber` as a service (e.g., `#[AsEventListener(event: GridEvent::EVENT_NAME)]`).
-
 </details>
 
 <details>
-<summary><strong>Services & Tags</strong>: Extend the core logic.</summary>
+<summary><strong>Handling Events</strong></summary>
 
-You can register custom services using these tags:
-- `autogrid.action`: New grid actions.
-- `autogrid.action.parameter`: Custom parameters for actions.
-- `autogrid.filter_condition`: Custom search logic.
-- `autogrid.customization`: Global grid logic modifiers.
+AutoGrid dispatches events during the CRUD lifecycle, providing integration points without modifying core logic. 
 
-Refer to [services.yaml](../config/services.yaml) for core implementations.
-</details>
+### Event Names
+All event names can optionally include a `.{gridId}` suffix to target specific grid instances. Additionally, `MassEvent` and `ExportEvent` support a `.{code}` suffix to target specific action codes.
 
-<details>
-<summary><strong>Handling Events</strong>: Hook into the CRUD lifecycle.</summary>
+### Available Events
 
-AutoGrid's event system provides powerful extension points throughout its lifecycle. This lets you add custom logic, modify data, or integrate with other services without changing AutoGrid's core. By subscribing to these events, you can react to critical moments like entity saves, deletions, grid data loading, mass actions, and exports.
+| Event Name | Dispatched When | Event Class |
+| :--- | :--- | :--- |
+| `f0ska.autogrid.entity.save` | Before entity is persisted. | [`SaveEvent`](../src/Event/SaveEvent.php) |
+| `f0ska.autogrid.entity.delete` | Before entity removal. | [`DeleteEvent`](../src/Event/DeleteEvent.php) |
+| `f0ska.autogrid.entity.view` | When entity is loaded for view/edit. | [`ViewEvent`](../src/Event/ViewEvent.php) |
+| `f0ska.autogrid.mass_action` | When a bulk action is triggered. | [`MassEvent`](../src/Event/MassEvent.php) |
+| `f0ska.autogrid.export_action` | When an export action is triggered. | [`ExportEvent`](../src/Event/ExportEvent.php) |
+| `f0ska.autogrid.grid.load` | When grid data is being prepared. | [`GridEvent`](../src/Event/GridEvent.php) |
+| `f0ska.autogrid.error.show` | When an error occurs. | [`ErrorEvent`](../src/Event/ErrorEvent.php) |
 
-### Dynamic Event Naming
-All events are dispatched with an optional `.{gridId}` suffix, allowing you to target a specific grid instance.
-Additionally, `MassEvent` and `ExportEvent` include a `.{code}` suffix to target specific action codes.
-
-**Example: Specific Save Action**
+**Example: Specific Action Listener**
 ```php
 // Listen only to 'save' on the 'article_grid'
 #[AsEventListener(event: 'f0ska.autogrid.entity.save.article_grid')]
 public function onArticleSave(SaveEvent $event): void { ... }
 ```
-
-**Example: Specific Export Code**
-```php
-// Listen only to the 'csv_export' action
-#[AsEventListener(event: 'f0ska.autogrid.export_action.csv_export')]
-public function onCsvExport(ExportEvent $event): void { ... }
-```
-
-### Event Lifecycle Table
-
-| Event Name | Dispatched When... |
-| :--- | :--- |
-| `f0ska.autogrid.entity.save` | **Before** an entity is persisted/updated in the database. |
-| `f0ska.autogrid.entity.delete` | **Before** an entity is removed from the database. |
-| `f0ska.autogrid.entity.view` | When an entity is loaded for the view action. |
-| `f0ska.autogrid.mass_action` | When a bulk action is triggered. |
-| `f0ska.autogrid.export_action` | When an export action is triggered. |
-| `f0ska.autogrid.error.show` | When an error occurs during processing. |
-
 </details>
-
----
-
-[Index](./index.md) | [Installation](./installation.md) | [Configuration](./global-configuration.md) | [Attributes](./attributes.md) | [Templates](./templates.md)
