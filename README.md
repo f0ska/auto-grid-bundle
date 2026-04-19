@@ -1,50 +1,47 @@
 # AutoGridBundle
 
-Automate the CRUD layer in Symfony by generating grids, forms, and filters directly from Doctrine entities.
+AutoGrid automatically generates CRUD interfaces for Doctrine entities.
 
-[**Demo**](https://github.com/f0ska/auto-grid-test-bundle) | [**Documentation**](./docs/index.md) | [**Installation**](./docs/installation.md)
+[**Demo**](https://github.com/f0ska/auto-grid-test-bundle) | [**Installation**](./docs/installation.md) | [**Configuration**](./docs/global-configuration.md) | [**Attributes**](./docs/attributes.md) | [**Optional Factory Arguments**](./docs/optional-factory-arguments.md) | [**Templates**](./docs/templates.md) | [**Customization**](./docs/customization.md)
 
 ---
 
 ## Core Features
 
-*   **Out-of-the-box CRUD**: Full List, Create, Edit, and Delete functionality with minimal setup.
-*   **Metadata-driven UI**: Advanced form and filter detection using Doctrine metadata.
-*   **Automatic Filtering**: Integrated search and sorting based on database schema.
-*   **Attribute Configuration**: Fine-tune UI behavior directly in your Entity classes.
-*   **Multi-theme Support**: Default support for Bootstrap 5, with experimental support for Bootstrap 4, Bulma, Flowbite, and Foundation.
+*   **CRUD Generation**: Full List, Create, Edit, and Delete functionality.
+*   **Metadata-driven**: Automatically detects field types from Doctrine metadata.
+*   **Built-in Filtering/Sorting**: Integrated search based on database schema.
+*   **PHP 8 Attributes**: Configure UI behavior directly in Entity classes.
+*   **Multi-theme Support**: Includes Bootstrap 5, Bootstrap 4, Bulma, Flowbite, and Foundation.
 
 ---
 
-## Implementation
+## Quick Start
 
-### 1. Controller
-```php
-public function list(AutoGridFactory $factory): Response
-{
-    $grid = $factory->create(User::class);
-    
-    // AutoGrid handles form processing, redirects, and state internally
-    return $grid->getResponse() ?? $this->render('admin/user.html.twig', ['grid' => $grid]);
-}
-```
+1.  **In your Controller**
+    Inject `AutoGridFactory` to create a grid:
 
-### 2. Twig
-```html
-{{ ag_render(grid) }}
-```
+    ```php
+    public function list(AutoGridFactory $factory): Response
+    {
+        $grid = $factory->create(User::class);
+        
+        return $grid->getResponse() ?? $this->render('admin/user.html.twig', [
+            'grid' => $grid
+        ]);
+    }
+    ```
 
-### 3. Default UI
-![AutoGrid Screenshot](./docs/media/grid.png)
+2.  **In Twig**
+    Render the grid:
+
+    ```twig
+    {{ ag_render(grid) }}
+    ```
 
 ---
 
-## Technical Requirements
+## Requirements
 *   **PHP 8.1+**
 *   **Symfony 6.4+**
-*   **UI Framework**: Default templates use **Bootstrap 5**. The bundle now includes experimental support for **Bootstrap 4**, **Bulma**, **Flowbite**, and **Foundation**. For custom frameworks or deep overrides, see [template documentation](./docs/templates.md).
-
----
-
-
-[Documentation Index](./docs/index.md) | [Installation](./docs/installation.md) | [Attributes](./attributes.md)
+*   **Frameworks**: Default templates use Bootstrap 5. See [templates](./docs/templates.md) for custom framework configuration.
