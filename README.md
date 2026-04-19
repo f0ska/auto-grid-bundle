@@ -39,6 +39,9 @@ AutoGrid automatically generates CRUD interfaces for Doctrine entities.
     {{ ag_render(grid) }}
     ```
 
+3.  **Result**
+    ![AutoGrid Screenshot](./docs/media/grid.png)
+
 ---
 
 ## Requirements

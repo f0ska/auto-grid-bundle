@@ -14,6 +14,7 @@ f0ska_auto_grid:
     template:
         theme: '@@F0skaAutoGrid/bootstrap_5' # Main theme for the grid.
         base: 'base.html.twig'               # Your app's base template.
+        icons: '@F0skaAutoGrid/_icons.html.twig' # Icon set template.
         form_themes:
             - 'bootstrap_5_layout.html.twig'
 
