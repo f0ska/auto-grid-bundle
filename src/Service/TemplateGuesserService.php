@@ -146,12 +146,14 @@ class TemplateGuesserService
 
     private function getFieldTemplate(FieldParameter $field): string
     {
-        $code = $this->templateByFormType[$field->attributes['form']['type'] ?? null] ?? null;
+        $type = $field->attributes['form']['type'] ?? '';
+        $code = $this->templateByFormType[$type] ?? null;
         if ($code) {
             return $this->configuration->getFieldTemplate($code);
         }
 
-        $code = $this->templateByDbalType[$field->fieldMapping?->type] ?? null;
+        $dbalType = $field->fieldMapping->type ?? '';
+        $code = $this->templateByDbalType[$dbalType] ?? null;
         if ($code) {
             return $this->configuration->getFieldTemplate($code);
         }
