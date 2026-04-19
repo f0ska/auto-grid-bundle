@@ -15,7 +15,6 @@ namespace F0ska\AutoGridBundle\Service\Provider;
 use Doctrine\Common\Collections\Collection;
 use F0ska\AutoGridBundle\Exception\RenderException;
 use F0ska\AutoGridBundle\Model\FieldParameter;
-use F0ska\AutoGridBundle\Service\ParametersService;
 
 class FieldValueProvider
 {
@@ -23,9 +22,8 @@ class FieldValueProvider
     {
         $object = $entity;
         $property = $field->name;
-        if ($field->mappingType === ParametersService::MAPPING_VIRTUAL) {
-            $getter = 'get' . ucfirst($field->subObject);
-            $object = $entity->{$getter}();
+        if ($field->subObject !== null) {
+            $object = $this->getPropertyValue($entity, $field->subObject);
             $property = $field->subName;
         }
 
@@ -34,6 +32,7 @@ class FieldValueProvider
             foreach ($object as $item) {
                 $result[] = $this->getPropertyValue($item, $property);
             }
+
             return implode(', ', $result);
         }
 
@@ -44,18 +43,34 @@ class FieldValueProvider
         return $this->getPropertyValue($object, $property);
     }
 
+    public function setValue(object $entity, FieldParameter $field, mixed $value): void
+    {
+        $object = $entity;
+        $property = $field->name;
+        if ($field->subObject !== null) {
+            $object = $this->getPropertyValue($entity, $field->subObject);
+            $property = $field->subName;
+        }
+        $this->setPropertyValue($object, $property, $value);
+    }
+
     private function getPropertyValue(object $object, string $property): mixed
     {
-        $getter = 'get' . ucfirst($property);
-        if (method_exists($object, $getter)) {
-            return $object->{$getter}();
+        $methods = ['get' . ucfirst($property), 'is' . ucfirst($property), $property];
+        foreach ($methods as $method) {
+            if (method_exists($object, $method)) {
+                return $object->{$method}();
+            }
         }
-
-        $isser = 'is' . ucfirst($property);
-        if (method_exists($object, $isser)) {
-            return $object->{$isser}();
-        }
-
         throw new RenderException(sprintf('Invalid property "%s" in class "%s"', $property, get_class($object)));
+    }
+
+    private function setPropertyValue(object $object, string $property, mixed $value): void
+    {
+        $method = 'set' . ucfirst($property);
+        if (!method_exists($object, $method)) {
+            throw new RenderException(sprintf('Setter "%s" not found in class "%s"', $method, get_class($object)));
+        }
+        $object->{$method}($value);
     }
 }

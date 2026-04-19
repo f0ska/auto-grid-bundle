@@ -33,11 +33,15 @@ class AttributeParserService
         $reflectionClass = $metadata->getReflectionClass();
 
         $entityAttributes = $this->parseEntityAttributes($reflectionClass);
-        $fieldAttributes = $this->parseFieldAttributes($metadata, $reflectionClass, $entityAttributes);
+        [$fieldAttributes, $pureVirtualFieldNames] = $this->parseFieldAttributes(
+            $metadata,
+            $reflectionClass,
+            $entityAttributes
+        );
 
         $this->processFieldsetAttributes($fieldAttributes, $entityAttributes);
 
-        return new AttributeCollection($entityAttributes, $fieldAttributes);
+        return new AttributeCollection($entityAttributes, $fieldAttributes, $pureVirtualFieldNames);
     }
 
     private function parseEntityAttributes(ReflectionClass $reflectionClass): array
@@ -56,21 +60,33 @@ class AttributeParserService
         array &$entityAttributes
     ): array {
         $fieldAttributes = [];
-        $fieldNames = array_merge($metadata->getFieldNames(), $metadata->getAssociationNames());
         $defaultSort = [];
+        $pureVirtualFieldNames = [];
 
-        foreach ($fieldNames as $fieldName) {
-            if ($reflectionClass->hasProperty($fieldName)) {
-                foreach ($reflectionClass->getProperty($fieldName)->getAttributes() as $attribute) {
-                    $instance = $attribute->newInstance();
-                    if ($instance instanceof Sortable) {
-                        $this->processSortableAttribute($instance, $fieldName, $fieldAttributes, $defaultSort);
-                    } elseif ($instance instanceof Filterable) {
-                        $this->processFilterableAttribute($instance, $fieldName, $fieldAttributes);
-                    } elseif ($instance instanceof AttributeInterface) {
-                        $this->addFieldValue($fieldAttributes, $instance, $fieldName);
-                    }
+        foreach ($reflectionClass->getProperties() as $property) {
+            $fieldName = $property->getName();
+            $isDoctrineMapped = $metadata->hasField($fieldName) || $metadata->hasAssociation($fieldName);
+
+            $propertyAttributes = [];
+            foreach ($property->getAttributes() as $attribute) {
+                $instance = $attribute->newInstance();
+                if ($instance instanceof Sortable) {
+                    $this->processSortableAttribute($instance, $fieldName, $propertyAttributes, $defaultSort);
+                } elseif ($instance instanceof Filterable) {
+                    $this->processFilterableAttribute($instance, $propertyAttributes);
+                } elseif ($instance instanceof AttributeInterface) {
+                    $this->addValue($propertyAttributes, $instance->getCode(), $instance->getValue());
                 }
+            }
+
+            $isVirtualField = $propertyAttributes['virtual_column'] ?? false;
+
+            if ($isVirtualField) {
+                $pureVirtualFieldNames[] = $fieldName;
+            }
+
+            if ($isDoctrineMapped || $isVirtualField) {
+                $fieldAttributes[$fieldName] = $propertyAttributes;
             }
         }
 
@@ -79,17 +95,17 @@ class AttributeParserService
             $entityAttributes['default_sort'] = array_map(fn($item) => $item['direction'], $defaultSort);
         }
 
-        return $fieldAttributes;
+        return [$fieldAttributes, $pureVirtualFieldNames];
     }
 
     private function processSortableAttribute(
         Sortable $attribute,
         string $fieldName,
-        array &$fieldAttributes,
+        array &$propertyAttributes,
         array &$defaultSort
     ): void {
         $sortInfo = $attribute->getValue();
-        $this->addValue($fieldAttributes, $fieldName . '.can_sort', $sortInfo['can_sort']);
+        $this->addValue($propertyAttributes, 'can_sort', $sortInfo['can_sort']);
         if (isset($sortInfo['direction'])) {
             $defaultSort[$fieldName] = [
                 'direction' => $sortInfo['direction'],
@@ -100,19 +116,18 @@ class AttributeParserService
 
     private function processFilterableAttribute(
         Filterable $attribute,
-        string $fieldName,
-        array &$fieldAttributes
+        array &$propertyAttributes
     ): void {
         $info = $attribute->getValue();
-        $this->addValue($fieldAttributes, $fieldName . '.can_filter', $info['enabled']);
+        $this->addValue($propertyAttributes, 'can_filter', $info['enabled']);
         if ($info['condition'] !== null) {
-            $this->addValue($fieldAttributes, $fieldName . '.filterable.condition', $info['condition']);
+            $this->addValue($propertyAttributes, 'filterable.condition', $info['condition']);
         }
         if ($info['form_type'] !== null) {
-            $this->addValue($fieldAttributes, $fieldName . '.filterable.form_type', $info['form_type']);
+            $this->addValue($propertyAttributes, 'filterable.form_type', $info['form_type']);
         }
         if (!empty($info['form_options'])) {
-            $this->addValue($fieldAttributes, $fieldName . '.filterable.form_options', $info['form_options']);
+            $this->addValue($propertyAttributes, 'filterable.form_options', $info['form_options']);
         }
     }
 
@@ -138,11 +153,6 @@ class AttributeParserService
         if ($instance instanceof AttributeInterface) {
             $this->addValue($entityAttributes, $instance->getCode(), $instance->getValue());
         }
-    }
-
-    private function addFieldValue(array &$fieldAttributes, AttributeInterface $instance, string $fieldName): void
-    {
-        $this->addValue($fieldAttributes, $fieldName . '.' . $instance->getCode(), $instance->getValue());
     }
 
     private function addValue(array &$link, string $code, mixed $value): void

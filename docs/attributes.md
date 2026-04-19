@@ -246,7 +246,7 @@ private ?string $longDescription = null;
 #### 5. Context-Aware (gridId) Visibility
 ```php
 // Hide a field only when displayed in a specific parent grid
-// Useful for virtual fields from [AssociatedField]
+// Useful for fine-tuning access to specific fields (including associated subfields) in a parent grid.
 #[Permission(gridId: 'article_list', allow: false)]
 private ?string $userEmail = null;
 ```
@@ -272,8 +272,8 @@ This attribute is repeatable, allowing you to show multiple fields from the same
 - `name`: (string) **Required**. The property name on the target entity.
 - `label`: (string) Custom label for the column (Translatable).
 - `position`: (int) Change the display order.
-- `canFilter`: (bool) Enable/disable filtering for this virtual column.
-- `canSort`: (bool) Enable/disable sorting for this virtual column.
+- `canFilter`: (bool) Enable/disable filtering for this associated subfield.
+- `canSort`: (bool) Enable/disable sorting for this associated subfield.
 - `options`: (array) Additional parameters (passed to template or metadata).
 
 **Notes:**
