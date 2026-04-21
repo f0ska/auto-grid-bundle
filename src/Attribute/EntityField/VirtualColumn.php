@@ -17,8 +17,8 @@ use F0ska\AutoGridBundle\Attribute\AbstractAttribute;
 #[\Attribute(\Attribute::TARGET_PROPERTY)]
 class VirtualColumn extends AbstractAttribute
 {
-    public function __construct()
+    public function __construct(?string $dql = null)
     {
-        parent::__construct(true);
+        parent::__construct(['allowed' => true, 'dql' => $dql]);
     }
 }

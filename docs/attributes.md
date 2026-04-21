@@ -257,6 +257,15 @@ private ?string $status = null;
 
 Enables grid searching/filtering.
 
+**Parameters:**
+- `condition`: The condition class name. Available conditions:
+  - [`AssociationCondition`](../src/Condition/AssociationCondition.php): For filtering entity relations.
+  - [`ContainsCondition`](../src/Condition/ContainsCondition.php): SQL `LIKE %value%`.
+  - [`ExactCondition`](../src/Condition/ExactCondition.php): SQL `=` comparison.
+  - [`InCondition`](../src/Condition/InCondition.php): SQL `IN (...)` comparison.
+  - [`RangeCondition`](../src/Condition/RangeCondition.php): For numerical or date ranges (`min`/`max` array keys).
+  - [`StartsWithCondition`](../src/Condition/StartsWithCondition.php): SQL `LIKE value%`.
+
 ```php
 #[Filterable(condition: ContainsCondition::class)]
 private ?string $description = null;
@@ -357,10 +366,13 @@ private ?string $avatarPath = null;
 
 Marks a property as non-Doctrine-mapped, for computed grid-only data.
 
+**Parameters:**
+- `dql`: (Optional) A DQL subquery string to automatically populate the field. Use `{this}` for current record alias and `{root}` for main entity root alias.
+
 ```php
-#[VirtualColumn]
-#[ViewService(MyFullNameViewService::class)]
-public ?string $fullName = null;
+// Computed data from DQL subquery
+#[VirtualColumn(dql: "SELECT COUNT(c.id) FROM App\Entity\Comment c WHERE c.post = {this}")]
+public ?int $commentCount = null;
 ```
 </details>
 

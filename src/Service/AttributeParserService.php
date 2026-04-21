@@ -79,7 +79,7 @@ class AttributeParserService
                 }
             }
 
-            $isVirtualField = $propertyAttributes['virtual_column'] ?? false;
+            $isVirtualField = !empty($propertyAttributes['virtual_column']['allowed']);
 
             if ($isVirtualField) {
                 $pureVirtualFieldNames[] = $fieldName;
