@@ -288,14 +288,10 @@ class ParametersService
         }
 
         $field->canSort = $field->attributes['can_sort'] ?? false;
-        $field->canFilter = $field->attributes['can_filter'] ?? false;
-        $field->filterCondition = $field->attributes['filterable']['condition'] ?? null;
         $parameters = $field->parameters;
         $parameters->query['has_dql'] = true;
 
         $parameters->query['virtual_alias_map'][$field->name] = $this->buildVirtualDqlAlias($field);
-
-        $this->guesserService->guessFilterCondition($field);
     }
 
     private function buildVirtualDqlAlias(FieldParameter $field): string

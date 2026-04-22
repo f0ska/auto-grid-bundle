@@ -24,15 +24,6 @@ class RangeCondition implements FilterConditionInterface
         $hasFrom = $valueFrom !== null && $valueFrom !== '';
         $hasTo = $valueTo !== null && $valueTo !== '';
 
-        if ($hasFrom && $hasTo) {
-            $aliasFrom = uniqid('param');
-            $aliasTo = uniqid('param');
-            $qb->andWhere($qb->expr()->between($column, ':' . $aliasFrom, ':' . $aliasTo));
-            $qb->setParameter($aliasFrom, $valueFrom);
-            $qb->setParameter($aliasTo, $valueTo);
-            return;
-        }
-
         if ($hasFrom) {
             $aliasFrom = uniqid('param');
             $qb->andWhere($qb->expr()->gte($column, ':' . $aliasFrom));

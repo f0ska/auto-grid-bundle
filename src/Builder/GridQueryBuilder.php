@@ -123,7 +123,11 @@ class GridQueryBuilder
         }
     }
 
-    private function prepareQueryField(QueryBuilder $builder, string $key, Parameters $parameters): string
+    private function prepareQueryField(
+        QueryBuilder $builder,
+        string $key,
+        Parameters $parameters
+    ): string
     {
         if (isset($parameters->query['virtual_alias_map'][$key])) {
             return sprintf('(%s)', $this->buildVirtualDql($builder, $parameters, $key));
@@ -170,7 +174,11 @@ class GridQueryBuilder
         }
     }
 
-    private function buildVirtualDql(QueryBuilder $builder, Parameters $parameters, string $fieldName): string
+    private function buildVirtualDql(
+        QueryBuilder $builder,
+        Parameters $parameters,
+        string $fieldName
+    ): string
     {
         $field = $parameters->fields[$fieldName];
         $dql = $field->attributes['virtual_column']['dql'];

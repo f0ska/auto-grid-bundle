@@ -263,7 +263,7 @@ Enables grid searching/filtering.
   - [`ContainsCondition`](../src/Condition/ContainsCondition.php): SQL `LIKE %value%`.
   - [`ExactCondition`](../src/Condition/ExactCondition.php): SQL `=` comparison.
   - [`InCondition`](../src/Condition/InCondition.php): SQL `IN (...)` comparison.
-  - [`RangeCondition`](../src/Condition/RangeCondition.php): For numerical or date ranges (`min`/`max` array keys).
+  - [`RangeCondition`](../src/Condition/RangeCondition.php): For numerical or date ranges (`from`/`to` array keys).
   - [`StartsWithCondition`](../src/Condition/StartsWithCondition.php): SQL `LIKE value%`.
 
 ```php
@@ -368,6 +368,11 @@ Marks a property as non-Doctrine-mapped, for computed grid-only data.
 
 **Parameters:**
 - `dql`: (Optional) A DQL subquery string to automatically populate the field. Use `{this}` for current record alias and `{root}` for main entity root alias.
+
+**Notes:**
+- DQL-backed virtual columns are read-only.
+- They can be made sortable with `#[Sortable]`.
+- Filtering is not supported for DQL-backed virtual columns. If you need filtering, use a regular mapped field.
 
 ```php
 // Computed data from DQL subquery
