@@ -126,20 +126,7 @@ class GridQueryBuilder
     private function prepareQueryField(QueryBuilder $builder, string $key, Parameters $parameters): string
     {
         if (isset($parameters->query['virtual_alias_map'][$key])) {
-            $field = $parameters->fields[$key];
-            $dql = $field->attributes['virtual_column']['dql'];
-
-            $aliases = $builder->getRootAliases();
-            $rootAlias = reset($aliases);
-            $thisAlias = $rootAlias;
-            if ($field->subObject !== null) {
-                $thisAlias = $this->prepareField($builder, $key);
-                $thisAlias = strstr($thisAlias, '.', true) ?: $thisAlias;
-            }
-
-            $dql = str_replace(['{this}', '{root}'], [$thisAlias, $rootAlias], $dql);
-
-            return sprintf('(%s)', $dql);
+            return sprintf('(%s)', $this->buildVirtualDql($builder, $parameters, $key));
         }
 
         return $this->prepareField($builder, $key);
@@ -178,23 +165,25 @@ class GridQueryBuilder
             return;
         }
 
+        foreach ($parameters->query['virtual_alias_map'] as $fieldName => $alias) {
+            $builder->addSelect(sprintf('(%s) AS %s', $this->buildVirtualDql($builder, $parameters, $fieldName), $alias));
+        }
+    }
+
+    private function buildVirtualDql(QueryBuilder $builder, Parameters $parameters, string $fieldName): string
+    {
+        $field = $parameters->fields[$fieldName];
+        $dql = $field->attributes['virtual_column']['dql'];
+
         $aliases = $builder->getRootAliases();
         $rootAlias = reset($aliases);
-
-        foreach ($parameters->query['virtual_alias_map'] as $fieldName => $alias) {
-            $field = $parameters->fields[$fieldName];
-            $dql = $field->attributes['virtual_column']['dql'];
-
-            $thisAlias = $rootAlias;
-            if ($field->subObject !== null) {
-                $thisAlias = $this->prepareField($builder, $fieldName);
-                $thisAlias = strstr($thisAlias, '.', true) ?: $thisAlias;
-            }
-
-            $dql = str_replace(['{this}', '{root}'], [$thisAlias, $rootAlias], $dql);
-
-            $builder->addSelect(sprintf('(%s) AS %s', $dql, $alias));
+        $thisAlias = $rootAlias;
+        if ($field->subObject !== null) {
+            $thisAlias = $this->prepareField($builder, $fieldName);
+            $thisAlias = strstr($thisAlias, '.', true) ?: $thisAlias;
         }
+
+        return str_replace(['{this}', '{root}'], [$thisAlias, $rootAlias], $dql);
     }
 
     public function getHydratedResult(Query $query, Parameters $parameters): array
@@ -209,6 +198,9 @@ class GridQueryBuilder
         if ($result === null) {
             return null;
         }
+        if (is_object($result)) {
+            return $result;
+        }
         $hydrated = $this->hydrateVirtualDql($parameters, [$result]);
         return $hydrated[0] ?? null;
     }
@@ -219,24 +211,42 @@ class GridQueryBuilder
             return $results;
         }
 
-        foreach ($results as &$entity) {
-            if (is_array($entity) && isset($entity[0]) && $entity[0] instanceof $parameters->attributes['entity']) {
-                $entityObj = $entity[0];
+        foreach ($results as &$row) {
+            if (!is_array($row)) {
+                continue;
+            }
 
-                foreach ($parameters->query['virtual_alias_map'] as $fieldName => $alias) {
-                    if (array_key_exists($alias, $entity)) {
-                        $this->fieldValueProvider->setValue(
-                            $entityObj,
-                            $parameters->fields[$fieldName],
-                            $entity[$alias]
-                        );
-                    }
+            $entity = $this->extractEntityFromMixedResult($row, $parameters->attributes['entity']);
+            if ($entity === null) {
+                continue;
+            }
+
+            foreach ($parameters->query['virtual_alias_map'] as $fieldName => $alias) {
+                if (!array_key_exists($alias, $row)) {
+                    continue;
                 }
 
-                $entity = $entityObj;
+                $this->fieldValueProvider->setValue(
+                    $entity,
+                    $parameters->fields[$fieldName],
+                    $row[$alias]
+                );
             }
+
+            $row = $entity;
         }
 
         return $results;
+    }
+
+    private function extractEntityFromMixedResult(array $row, string $entityClass): ?object
+    {
+        foreach ($row as $value) {
+            if ($value instanceof $entityClass) {
+                return $value;
+            }
+        }
+
+        return null;
     }
 }

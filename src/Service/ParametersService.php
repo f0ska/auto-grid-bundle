@@ -293,11 +293,15 @@ class ParametersService
         $parameters = $field->parameters;
         $parameters->query['has_dql'] = true;
 
-        $metadata = $this->metaDataService->getMetadata($parameters->agId);
-        $rootAlias = u($metadata->rootEntityName)->afterLast('\\')->camel()->toString();
-        $parameters->query['virtual_alias_map'][$field->name] = $rootAlias . '_' . $field->name;
+        $parameters->query['virtual_alias_map'][$field->name] = $this->buildVirtualDqlAlias($field);
 
         $this->guesserService->guessFilterCondition($field);
+    }
+
+    private function buildVirtualDqlAlias(FieldParameter $field): string
+    {
+        $metadata = $this->metaDataService->getMetadata($field->parameters->agId);
+        return 'vdql_' . md5($metadata->rootEntityName . ':' . $field->name);
     }
 
     private function hasIndex(ClassMetadata $metadata, string $fieldName): bool

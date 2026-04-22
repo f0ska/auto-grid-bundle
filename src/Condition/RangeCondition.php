@@ -21,14 +21,25 @@ class RangeCondition implements FilterConditionInterface
     {
         $valueFrom = $value['from'] ?? null;
         $valueTo = $value['to'] ?? null;
+        $hasFrom = $valueFrom !== null && $valueFrom !== '';
+        $hasTo = $valueTo !== null && $valueTo !== '';
 
-        if ($valueFrom) {
+        if ($hasFrom && $hasTo) {
+            $aliasFrom = uniqid('param');
+            $aliasTo = uniqid('param');
+            $qb->andWhere($qb->expr()->between($column, ':' . $aliasFrom, ':' . $aliasTo));
+            $qb->setParameter($aliasFrom, $valueFrom);
+            $qb->setParameter($aliasTo, $valueTo);
+            return;
+        }
+
+        if ($hasFrom) {
             $aliasFrom = uniqid('param');
             $qb->andWhere($qb->expr()->gte($column, ':' . $aliasFrom));
             $qb->setParameter($aliasFrom, $valueFrom);
         }
 
-        if ($valueTo) {
+        if ($hasTo) {
             $aliasTo = uniqid('param');
             $qb->andWhere($qb->expr()->lte($column, ':' . $aliasTo));
             $qb->setParameter($aliasTo, $valueTo);
