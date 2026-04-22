@@ -23,7 +23,6 @@ use F0ska\AutoGridBundle\Condition\RangeCondition;
 use F0ska\AutoGridBundle\Condition\StartsWithCondition;
 use F0ska\AutoGridBundle\DBAL\TypesCompatibility;
 use F0ska\AutoGridBundle\Model\FieldParameter;
-use F0ska\AutoGridBundle\Service\ParametersService;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Clock\DatePoint;
 use Symfony\Component\Form\CallbackTransformer;
@@ -78,7 +77,7 @@ class GuesserService
                 $field->attributes['form']['options'] = [
                     'required' => true,
                     'expanded' => false,
-                    'choices' => ['f0ska.autogrid.choice.yes' => '1', 'f0ska.autogrid.choice.no' => '0'],
+                    'choices'  => ['f0ska.autogrid.choice.yes' => '1', 'f0ska.autogrid.choice.no' => '0'],
                 ];
                 return;
             }

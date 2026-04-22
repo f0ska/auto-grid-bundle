@@ -50,6 +50,8 @@ class ActionService
                 'query' => [
                     'expression' => $autoGrid->getQueryExpression(),
                     'parameters' => $autoGrid->getQueryParameters(),
+                    'has_dql' => false,
+                    'virtual_alias_map' => [],
                 ],
                 'customization' => $autoGrid->getCustomizationParameters(),
             ]

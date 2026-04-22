@@ -26,30 +26,15 @@ class ParametersService
     public const MAPPING_ASSOCIATED_SUBFIELD = 'associated_subfield';
     public const MAPPING_PURE_VIRTUAL        = 'pure_virtual';
 
-    private EncoderService $encoderService;
-    private RouterInterface $router;
-    private ConfigurationService $configuration;
-    private ActionParametersListService $actionParametersList;
-    private MetaDataService $metaDataService;
-    private PermissionService $permissionService;
-    private GuesserService $guesserService;
-
     public function __construct(
-        EncoderService $encoderService,
-        RouterInterface $router,
-        ConfigurationService $configuration,
-        ActionParametersListService $actionParametersList,
-        MetaDataService $metaDataService,
-        PermissionService $permissionService,
-        GuesserService $guesserService
+        private readonly EncoderService $encoderService,
+        private readonly RouterInterface $router,
+        private readonly ConfigurationService $configuration,
+        private readonly ActionParametersListService $actionParametersList,
+        private readonly MetaDataService $metaDataService,
+        private readonly PermissionService $permissionService,
+        private readonly GuesserService $guesserService
     ) {
-        $this->encoderService = $encoderService;
-        $this->router = $router;
-        $this->configuration = $configuration;
-        $this->actionParametersList = $actionParametersList;
-        $this->metaDataService = $metaDataService;
-        $this->permissionService = $permissionService;
-        $this->guesserService = $guesserService;
     }
 
     public function createParametersModel(array $initialParameters): Parameters
@@ -264,7 +249,7 @@ class ParametersService
 
         $attributes = $this->metaDataService->getEntityFieldAttributes($field->agId, $name);
         foreach ($attributes as $key => $value) {
-            if ($value !== null && !isset($field->{$key})) {
+            if ($value !== null && !isset($field->{$key}) && !isset($field->attributes[$key])) {
                 $field->attributes[$key] = $value;
             }
         }
@@ -289,7 +274,7 @@ class ParametersService
         $name = $field->subName ?? $field->name;
         $attributes = $this->metaDataService->getEntityFieldAttributes($field->agId, $name);
         foreach ($attributes as $key => $value) {
-            if ($value !== null && !isset($field->{$key})) {
+            if ($value !== null && !isset($field->{$key}) && !isset($field->attributes[$key])) {
                 $field->attributes[$key] = $value;
             }
         }
@@ -297,6 +282,22 @@ class ParametersService
         $field->canSort = false;
         $field->canFilter = false;
         $field->canEdit = false;
+
+        if (empty($attributes['virtual_column']['dql'])) {
+            return;
+        }
+
+        $field->canSort = $field->attributes['can_sort'] ?? false;
+        $parameters = $field->parameters;
+        $parameters->query['has_dql'] = true;
+
+        $parameters->query['virtual_alias_map'][$field->name] = $this->buildVirtualDqlAlias($field);
+    }
+
+    private function buildVirtualDqlAlias(FieldParameter $field): string
+    {
+        $metadata = $this->metaDataService->getMetadata($field->parameters->agId);
+        return 'vdql_' . md5($metadata->rootEntityName . ':' . $field->name);
     }
 
     private function hasIndex(ClassMetadata $metadata, string $fieldName): bool

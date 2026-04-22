@@ -20,20 +20,18 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class GridAction extends AbstractAction
 {
-    private GridQueryBuilder $gridQueryBuilder;
-    private EventDispatcherInterface $dispatcher;
-
-    public function __construct(GridQueryBuilder $gridQueryBuilder, EventDispatcherInterface $dispatcher)
-    {
-        $this->gridQueryBuilder = $gridQueryBuilder;
-        $this->dispatcher = $dispatcher;
+    public function __construct(
+        private readonly GridQueryBuilder $gridQueryBuilder,
+        private readonly EventDispatcherInterface $dispatcher
+    ) {
     }
 
     public function execute(AutoGrid $autoGrid, Parameters $parameters): void
     {
         $count = (int) $this->gridQueryBuilder->buildGridCountQuery($parameters)->getSingleScalarResult();
         $parameters->initPagination($count);
-        $entities = $this->gridQueryBuilder->buildGridQuery($parameters)->getResult();
+        $query = $this->gridQueryBuilder->buildGridQuery($parameters);
+        $entities = $this->gridQueryBuilder->getHydratedResult($query, $parameters);
         $event = new GridEvent($entities, $count, $parameters);
         $this->dispatcher->dispatch($event, $event::EVENT_NAME);
         $this->dispatcher->dispatch($event, $event::EVENT_NAME . '.' . $autoGrid->getId());

@@ -19,18 +19,11 @@ use F0ska\AutoGridBundle\Service\MetaDataService;
 
 class EntityBuilder
 {
-    private EntityManagerInterface $entityManager;
-    private MetaDataService $metaDataService;
-    private GridQueryBuilder $queryBuilder;
-
     public function __construct(
-        EntityManagerInterface $entityManager,
-        MetaDataService $metaDataService,
-        GridQueryBuilder $queryBuilder
+        private readonly EntityManagerInterface $entityManager,
+        private readonly MetaDataService $metaDataService,
+        private readonly GridQueryBuilder $queryBuilder
     ) {
-        $this->entityManager = $entityManager;
-        $this->metaDataService = $metaDataService;
-        $this->queryBuilder = $queryBuilder;
     }
 
     public function getNewEntity(Parameters $parameters): object
@@ -74,9 +67,9 @@ class EntityBuilder
         $class = $this->getEntityClass($parameters);
         $repository = $this->entityManager->getRepository($class);
         $entity = $repository->find($entityId);
-        if (!empty($parameters->query['expression'])) {
+        if (!empty($parameters->query['expression']) || !empty($parameters->query['has_dql'])) {
             $query = $this->queryBuilder->buildEntityQuery($parameters, $entity);
-            return $query->getOneOrNullResult();
+            return $this->queryBuilder->getOneOrNullHydratedResult($query, $parameters);
         }
         return $entity;
     }
