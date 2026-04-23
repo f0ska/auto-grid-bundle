@@ -364,7 +364,7 @@ private ?string $avatarPath = null;
 <details>
 <summary><strong>VirtualColumn</strong></summary>
 
-Marks a property as non-Doctrine-mapped, for computed grid-only data.
+Marks a property as non-Doctrine-mapped, for computed read-only data.
 
 **Parameters:**
 - `dql`: (Optional) A DQL subquery string to automatically populate the field. Use `{this}` for current record alias and `{root}` for main entity root alias.
