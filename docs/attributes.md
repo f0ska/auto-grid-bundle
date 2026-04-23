@@ -258,6 +258,7 @@ private ?string $status = null;
 Enables grid searching/filtering.
 
 **Parameters:**
+- `enabled`: Enable or disable filtering for this field.
 - `condition`: The condition class name. Available conditions:
   - [`AssociationCondition`](../src/Condition/AssociationCondition.php): For filtering entity relations.
   - [`ContainsCondition`](../src/Condition/ContainsCondition.php): SQL `LIKE %value%`.
@@ -265,6 +266,8 @@ Enables grid searching/filtering.
   - [`InCondition`](../src/Condition/InCondition.php): SQL `IN (...)` comparison.
   - [`RangeCondition`](../src/Condition/RangeCondition.php): For numerical or date ranges (`from`/`to` array keys).
   - [`StartsWithCondition`](../src/Condition/StartsWithCondition.php): SQL `LIKE value%`.
+- `formType`: Override the guessed filter form type.
+- `formOptions`: Override the guessed filter form options.
 
 ```php
 #[Filterable(condition: ContainsCondition::class)]
@@ -364,7 +367,7 @@ private ?string $avatarPath = null;
 <details>
 <summary><strong>VirtualColumn</strong></summary>
 
-Marks a property as non-Doctrine-mapped, for computed grid-only data.
+Marks a property as non-Doctrine-mapped, for computed read-only data.
 
 **Parameters:**
 - `dql`: (Optional) A DQL subquery string to automatically populate the field. Use `{this}` for current record alias and `{root}` for main entity root alias.

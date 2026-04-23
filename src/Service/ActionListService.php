@@ -14,7 +14,7 @@ namespace F0ska\AutoGridBundle\Service;
 
 use F0ska\AutoGridBundle\Action\ActionInterface;
 use F0ska\AutoGridBundle\Action\ErrorAction;
-use F0ska\AutoGridBundle\Exception\ActionException;
+use F0ska\AutoGridBundle\Exception\GridActionNotFoundException;
 
 class ActionListService
 {
@@ -43,7 +43,7 @@ class ActionListService
 
     public function getAction(string $action): ActionInterface
     {
-        return $this->actions[$action] ?? throw new ActionException('Undefined action');
+        return $this->actions[$action] ?? throw new GridActionNotFoundException();
     }
 
     /**

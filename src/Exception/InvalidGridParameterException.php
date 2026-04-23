@@ -12,8 +12,7 @@ declare(strict_types=1);
 
 namespace F0ska\AutoGridBundle\Exception;
 
-use Exception;
-
-class ActionException extends Exception
+class InvalidGridParameterException extends GridException
 {
+    protected $message = 'Invalid request parameter';
 }

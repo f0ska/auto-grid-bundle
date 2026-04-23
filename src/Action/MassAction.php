@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace F0ska\AutoGridBundle\Action;
 
 use F0ska\AutoGridBundle\Event\MassEvent;
-use F0ska\AutoGridBundle\Exception\ActionException;
+use F0ska\AutoGridBundle\Exception\GridAccessDeniedException;
 use F0ska\AutoGridBundle\Model\AutoGrid;
 use F0ska\AutoGridBundle\Model\Parameters;
 use F0ska\AutoGridBundle\Service\FormFacade;
@@ -55,6 +55,6 @@ class MassAction extends AbstractAction
             return;
         }
 
-        throw new ActionException('Not Allowed');
+        throw new GridAccessDeniedException();
     }
 }

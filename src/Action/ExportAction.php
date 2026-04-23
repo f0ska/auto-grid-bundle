@@ -14,7 +14,7 @@ namespace F0ska\AutoGridBundle\Action;
 
 use F0ska\AutoGridBundle\Builder\GridQueryBuilder;
 use F0ska\AutoGridBundle\Event\ExportEvent;
-use F0ska\AutoGridBundle\Exception\ActionException;
+use F0ska\AutoGridBundle\Exception\GridAccessDeniedException;
 use F0ska\AutoGridBundle\Model\AutoGrid;
 use F0ska\AutoGridBundle\Model\Parameters;
 use F0ska\AutoGridBundle\Service\FormFacade;
@@ -58,6 +58,6 @@ class ExportAction extends AbstractAction
             return;
         }
 
-        throw new ActionException('Not Allowed');
+        throw new GridAccessDeniedException();
     }
 }

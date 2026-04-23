@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace F0ska\AutoGridBundle\ActionParameter;
 
-use F0ska\AutoGridBundle\Exception\ActionParameterException;
+use F0ska\AutoGridBundle\Exception\InvalidGridParameterException;
 use F0ska\AutoGridBundle\Model\Parameters;
 
 class PageParameter implements ActionParameterInterface
@@ -28,6 +28,6 @@ class PageParameter implements ActionParameterInterface
         if (is_numeric($value) && (int) $value > 0) {
             return (int) $value;
         }
-        throw new ActionParameterException();
+        throw new InvalidGridParameterException();
     }
 }

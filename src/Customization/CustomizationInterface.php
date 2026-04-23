@@ -17,5 +17,9 @@ use F0ska\AutoGridBundle\Model\Parameters;
 
 interface CustomizationInterface
 {
+    /**
+     * Runs after AutoGrid has built the full context and prepared the view state,
+     * but before anything is rendered or action-specific execution continues.
+     */
     public function execute(AutoGrid $autoGrid, Parameters $parameters): void;
 }

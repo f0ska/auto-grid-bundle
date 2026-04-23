@@ -16,7 +16,7 @@ use DateTimeInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use F0ska\AutoGridBundle\Condition\InCondition;
 use F0ska\AutoGridBundle\Condition\RangeCondition;
-use F0ska\AutoGridBundle\Exception\ActionParameterException;
+use F0ska\AutoGridBundle\Exception\InvalidGridParameterException;
 use F0ska\AutoGridBundle\Model\FieldParameter;
 use F0ska\AutoGridBundle\Model\Parameters;
 
@@ -37,7 +37,7 @@ class FilterParameter implements ActionParameterInterface
     public function normalize(mixed $value, Parameters $parameters): ?array
     {
         if (!$this->validate($value, $parameters)) {
-            throw new ActionParameterException();
+            throw new InvalidGridParameterException();
         }
 
         if (!is_array($value)) {
