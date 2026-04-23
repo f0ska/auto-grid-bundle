@@ -24,9 +24,6 @@ class MetaDataService
     private int $instanceCount = 0;
     private int $subInstanceCount = 0;
 
-    /** @var array<string, array{metadata: ClassMetadata, attributes: AttributeCollection}> */
-    private static array $staticCache = [];
-
     /** @var array<string, array{metadata: ClassMetadata, attributes: AttributeCollection, instanceAttributes: array}> */
     private array $instanceCache = [];
 
@@ -52,18 +49,14 @@ class MetaDataService
 
     public function add(string $entityClass, ?string $customId = null, bool $isSubInstance = false): string
     {
-        if (!isset(self::$staticCache[$entityClass])) {
-            self::$staticCache[$entityClass] = [
-                'metadata' => $this->entityManager->getClassMetadata($entityClass),
-                'attributes' => $this->attributeParser->parse($entityClass),
-            ];
-        }
-
-        $metadata = self::$staticCache[$entityClass]['metadata'];
+        $metadata = $this->entityManager->getClassMetadata($entityClass);
         $instanceCount = $isSubInstance ? ++$this->subInstanceCount : ++$this->instanceCount;
         $agId = $customId ? $this->prepareCustomAgId($customId) : $this->prepareAgId($metadata, $instanceCount);
 
-        $this->instanceCache[$agId] = self::$staticCache[$entityClass];
+        $this->instanceCache[$agId] = [
+            'metadata' => $metadata,
+            'attributes' => $this->attributeParser->parse($entityClass),
+        ];
         $this->instanceCache[$agId]['instanceAttributes'] = [];
 
         if (!$isSubInstance) {

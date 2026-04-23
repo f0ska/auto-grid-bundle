@@ -19,24 +19,14 @@ use Symfony\Component\Form\FormView;
 
 class ViewService
 {
-    private FormFacade $formFacade;
-    private ConfigurationService $configuration;
-    private FieldsetService $fieldsetService;
-    private TemplateGuesserService $templateGuesserService;
-    private ChoiceBuilder $choiceBuilder;
-
     public function __construct(
-        FormFacade $formFacade,
-        ConfigurationService $configuration,
-        FieldsetService $fieldsetService,
-        TemplateGuesserService $templateGuesserService,
-        ChoiceBuilder $choiceBuilder
+        private readonly FormFacade $formFacade,
+        private readonly ConfigurationService $configuration,
+        private readonly PaginationBuilder $paginationBuilder,
+        private readonly FieldsetService $fieldsetService,
+        private readonly TemplateGuesserService $templateGuesserService,
+        private readonly ChoiceBuilder $choiceBuilder
     ) {
-        $this->formFacade = $formFacade;
-        $this->configuration = $configuration;
-        $this->fieldsetService = $fieldsetService;
-        $this->templateGuesserService = $templateGuesserService;
-        $this->choiceBuilder = $choiceBuilder;
     }
 
     public function prepareView(Parameters $parameters): void
@@ -57,7 +47,7 @@ class ViewService
         $parameters->view->fieldset = $this->fieldsetService->build($parameters);
 
         $this->buildFormThemes($parameters);
-        $this->buildPaginationParameters($parameters);
+        $this->paginationBuilder->build($parameters);
         $this->buildMassAction($parameters);
         $this->buildExportAction($parameters);
     }
@@ -80,21 +70,6 @@ class ViewService
     {
         $themes = $parameters->attributes['form_themes'] ?? null;
         $parameters->view->formThemes = $themes ?? $this->configuration->getFormThemes();
-    }
-
-    private function buildPaginationParameters(Parameters $parameters): void
-    {
-        $pageLimits = $parameters->attributes['page_limits'] ?? $this->configuration->getPaginationLimits();
-        $limit = $parameters->request['limit'] ?? null;
-        if (!$limit || !in_array($limit, $pageLimits, true)) {
-            $limit = reset($pageLimits);
-        }
-        $parameters->view->pagination = [
-            'limits' => $pageLimits,
-            'limit'  => $limit,
-            'page'   => $parameters->request['page'] ?? 1,
-            'count'  => 0,
-        ];
     }
 
     private function buildMassAction(Parameters $parameters): void
