@@ -15,7 +15,6 @@ namespace F0ska\AutoGridBundle\Service;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use F0ska\AutoGridBundle\Model\FieldParameter;
 use F0ska\AutoGridBundle\Model\Parameters;
-use Symfony\Component\Routing\RouterInterface;
 
 use function Symfony\Component\String\u;
 
@@ -27,10 +26,9 @@ class ParametersService
     public const MAPPING_PURE_VIRTUAL        = 'pure_virtual';
 
     public function __construct(
-        private readonly EncoderService $encoderService,
-        private readonly RouterInterface $router,
         private readonly ConfigurationService $configuration,
-        private readonly ActionParametersListService $actionParametersList,
+        private readonly GridUrlGenerator $urlGenerator,
+        private readonly EntityAttributesBuilder $entityAttributesBuilder,
         private readonly MetaDataService $metaDataService,
         private readonly PermissionService $permissionService,
         private readonly GuesserService $guesserService
@@ -51,34 +49,7 @@ class ParametersService
 
     public function getActionUrl(string $action, array $params, Parameters $parameters): string
     {
-        $request = $parameters->request;
-        $callback = fn($value) => $value !== null && $value != '' && $value !== [];
-
-        foreach ($params as $key => $value) {
-            if (!$this->actionParametersList->hasParameter($key)) {
-                continue;
-            }
-            $value = $this->actionParametersList->normalizeParameter($key, $value, $parameters);
-            if (is_array($value) && !empty($request[$key]) && is_array($request[$key])) {
-                $request[$key] = array_filter(array_merge($request[$key], $value), $callback);
-                continue;
-            }
-            $request[$key] = is_array($value) ? array_filter($value, $callback) : $value;
-        }
-
-        $request = array_filter($request, $callback);
-
-        if (!empty($parameters->attributes['route'][$action])) {
-            return $this->buildCustomRouteUrl($action, $request, $parameters);
-        }
-
-        return $this->router->generate(
-            $parameters->route['name'],
-            array_merge(
-                $parameters->route['params'],
-                $this->buildActionParams($parameters, $action, $request)
-            )
-        );
+        return $this->urlGenerator->generate($action, $params, $parameters);
     }
 
     private function buildAttributes(Parameters $parameters): void
@@ -89,38 +60,7 @@ class ParametersService
 
     private function buildEntityAttributes(Parameters $parameters): void
     {
-        $agId = $parameters->agId;
-        $metadata = $this->metaDataService->getMetadata($agId);
-        $default = [
-            'title'  => $this->buildEntityTitle($metadata),
-            'entity' => $metadata->rootEntityName,
-        ];
-
-        $parameters->permissions = $this->permissionService->getEntityActionPermissions($agId);
-        $parameters->attributes = $this->metaDataService->getEntityAttributes($agId) + $default;
-
-        $buttons = $this->configuration->getDefaultButtonsPositions();
-        foreach ($buttons as $button => $positions) {
-            foreach ($positions as $position => $enabled) {
-                if (!isset($parameters->attributes['button'][$button][$position])) {
-                    $parameters->attributes['button'][$button][$position] = $enabled;
-                }
-            }
-        }
-    }
-
-    private function buildEntityTitle(ClassMetadata $metadata): ?string
-    {
-        if (!$this->configuration->showEntityTitle()) {
-            return null;
-        }
-        return u($metadata->rootEntityName)
-            ->afterLast('\\')
-            ->snake()
-            ->replace('_', ' ')
-            ->title(true)
-            ->toString()
-        ;
+        $this->entityAttributesBuilder->build($parameters);
     }
 
     private function buildEntityFields(Parameters $parameters): void
@@ -352,41 +292,4 @@ class ParametersService
         $this->guesserService->guessFilterCondition($field);
     }
 
-    private function buildActionParams(Parameters $parameters, string $action, array $params): array
-    {
-        $result = ['_fragment' => $parameters->attributes['container_id']];
-        if ($this->configuration->isSingleParamRequest()) {
-            $result[$this->configuration->getSingleParamRequestCode()] = $this->encoderService
-                ->encodeAction($parameters->agId, $action, $params)
-            ;
-            return $result;
-        }
-        $result[$this->configuration->getMultiParamRequestId()] = $parameters->agId;
-        $result[$this->configuration->getMultiParamRequestAction()] = $action;
-        $result[$this->configuration->getMultiParamRequestParams()] = $params;
-        return $result;
-    }
-
-    private function buildCustomRouteUrl(string $action, array $request, Parameters $parameters): string
-    {
-        $prefix = $parameters->route['custom_prefix'];
-        $route = ($prefix ?? '') . ($parameters->attributes['route'][$action]['route'] ?? $action);
-        $params = $parameters->attributes['route'][$action]['parameters'];
-        $finalParams = [];
-
-        if (!empty($request['id'])) {
-            $finalParams['id'] = (int) $request['id'];
-        }
-
-        /** Reuse available request parameters you provide */
-        foreach ($params as $key) {
-            if (isset($parameters->route['custom'][$key])) {
-                $finalParams[$key] = $parameters->route['custom_params'][$key];
-            } elseif (isset($parameters->route['params'][$key])) {
-                $finalParams[$key] = $parameters->route['params'][$key];
-            }
-        }
-
-        return $this->router->generate($route, $finalParams);
-    }
 }
