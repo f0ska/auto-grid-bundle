@@ -12,8 +12,8 @@ declare(strict_types=1);
 
 namespace F0ska\AutoGridBundle\Service;
 
-use F0ska\AutoGridBundle\Exception\ActionException;
 use F0ska\AutoGridBundle\Model\Parameters;
+use RuntimeException;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -37,6 +37,6 @@ class RedirectService
             }
         }
 
-        throw new ActionException('Something bad happened');
+        throw new RuntimeException('No allowed redirect target found after form submit.');
     }
 }

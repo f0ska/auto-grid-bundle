@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace F0ska\AutoGridBundle\Service;
 
 use F0ska\AutoGridBundle\ActionParameter\ActionParameterInterface;
-use F0ska\AutoGridBundle\Exception\ActionParameterException;
+use F0ska\AutoGridBundle\Exception\InvalidGridParameterException;
 use F0ska\AutoGridBundle\Model\Parameters;
 
 class ActionParametersListService
@@ -38,13 +38,13 @@ class ActionParametersListService
 
     public function getParameter(string $key): ActionParameterInterface
     {
-        return $this->actionParameters[$key] ?? throw new ActionParameterException();
+        return $this->actionParameters[$key] ?? throw new InvalidGridParameterException();
     }
 
     public function normalizeParameter(mixed $key, mixed $value, Parameters $parameters): mixed
     {
         if (!$this->hasParameter($key)) {
-            return throw new ActionParameterException();
+            return throw new InvalidGridParameterException();
         }
         return $this->getParameter($key)->normalize($value, $parameters);
     }

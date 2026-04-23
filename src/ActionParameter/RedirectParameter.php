@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace F0ska\AutoGridBundle\ActionParameter;
 
-use F0ska\AutoGridBundle\Exception\ActionParameterException;
+use F0ska\AutoGridBundle\Exception\InvalidGridParameterException;
 use F0ska\AutoGridBundle\Model\Parameters;
 
 class RedirectParameter implements ActionParameterInterface
@@ -28,6 +28,6 @@ class RedirectParameter implements ActionParameterInterface
         if (is_string($value) && !empty($value)) {
             return $value;
         }
-        throw new ActionParameterException();
+        throw new InvalidGridParameterException();
     }
 }

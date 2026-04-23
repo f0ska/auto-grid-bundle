@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace F0ska\AutoGridBundle\ActionParameter;
 
-use F0ska\AutoGridBundle\Exception\ActionParameterException;
+use F0ska\AutoGridBundle\Exception\InvalidGridParameterException;
 use F0ska\AutoGridBundle\Model\Parameters;
 
 class OrderParameter implements ActionParameterInterface
@@ -26,17 +26,17 @@ class OrderParameter implements ActionParameterInterface
     {
         $result = [];
         if (!is_array($value) || empty($value)) {
-            throw new ActionParameterException();
+            throw new InvalidGridParameterException();
         }
         foreach ($value as $field => $direction) {
             if (!is_string($field)) {
-                throw new ActionParameterException();
+                throw new InvalidGridParameterException();
             }
             if (!in_array($direction, ['asc', 'desc', null], true)) {
-                throw new ActionParameterException();
+                throw new InvalidGridParameterException();
             }
             if (!isset($parameters->fields[$field])) {
-                throw new ActionParameterException();
+                throw new InvalidGridParameterException();
             }
             $result[$field] = $direction;
         }

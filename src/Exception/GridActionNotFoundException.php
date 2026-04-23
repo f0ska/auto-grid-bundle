@@ -12,9 +12,7 @@ declare(strict_types=1);
 
 namespace F0ska\AutoGridBundle\Exception;
 
-use Exception;
-
-class ActionParameterException extends Exception
+class GridActionNotFoundException extends GridException
 {
-    protected $message = 'Invalid request parameter';
+    protected $message = 'Unknown Action';
 }

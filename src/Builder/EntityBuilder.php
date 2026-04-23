@@ -13,9 +13,10 @@ declare(strict_types=1);
 namespace F0ska\AutoGridBundle\Builder;
 
 use Doctrine\ORM\EntityManagerInterface;
-use F0ska\AutoGridBundle\Exception\ActionException;
+use F0ska\AutoGridBundle\Exception\GridEntityNotFoundException;
 use F0ska\AutoGridBundle\Model\Parameters;
 use F0ska\AutoGridBundle\Service\MetaDataService;
+use LogicException;
 
 class EntityBuilder
 {
@@ -35,17 +36,17 @@ class EntityBuilder
     public function loadEntity(Parameters $parameters): object
     {
         if (empty($parameters->request['id'])) {
-            throw new ActionException('Not found');
+            throw new GridEntityNotFoundException();
         }
         $entity = $this->findEntity($parameters);
         if (empty($entity)) {
-            throw new ActionException('Not found');
+            throw new GridEntityNotFoundException();
         }
         if (!method_exists($entity, 'getId')) {
-            throw new ActionException('ID getter is missing');
+            throw new LogicException('ID getter is missing');
         }
         if (!is_int($entity->getId())) {
-            throw new ActionException('ID must be an integer');
+            throw new LogicException('ID must be an integer');
         }
         return $entity;
     }
