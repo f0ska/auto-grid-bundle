@@ -74,6 +74,8 @@ This parameter is not used by AutoGrid natively but is available in your [custom
 
 It is meant for extension code, not for core grid structure. If you need to change grid structure itself, prefer attributes or other earlier configuration points.
 
+It does not decide which customization service runs. All registered customizations still execute.
+
 ```php
 $autoGrid = $autoGridFactory->create(
     User::class, 

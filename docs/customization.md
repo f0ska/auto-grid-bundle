@@ -55,17 +55,68 @@ private ?string $avatarPath = null;
 </details>
 
 <details>
+<summary><strong>Customizations</strong></summary>
+
+1. Implement [`CustomizationInterface`](../src/Customization/CustomizationInterface.php).
+2. Register the service with the `autogrid.customization` tag.
+
+```php
+use F0ska\AutoGridBundle\Customization\CustomizationInterface;
+use F0ska\AutoGridBundle\Model\AutoGrid;
+use F0ska\AutoGridBundle\Model\Parameters;
+
+final class MyCustomization implements CustomizationInterface
+{
+    public function execute(AutoGrid $autoGrid, Parameters $parameters): void
+    {
+    }
+}
+```
+
+```yaml
+# config/services.yaml
+App\AutoGrid\MyCustomization:
+    tags: ['autogrid.customization']
+```
+</details>
+
+<details>
+<summary><strong>Custom Actions</strong></summary>
+
+1. Implement [`ActionInterface`](../src/Action/ActionInterface.php).
+2. Register the service with the `autogrid.action` tag.
+
+```yaml
+# config/services.yaml
+App\AutoGrid\MyAction:
+    tags: ['autogrid.action']
+```
+</details>
+
+<details>
+<summary><strong>Custom Action Parameters</strong></summary>
+
+1. Implement [`ActionParameterInterface`](../src/ActionParameter/ActionParameterInterface.php).
+2. Register the service with the `autogrid.action.parameter` tag.
+
+```yaml
+# config/services.yaml
+App\AutoGrid\MyActionParameter:
+    tags: ['autogrid.action.parameter']
+```
+</details>
+
+<details>
 <summary><strong>Custom Filter Conditions</strong></summary>
 
 1. Implement [`FilterConditionInterface`](../src/Condition/FilterConditionInterface.php).
-2. Register as a service with the `autogrid.filter_condition` tag and set `public: true`.
+2. Register as a service with the `autogrid.filter_condition` tag.
 3. Use in `#[Filterable(condition: MyCondition::class)]`.
 
 ```php
 // config/services.yaml
 App\Filter\MyCustomCondition:
     tags: ['autogrid.filter_condition']
-    public: true
 ```
 </details>
 
@@ -73,14 +124,13 @@ App\Filter\MyCustomCondition:
 <summary><strong>Custom View Services</strong></summary>
 
 1. Implement [`ViewServiceInterface`](../src/View/ViewServiceInterface.php).
-2. Register as a service with the `autogrid.view_service` tag and set `public: true`.
+2. Register as a service with the `autogrid.view_service` tag.
 3. Use `#[ViewService(MyService::class)]`.
 
 ```php
 // config/services.yaml
 App\Service\MyCustomViewService:
     tags: ['autogrid.view_service']
-    public: true
 ```
 </details>
 
@@ -126,30 +176,13 @@ class UserGridSubscriber implements EventSubscriberInterface
 </details>
 
 <details>
-<summary><strong>Service Tags</strong></summary>
+<summary><strong>When Customizations Run</strong></summary>
 
-You can extend core functionality by registering services with these tags:
+Customizations are services implementing `CustomizationInterface`.
 
-| Tag | Interface |
-| :--- | :--- |
-| `autogrid.action` | [`ActionInterface`](../src/Action/ActionInterface.php) |
-| `autogrid.action.parameter` | [`ActionParameterInterface`](../src/ActionParameter/ActionParameterInterface.php) |
-| `autogrid.customization` | [`CustomizationInterface`](../src/Customization/CustomizationInterface.php) |
+They run after AutoGrid has already built the full grid context and prepared the view state, but before anything is rendered or any action-specific database work is executed.
 
-All such services must be registered with the tag and set to `public: true`:
-
-```yaml
-# config/services.yaml
-App\Service\MyCustomAction:
-    tags: ['autogrid.action']
-    public: true
-```
-</details>
-
-<details>
-<summary><strong>Customization Timing</strong></summary>
-
-Customizations run after AutoGrid has already built the full grid context and prepared the view state, but before anything is rendered or any action-specific database work is executed.
+Every service tagged with `autogrid.customization` runs for every grid. The `customization` array is only input data for your extension code, not a selector for which customization should execute.
 
 That means a customization receives:
 
@@ -212,7 +245,7 @@ All event names can optionally include a `.{gridId}` suffix to target specific g
 | `f0ska.autogrid.entity.view` | When entity is loaded for view/edit. | [`ViewEvent`](../src/Event/ViewEvent.php) |
 | `f0ska.autogrid.mass_action` | When a bulk action is triggered. | [`MassEvent`](../src/Event/MassEvent.php) |
 | `f0ska.autogrid.export_action` | When an export action is triggered. | [`ExportEvent`](../src/Event/ExportEvent.php) |
-| `f0ska.autogrid.grid.load` | When grid data is being prepared. | [`GridEvent`](../src/Event/GridEvent.php) |
+| `f0ska.autogrid.entity.grid` | When grid data is being prepared. | [`GridEvent`](../src/Event/GridEvent.php) |
 | `f0ska.autogrid.error.show` | When an error occurs. | [`ErrorEvent`](../src/Event/ErrorEvent.php) |
 
 **Example: Specific Action Listener**

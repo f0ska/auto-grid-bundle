@@ -258,6 +258,7 @@ private ?string $status = null;
 Enables grid searching/filtering.
 
 **Parameters:**
+- `enabled`: Enable or disable filtering for this field.
 - `condition`: The condition class name. Available conditions:
   - [`AssociationCondition`](../src/Condition/AssociationCondition.php): For filtering entity relations.
   - [`ContainsCondition`](../src/Condition/ContainsCondition.php): SQL `LIKE %value%`.
@@ -265,6 +266,8 @@ Enables grid searching/filtering.
   - [`InCondition`](../src/Condition/InCondition.php): SQL `IN (...)` comparison.
   - [`RangeCondition`](../src/Condition/RangeCondition.php): For numerical or date ranges (`from`/`to` array keys).
   - [`StartsWithCondition`](../src/Condition/StartsWithCondition.php): SQL `LIKE value%`.
+- `formType`: Override the guessed filter form type.
+- `formOptions`: Override the guessed filter form options.
 
 ```php
 #[Filterable(condition: ContainsCondition::class)]

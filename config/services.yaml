@@ -40,6 +40,7 @@ services:
 
     F0ska\AutoGridBundle\View\ViewServiceRegistry:
         autowire: true
+        lazy: true
         arguments:
             $services: !tagged_iterator 'autogrid.view_service'
 
