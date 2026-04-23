@@ -19,13 +19,17 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use function Symfony\Component\String\u;
 
+/**
+ * Registers grid instances for the current request and exposes their metadata
+ * and parsed attributes by AutoGrid id.
+ */
 class MetaDataService
 {
     private int $instanceCount = 0;
     private int $subInstanceCount = 0;
 
     /** @var array<string, array{metadata: ClassMetadata, attributes: AttributeCollection, instanceAttributes: array}> */
-    private array $instanceCache = [];
+    private array $instances = [];
 
     private EntityManagerInterface $entityManager;
     private ConfigurationService $configuration;
@@ -53,19 +57,19 @@ class MetaDataService
         $instanceCount = $isSubInstance ? ++$this->subInstanceCount : ++$this->instanceCount;
         $agId = $customId ? $this->prepareCustomAgId($customId) : $this->prepareAgId($metadata, $instanceCount);
 
-        $this->instanceCache[$agId] = [
+        $this->instances[$agId] = [
             'metadata' => $metadata,
             'attributes' => $this->attributeParser->parse($entityClass),
         ];
-        $this->instanceCache[$agId]['instanceAttributes'] = [];
+        $this->instances[$agId]['instanceAttributes'] = [];
 
         if (!$isSubInstance) {
-            $this->instanceCache[$agId]['instanceAttributes']['container_id'] = sprintf(
+            $this->instances[$agId]['instanceAttributes']['container_id'] = sprintf(
                 '%s%s',
                 $this->configuration->getFriendlyId(),
                 $instanceCount > 1 ? $instanceCount : ''
             );
-            $this->instanceCache[$agId]['instanceAttributes']['container_class'] = $this->configuration->getFriendlyId();
+            $this->instances[$agId]['instanceAttributes']['container_class'] = $this->configuration->getFriendlyId();
         }
 
         return $agId;
@@ -73,13 +77,13 @@ class MetaDataService
 
     public function getMetadata(string $agId): ClassMetadata
     {
-        return $this->instanceCache[$agId]['metadata'];
+        return $this->instances[$agId]['metadata'];
     }
 
     public function getEntityAttributes(string $agId): array
     {
-        $collection = $this->instanceCache[$agId]['attributes'];
-        return array_merge($collection->getEntityAttributes(), $this->instanceCache[$agId]['instanceAttributes']);
+        $collection = $this->instances[$agId]['attributes'];
+        return array_merge($collection->getEntityAttributes(), $this->instances[$agId]['instanceAttributes']);
     }
 
     public function getEntityAttribute(string $agId, string $key): mixed
@@ -93,7 +97,7 @@ class MetaDataService
 
     public function getEntityFieldAttributes(string $agId, string $fieldName): array
     {
-        $collection = $this->instanceCache[$agId]['attributes'];
+        $collection = $this->instances[$agId]['attributes'];
         return $collection->getFieldAttributes()[$fieldName] ?? [];
     }
 
@@ -108,7 +112,7 @@ class MetaDataService
 
     public function getPureVirtualFieldNames(string $agId): array
     {
-        $collection = $this->instanceCache[$agId]['attributes'];
+        $collection = $this->instances[$agId]['attributes'];
         return $collection->getPureVirtualFieldNames();
     }
 
