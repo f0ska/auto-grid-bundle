@@ -70,7 +70,9 @@ $autoGrid = $autoGridFactory->create(
 <details>
 <summary><strong>customization</strong>: Pass arbitrary data to your custom extensions.</summary>
 
-This parameter is not used by AutoGrid natively but is available in your [customizations](./customization.md).
+This parameter is not used by AutoGrid natively but is available in your [customizations](./customization.md), view services, and templates through the prepared grid context.
+
+It is meant for extension code, not for core grid structure. If you need to change grid structure itself, prefer attributes or other earlier configuration points.
 
 ```php
 $autoGrid = $autoGridFactory->create(

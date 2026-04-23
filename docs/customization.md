@@ -147,6 +147,28 @@ App\Service\MyCustomAction:
 </details>
 
 <details>
+<summary><strong>Customization Timing</strong></summary>
+
+Customizations run after AutoGrid has already built the full grid context and prepared the view state, but before anything is rendered or any action-specific database work is executed.
+
+That means a customization receives:
+
+- resolved metadata and attributes
+- built field definitions and permissions
+- prepared form views and pagination state
+- request parameters and controller-provided `customization` data
+
+That also means customizations are **not** part of the context-building phase itself.
+
+Use this extension point when you want to work with an already prepared grid state.
+
+Use other extension points for other stages:
+
+- attributes, configuration, and optional factory arguments for earlier structural setup
+- events, custom actions, and view services for later execution or rendering concerns
+</details>
+
+<details>
 <summary><strong>Custom Data Exchange</strong></summary>
 
 The `customization` array is available throughout the AutoGrid lifecycle to store and retrieve arbitrary data. This is useful for passing information from your controller to `ViewServices`, Twig templates, or other customizations.
