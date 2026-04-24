@@ -68,24 +68,30 @@
                     </td>
                 </tr>
             {% else %}
-                {% for field in fields %}
-                    {% if field.permissions.view %}
-                        {% block autogrid_view_body_row %}
-                            <tr>
-                                {% block autogrid_view_body_row_label %}
-                                    <th class="col col-4 text-end table-light">
-                                        {{ field.attributes.label|trans }}
-                                    </th>
-                                {% endblock %}
-                                {% block autogrid_view_body_row_value %}
-                                    <td class="col col-8">
-                                        {% set agView = field|ag_prepare(entity) %}{{ include(agView.template, agView.variables) }}
-                                    </td>
-                                {% endblock %}
-                            </tr>
-                        {% endblock %}
-                    {% endif %}
-                {% endfor %}
+                <tr>
+                    <td colspan="2" class="ps-0 pe-0">
+                        <div class="container-fluid py-3">
+                            {% for field in fields %}
+                                {% if field.permissions.view %}
+                                    {% block autogrid_view_body_row %}
+                                        <div class="{{ not loop.first ? 'border-top' }} py-3">
+                                            {% block autogrid_view_body_row_label %}
+                                                <div class="small text-secondary text-uppercase fw-semibold mb-2">
+                                                    {{ field.attributes.label|trans }}
+                                                </div>
+                                            {% endblock %}
+                                            {% block autogrid_view_body_row_value %}
+                                                <div>
+                                                    {% set agView = field|ag_prepare(entity) %}{{ include(agView.template, agView.variables) }}
+                                                </div>
+                                            {% endblock %}
+                                        </div>
+                                    {% endblock %}
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </td>
+                </tr>
             {% endif %}
             </tbody>
         {% endblock %}

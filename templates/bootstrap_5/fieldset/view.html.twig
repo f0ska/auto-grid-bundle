@@ -10,19 +10,19 @@
                             </h5>
                         {% endblock %}
                         {% block autogrid_fieldset_view_body %}
-                            <table class="table mb-1">
+                            <div class="card-body">
                                 {% for fieldName in fieldset.fields %}
                                     {% set field = attribute(fields, fieldName) %}
-                                    <tr>
-                                        <th class="col col-4 text-end table-light {{ loop.last ? 'border-bottom-0' }}">
+                                    <div class="{{ not loop.first ? 'border-top' }} py-3">
+                                        <div class="small text-secondary text-uppercase fw-semibold mb-2">
                                             {{ field.attributes.label|trans }}
-                                        </th>
-                                        <td class="col col-8 {{ loop.last ? 'border-bottom-0' }}">
+                                        </div>
+                                        <div>
                                             {% set agView = field|ag_prepare(entity) %}{{ include(agView.template, agView.variables) }}
-                                        </td>
-                                    </tr>
+                                        </div>
+                                    </div>
                                 {% endfor %}
-                            </table>
+                            </div>
                         {% endblock %}
                     </div>
                 </div>
@@ -31,19 +31,19 @@
         {% if view.fieldset.not_defined %}
             {% block autogrid_fieldset_view_no_fieldset %}
                 <div class="col">
-                    <table class="table mt-4 mb-0">
+                    <div class="mt-4">
                         {% for fieldName in view.fieldset.not_defined %}
                             {% set field = attribute(fields, fieldName) %}
-                            <tr>
-                                <th class="col col-4 text-end table-light {{ loop.last ? 'border-bottom-0' }}">
+                            <div class="{{ not loop.first ? 'border-top' }} py-3">
+                                <div class="small text-secondary text-uppercase fw-semibold mb-2">
                                     {{ field.attributes.label|trans }}
-                                </th>
-                                <td class="col col-8 {{ loop.last ? 'border-bottom-0' }}">
+                                </div>
+                                <div>
                                     {% set agView = field|ag_prepare(entity) %}{{ include(agView.template, agView.variables) }}
-                                </td>
-                            </tr>
+                                </div>
+                            </div>
                         {% endfor %}
-                    </table>
+                    </div>
                 </div>
             {% endblock %}
         {% endif %}
