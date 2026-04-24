@@ -8,9 +8,9 @@
 
 {% macro sort_neutral() %}<i><svg style="{{ _context.ag_icon_style|default(_self._ag_icon_style_default) }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l7-6 7 6"></path><path d="M5 15l7 6 7-6"></path></svg></i>{% endmacro %}
 
-{% macro sort_asc() %}<i><svg style="{{ _context.ag_icon_style|default(_self._ag_icon_style_default) }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7l7-5 7 5"></path><path d="M5 16l7-5 7 5"></path></svg></i>{% endmacro %}
+{% macro sort_asc() %}<i><svg style="{{ _context.ag_icon_style|default(_self._ag_icon_style_default) }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l7-6 7 6" stroke-width="2.8"></path><path d="M7 16.2l5 4.286 5-4.286" stroke-width="2" opacity="0.45"></path></svg></i>{% endmacro %}
 
-{% macro sort_desc() %}<i><svg style="{{ _context.ag_icon_style|default(_self._ag_icon_style_default) }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17l7 5 7-5"></path><path d="M5 8l7 5 7-5"></path></svg></i>{% endmacro %}
+{% macro sort_desc() %}<i><svg style="{{ _context.ag_icon_style|default(_self._ag_icon_style_default) }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7.8l5-4.286 5 4.286" stroke-width="2" opacity="0.45"></path><path d="M5 15l7 6 7-6" stroke-width="2.8"></path></svg></i>{% endmacro %}
 
 {% macro filter() %}<i><svg style="{{ _context.ag_icon_style|default(_self._ag_icon_style_default) }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg></i>{% endmacro %}
 

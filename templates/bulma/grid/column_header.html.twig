@@ -1,21 +1,29 @@
 {% if field.permissions.grid %}
     {% block autogrid_grid_column_header_cell %}
         <th class="{{ field.attributes.column_html_class.header|default('has-text-left') }}" style="position: relative;">
-            {% block autogrid_grid_column_header_sort %}
-                {% if (field.canSort) %}
-                    {{ include(attributes.template.grid.column_header_sort|default(ag_template('grid.column_header_sort'))) }}
-                {% endif %}
-            {% endblock %}
+            <span style="display: inline-flex; align-items: center; gap: 0.35rem; max-width: 100%; min-width: 0; vertical-align: middle;">
+                <span style="display: inline-flex; align-items: center; flex-shrink: 0;">
+                    {% block autogrid_grid_column_header_sort %}
+                        {% if (field.canSort) %}
+                            {{ include(attributes.template.grid.column_header_sort|default(ag_template('grid.column_header_sort'))) }}
+                        {% endif %}
+                    {% endblock %}
+                </span>
 
-            {% block autogrid_grid_column_header_label %}
-                {{ field.attributes.label|trans }}
-            {% endblock %}
+                <span style="display: block; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="{{ field.attributes.label|trans }}">
+                    {% block autogrid_grid_column_header_label %}
+                        {{ field.attributes.label|trans }}
+                    {% endblock %}
+                </span>
 
-            {% block autogrid_grid_column_header_filter %}
-                {% if (field.canFilter and ag_run(agIsAllowed, 'filter')) %}
-                    {{ include(attributes.template.grid.column_header_filter|default(ag_template('grid.column_header_filter'))) }}
-                {% endif %}
-            {% endblock %}
+                <span style="display: inline-flex; align-items: center; flex-shrink: 0;">
+                    {% block autogrid_grid_column_header_filter %}
+                        {% if (field.canFilter and ag_run(agIsAllowed, 'filter')) %}
+                            {{ include(attributes.template.grid.column_header_filter|default(ag_template('grid.column_header_filter'))) }}
+                        {% endif %}
+                    {% endblock %}
+                </span>
+            </span>
         </th>
     {% endblock %}
 {% endif %}
