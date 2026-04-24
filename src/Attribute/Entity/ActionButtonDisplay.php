@@ -34,10 +34,10 @@ class ActionButtonDisplay extends AbstractAttribute
     ) {
         $value = [
             $buttonAction => array_filter([
-                'display_on_grid' => $displayOnGrid,
-                'display_on_create' => $displayOnCreate,
-                'display_on_edit' => $displayOnEdit,
-                'display_on_view' => $displayOnView,
+                'display_in_grid' => $displayOnGrid,
+                'display_in_create' => $displayOnCreate,
+                'display_in_edit' => $displayOnEdit,
+                'display_in_view' => $displayOnView,
             ], fn ($v) => $v !== null)
         ];
 
