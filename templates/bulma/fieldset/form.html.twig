@@ -6,7 +6,7 @@
                 <div class="column {{ fieldset.class|default('is-full') }}">
                     <div class="box">
                         {% block autogrid_fieldset_form_header %}
-                            <p class="title is-5 mb-3">{{ fieldset.name|trans }}</p>
+                            <p class="title is-5 mb-4">{{ fieldset.name|trans }}</p>
                         {% endblock %}
                         {% block autogrid_fieldset_form_body %}
                             {% for fieldName in fieldset.fields %}

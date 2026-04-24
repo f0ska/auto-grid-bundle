@@ -5,22 +5,22 @@
                 <div class="column {{ fieldset.class|default('is-full') }}">
                     <div class="box">
                         {% block autogrid_fieldset_view_header %}
-                            <p class="title is-5 mb-3">{{ fieldset.name|trans }}</p>
+                            <p class="title is-5 mb-4">{{ fieldset.name|trans }}</p>
                         {% endblock %}
                         {% block autogrid_fieldset_view_body %}
-                            <table class="table is-fullwidth mb-0">
+                            <div>
                                 {% for fieldName in fieldset.fields %}
                                     {% set field = attribute(fields, fieldName) %}
-                                    <tr class="{{ loop.last ? 'is-borderless' : '' }}">
-                                        <td class="has-text-right has-text-grey-light has-background-light" style="width: 33%;">
+                                    <div class="{{ not loop.first ? 'pt-4 mt-4 has-border-top' : '' }}">
+                                        <div class="is-size-7 has-text-weight-semibold has-text-grey is-uppercase mb-2" style="letter-spacing: .06em;">
                                             {{ field.attributes.label|trans }}
-                                        </td>
-                                        <td class="{{ loop.last ? 'is-borderless' : '' }}">
+                                        </div>
+                                        <div class="has-text-dark" style="line-height: 1.6;">
                                             {% set agView = field|ag_prepare(entity) %}{{ include(agView.template, agView.variables) }}
-                                        </td>
-                                    </tr>
+                                        </div>
+                                    </div>
                                 {% endfor %}
-                            </table>
+                            </div>
                         {% endblock %}
                     </div>
                 </div>
@@ -29,19 +29,19 @@
         {% if view.fieldset.not_defined %}
             {% block autogrid_fieldset_view_no_fieldset %}
                 <div class="column is-full">
-                    <table class="table is-fullwidth">
+                    <div class="box">
                         {% for fieldName in view.fieldset.not_defined %}
                             {% set field = attribute(fields, fieldName) %}
-                            <tr class="{{ loop.last ? 'is-borderless' : '' }}">
-                                <td class="has-text-right has-text-grey-light has-background-light" style="width: 33%;">
+                            <div class="{{ not loop.first ? 'pt-4 mt-4 has-border-top' : '' }}">
+                                <div class="is-size-7 has-text-weight-semibold has-text-grey is-uppercase mb-2" style="letter-spacing: .06em;">
                                     {{ field.attributes.label|trans }}
-                                </td>
-                                <td class="{{ loop.last ? 'is-borderless' : '' }}">
+                                </div>
+                                <div class="has-text-dark" style="line-height: 1.6;">
                                     {% set agView = field|ag_prepare(entity) %}{{ include(agView.template, agView.variables) }}
-                                </td>
-                            </tr>
+                                </div>
+                            </div>
                         {% endfor %}
-                    </table>
+                    </div>
                 </div>
             {% endblock %}
         {% endif %}

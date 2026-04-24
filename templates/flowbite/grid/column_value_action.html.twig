@@ -1,38 +1,37 @@
 {% import attributes.template.icons|default(ag_template('icons')) as ag_icons %}
 {% if ag_run(agIsAnyAllowed) or attributes.has_custom_action is defined %}
-    {% set btnClass = 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-900 font-medium leading-5 text-sm px-3 py-1.5 focus:outline-none' %}
-    {% set btnDelClass = 'text-red-700 bg-white border border-gray-300 hover:bg-red-50 hover:text-red-900 font-medium leading-5 text-sm px-3 py-1.5 focus:outline-none' %}
+    {% set btnClass = 'inline-flex h-8 w-8 items-center justify-center rounded-md border border-gray-200 bg-gray-50 text-gray-500 transition hover:border-gray-300 hover:bg-white hover:text-gray-800 focus:outline-none' %}
+    {% set btnDelClass = btnClass ~ ' hover:border-red-300 hover:text-red-600' %}
     {% set hasView = ag_run(agIsAllowed, 'view') and attributes.button.view.display_in_grid %}
     {% set hasEdit = ag_run(agIsAllowed, 'edit') and attributes.button.edit.display_in_grid %}
     {% set hasDelete = ag_run(agIsAllowed, 'delete') and attributes.button.delete.display_in_grid %}
     {% set hasCustom = attributes.has_custom_action is defined %}
-    {% set totalBtns = (hasView ? 1 : 0) + (hasEdit ? 1 : 0) + (hasDelete ? 1 : 0) + (hasCustom ? 1 : 0) %}
     <td class="px-6 py-3 {{ attributes.html_class.action_column_value|default('text-right whitespace-nowrap') }}">
-        {% if totalBtns > 0 %}
-        <div class="inline-flex rounded-base shadow-xs -space-x-px" role="group">
-            {% set btnIndex = 0 %}
-            {% set btnIndex = btnIndex + (hasView ? 1 : 0) %}
+        {% if hasView or hasEdit or hasDelete or hasCustom %}
+        <div class="inline-flex items-center gap-1.5" role="group">
             {% block autogrid_grid_row_action_view %}
                 {% if hasView %}
-                    <a class="{{ btnClass }}{% if btnIndex == 1 %} rounded-s-base{% endif %}{% if btnIndex == totalBtns %} rounded-e-base{% endif %}" href="{{ ag_run(agActionUrl, 'view', {'id': entity.id}) }}">{{ ag_icons.view() }}</a>
+                    <a class="{{ btnClass }}" href="{{ ag_run(agActionUrl, 'view', {'id': entity.id}) }}" title="{{ 'f0ska.autogrid.button.view'|trans }}">
+                        {{ ag_icons.view() }}
+                    </a>
                 {% endif %}
             {% endblock %}
-            {% set btnIndex = btnIndex + (hasEdit ? 1 : 0) %}
             {% block autogrid_grid_row_action_edit %}
                 {% if hasEdit %}
-                    <a class="{{ btnClass }}{% if btnIndex == 1 %} rounded-s-base{% endif %}{% if btnIndex == totalBtns %} rounded-e-base{% endif %}" href="{{ ag_run(agActionUrl, 'edit', {'id': entity.id}) }}">{{ ag_icons.edit() }}</a>
+                    <a class="{{ btnClass }}" href="{{ ag_run(agActionUrl, 'edit', {'id': entity.id}) }}" title="{{ 'f0ska.autogrid.button.modify'|trans }}">
+                        {{ ag_icons.edit() }}
+                    </a>
                 {% endif %}
             {% endblock %}
-            {% set btnIndex = btnIndex + (hasDelete ? 1 : 0) %}
             {% block autogrid_grid_row_action_delete %}
                 {% if hasDelete %}
-                    <a class="{{ btnDelClass }}{% if btnIndex == 1 %} rounded-s-base{% endif %}{% if btnIndex == totalBtns %} rounded-e-base{% endif %}"
+                    <a class="{{ btnDelClass }}"
                        href="{{ ag_run(agActionUrl, 'delete', {'id': entity.id}) }}"
                        onclick="return confirm('{{ 'f0ska.autogrid.dialog.delete_confirm'|trans }}');"
+                       title="{{ 'f0ska.autogrid.button.delete'|trans }}"
                     >{{ ag_icons.delete() }}</a>
                 {% endif %}
             {% endblock %}
-            {% set btnIndex = btnIndex + (hasCustom ? 1 : 0) %}
             {% block autogrid_grid_row_custom_action %}{% endblock %}
         </div>
         {% endif %}

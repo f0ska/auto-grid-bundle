@@ -2,26 +2,29 @@
 {% if view.pagination.limits|length > 1 %}
     {% set btnClass = attributes.html_class.tfoot_btn|default('button small secondary') %}
     {% block autogrid_grid_limit %}
-        <div class="button-group small" style="display: inline-flex;">
-            {% for pageLimit in view.pagination.limits %}
-                {% if pageLimit == view.pagination.limit %}
-                    {% block autogrid_grid_limit_active %}
-                        <span class="button small primary">{{ pageLimit }}</span>
-                    {% endblock %}
-                {% else %}
-                    {% block autogrid_grid_limit_button %}
-                        {% set calcOffset = (view.pagination.count > view.pagination.limit ? view.pagination.limit : view.pagination.count) * (view.pagination.page - 1) + 1 %}
-                        {% set toPage = (calcOffset / pageLimit)|round(0, 'ceil')|ag_to_int %}
-                        <a type="button"
-                           href="{{ ag_run(agActionUrl, 'grid', {'limit': pageLimit, 'page': toPage}) }}"
-                           class="button small secondary">{{ pageLimit }}</a>
-                    {% endblock %}
-                {% endif %}
-            {% endfor %}
-            <a class="button small secondary"
-               href="#{{ attributes.container_id }}"
-            >{{ ag_icons.arrow_up() }}</a>
-        </div>
+        <span style="display: inline-flex; align-items: center;">
+            <span class="text-gray-600" style="margin-right: .5rem;">{{ 'f0ska.autogrid.rows'|trans }}</span>
+            <span class="button-group small" style="display: inline-flex; margin-bottom: 0;">
+                {% for pageLimit in view.pagination.limits %}
+                    {% if pageLimit == view.pagination.limit %}
+                        {% block autogrid_grid_limit_active %}
+                            <span class="button small primary">{{ pageLimit }}</span>
+                        {% endblock %}
+                    {% else %}
+                        {% block autogrid_grid_limit_button %}
+                            {% set calcOffset = (view.pagination.count > view.pagination.limit ? view.pagination.limit : view.pagination.count) * (view.pagination.page - 1) + 1 %}
+                            {% set toPage = (calcOffset / pageLimit)|round(0, 'ceil')|ag_to_int %}
+                            <a type="button"
+                               href="{{ ag_run(agActionUrl, 'grid', {'limit': pageLimit, 'page': toPage}) }}"
+                               class="button small secondary">{{ pageLimit }}</a>
+                        {% endblock %}
+                    {% endif %}
+                {% endfor %}
+                <a class="button small secondary"
+                   href="#{{ attributes.container_id }}"
+                >{{ ag_icons.arrow_up() }}</a>
+            </span>
+        </span>
     {% endblock %}
 {% else %}
     <a class="button small secondary"

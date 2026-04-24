@@ -3,17 +3,17 @@
     {% set btnClass = attributes.html_class.thead_btn|default('btn-outline-secondary') %}
     {% set btnClassActive = attributes.html_class.thead_btn_active|default('btn-primary') %}
     <th class="{{ attributes.html_class.action_column_header|default('text-right text-nowrap align-middle') }}">
-        <span class="btn-group">
+        <span class="d-inline-flex align-items-center">
             {% block autogrid_grid_header_action_clear_filter %}
                 {% if request.filter is defined and ag_run(agIsAllowed, 'filter') %}
-                    <a class="btn btn-sm btn-outline-danger" href="{{ ag_run(agActionUrl, 'grid', {'filter': null}) }}">
+                    <a class="btn btn-sm btn-outline-danger mr-1" href="{{ ag_run(agActionUrl, 'grid', {'filter': null}) }}">
                         {{ ag_icons.filter_reset() }}
                     </a>
                 {% endif %}
             {% endblock %}
             {% block autogrid_grid_header_action_advanced_filter %}
                 {% if view.advancedFilterFormView and ag_run(agIsAllowed, 'advanced_filter') %}
-                    <button class="btn btn-sm {{ request.filter is defined ? btnClassActive : btnClass }}"
+                    <button class="btn btn-sm {{ request.filter is defined ? btnClassActive : btnClass }} mr-1"
                             data-toggle="modal"
                             data-target="#adv{{ agId }}"
                     >{{ ag_icons.search() }}</button>
@@ -21,7 +21,7 @@
             {% endblock %}
             {% block autogrid_grid_header_action_export %}
                 {% if view.exportActionFormView and view.pagination.count %}
-                    <button class="btn btn-sm {{ btnClass }} dropdown-toggle"
+                    <button class="btn btn-sm {{ btnClass }} dropdown-toggle mr-1"
                             data-toggle="dropdown"
                             aria-expanded="false"
                             id="exp{{ agId }}"

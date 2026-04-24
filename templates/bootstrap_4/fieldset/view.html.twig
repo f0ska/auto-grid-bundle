@@ -2,48 +2,48 @@
     <div class="row">
         {% for fieldset in view.fieldset.defined %}
             {% block autogrid_fieldset_view_card %}
-                <div class="col {{ fieldset.class|default('col-12') }}">
-                    <div class="card mt-3">
+                <div class="col {{ fieldset.class|default('col-12') }} mb-3">
+                    <section class="h-100 border rounded bg-light px-4 py-3">
                         {% block autogrid_fieldset_view_header %}
-                            <h5 class="card-header">
+                            <h5 class="h6 text-dark font-weight-bold mb-3 pb-2 border-bottom">
                                 {{ fieldset.name|trans }}
                             </h5>
                         {% endblock %}
                         {% block autogrid_fieldset_view_body %}
-                            <table class="table mb-1">
+                            <div>
                                 {% for fieldName in fieldset.fields %}
                                     {% set field = attribute(fields, fieldName) %}
-                                    <tr>
-                                        <th class="col col-4 text-right table-light {{ loop.last ? 'border-bottom-0' }}">
+                                    <div class="{% if not loop.first %}border-top {% endif %}py-3">
+                                        <div class="small text-muted text-uppercase font-weight-bold mb-2" style="letter-spacing: .06em;">
                                             {{ field.attributes.label|trans }}
-                                        </th>
-                                        <td class="col col-8 {{ loop.last ? 'border-bottom-0' }}">
+                                        </div>
+                                        <div class="text-dark" style="line-height: 1.55;">
                                             {% set agView = field|ag_prepare(entity) %}{{ include(agView.template, agView.variables) }}
-                                        </td>
-                                    </tr>
+                                        </div>
+                                    </div>
                                 {% endfor %}
-                            </table>
+                            </div>
                         {% endblock %}
-                    </div>
+                    </section>
                 </div>
             {% endblock %}
         {% endfor %}
         {% if view.fieldset.not_defined %}
             {% block autogrid_fieldset_view_no_fieldset %}
                 <div class="col">
-                    <table class="table mt-4 mb-0">
+                    <div class="mt-2">
                         {% for fieldName in view.fieldset.not_defined %}
                             {% set field = attribute(fields, fieldName) %}
-                            <tr>
-                                <th class="col col-4 text-right table-light {{ loop.last ? 'border-bottom-0' }}">
+                            <div class="{% if not loop.first %}border-top {% endif %}py-3">
+                                <div class="small text-muted text-uppercase font-weight-bold mb-2" style="letter-spacing: .06em;">
                                     {{ field.attributes.label|trans }}
-                                </th>
-                                <td class="col col-8 {{ loop.last ? 'border-bottom-0' }}">
+                                </div>
+                                <div class="text-dark" style="line-height: 1.55;">
                                     {% set agView = field|ag_prepare(entity) %}{{ include(agView.template, agView.variables) }}
-                                </td>
-                            </tr>
+                                </div>
+                            </div>
                         {% endfor %}
-                    </table>
+                    </div>
                 </div>
             {% endblock %}
         {% endif %}

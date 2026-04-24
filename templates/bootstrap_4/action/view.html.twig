@@ -14,29 +14,29 @@
             {% set btnClass = attributes.html_class.thead_btn|default('btn-outline-secondary') %}
             <thead class="{{ attributes.html_class.thead|default('') }}">
             <tr>
-                <td class="text-nowrap h4 align-middle pl-0 pr-0" colspan="2">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col col-4 text-start">
+                <td class="align-middle pl-0 pr-0" colspan="2">
+                    <div class="container-fluid py-2">
+                        <div class="d-flex flex-wrap align-items-center justify-content-between">
+                            <div class="d-flex flex-wrap align-items-center mb-2 mb-md-0">
                                 {% block autogrid_view_header_back_button %}
                                     {% if ag_run(agIsAllowed, 'grid') %}
-                                        <a class="btn btn-sm {{ btnClass }}" href="{{ ag_run(agActionUrl, 'grid') }}">
+                                        <a class="btn btn-sm {{ btnClass }} mr-2" href="{{ ag_run(agActionUrl, 'grid') }}">
                                             {{ ag_icons.arrow_left() }}&nbsp;{{ 'f0ska.autogrid.button.back'|trans }}
                                         </a>
                                     {% endif %}
                                 {% endblock %}
                             </div>
-                            <div class="col col-4 text-center">
+                            <div class="flex-grow-1 text-center mb-2 mb-md-0">
                                 {% block autogrid_view_header_title %}
-                                    <span class="badge rounded-pill bg-light text-dark fw-normal">
+                                    <span class="badge badge-pill badge-light text-dark font-weight-normal px-3 py-2 border">
                                         {{ ('f0ska.autogrid.action.' ~ action)|trans }}&nbsp;{{ ag_icons.id() }}{{ entity.id }}
                                     </span>
                                 {% endblock %}
                             </div>
-                            <div class="col col-4 text-right">
+                            <div class="d-flex flex-wrap align-items-center justify-content-end">
                                 {% block autogrid_view_header_edit_button %}
                                     {% if ag_run(agIsAllowed, 'edit') and attributes.button.edit.display_in_view %}
-                                        <a class="btn btn-sm btn-outline-secondary" href="{{ ag_run(agActionUrl, 'edit') }}">
+                                        <a class="btn btn-sm btn-outline-secondary mr-2" href="{{ ag_run(agActionUrl, 'edit') }}">
                                             {{ ag_icons.edit() }}&nbsp;{{ 'f0ska.autogrid.button.modify'|trans }}
                                         </a>
                                     {% endif %}
@@ -60,7 +60,7 @@
         {% endblock %}
 
         {% block autogrid_view_body %}
-            <tbody class="{{ attributes.html_class.tbody|default('') }}">
+            <tbody class="{{ attributes.html_class.tbody|default('border-top') }}">
             {% if view.fieldset.defined %}
                 <tr>
                     <td colspan="2" class="pl-0 pr-0">
@@ -68,35 +68,41 @@
                     </td>
                 </tr>
             {% else %}
-                {% for field in fields %}
-                    {% if field.permissions.view %}
-                        {% block autogrid_view_body_row %}
-                            <tr>
-                                {% block autogrid_view_body_row_label %}
-                                    <th class="col col-4 text-right table-light">
-                                        {{ field.attributes.label|trans }}
-                                    </th>
-                                {% endblock %}
-                                {% block autogrid_view_body_row_value %}
-                                    <td class="col col-8">
-                                        {% set agView = field|ag_prepare(entity) %}{{ include(agView.template, agView.variables) }}
-                                    </td>
-                                {% endblock %}
-                            </tr>
-                        {% endblock %}
-                    {% endif %}
-                {% endfor %}
+                <tr>
+                    <td colspan="2" class="pl-0 pr-0">
+                        <div class="container-fluid py-3">
+                            {% for field in fields %}
+                                {% if field.permissions.view %}
+                                    {% block autogrid_view_body_row %}
+                                        <div class="{% if not loop.first %}border-top {% endif %}py-3">
+                                            {% block autogrid_view_body_row_label %}
+                                                <div class="small text-muted text-uppercase font-weight-bold mb-2" style="letter-spacing: .06em;">
+                                                    {{ field.attributes.label|trans }}
+                                                </div>
+                                            {% endblock %}
+                                            {% block autogrid_view_body_row_value %}
+                                                <div class="text-dark" style="line-height: 1.55;">
+                                                    {% set agView = field|ag_prepare(entity) %}{{ include(agView.template, agView.variables) }}
+                                                </div>
+                                            {% endblock %}
+                                        </div>
+                                    {% endblock %}
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </td>
+                </tr>
             {% endif %}
             </tbody>
         {% endblock %}
 
         {% block autogrid_view_footer %}
-            <tfoot class="{{ attributes.html_class.tfoot|default('') }}">
+            <tfoot class="{{ attributes.html_class.tfoot|default('border-top') }}">
             <tr>
                 <td colspan="2" class="pl-0 pr-0">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col text-right">
+                    <div class="container-fluid py-2">
+                        <div class="d-flex justify-content-end">
+                            <div>
                                 <a class="btn btn-sm {{ attributes.html_class.tfoot_btn|default('btn-outline-secondary') }}"
                                    href="#{{ attributes.container_id }}"
                                 >{{ ag_icons.arrow_up() }}</a>

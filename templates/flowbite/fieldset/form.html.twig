@@ -1,22 +1,20 @@
 {{ form_start(form) }}
-<div class="px-6 py-4">
-    <div class="grid auto-cols-auto gap-4">
+<div class="px-4 py-5 sm:px-6">
+    <div class="grid gap-5 xl:grid-cols-2">
         {% for fieldset in view.fieldset.defined %}
             {% block autogrid_fieldset_form_card %}
-                <div class="{{ fieldset.class|default('col-auto') }}">
-                    <div class="bg-white rounded-lg shadow border border-gray-200">
+                <div class="w-full {{ fieldset.class|default('') }}">
+                    <div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
                         {% block autogrid_fieldset_form_header %}
-                            <h5 class="px-4 py-3 text-gray-900 font-medium bg-gray-50 rounded-t-lg border-b border-gray-200">
+                            <h5 class="border-b border-gray-200 bg-gray-50 px-5 py-4 text-sm font-semibold uppercase tracking-wide text-gray-600">
                                 {{ fieldset.name|trans }}
                             </h5>
                         {% endblock %}
                         {% block autogrid_fieldset_form_body %}
-                            <div class="p-4 space-y-4">
+                            <div class="space-y-5 px-5 py-5">
                                 {% for fieldName in fieldset.fields %}
                                     {% if attribute(form, fieldName) is defined %}
-                                        <div>
-                                            {{ form_row(attribute(form, fieldName)) }}
-                                        </div>
+                                        {{ form_row(attribute(form, fieldName)) }}
                                     {% endif %}
                                 {% endfor %}
                             </div>
@@ -27,12 +25,10 @@
         {% endfor %}
         {% if view.fieldset.not_defined %}
             {% block autogrid_fieldset_form_no_fieldset %}
-                <div class="col-span-2">
+                <div class="xl:col-span-2">
                     {% for fieldName in view.fieldset.not_defined %}
                         {% if attribute(form, fieldName) is defined %}
-                            <div class="mb-4">
-                                {{ form_row(attribute(form, fieldName)) }}
-                            </div>
+                            {{ form_row(attribute(form, fieldName)) }}
                         {% endif %}
                     {% endfor %}
                 </div>
