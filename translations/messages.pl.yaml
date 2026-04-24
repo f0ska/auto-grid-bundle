@@ -1,0 +1,25 @@
+f0ska:
+    autogrid:
+        button:
+            submit: "Zapisz"
+            back: "Wstecz"
+            modify: "Edytuj"
+            reset: "Resetuj"
+            delete: "Usuń"
+            view: "Pokaż"
+        dialog:
+            delete_confirm: "Czy na pewno chcesz to usunąć?"
+        action:
+            create: "Utwórz nowy wpis"
+            edit: "Edytuj wpis"
+            view: "Podgląd wpisu"
+            select_all: "Zaznacz wszystko"
+        choice:
+            yes: "Tak"
+            no: "Nie"
+        range:
+            from: "Od"
+            to: "Do"
+        rows: "Wiersze"
+        total: "Łącznie"
+        empty: "Pusto"

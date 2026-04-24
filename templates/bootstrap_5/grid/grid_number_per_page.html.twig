@@ -2,7 +2,7 @@
     {% set btnClass = attributes.html_class.tfoot_btn|default('btn-outline-secondary') %}
     {% block autogrid_grid_limit %}
         <div class="d-inline-flex align-items-center gap-2">
-            <span class="small text-body-secondary fw-semibold">Rows</span>
+            <span class="small text-body-secondary fw-semibold">{{ 'f0ska.autogrid.rows'|trans }}</span>
             <div class="btn-group btn-group-sm shadow-sm" role="group">
             {% for pageLimit in view.pagination.limits %}
                 {% if pageLimit == view.pagination.limit %}

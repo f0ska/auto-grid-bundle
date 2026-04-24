@@ -10,7 +10,7 @@ f0ska:
         dialog:
             delete_confirm: "Do you really want to delete this?"
         action:
-            create: "Create new enty"
+            create: "Create new entry"
             edit: "Modify entry"
             view: "View entry"
             select_all: "Select All"
@@ -20,5 +20,6 @@ f0ska:
         range:
             from: "From"
             to: "To"
+        rows: "Rows"
         total: "Total"
         empty: "Empty"

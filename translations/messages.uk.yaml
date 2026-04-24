@@ -1,0 +1,25 @@
+f0ska:
+    autogrid:
+        button:
+            submit: "Зберегти"
+            back: "Назад"
+            modify: "Змінити"
+            reset: "Скинути"
+            delete: "Видалити"
+            view: "Переглянути"
+        dialog:
+            delete_confirm: "Ви дійсно хочете це видалити?"
+        action:
+            create: "Створити новий запис"
+            edit: "Змінити запис"
+            view: "Переглянути запис"
+            select_all: "Вибрати все"
+        choice:
+            yes: "Так"
+            no: "Ні"
+        range:
+            from: "Від"
+            to: "До"
+        rows: "Рядки"
+        total: "Усього"
+        empty: "Порожньо"

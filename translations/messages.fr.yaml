@@ -1,0 +1,25 @@
+f0ska:
+    autogrid:
+        button:
+            submit: "Enregistrer"
+            back: "Retour"
+            modify: "Modifier"
+            reset: "Réinitialiser"
+            delete: "Supprimer"
+            view: "Voir"
+        dialog:
+            delete_confirm: "Voulez-vous vraiment supprimer ceci ?"
+        action:
+            create: "Créer une nouvelle entrée"
+            edit: "Modifier l'entrée"
+            view: "Voir l'entrée"
+            select_all: "Tout sélectionner"
+        choice:
+            yes: "Oui"
+            no: "Non"
+        range:
+            from: "De"
+            to: "À"
+        rows: "Lignes"
+        total: "Total"
+        empty: "Vide"
