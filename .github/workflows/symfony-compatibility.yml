@@ -176,6 +176,15 @@ jobs:
           find vendor/f0ska -maxdepth 2 -type f | sort || true
           php -r 'require "vendor/autoload.php"; var_dump(class_exists("F0ska\\AutoGridBundle\\F0skaAutoGridBundle")); var_dump(class_exists("F0ska\\AutoGridTestBundle\\F0skaAutoGridTestBundle"));'
 
+      - name: Debug Symfony boot
+        working-directory: app
+        env:
+          APP_ENV: test
+        run: |
+          cat config/bundles.php
+          php -r 'require "vendor/autoload.php"; $bundles = require "config/bundles.php"; var_dump(isset($bundles["F0ska\\AutoGridBundle\\F0skaAutoGridBundle"])); var_dump(isset($bundles["F0ska\\AutoGridTestBundle\\F0skaAutoGridTestBundle"])); var_dump(class_exists("F0ska\\AutoGridBundle\\F0skaAutoGridBundle")); var_dump(class_exists("F0ska\\AutoGridTestBundle\\F0skaAutoGridTestBundle"));'
+          php bin/console about -vvv
+
       - name: Install importmap assets
         working-directory: app
         run: php bin/console importmap:install --no-interaction
