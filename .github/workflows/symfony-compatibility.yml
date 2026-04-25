@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       SHARED_REF: ${{ github.head_ref || github.ref_name }}
-      LOCAL_PACKAGE_VERSION: 999.0.0
+      LOCAL_PACKAGE_VERSION: 2.999.0
 
     strategy:
       fail-fast: false
