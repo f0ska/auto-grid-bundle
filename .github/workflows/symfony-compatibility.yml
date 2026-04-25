@@ -164,8 +164,22 @@ jobs:
           php bin/console doctrine:schema:update --force --env=test
           php bin/console doctrine:fixtures:load --no-interaction --env=test
 
-      - name: Run PHPStan
+      - name: Run PHPStan on Symfony 6.4
         working-directory: app
+        if: matrix.symfony == '6.4'
+        run: |
+          cat <<'EOF' > phpstan-ci.neon
+          parameters:
+              ignoreErrors:
+                  -
+                      path: vendor/f0ska/auto-grid-bundle/src/DependencyInjection/Configuration.php
+                      message: '#Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\.*#'
+          EOF
+          vendor/bin/phpstan analyse -c phpstan-ci.neon -l 5 vendor/f0ska/auto-grid-bundle/src
+
+      - name: Run PHPStan on Symfony 7.4/8.0
+        working-directory: app
+        if: matrix.symfony != '6.4'
         run: vendor/bin/phpstan analyse -l 5 vendor/f0ska/auto-grid-bundle/src
 
       - name: Run functional tests
