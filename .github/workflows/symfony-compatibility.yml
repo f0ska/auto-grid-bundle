@@ -94,7 +94,6 @@ jobs:
           doctrine:
               dbal:
                   url: '%env(resolve:DATABASE_URL)%'
-                  use_savepoints: true
               orm:
                   auto_generate_proxy_classes: true
                   enable_lazy_ghost_objects: true
@@ -188,8 +187,12 @@ jobs:
           APP_ENV: test
         run: |
           cat config/bundles.php
+          echo "--- config/routes/f0ska_auto_grid_test.yaml"
+          cat config/routes/f0ska_auto_grid_test.yaml
           php -r 'require "vendor/autoload.php"; $bundles = require "config/bundles.php"; var_dump(isset($bundles["F0ska\\AutoGridBundle\\F0skaAutoGridBundle"])); var_dump(isset($bundles["F0ska\\AutoGridTestBundle\\F0skaAutoGridTestBundle"])); var_dump(class_exists("F0ska\\AutoGridBundle\\F0skaAutoGridBundle")); var_dump(class_exists("F0ska\\AutoGridTestBundle\\F0skaAutoGridTestBundle"));'
           php bin/console about -vvv
+          php bin/console debug:router | grep auto_grid_test || true
+          php bin/console router:match /auto-grid/advanced || true
 
       - name: Install importmap assets
         working-directory: app
