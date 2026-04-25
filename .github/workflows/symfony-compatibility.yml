@@ -154,6 +154,7 @@ jobs:
                   <ini name="display_errors" value="1" />
                   <ini name="error_reporting" value="-1" />
                   <server name="APP_ENV" value="test" force="true" />
+                  <server name="DEFAULT_URI" value="http://localhost" />
                   <server name="KERNEL_CLASS" value="App\Kernel" />
                   <server name="SHELL_VERBOSITY" value="-1" />
               </php>
