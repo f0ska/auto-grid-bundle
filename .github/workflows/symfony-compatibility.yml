@@ -67,8 +67,8 @@ jobs:
         working-directory: app
         run: |
           composer config extra.symfony.require "${{ matrix.symfony }}.*"
-          composer config repositories.auto-grid-bundle "{\"type\":\"path\",\"url\":\"../auto-grid-bundle\",\"options\":{\"symlink\":false},\"versions\":{\"f0ska/auto-grid-bundle\":\"${LOCAL_PACKAGE_VERSION}\"}}"
-          composer config repositories.auto-grid-test-bundle "{\"type\":\"path\",\"url\":\"../auto-grid-test-bundle\",\"options\":{\"symlink\":false},\"versions\":{\"f0ska/auto-grid-test-bundle\":\"${LOCAL_PACKAGE_VERSION}\"}}"
+          composer config repositories.auto-grid-bundle "{\"type\":\"path\",\"url\":\"../auto-grid-bundle\",\"options\":{\"symlink\":false,\"versions\":{\"f0ska/auto-grid-bundle\":\"${LOCAL_PACKAGE_VERSION}\"}}}"
+          composer config repositories.auto-grid-test-bundle "{\"type\":\"path\",\"url\":\"../auto-grid-test-bundle\",\"options\":{\"symlink\":false,\"versions\":{\"f0ska/auto-grid-test-bundle\":\"${LOCAL_PACKAGE_VERSION}\"}}}"
 
           composer require --no-interaction --no-progress \
             f0ska/auto-grid-test-bundle:${LOCAL_PACKAGE_VERSION}
