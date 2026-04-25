@@ -71,6 +71,7 @@ jobs:
           composer config repositories.auto-grid-test-bundle "{\"type\":\"path\",\"url\":\"../auto-grid-test-bundle\",\"options\":{\"symlink\":false,\"versions\":{\"f0ska/auto-grid-test-bundle\":\"${LOCAL_PACKAGE_VERSION}\"}}}"
 
           composer require --no-interaction --no-progress \
+            f0ska/auto-grid-bundle:${LOCAL_PACKAGE_VERSION} \
             f0ska/auto-grid-test-bundle:${LOCAL_PACKAGE_VERSION}
 
           composer require --dev --no-interaction --no-progress phpunit/phpunit:^10.5
