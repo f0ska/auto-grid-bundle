@@ -78,7 +78,7 @@ jobs:
 
           php -r '$file = "composer.json"; $composer = json_decode(file_get_contents($file), true, 512, JSON_THROW_ON_ERROR); $composer["autoload-dev"]["psr-4"]["F0ska\\\\AutoGridTestBundle\\\\Tests\\\\"] = "../auto-grid-test-bundle/tests/"; file_put_contents($file, json_encode($composer, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . PHP_EOL);'
 
-          php -r '$bundlesFile = "config/bundles.php"; $bundles = require $bundlesFile; $bundles["F0ska\\\\AutoGridBundle\\\\F0skaAutoGridBundle"] = ["all" => true]; $bundles["F0ska\\\\AutoGridTestBundle\\\\F0skaAutoGridTestBundle"] = ["all" => true]; $code = "<?php\n\nreturn " . var_export($bundles, true) . ";\n"; file_put_contents($bundlesFile, $code);'
+          php -r '$bundlesFile = "config/bundles.php"; $bundles = require $bundlesFile; unset($bundles["F0ska\\\\AutoGridBundle\\\\F0skaAutoGridBundle"], $bundles["F0ska\\\\AutoGridTestBundle\\\\F0skaAutoGridTestBundle"]); $bundles["F0ska\\AutoGridBundle\\F0skaAutoGridBundle"] = ["all" => true]; $bundles["F0ska\\AutoGridTestBundle\\F0skaAutoGridTestBundle"] = ["all" => true]; $code = "<?php\n\nreturn " . var_export($bundles, true) . ";\n"; file_put_contents($bundlesFile, $code);'
 
           cat <<'EOF' > .env.test
           APP_ENV=test
