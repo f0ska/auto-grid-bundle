@@ -7,6 +7,8 @@
                 {% if ag_run(agIsAllowed, 'view') and attributes.button.view.display_in_grid %}
                     <a class="{{ btnClass }}"
                        href="{{ ag_run(agActionUrl, 'view', {'id': entity.id}) }}"
+                       title="{{ 'f0ska.autogrid.button.view'|trans }}"
+                       aria-label="{{ 'f0ska.autogrid.button.view'|trans }}"
                     >{{ ag_icons.view() }}</a>
                 {% endif %}
             {% endblock %}
@@ -14,6 +16,8 @@
                 {% if ag_run(agIsAllowed, 'edit') and attributes.button.edit.display_in_grid %}
                     <a class="{{ btnClass }}"
                        href="{{ ag_run(agActionUrl, 'edit', {'id': entity.id}) }}"
+                       title="{{ 'f0ska.autogrid.button.modify'|trans }}"
+                       aria-label="{{ 'f0ska.autogrid.button.modify'|trans }}"
                     >{{ ag_icons.edit() }}</a>
                 {% endif %}
             {% endblock %}
@@ -22,6 +26,8 @@
                     <a class="button small alert"
                        href="{{ ag_run(agActionUrl, 'delete', {'id': entity.id}) }}"
                        onclick="return confirm('{{ 'f0ska.autogrid.dialog.delete_confirm'|trans }}');"
+                       title="{{ 'f0ska.autogrid.button.delete'|trans }}"
+                       aria-label="{{ 'f0ska.autogrid.button.delete'|trans }}"
                     >{{ ag_icons.delete() }}</a>
                 {% endif %}
             {% endblock %}

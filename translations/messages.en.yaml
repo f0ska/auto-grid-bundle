@@ -3,6 +3,13 @@ f0ska:
         button:
             submit: "Submit"
             back: "Back"
+            sort: "Sort"
+            filter: "Filter"
+            mass_action: "Mass actions"
+            export: "Export"
+            search: "Search"
+            filter_reset: "Reset filters"
+            create: "Create"
             modify: "Modify"
             reset: "Reset"
             delete: "Delete"
@@ -10,7 +17,7 @@ f0ska:
         dialog:
             delete_confirm: "Do you really want to delete this?"
         action:
-            create: "Create new enty"
+            create: "Create new entry"
             edit: "Modify entry"
             view: "View entry"
             select_all: "Select All"
@@ -20,5 +27,6 @@ f0ska:
         range:
             from: "From"
             to: "To"
+        rows: "Rows"
         total: "Total"
         empty: "Empty"

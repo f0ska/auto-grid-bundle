@@ -55,18 +55,26 @@
             <tfoot class="{{ attributes.html_class.tfoot|default('') }}">
                 <tr>
                     <td colspan="{{ columnsCount }}">
-                        <nav class="is-flex is-justify-content-space-between is-align-items-center" role="navigation">
-                            <div class="has-text-grey-light">
-                                <b>{{ 'f0ska.autogrid.total'|trans }}: {{ view.pagination.count }}</b>
+                        <nav class="level is-mobile" role="navigation">
+                            <div class="level-left">
+                                <div class="level-item has-text-grey">
+                                    <span><strong>{{ 'f0ska.autogrid.total'|trans }}:</strong>&nbsp;{{ view.pagination.count }}</span>
+                                </div>
                             </div>
-                            <div class="buttons has-addons are-small" style="flex-wrap: nowrap;">
-                                {{ include(attributes.template.grid.grid_pagination|default(ag_template('grid.grid_pagination'))) }}
+                            <div class="level-item">
+                                <div class="is-inline-flex is-align-items-center" style="gap: 0.25rem; flex-wrap: wrap; justify-content: center;">
+                                    {{ include(attributes.template.grid.grid_pagination|default(ag_template('grid.grid_pagination'))) }}
+                                </div>
                             </div>
-                            <div class="buttons has-addons are-small" style="flex-wrap: nowrap;">
-                                {{ include(attributes.template.grid.grid_number_per_page|default(ag_template('grid.grid_number_per_page'))) }}
-                                <a class="button is-small"
-                                   href="#{{ attributes.container_id }}"
-                                >{{ ag_icons.arrow_up() }}</a>
+                            <div class="level-right">
+                                <div class="level-item">
+                                    <div class="is-inline-flex is-align-items-center" style="gap: 0.25rem; flex-wrap: wrap; justify-content: flex-end;">
+                                        {{ include(attributes.template.grid.grid_number_per_page|default(ag_template('grid.grid_number_per_page'))) }}
+                                        <a class="button is-small"
+                                           href="#{{ attributes.container_id }}"
+                                        >{{ ag_icons.arrow_up() }}</a>
+                                    </div>
+                                </div>
                             </div>
                         </nav>
                     </td>

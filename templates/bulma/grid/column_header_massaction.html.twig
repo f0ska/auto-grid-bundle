@@ -6,7 +6,7 @@
             {{ form_start(view.massActionFormView) }}
             {% block autogrid_grid_column_header_massaction_dropdown %}
                 <div style="display: inline-block;">
-                    <button type="button" class="button {{ btnClass }}" aria-haspopup="true" onclick="var d=document.getElementById('mass{{ agId }}');d.style.display=d.style.display=='none'?'block':'none'; event.stopPropagation();">
+                    <button type="button" class="button {{ btnClass }}" aria-haspopup="true" onclick="var d=document.getElementById('mass{{ agId }}');d.style.display=d.style.display=='none'?'block':'none'; event.stopPropagation();" title="{{ 'f0ska.autogrid.button.mass_action'|trans }}" aria-label="{{ 'f0ska.autogrid.button.mass_action'|trans }}">
                         {{ ag_icons.chevron_down() }}
                     </button>
                     <div id="mass{{ agId }}" class="dropdown-menu" style="position: absolute; left: 0; top: 100%; min-width: 240px; display: none; background: white; z-index: 1000; box-shadow: 0 2px 3px rgba(10,10,10,0.1), 0 0 0 1px rgba(10,10,10,0.1); border-radius: 4px;" onclick="event.stopPropagation();">

@@ -6,7 +6,7 @@
             {{ form_start(view.massActionFormView) }}
             {% block autogrid_grid_column_header_massaction_dropdown %}
             <span>
-                <button type="button" class="{{ btnClass }}" onclick="var d=document.getElementById('mass{{ agId }}');d.style.display=d.style.display=='none'?'block':'none'; event.stopPropagation();" style="margin-bottom: 0;">{{ ag_icons.chevron_down() }}</button>
+                <button type="button" class="{{ btnClass }}" onclick="var d=document.getElementById('mass{{ agId }}');d.style.display=d.style.display=='none'?'block':'none'; event.stopPropagation();" style="margin-bottom: 0;" title="{{ 'f0ska.autogrid.button.mass_action'|trans }}" aria-label="{{ 'f0ska.autogrid.button.mass_action'|trans }}">{{ ag_icons.chevron_down() }}</button>
                 <div id="mass{{ agId }}" style="display: none; position: absolute; left: 0; top: 100%; z-index: 1000; background: white; border: 1px solid #ccc; padding: 10px; min-width: 300px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); text-align: left;" onclick="event.stopPropagation();">
                     {% block autogrid_grid_column_header_massaction_choices %}
                         {% for label,code in view.massActionChoices %}

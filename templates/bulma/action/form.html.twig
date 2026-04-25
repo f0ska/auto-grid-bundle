@@ -4,7 +4,7 @@
     <div class="{{ attributes.html_class.table|default('') }}">
         {% block autogrid_form_caption %}
             {% if attributes.title is not empty %}
-                <div class="has-text-centered has-text-grey mb-4">
+                <div class="has-text-centered has-text-grey mb-5">
                     <h4 class="is-size-4">{{ attributes.title|trans }}</h4>
                 </div>
             {% endif %}
@@ -12,26 +12,30 @@
 
         {% block autogrid_form_header %}
             {% set btnClass = attributes.html_class.thead_btn|default('is-small') %}
-            <div class="{{ attributes.html_class.thead|default('is-flex is-justify-content-space-between is-align-items-center') }}">
-                <div class="buttons">
-                    {% block autogrid_form_header_back_button %}
-                        {% if ag_run(agIsAllowed, 'grid') %}
-                            <a class="button {{ btnClass }}" href="{{ ag_run(agActionUrl, 'grid') }}">
-                                {{ ag_icons.arrow_left() }}&nbsp;{{ 'f0ska.autogrid.button.back'|trans }}
-                            </a>
-                        {% endif %}
-                    {% endblock %}
-                    {% block autogrid_form_header_view_button %}
-                        {% if action is not same as 'create' and ag_run(agIsAllowed, 'view') and attributes.button.view.display_in_edit %}
-                            <a class="button {{ btnClass }}"
-                               href="{{ ag_run(agActionUrl, 'view', {'id': entity.id}) }}"
-                            >
-                                {{ ag_icons.view() }}&nbsp;{{ 'f0ska.autogrid.button.view'|trans }}
-                            </a>
-                        {% endif %}
-                    {% endblock %}
+            <div class="{{ attributes.html_class.thead|default('level mb-5') }}">
+                <div class="level-left">
+                    <div class="level-item">
+                        <div class="buttons are-small mb-0">
+                            {% block autogrid_form_header_back_button %}
+                                {% if ag_run(agIsAllowed, 'grid') %}
+                                    <a class="button {{ btnClass }}" href="{{ ag_run(agActionUrl, 'grid') }}">
+                                        {{ ag_icons.arrow_left() }}&nbsp;{{ 'f0ska.autogrid.button.back'|trans }}
+                                    </a>
+                                {% endif %}
+                            {% endblock %}
+                            {% block autogrid_form_header_view_button %}
+                                {% if action is not same as 'create' and ag_run(agIsAllowed, 'view') and attributes.button.view.display_in_edit %}
+                                    <a class="button {{ btnClass }}"
+                                       href="{{ ag_run(agActionUrl, 'view', {'id': entity.id}) }}"
+                                    >
+                                        {{ ag_icons.view() }}&nbsp;{{ 'f0ska.autogrid.button.view'|trans }}
+                                    </a>
+                                {% endif %}
+                            {% endblock %}
+                        </div>
+                    </div>
                 </div>
-                <div>
+                <div class="level-item">
                     {% block autogrid_form_header_title %}
                         <span class="tag is-light is-medium">
                             {{ ('f0ska.autogrid.action.' ~ action)|trans }}
@@ -41,23 +45,27 @@
                         </span>
                     {% endblock %}
                 </div>
-                <div class="buttons">
-                    {% block autogrid_form_header_submit_button %}
-                        <button class="button is-success {{ btnClass }}" type="submit"
-                                form="{{ form.vars.attr.id }}">
-                            {{ ag_icons.save() }}&nbsp;{{ 'f0ska.autogrid.button.submit'|trans }}
-                        </button>
-                    {% endblock %}
-                    {% block autogrid_form_header_delete_button %}
-                        {% if action is not same as 'create' and ag_run(agIsAllowed, 'delete') and attributes.button.delete.display_in_edit %}
-                            <a class="button is-danger {{ btnClass }}"
-                               href="{{ ag_run(agActionUrl, 'delete', {'id': entity.id}) }}"
-                               onclick="return confirm('{{ 'f0ska.autogrid.dialog.delete_confirm'|trans }}');"
-                            >
-                                {{ ag_icons.delete() }}&nbsp;{{ 'f0ska.autogrid.button.delete'|trans }}
-                            </a>
-                        {% endif %}
-                    {% endblock %}
+                <div class="level-right">
+                    <div class="level-item">
+                        <div class="buttons are-small mb-0">
+                            {% block autogrid_form_header_submit_button %}
+                                <button class="button is-success {{ btnClass }}" type="submit"
+                                        form="{{ form.vars.attr.id }}">
+                                    {{ ag_icons.save() }}&nbsp;{{ 'f0ska.autogrid.button.submit'|trans }}
+                                </button>
+                            {% endblock %}
+                            {% block autogrid_form_header_delete_button %}
+                                {% if action is not same as 'create' and ag_run(agIsAllowed, 'delete') and attributes.button.delete.display_in_edit %}
+                                    <a class="button is-danger {{ btnClass }}"
+                                       href="{{ ag_run(agActionUrl, 'delete', {'id': entity.id}) }}"
+                                       onclick="return confirm('{{ 'f0ska.autogrid.dialog.delete_confirm'|trans }}');"
+                                    >
+                                        {{ ag_icons.delete() }}&nbsp;{{ 'f0ska.autogrid.button.delete'|trans }}
+                                    </a>
+                                {% endif %}
+                            {% endblock %}
+                        </div>
+                    </div>
                 </div>
             </div>
         {% endblock %}

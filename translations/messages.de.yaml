@@ -1,0 +1,32 @@
+f0ska:
+    autogrid:
+        button:
+            submit: "Speichern"
+            back: "Zurück"
+            sort: "Sortieren"
+            filter: "Filtern"
+            mass_action: "Massenaktionen"
+            export: "Exportieren"
+            search: "Suchen"
+            filter_reset: "Filter zurücksetzen"
+            create: "Erstellen"
+            modify: "Bearbeiten"
+            reset: "Zurücksetzen"
+            delete: "Löschen"
+            view: "Ansehen"
+        dialog:
+            delete_confirm: "Möchten Sie dies wirklich löschen?"
+        action:
+            create: "Neuen Eintrag erstellen"
+            edit: "Eintrag bearbeiten"
+            view: "Eintrag ansehen"
+            select_all: "Alle auswählen"
+        choice:
+            yes: "Ja"
+            no: "Nein"
+        range:
+            from: "Von"
+            to: "Bis"
+        rows: "Zeilen"
+        total: "Gesamt"
+        empty: "Leer"

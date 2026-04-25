@@ -1,11 +1,14 @@
 {% if view.pagination.limits|length > 1 %}
     {% block autogrid_grid_limit %}
-        <div class="inline-flex rounded-base shadow-xs -space-x-px" role="group">
-            {% set baseBtnClass = 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-900 focus:ring-2 focus:ring-gray-200 font-medium leading-5 text-sm px-3 py-1.5 focus:outline-none cursor-pointer' %}
+        <div class="flex items-center gap-3">
+            <span class="text-sm font-medium text-gray-500">{{ 'f0ska.autogrid.rows'|trans }}</span>
+            <div class="inline-flex shadow-xs -space-x-px" role="group">
+            {% set baseBtnClass = 'cursor-pointer border border-gray-200 bg-gray-50 px-2.5 py-1 text-sm font-medium leading-5 text-gray-500 transition hover:border-gray-300 hover:bg-white hover:text-gray-800 focus:outline-none' %}
+            {% set activeBtnClass = 'cursor-pointer border border-gray-200 bg-gray-100 px-2.5 py-1 text-sm font-medium leading-5 text-blue-600 focus:outline-none' %}
             {% for pageLimit in view.pagination.limits %}
                 {% if pageLimit == view.pagination.limit %}
                     {% block autogrid_grid_limit_active %}
-                        <button type="button" class="{{ baseBtnClass }} text-blue-600 bg-blue-50 hover:bg-blue-100 hover:text-blue-600 focus:ring-2 focus:ring-blue-200{% if loop.first %} rounded-s-base{% endif %}{% if loop.last %} rounded-e-base{% endif %}">{{ pageLimit }}</button>
+                        <button type="button" class="{{ activeBtnClass }}{% if loop.first %} rounded-s-md{% endif %}{% if loop.last %} rounded-e-md{% endif %}">{{ pageLimit }}</button>
                     {% endblock %}
                 {% else %}
                     {% block autogrid_grid_limit_button %}
@@ -13,10 +16,11 @@
                         {% set toPage = (calcOffset / pageLimit)|round(0, 'ceil')|ag_to_int %}
                         <button type="button"
                                 onclick="window.location.href='{{ ag_run(agActionUrl, 'grid', {'limit': pageLimit, 'page': toPage}) }}'"
-                                class="{{ baseBtnClass }}{% if loop.first %} rounded-s-base{% endif %}{% if loop.last %} rounded-e-base{% endif %}">{{ pageLimit }}</button>
+                                class="{{ baseBtnClass }}{% if loop.first %} rounded-s-md{% endif %}{% if loop.last %} rounded-e-md{% endif %}">{{ pageLimit }}</button>
                     {% endblock %}
                 {% endif %}
             {% endfor %}
+            </div>
         </div>
     {% endblock %}
 {% endif %}

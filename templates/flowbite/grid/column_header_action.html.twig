@@ -1,12 +1,12 @@
 {% import attributes.template.icons|default(ag_template('icons')) as ag_icons %}
 {% if (ag_run(agIsAnyAllowed)) or attributes.has_custom_action is defined %}
-    {% set btnClass = 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-900 font-medium leading-5 text-sm px-3 py-1.5 focus:outline-none rounded-base' %}
-    {% set btnClassActive = 'text-white bg-blue-700 hover:bg-blue-800 font-medium leading-5 text-sm px-3 py-1.5 focus:outline-none rounded-base' %}
+    {% set btnClass = 'inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-md border border-gray-200 bg-gray-50 text-gray-500 transition hover:border-gray-300 hover:bg-white hover:text-gray-800 focus:outline-none' %}
+    {% set btnClassActive = 'inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-md border border-gray-700 bg-gray-800 text-white transition hover:border-gray-700 hover:bg-gray-800 hover:text-white focus:outline-none' %}
     <th class="px-6 py-3 relative {{ attributes.html_class.action_column_header|default('text-right') }}" style="white-space: nowrap;">
-        <div style="display: inline-flex; gap: 0;">
+        <div class="inline-flex items-center gap-1.5">
             {% block autogrid_grid_header_action_clear_filter %}
                 {% if request.filter is defined and ag_run(agIsAllowed, 'filter') %}
-                    <a class="{{ btnClass }} text-red-700 hover:bg-red-50 rounded-s-base" href="{{ ag_run(agActionUrl, 'grid', {'filter': null}) }}" style="margin-bottom: 0;">
+                    <a class="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-md border border-gray-200 bg-gray-50 text-gray-500 transition hover:border-red-300 hover:bg-red-50 hover:text-red-600 focus:outline-none" href="{{ ag_run(agActionUrl, 'grid', {'filter': null}) }}" title="{{ 'f0ska.autogrid.button.filter_reset'|trans }}" aria-label="{{ 'f0ska.autogrid.button.filter_reset'|trans }}">
                         {{ ag_icons.filter_reset() }}
                     </a>
                 {% endif %}
@@ -15,16 +15,18 @@
                 {% if view.advancedFilterFormView and ag_run(agIsAllowed, 'advanced_filter') %}
                     <button class="{{ request.filter is defined ? btnClassActive : btnClass }}"
                             onclick="var d=document.getElementById('adv{{ agId }}');d.style.display=d.style.display==='none'?'flex':'none';"
-                            style="margin-bottom: 0;"
+                            title="{{ 'f0ska.autogrid.button.search'|trans }}"
+                            aria-label="{{ 'f0ska.autogrid.button.search'|trans }}"
                     >{{ ag_icons.search() }}</button>
                 {% endif %}
             {% endblock %}
             {% block autogrid_grid_header_action_export %}
                 {% if view.exportActionFormView and view.pagination.count %}
                     <span>
-                        <button class="{{ btnClass }} rounded-e-base"
+                        <button class="{{ btnClass }}"
                                 onclick="var d=document.getElementById('exp{{ agId }}');d.style.display=d.style.display==='none'?'block':'none';event.stopPropagation();"
-                                style="margin-bottom: 0;"
+                                title="{{ 'f0ska.autogrid.button.export'|trans }}"
+                                aria-label="{{ 'f0ska.autogrid.button.export'|trans }}"
                         >{{ ag_icons.export() }}</button>
                         <div id="exp{{ agId }}"
                              class="bg-white border border-gray-200 shadow-lg p-2 rounded-lg absolute right-0 top-full mt-1"
@@ -46,7 +48,7 @@
             {% endblock %}
             {% block autogrid_grid_header_action_create %}
                 {% if (ag_run(agIsAllowed, 'create')) %}
-                    <a class="{{ btnClass }} rounded-e-base" href="{{ ag_run(agActionUrl, 'create') }}" style="margin-bottom: 0;">
+                    <a class="{{ btnClass }}" href="{{ ag_run(agActionUrl, 'create') }}" title="{{ 'f0ska.autogrid.button.create'|trans }}" aria-label="{{ 'f0ska.autogrid.button.create'|trans }}">
                         {{ ag_icons.add() }}
                     </a>
                 {% endif %}

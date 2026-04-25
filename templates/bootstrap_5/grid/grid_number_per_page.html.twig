@@ -1,7 +1,9 @@
 {% if view.pagination.limits|length > 1 %}
     {% set btnClass = attributes.html_class.tfoot_btn|default('btn-outline-secondary') %}
     {% block autogrid_grid_limit %}
-        <div class="btn-group" role="group">
+        <div class="d-inline-flex align-items-center gap-2">
+            <span class="small text-body-secondary fw-semibold">{{ 'f0ska.autogrid.rows'|trans }}</span>
+            <div class="btn-group btn-group-sm shadow-sm" role="group">
             {% for pageLimit in view.pagination.limits %}
                 {% if pageLimit == view.pagination.limit %}
                     {% block autogrid_grid_limit_active %}
@@ -17,6 +19,7 @@
                     {% endblock %}
                 {% endif %}
             {% endfor %}
+            </div>
         </div>
     {% endblock %}
 {% endif %}

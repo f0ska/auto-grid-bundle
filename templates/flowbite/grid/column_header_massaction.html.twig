@@ -6,8 +6,10 @@
             {% block autogrid_grid_column_header_massaction_dropdown %}
                 <span>
                     <button type="button"
-                            class="text-gray-700 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-900 font-medium leading-5 text-sm px-3 py-2 focus:outline-none rounded-base"
+                            class="inline-flex h-8 w-8 items-center justify-center rounded-md border border-gray-200 bg-gray-50 text-gray-500 transition hover:border-gray-300 hover:bg-white hover:text-gray-800 focus:outline-none"
                             onclick="var d=document.getElementById('mass{{ agId }}');d.style.display=d.style.display=='none'?'block':'none';event.stopPropagation();"
+                            title="{{ 'f0ska.autogrid.button.mass_action'|trans }}"
+                            aria-label="{{ 'f0ska.autogrid.button.mass_action'|trans }}"
                     >{{ ag_icons.chevron_down() }}</button>
                     <div id="mass{{ agId }}" 
                          class="bg-white border border-gray-200 shadow-lg p-2 rounded-lg absolute left-0 top-full mt-1"

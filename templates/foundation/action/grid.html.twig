@@ -56,7 +56,7 @@
                     <td colspan="{{ columnsCount }}">
                         <div class="grid-x grid-padding-x align-middle" style="align-items: center;">
                             <div class="cell small-3 text-left">
-                                <b>{{ 'f0ska.autogrid.total'|trans }}: {{ view.pagination.count }}</b>
+                                <span class="text-gray-600"><strong>{{ 'f0ska.autogrid.total'|trans }}:</strong> {{ view.pagination.count }}</span>
                             </div>
                             <div class="cell small-6 text-center">
                                 {{ include(attributes.template.grid.grid_pagination|default(ag_template('grid.grid_pagination'))) }}

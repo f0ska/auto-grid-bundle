@@ -1,28 +1,28 @@
-<div class="px-6 py-4">
-    <div class="grid auto-cols-auto gap-4">
+<div class="px-4 py-5 sm:px-6">
+    <div class="grid gap-5 xl:grid-cols-2">
         {% for fieldset in view.fieldset.defined %}
             {% block autogrid_fieldset_view_card %}
-                <div class="{{ fieldset.class|default('col-auto') }}">
-                    <div class="bg-white rounded-lg shadow border border-gray-200">
+                <div class="w-full {{ fieldset.class|default('') }}">
+                    <div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
                         {% block autogrid_fieldset_view_header %}
-                            <h5 class="px-4 py-3 text-gray-900 font-medium bg-gray-50 rounded-t-lg border-b border-gray-200">
+                            <h5 class="border-b border-gray-200 bg-gray-50 px-5 py-4 text-sm font-semibold uppercase tracking-wide text-gray-600">
                                 {{ fieldset.name|trans }}
                             </h5>
                         {% endblock %}
                         {% block autogrid_fieldset_view_body %}
-                            <table class="w-full text-sm text-left text-gray-500 mb-0">
+                            <div>
                                 {% for fieldName in fieldset.fields %}
                                     {% set field = attribute(fields, fieldName) %}
-                                    <tr class="bg-white border-b {{ loop.last ? 'border-0' : 'border-gray-200' }}">
-                                        <th class="px-4 py-3 text-right text-xs text-gray-700 uppercase bg-gray-50 w-1/3">
+                                    <div class="px-5 py-4 {{ not loop.first ? 'border-t border-gray-200' : '' }}">
+                                        <div class="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-500">
                                             {{ field.attributes.label|trans }}
-                                        </th>
-                                        <td class="px-4 py-3 text-gray-900">
+                                        </div>
+                                        <div class="text-sm leading-6 text-gray-900">
                                             {% set agView = field|ag_prepare(entity) %}{{ include(agView.template, agView.variables) }}
-                                        </td>
-                                    </tr>
+                                        </div>
+                                    </div>
                                 {% endfor %}
-                            </table>
+                            </div>
                         {% endblock %}
                     </div>
                 </div>
@@ -30,20 +30,20 @@
         {% endfor %}
         {% if view.fieldset.not_defined %}
             {% block autogrid_fieldset_view_no_fieldset %}
-                <div class="col-span-2">
-                    <table class="w-full text-sm text-left text-gray-500">
+                <div class="xl:col-span-2">
+                    <div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
                         {% for fieldName in view.fieldset.not_defined %}
                             {% set field = attribute(fields, fieldName) %}
-                            <tr class="bg-white border-b border-gray-200">
-                                <th class="px-4 py-3 text-right text-xs text-gray-700 uppercase bg-gray-50 w-1/3">
+                            <div class="px-5 py-4 {{ not loop.first ? 'border-t border-gray-200' : '' }}">
+                                <div class="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-500">
                                     {{ field.attributes.label|trans }}
-                                </th>
-                                <td class="px-4 py-3 text-gray-900">
+                                </div>
+                                <div class="text-sm leading-6 text-gray-900">
                                     {% set agView = field|ag_prepare(entity) %}{{ include(agView.template, agView.variables) }}
-                                </td>
-                            </tr>
+                                </div>
+                            </div>
                         {% endfor %}
-                    </table>
+                    </div>
                 </div>
             {% endblock %}
         {% endif %}

@@ -1,0 +1,32 @@
+f0ska:
+    autogrid:
+        button:
+            submit: "Guardar"
+            back: "Volver"
+            sort: "Ordenar"
+            filter: "Filtrar"
+            mass_action: "Acciones masivas"
+            export: "Exportar"
+            search: "Buscar"
+            filter_reset: "Restablecer filtros"
+            create: "Crear"
+            modify: "Modificar"
+            reset: "Restablecer"
+            delete: "Eliminar"
+            view: "Ver"
+        dialog:
+            delete_confirm: "¿Realmente desea eliminar esto?"
+        action:
+            create: "Crear nueva entrada"
+            edit: "Modificar entrada"
+            view: "Ver entrada"
+            select_all: "Seleccionar todo"
+        choice:
+            yes: "Sí"
+            no: "No"
+        range:
+            from: "Desde"
+            to: "Hasta"
+        rows: "Filas"
+        total: "Total"
+        empty: "Vacío"

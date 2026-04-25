@@ -14,10 +14,10 @@
             {% set btnClass = attributes.html_class.thead_btn|default('btn-outline-secondary') %}
             <thead class="{{ attributes.html_class.thead|default('') }}">
             <tr>
-                <td class="text-nowrap h4 align-middle ps-0 pe-0">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col col-4 text-start">
+                <td class="align-middle ps-0 pe-0">
+                    <div class="container-fluid py-2">
+                        <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+                            <div class="d-flex flex-wrap align-items-center gap-2">
                                 {% block autogrid_form_header_back_button %}
                                     {% if ag_run(agIsAllowed, 'grid') %}
                                         <a class="btn btn-sm {{ btnClass }}" href="{{ ag_run(agActionUrl, 'grid') }}">
@@ -35,9 +35,9 @@
                                     {% endif %}
                                 {% endblock %}
                             </div>
-                            <div class="col col-4 text-center">
+                            <div class="flex-grow-1 text-center">
                                 {% block autogrid_form_header_title %}
-                                    <span class="badge rounded-pill text-bg-light fw-normal">
+                                    <span class="badge rounded-pill text-bg-light fw-normal px-3 py-2 border">
                                         {{ ('f0ska.autogrid.action.' ~ action)|trans }}
                                         {% if action is not same as 'create' %}
                                             &nbsp;{{ ag_icons.id() }}{{ entity.id }}
@@ -45,7 +45,7 @@
                                     </span>
                                 {% endblock %}
                             </div>
-                            <div class="col col-4 text-end">
+                            <div class="d-flex flex-wrap align-items-center justify-content-end gap-2">
                                 {% block autogrid_form_header_submit_button %}
                                     <button class="btn btn-sm btn-outline-secondary" type="submit"
                                             form="{{ form.vars.attr.id }}">
@@ -99,13 +99,12 @@
             <tfoot class="{{ attributes.html_class.tfoot|default('table-group-divider') }}">
             <tr>
                 <td class="ps-0 pe-0">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col text-end">
+                    <div class="container-fluid py-2">
+                        <div class="d-flex justify-content-end">
+                            <div>
                                 <a class="btn btn-sm {{ attributes.html_class.tfoot_btn|default('btn-outline-secondary') }}"
                                    href="#{{ attributes.container_id }}"
                                 >{{ ag_icons.arrow_up() }}</a>
-                            </div>
                         </div>
                     </div>
                 </td>

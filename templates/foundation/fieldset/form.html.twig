@@ -1,20 +1,20 @@
 {{ form_start(form) }}
-<div class="grid-container">
+<div>
     <div class="grid-x grid-padding-x">
         {% for fieldset in view.fieldset.defined %}
             {% block autogrid_fieldset_form_card %}
                 <div class="cell {{ fieldset.class }}">
-                    <div class="card">
+                    <div class="callout secondary">
                         {% block autogrid_fieldset_form_header %}
-                            <div class="card-divider">
-                                <h5>{{ fieldset.name|trans }}</h5>
-                            </div>
+                            <h5 class="margin-bottom-1 text-uppercase text-gray-600" style="font-size: .75rem; font-weight: 700; letter-spacing: .06em;">{{ fieldset.name|trans }}</h5>
                         {% endblock %}
                         {% block autogrid_fieldset_form_body %}
-                            <div class="card-section">
+                            <div>
                                 {% for fieldName in fieldset.fields %}
                                     {% if attribute(form, fieldName) is defined %}
-                                        {{ form_row(attribute(form, fieldName)) }}
+                                        <div class="{{ not loop.first ? 'padding-top-1 margin-top-1 border-top' : '' }}" style="{{ not loop.last ? 'padding-bottom: 1rem;' : '' }}">
+                                            {{ form_row(attribute(form, fieldName)) }}
+                                        </div>
                                     {% endif %}
                                 {% endfor %}
                             </div>
@@ -26,11 +26,15 @@
         {% if view.fieldset.not_defined %}
             {% block autogrid_fieldset_form_no_fieldset %}
                 <div class="cell">
-                    {% for fieldName in view.fieldset.not_defined %}
-                        {% if attribute(form, fieldName) is defined %}
-                            {{ form_row(attribute(form, fieldName)) }}
-                        {% endif %}
-                    {% endfor %}
+                    <div class="callout secondary">
+                        {% for fieldName in view.fieldset.not_defined %}
+                            {% if attribute(form, fieldName) is defined %}
+                                <div class="{{ not loop.first ? 'padding-top-1 margin-top-1 border-top' : '' }}" style="{{ not loop.last ? 'padding-bottom: 1rem;' : '' }}">
+                                    {{ form_row(attribute(form, fieldName)) }}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
                 </div>
             {% endblock %}
         {% endif %}

@@ -9,6 +9,8 @@
             <a class="{{ isFilterActive ? linkClassActive : linkClass }}"
                role="button"
                onclick="var d=document.getElementById('{{ dropdownId }}');d.style.display=d.style.display=='none'?'block':'none'; event.stopPropagation();"
+               title="{{ 'f0ska.autogrid.button.filter'|trans }}"
+               aria-label="{{ 'f0ska.autogrid.button.filter'|trans }}"
             >{{ isFilterActive ? ag_icons.filter_active() : ag_icons.filter() }}</a>
         {% endblock %}
         {% block autogrid_grid_column_header_filter_dropdown %}

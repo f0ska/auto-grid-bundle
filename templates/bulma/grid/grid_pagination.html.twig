@@ -30,13 +30,13 @@
 {%- endif -%}
 {%- if canRender -%}
 {%- if view.pagination.page == i -%}
-<span class="{{ btnClass }} is-primary">{{- i -}}</span>
+<span class="{{ btnClass }} is-primary px-2">{{- i -}}</span>
 {%- else -%}
-<a class="{{ btnClass }}" href="{{ ag_run(agActionUrl, 'grid', {'page': i|ag_to_int}) }}">{{- i -}}</a>
+<a class="{{ btnClass }} px-2" href="{{ ag_run(agActionUrl, 'grid', {'page': i|ag_to_int}) }}">{{- i -}}</a>
 {%- endif -%}
 {%- elseif gap -%}
 {%- set gap = false -%}
-<span class="{{ btnClass }} is-static">&hellip;</span>
+<span class="{{ btnClass }} is-static px-2">&hellip;</span>
 {%- endif -%}
 {%- endfor -%}
 {%- endblock -%}

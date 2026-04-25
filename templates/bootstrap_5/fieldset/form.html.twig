@@ -1,17 +1,17 @@
 {{ form_start(form) }}
 <div class="container-fluid">
-    <div class="row">
+    <div class="row g-3">
         {% for fieldset in view.fieldset.defined %}
             {% block autogrid_fieldset_form_card %}
                 <div class="col {{ fieldset.class|default('col-12') }}">
-                    <div class="card mt-3">
+                    <section class="h-100 border rounded-3 bg-body-tertiary bg-opacity-25 px-4 py-3">
                         {% block autogrid_fieldset_form_header %}
-                            <h5 class="card-header">
+                            <h5 class="h6 text-body fw-semibold mb-3 pb-2 border-bottom border-2">
                                 {{ fieldset.name|trans }}
                             </h5>
                         {% endblock %}
                         {% block autogrid_fieldset_form_body %}
-                            <div class="card-body">
+                            <div>
                                 {% for fieldName in fieldset.fields %}
                                     {% if attribute(form, fieldName) is defined %}
                                         {{ form_row(attribute(form, fieldName)) }}
@@ -19,13 +19,13 @@
                                 {% endfor %}
                             </div>
                         {% endblock %}
-                    </div>
+                    </section>
                 </div>
             {% endblock %}
         {% endfor %}
         {% if view.fieldset.not_defined %}
             {% block autogrid_fieldset_form_no_fieldset %}
-                <div class="col mt-4">
+                <div class="col mt-2">
                     {% for fieldName in view.fieldset.not_defined %}
                         {% if attribute(form, fieldName) is defined %}
                             {{ form_row(attribute(form, fieldName)) }}

@@ -1,28 +1,26 @@
-<div class="grid-container">
+<div>
     <div class="grid-x grid-padding-x">
         {% for fieldset in view.fieldset.defined %}
             {% block autogrid_fieldset_view_card %}
                 <div class="cell {{ fieldset.class }}">
-                    <div class="card">
+                    <div class="callout secondary">
                         {% block autogrid_fieldset_view_header %}
-                            <div class="card-divider">
-                                <h5>{{ fieldset.name|trans }}</h5>
-                            </div>
+                            <h5 class="margin-bottom-1">{{ fieldset.name|trans }}</h5>
                         {% endblock %}
                         {% block autogrid_fieldset_view_body %}
-                            <table class="hover mb-0">
+                            <div>
                                 {% for fieldName in fieldset.fields %}
                                     {% set field = attribute(fields, fieldName) %}
-                                    <tr>
-                                        <th class="text-right width-33 secondary {{ loop.last ? 'border-0' : '' }}">
+                                    <div class="{{ not loop.first ? 'padding-top-1 margin-top-1 border-top' : '' }}" style="{{ not loop.last ? 'padding-bottom: 1rem;' : '' }}">
+                                        <div class="text-uppercase text-gray-600" style="font-size: .75rem; font-weight: 700; letter-spacing: .06em; margin-bottom: .5rem;">
                                             {{ field.attributes.label|trans }}
-                                        </th>
-                                        <td class="{{ loop.last ? 'border-0' : '' }}">
+                                        </div>
+                                        <div style="line-height: 1.6;">
                                             {% set agView = field|ag_prepare(entity) %}{{ include(agView.template, agView.variables) }}
-                                        </td>
-                                    </tr>
+                                        </div>
+                                    </div>
                                 {% endfor %}
-                            </table>
+                            </div>
                         {% endblock %}
                     </div>
                 </div>
@@ -31,19 +29,19 @@
         {% if view.fieldset.not_defined %}
             {% block autogrid_fieldset_view_no_fieldset %}
                 <div class="cell">
-                    <table class="hover">
+                    <div class="callout secondary">
                         {% for fieldName in view.fieldset.not_defined %}
                             {% set field = attribute(fields, fieldName) %}
-                            <tr>
-                                <th class="text-right width-33 secondary {{ loop.last ? 'border-0' : '' }}">
+                            <div class="{{ not loop.first ? 'padding-top-1 margin-top-1 border-top' : '' }}" style="{{ not loop.last ? 'padding-bottom: 1rem;' : '' }}">
+                                <div class="text-uppercase text-gray-600" style="font-size: .75rem; font-weight: 700; letter-spacing: .06em; margin-bottom: .5rem;">
                                     {{ field.attributes.label|trans }}
-                                </th>
-                                <td class="{{ loop.last ? 'border-0' : '' }}">
+                                </div>
+                                <div style="line-height: 1.6;">
                                     {% set agView = field|ag_prepare(entity) %}{{ include(agView.template, agView.variables) }}
-                                </td>
-                            </tr>
+                                </div>
+                            </div>
                         {% endfor %}
-                    </table>
+                    </div>
                 </div>
             {% endblock %}
         {% endif %}

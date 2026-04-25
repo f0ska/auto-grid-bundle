@@ -3,31 +3,39 @@
     {% set btnClass = attributes.html_class.thead_btn|default('is-small') %}
     {% set btnClassActive = attributes.html_class.thead_btn_active|default('is-primary') %}
     <th class="{{ attributes.html_class.action_column_header|default('has-text-right') }}" style="white-space: nowrap; position: relative;">
-        <div class="buttons are-small is-right" style="justify-content: flex-end;">
+        <div class="is-inline-flex is-align-items-center" style="gap: 0.35rem; justify-content: flex-end; flex-wrap: nowrap;">
             {% block autogrid_grid_header_action_clear_filter %}
                 {% if request.filter is defined and ag_run(agIsAllowed, 'filter') %}
-                    <a class="button is-danger" href="{{ ag_run(agActionUrl, 'grid', {'filter': null}) }}">
+                    <a class="button is-danger {{ btnClass }}" href="{{ ag_run(agActionUrl, 'grid', {'filter': null}) }}" title="{{ 'f0ska.autogrid.button.filter_reset'|trans }}" aria-label="{{ 'f0ska.autogrid.button.filter_reset'|trans }}">
                         {{ ag_icons.filter_reset() }}
                     </a>
                 {% endif %}
             {% endblock %}
             {% block autogrid_grid_header_action_advanced_filter %}
                 {% if view.advancedFilterFormView and ag_run(agIsAllowed, 'advanced_filter') %}
-                    <a class="button {{ request.filter is defined ? btnClassActive }}"
+                    <a class="button {{ btnClass }} {{ request.filter is defined ? btnClassActive }}"
                        data-target="adv{{ agId }}"
                        onclick="document.getElementById('adv{{ agId }}').classList.add('is-active');"
+                       title="{{ 'f0ska.autogrid.button.search'|trans }}"
+                       aria-label="{{ 'f0ska.autogrid.button.search'|trans }}"
                     >{{ ag_icons.search() }}</a>
                 {% endif %}
             {% endblock %}
 
             {% block autogrid_grid_header_action_export %}
                 {% if view.exportActionFormView and view.pagination.count %}
-                    <div class="control" style="position: static;">
-                        <button class="button is-info" type="button" aria-haspopup="true" onclick="var d=document.getElementById('exp{{ agId }}');d.style.display=d.style.display=='none'?'block':'none'; event.stopPropagation();">
-                            {{ ag_icons.export() }}
-                        </button>
-                        <div id="exp{{ agId }}" class="dropdown-menu" role="menu" style="position: absolute; left: auto !important; right: 0 !important; top: 100%; min-width: 200px; display: none; background: white; z-index: 1000; box-shadow: 0 2px 3px rgba(10,10,10,0.1), 0 0 0 1px rgba(10,10,10,0.1); border-radius: 4px;" onclick="event.stopPropagation();">
-                            <div class="dropdown-content" style="background: white;">
+                    <div class="dropdown is-right" id="expWrap{{ agId }}">
+                        <div class="dropdown-trigger">
+                            <button class="button is-info {{ btnClass }}" type="button" aria-haspopup="true" aria-controls="exp{{ agId }}"
+                                    title="{{ 'f0ska.autogrid.button.export'|trans }}"
+                                    aria-label="{{ 'f0ska.autogrid.button.export'|trans }}"
+                                    onclick="var d=document.getElementById('expWrap{{ agId }}');d.classList.toggle('is-active'); event.stopPropagation();">
+                                <span class="is-sr-only">{{ 'f0ska.autogrid.button.export'|trans }}</span>
+                                <span>{{ ag_icons.export() }}</span>
+                            </button>
+                        </div>
+                        <div id="exp{{ agId }}" class="dropdown-menu" role="menu">
+                            <div class="dropdown-content">
                                 {% for label,code in view.exportActionChoices %}
                                     <button
                                         class="dropdown-item"
@@ -45,7 +53,7 @@
 
             {% block autogrid_grid_header_action_create %}
                 {% if (ag_run(agIsAllowed, 'create')) %}
-                    <a class="button is-success" href="{{ ag_run(agActionUrl, 'create') }}">
+                    <a class="button is-success {{ btnClass }}" href="{{ ag_run(agActionUrl, 'create') }}" title="{{ 'f0ska.autogrid.button.create'|trans }}" aria-label="{{ 'f0ska.autogrid.button.create'|trans }}">
                         {{ ag_icons.add() }}
                     </a>
                 {% endif %}
