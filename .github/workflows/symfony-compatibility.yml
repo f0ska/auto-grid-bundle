@@ -138,68 +138,68 @@ jobs:
           mkdir -p config/routes
           cat <<'EOF' > config/routes/f0ska_auto_grid_test.yaml
           auto_grid_test_basic:
-              path: /{_theme}/
+              path: /auto-grid/
               controller: F0ska\AutoGridTestBundle\Controller\BasicController::index
               defaults:
                   _theme: auto-grid
 
           auto_grid_test_corporate:
-              path: /{_theme}/corporate
+              path: /auto-grid/corporate
               controller: F0ska\AutoGridTestBundle\Controller\BasicController::corporate
               defaults:
                   _theme: auto-grid
 
           auto_grid_test_advanced:
-              path: /{_theme}/advanced/{userId}
+              path: /auto-grid/advanced/{userId}
               controller: F0ska\AutoGridTestBundle\Controller\AdvancedController::index
               defaults:
                   _theme: auto-grid
                   userId: null
 
           auto_grid_test_relations:
-              path: /{_theme}/relations
+              path: /auto-grid/relations
               controller: F0ska\AutoGridTestBundle\Controller\RelationsController::index
               defaults:
                   _theme: auto-grid
 
           auto_grid_test_types:
-              path: /{_theme}/types
+              path: /auto-grid/types
               controller: F0ska\AutoGridTestBundle\Controller\TypesController::index
               defaults:
                   _theme: auto-grid
 
           auto_grid_test_custom_action:
-              path: /{_theme}/custom-action
+              path: /auto-grid/custom-action
               controller: F0ska\AutoGridTestBundle\Controller\CustomActionController::index
               defaults:
                   _theme: auto-grid
 
           auto_grid_test_custom_action_create:
-              path: /{_theme}/custom-action-create
+              path: /auto-grid/custom-action-create
               controller: F0ska\AutoGridTestBundle\Controller\CustomActionController::create
               defaults:
                   _theme: auto-grid
 
           auto_grid_test_custom_action_edit:
-              path: /{_theme}/custom-action-edit/{id}
+              path: /auto-grid/custom-action-edit/{id}
               controller: F0ska\AutoGridTestBundle\Controller\CustomActionController::edit
               defaults:
                   _theme: auto-grid
 
           auto_grid_test_custom_action_view:
-              path: /{_theme}/custom-action-view/{id}
+              path: /auto-grid/custom-action-view/{id}
               controller: F0ska\AutoGridTestBundle\Controller\CustomActionController::view
               defaults:
                   _theme: auto-grid
 
           auto_grid_test_custom_action_delete:
-              path: /{_theme}/custom-action-delete/{id}
+              path: /auto-grid/custom-action-delete/{id}
               controller: F0ska\AutoGridTestBundle\Controller\CustomActionController::delete
               defaults:
                   _theme: auto-grid
 
           auto_grid_test_custom_action_download:
-              path: /{_theme}/custom-action-download/{hash}
+              path: /auto-grid/custom-action-download/{hash}
               controller: F0ska\AutoGridTestBundle\Controller\CustomActionController::download
               methods: [GET]
               defaults:
@@ -208,22 +208,54 @@ jobs:
                   hash: '[0-9a-f]{40}'
 
           auto_grid_test_custom_form:
-              path: /{_theme}/custom-form
+              path: /auto-grid/custom-form
               controller: F0ska\AutoGridTestBundle\Controller\CustomFormController::index
               defaults:
                   _theme: auto-grid
 
           auto_grid_test_customization_service:
-              path: /{_theme}/customization-service
+              path: /auto-grid/customization-service
               controller: F0ska\AutoGridTestBundle\Controller\CustomizationServiceController::index
               defaults:
                   _theme: auto-grid
 
           auto_grid_test_customization_service_error:
-              path: /{_theme}/customization-service-error
+              path: /auto-grid/customization-service-error
               controller: F0ska\AutoGridTestBundle\Controller\CustomizationServiceController::error
               defaults:
                   _theme: auto-grid
+
+          smoke_bootstrap4:
+              resource: '../../vendor/f0ska/auto-grid-test-bundle/src/Controller/'
+              type: attribute
+              prefix: /auto-grid-bootstrap4
+              name_prefix: smoke_bootstrap4_
+              defaults:
+                  _theme: auto-grid-bootstrap4
+
+          smoke_bulma:
+              resource: '../../vendor/f0ska/auto-grid-test-bundle/src/Controller/'
+              type: attribute
+              prefix: /auto-grid-bulma
+              name_prefix: smoke_bulma_
+              defaults:
+                  _theme: auto-grid-bulma
+
+          smoke_foundation:
+              resource: '../../vendor/f0ska/auto-grid-test-bundle/src/Controller/'
+              type: attribute
+              prefix: /auto-grid-foundation
+              name_prefix: smoke_foundation_
+              defaults:
+                  _theme: auto-grid-foundation
+
+          smoke_flowbite:
+              resource: '../../vendor/f0ska/auto-grid-test-bundle/src/Controller/'
+              type: attribute
+              prefix: /auto-grid-flowbite
+              name_prefix: smoke_flowbite_
+              defaults:
+                  _theme: auto-grid-flowbite
           EOF
 
           cat <<'EOF' > phpunit.xml.dist
