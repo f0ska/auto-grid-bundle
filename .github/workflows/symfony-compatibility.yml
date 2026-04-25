@@ -138,7 +138,7 @@ jobs:
           mkdir -p config/routes
           cat <<'EOF' > config/routes/f0ska_auto_grid_test.yaml
           f0ska_auto_grid_test:
-              resource: '../vendor/f0ska/auto-grid-test-bundle/src/Controller/'
+              resource: '../../vendor/f0ska/auto-grid-test-bundle/src/Controller/'
               type: attribute
               prefix: /{_theme}
               defaults:
