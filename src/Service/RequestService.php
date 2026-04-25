@@ -16,11 +16,9 @@ use F0ska\AutoGridBundle\Action\ErrorAction;
 use F0ska\AutoGridBundle\Exception\RequestException;
 use F0ska\AutoGridBundle\Model\AutoGrid;
 use F0ska\AutoGridBundle\Model\RequestInfo;
-use Symfony\Component\DependencyInjection\Attribute\Lazy;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-#[Lazy]
 class RequestService
 {
     private RequestStack $requestStack;
