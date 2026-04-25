@@ -166,7 +166,18 @@ jobs:
           EOF
 
           composer dump-autoload
-          php bin/console importmap:install --no-interaction
+
+      - name: Debug package installation
+        working-directory: app
+        run: |
+          composer show f0ska/auto-grid-bundle f0ska/auto-grid-test-bundle
+          ls -la vendor/f0ska || true
+          find vendor/f0ska -maxdepth 2 -type f | sort || true
+          php -r 'require "vendor/autoload.php"; var_dump(class_exists("F0ska\\AutoGridBundle\\F0skaAutoGridBundle")); var_dump(class_exists("F0ska\\AutoGridTestBundle\\F0skaAutoGridTestBundle"));'
+
+      - name: Install importmap assets
+        working-directory: app
+        run: php bin/console importmap:install --no-interaction
 
       - name: Prepare test database
         working-directory: app
