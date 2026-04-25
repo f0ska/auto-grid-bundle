@@ -3,6 +3,13 @@ f0ska:
         button:
             submit: "Zapisz"
             back: "Wstecz"
+            sort: "Sortuj"
+            filter: "Filtruj"
+            mass_action: "Akcje zbiorcze"
+            export: "Eksportuj"
+            search: "Szukaj"
+            filter_reset: "Wyczyść filtry"
+            create: "Utwórz"
             modify: "Edytuj"
             reset: "Resetuj"
             delete: "Usuń"

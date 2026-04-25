@@ -10,6 +10,8 @@
                data-bs-toggle="dropdown"
                aria-expanded="false"
                data-bs-auto-close="outside"
+               title="{{ 'f0ska.autogrid.button.filter'|trans }}"
+               aria-label="{{ 'f0ska.autogrid.button.filter'|trans }}"
             >{{ isFilterActive ? ag_icons.filter_active() : ag_icons.filter() }}</a>
         {% endblock %}
         {% block autogrid_grid_column_header_filter_dropdown %}

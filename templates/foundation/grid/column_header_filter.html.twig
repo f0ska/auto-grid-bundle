@@ -10,6 +10,8 @@
            aria-expanded="false"
            href="javascript:void(0);"
            onclick="var d=document.getElementById('{{ dropdownId }}');d.style.display=d.style.display=='none'?'block':'none'; event.stopPropagation();"
+           title="{{ 'f0ska.autogrid.button.filter'|trans }}"
+           aria-label="{{ 'f0ska.autogrid.button.filter'|trans }}"
         >{{ isFilterActive ? ag_icons.filter_active() : ag_icons.filter() }}</a>
         <div id="{{ dropdownId }}" style="display: none; position: absolute; left: 0; top: 100%; z-index: 1000; background: white; border: 1px solid #ccc; padding: 10px; min-width: 250px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);" onclick="event.stopPropagation();">
             {% set form = attribute(view.filterFormViews, field.name) %}

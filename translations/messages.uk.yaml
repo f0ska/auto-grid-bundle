@@ -3,6 +3,13 @@ f0ska:
         button:
             submit: "Зберегти"
             back: "Назад"
+            sort: "Сортувати"
+            filter: "Фільтрувати"
+            mass_action: "Масові дії"
+            export: "Експортувати"
+            search: "Пошук"
+            filter_reset: "Скинути фільтри"
+            create: "Створити"
             modify: "Змінити"
             reset: "Скинути"
             delete: "Видалити"

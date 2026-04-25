@@ -6,7 +6,7 @@
         <span class="d-inline-flex align-items-center">
             {% block autogrid_grid_header_action_clear_filter %}
                 {% if request.filter is defined and ag_run(agIsAllowed, 'filter') %}
-                    <a class="btn btn-sm btn-outline-danger mr-1" href="{{ ag_run(agActionUrl, 'grid', {'filter': null}) }}">
+                    <a class="btn btn-sm btn-outline-danger mr-1" href="{{ ag_run(agActionUrl, 'grid', {'filter': null}) }}" title="{{ 'f0ska.autogrid.button.filter_reset'|trans }}" aria-label="{{ 'f0ska.autogrid.button.filter_reset'|trans }}">
                         {{ ag_icons.filter_reset() }}
                     </a>
                 {% endif %}
@@ -16,6 +16,8 @@
                     <button class="btn btn-sm {{ request.filter is defined ? btnClassActive : btnClass }} mr-1"
                             data-toggle="modal"
                             data-target="#adv{{ agId }}"
+                            title="{{ 'f0ska.autogrid.button.search'|trans }}"
+                            aria-label="{{ 'f0ska.autogrid.button.search'|trans }}"
                     >{{ ag_icons.search() }}</button>
                 {% endif %}
             {% endblock %}
@@ -25,6 +27,8 @@
                             data-toggle="dropdown"
                             aria-expanded="false"
                             id="exp{{ agId }}"
+                            title="{{ 'f0ska.autogrid.button.export'|trans }}"
+                            aria-label="{{ 'f0ska.autogrid.button.export'|trans }}"
                     ></button>
                     <ul class="dropdown-menu">
                         {% for label,code in view.exportActionChoices %}
@@ -46,7 +50,7 @@
 
         {% block autogrid_grid_header_action_create %}
             {% if (ag_run(agIsAllowed, 'create')) %}
-                <a class="btn btn-sm {{ btnClass }}" href="{{ ag_run(agActionUrl, 'create') }}">
+                <a class="btn btn-sm {{ btnClass }}" href="{{ ag_run(agActionUrl, 'create') }}" title="{{ 'f0ska.autogrid.button.create'|trans }}" aria-label="{{ 'f0ska.autogrid.button.create'|trans }}">
                     {{ ag_icons.add() }}
                 </a>
             {% endif %}

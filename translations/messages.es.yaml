@@ -3,6 +3,13 @@ f0ska:
         button:
             submit: "Guardar"
             back: "Volver"
+            sort: "Ordenar"
+            filter: "Filtrar"
+            mass_action: "Acciones masivas"
+            export: "Exportar"
+            search: "Buscar"
+            filter_reset: "Restablecer filtros"
+            create: "Crear"
             modify: "Modificar"
             reset: "Restablecer"
             delete: "Eliminar"
