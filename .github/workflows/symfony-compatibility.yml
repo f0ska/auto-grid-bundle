@@ -66,6 +66,8 @@ jobs:
       - name: Configure test app
         working-directory: app
         run: |
+          composer config allow-plugins.symfony/flex true
+          composer require --no-interaction --no-progress symfony/flex:^2
           composer config extra.symfony.require "${{ matrix.symfony }}.*"
           composer config repositories.auto-grid-bundle "{\"type\":\"path\",\"url\":\"../auto-grid-bundle\",\"options\":{\"symlink\":false,\"versions\":{\"f0ska/auto-grid-bundle\":\"${LOCAL_PACKAGE_VERSION}\"}}}"
           composer config repositories.auto-grid-test-bundle "{\"type\":\"path\",\"url\":\"../auto-grid-test-bundle\",\"options\":{\"symlink\":false,\"versions\":{\"f0ska/auto-grid-test-bundle\":\"${LOCAL_PACKAGE_VERSION}\"}}}"
@@ -81,8 +83,6 @@ jobs:
 
           php -r '$file = "composer.json"; $composer = json_decode(file_get_contents($file), true, 512, JSON_THROW_ON_ERROR); $composer["autoload-dev"]["psr-4"]["F0ska\\\\AutoGridTestBundle\\\\Tests\\\\"] = "../auto-grid-test-bundle/tests/"; file_put_contents($file, json_encode($composer, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . PHP_EOL);'
 
-          php -r '$bundlesFile = "config/bundles.php"; $bundles = require $bundlesFile; unset($bundles["F0ska\\\\AutoGridBundle\\\\F0skaAutoGridBundle"], $bundles["F0ska\\\\AutoGridTestBundle\\\\F0skaAutoGridTestBundle"]); $bundles["F0ska\\AutoGridBundle\\F0skaAutoGridBundle"] = ["all" => true]; $bundles["F0ska\\AutoGridTestBundle\\F0skaAutoGridTestBundle"] = ["all" => true]; $code = "<?php\n\nreturn " . var_export($bundles, true) . ";\n"; file_put_contents($bundlesFile, $code);'
-
           cat <<'EOF' > .env.test
           APP_ENV=test
           APP_SECRET='$ecretf0rt3st'
@@ -90,19 +90,7 @@ jobs:
           DEFAULT_URI=http://localhost
           EOF
 
-          cat <<'EOF' > config/packages/doctrine.yaml
-          doctrine:
-              dbal:
-                  url: '%env(resolve:DATABASE_URL)%'
-              orm:
-                  auto_generate_proxy_classes: true
-                  enable_lazy_ghost_objects: true
-                  report_fields_where_declared: true
-                  validate_xml_mapping: true
-                  auto_mapping: true
-          EOF
-
-          mkdir -p config/packages/test
+          mkdir -p config/packages/test tests
           cat <<'EOF' > config/packages/test/doctrine.yaml
           doctrine:
               dbal:
@@ -110,75 +98,29 @@ jobs:
                   dbname_suffix: ''
           EOF
 
-          cat <<'EOF' > config/packages/security.yaml
-          security:
-              password_hashers:
-                  Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: auto
-              providers:
-                  users_in_memory:
-                      memory: null
-              firewalls:
-                  dev:
-                      pattern: ^/(_(profiler|wdt)|css|images|js)/
-                      security: false
-                  main:
-                      lazy: true
-                      provider: users_in_memory
-
-          when@test:
-              security:
-                  password_hashers:
-                      Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
-                          algorithm: auto
-                          cost: 4
-                          time_cost: 3
-                          memory_cost: 10
+          cat <<'EOF' > config/routes.yaml
+          f0ska_auto_grid_test:
+              resource: '@F0skaAutoGridTestBundle/config/routes.yaml'
           EOF
 
-          mkdir -p config/routes
-          cat <<'EOF' > config/routes/f0ska_auto_grid_test.yaml
-          # Routes are loaded automatically from F0skaAutoGridTestBundle.
-          EOF
+          cat <<'EOF' > tests/bootstrap.php
+          <?php
 
-          cat <<'EOF' > vendor/f0ska/auto-grid-test-bundle/config/routes.yaml
-          auto_grid_test:
-              resource: '../src/Controller/'
-              type: attribute
-              prefix: /auto-grid
-              defaults:
-                  _theme: auto-grid
+          use Symfony\Component\Dotenv\Dotenv;
 
-          smoke_bootstrap4:
-              resource: '../src/Controller/'
-              type: attribute
-              prefix: /auto-grid-bootstrap4
-              name_prefix: smoke_bootstrap4_
-              defaults:
-                  _theme: auto-grid-bootstrap4
+          require dirname(__DIR__).'/vendor/autoload.php';
 
-          smoke_bulma:
-              resource: '../src/Controller/'
-              type: attribute
-              prefix: /auto-grid-bulma
-              name_prefix: smoke_bulma_
-              defaults:
-                  _theme: auto-grid-bulma
+          if (file_exists(dirname(__DIR__).'/.env.test')) {
+              (new Dotenv())->bootEnv(dirname(__DIR__).'/.env.test');
+          } elseif (method_exists(Dotenv::class, 'bootEnv')) {
+              (new Dotenv())->bootEnv(dirname(__DIR__).'/.env');
+          }
 
-          smoke_foundation:
-              resource: '../src/Controller/'
-              type: attribute
-              prefix: /auto-grid-foundation
-              name_prefix: smoke_foundation_
-              defaults:
-                  _theme: auto-grid-foundation
+          if ($_SERVER['APP_DEBUG'] ?? false) {
+              umask(0000);
+          }
 
-          smoke_flowbite:
-              resource: '../src/Controller/'
-              type: attribute
-              prefix: /auto-grid-flowbite
-              name_prefix: smoke_flowbite_
-              defaults:
-                  _theme: auto-grid-flowbite
+          $_SERVER['APP_ENV'] = $_ENV['APP_ENV'] = 'test';
           EOF
 
           cat <<'EOF' > phpunit.xml.dist
@@ -187,13 +129,12 @@ jobs:
                    xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
                    backupGlobals="false"
                    colors="true"
-                   bootstrap="vendor/autoload.php"
+                   bootstrap="tests/bootstrap.php"
                    cacheDirectory=".phpunit.cache">
               <php>
                   <ini name="display_errors" value="1" />
                   <ini name="error_reporting" value="-1" />
                   <server name="APP_ENV" value="test" force="true" />
-                  <server name="DEFAULT_URI" value="http://localhost" />
                   <server name="KERNEL_CLASS" value="App\Kernel" />
                   <server name="SHELL_VERBOSITY" value="-1" />
               </php>
@@ -211,32 +152,7 @@ jobs:
           EOF
 
           composer dump-autoload
-
-      - name: Debug package installation
-        working-directory: app
-        run: |
-          composer show f0ska/auto-grid-bundle
-          composer show f0ska/auto-grid-test-bundle
-          ls -la vendor/f0ska || true
-          find vendor/f0ska -maxdepth 2 -type f | sort || true
-          php -r 'require "vendor/autoload.php"; var_dump(class_exists("F0ska\\AutoGridBundle\\F0skaAutoGridBundle")); var_dump(class_exists("F0ska\\AutoGridTestBundle\\F0skaAutoGridTestBundle"));'
-
-      - name: Debug Symfony boot
-        working-directory: app
-        env:
-          APP_ENV: test
-        run: |
-          cat config/bundles.php
-          echo "--- config/routes/f0ska_auto_grid_test.yaml"
-          cat config/routes/f0ska_auto_grid_test.yaml
-          php -r 'require "vendor/autoload.php"; $bundles = require "config/bundles.php"; var_dump(isset($bundles["F0ska\\AutoGridBundle\\F0skaAutoGridBundle"])); var_dump(isset($bundles["F0ska\\AutoGridTestBundle\\F0skaAutoGridTestBundle"])); var_dump(class_exists("F0ska\\AutoGridBundle\\F0skaAutoGridBundle")); var_dump(class_exists("F0ska\\AutoGridTestBundle\\F0skaAutoGridTestBundle"));'
-          php bin/console about -vvv
-          php bin/console debug:router | grep auto_grid_test || true
-          php bin/console router:match /auto-grid/advanced || true
-
-      - name: Install importmap assets
-        working-directory: app
-        run: php bin/console importmap:install --no-interaction
+          php bin/console importmap:install --no-interaction
 
       - name: Prepare test database
         working-directory: app
