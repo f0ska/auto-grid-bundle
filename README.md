@@ -44,4 +44,4 @@ AutoGrid automatically generates CRUD interfaces for Doctrine entities.
 ## Requirements
 *   **PHP 8.1+**
 *   **Symfony 6.4+**
-*   **Frameworks**: Default templates use Bootstrap 5. See [templates](./docs/templates.md) for custom framework configuration.
+*   **Frameworks**: Default templates use Bootstrap 5. You can build your own template and use it with AutoGrid. See [templates](./docs/templates.md) for custom framework configuration.
