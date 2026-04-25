@@ -25,10 +25,7 @@ AutoGrid automatically generates CRUD interfaces for Doctrine entities.
     public function list(AutoGridFactory $factory): Response
     {
         $grid = $factory->create(User::class);
-        
-        return $grid->getResponse() ?? $this->render('admin/user.html.twig', [
-            'grid' => $grid
-        ]);
+        return $grid->getResponse() ?? $this->render('admin/user.html.twig', ['grid' => $grid]);
     }
     ```
 

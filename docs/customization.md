@@ -55,66 +55,14 @@ private ?string $avatarPath = null;
 </details>
 
 <details>
-<summary><strong>Customizations</strong></summary>
-
-1. Implement [`CustomizationInterface`](../src/Customization/CustomizationInterface.php).
-2. Register the service with the `autogrid.customization` tag.
-
-```php
-use F0ska\AutoGridBundle\Customization\CustomizationInterface;
-use F0ska\AutoGridBundle\Model\AutoGrid;
-use F0ska\AutoGridBundle\Model\Parameters;
-
-final class MyCustomization implements CustomizationInterface
-{
-    public function execute(AutoGrid $autoGrid, Parameters $parameters): void
-    {
-    }
-}
-```
-
-```yaml
-# config/services.yaml
-App\AutoGrid\MyCustomization:
-    tags: ['autogrid.customization']
-```
-</details>
-
-<details>
-<summary><strong>Custom Actions</strong></summary>
-
-1. Implement [`ActionInterface`](../src/Action/ActionInterface.php).
-2. Register the service with the `autogrid.action` tag.
-
-```yaml
-# config/services.yaml
-App\AutoGrid\MyAction:
-    tags: ['autogrid.action']
-```
-</details>
-
-<details>
-<summary><strong>Custom Action Parameters</strong></summary>
-
-1. Implement [`ActionParameterInterface`](../src/ActionParameter/ActionParameterInterface.php).
-2. Register the service with the `autogrid.action.parameter` tag.
-
-```yaml
-# config/services.yaml
-App\AutoGrid\MyActionParameter:
-    tags: ['autogrid.action.parameter']
-```
-</details>
-
-<details>
 <summary><strong>Custom Filter Conditions</strong></summary>
 
 1. Implement [`FilterConditionInterface`](../src/Condition/FilterConditionInterface.php).
 2. Register as a service with the `autogrid.filter_condition` tag.
-3. Use in `#[Filterable(condition: MyCondition::class)]`.
+3. Use in `#[Filterable(condition: MyCustomCondition::class)]`.
 
-```php
-// config/services.yaml
+```yaml
+# config/services.yaml
 App\Filter\MyCustomCondition:
     tags: ['autogrid.filter_condition']
 ```
@@ -125,10 +73,10 @@ App\Filter\MyCustomCondition:
 
 1. Implement [`ViewServiceInterface`](../src/View/ViewServiceInterface.php).
 2. Register as a service with the `autogrid.view_service` tag.
-3. Use `#[ViewService(MyService::class)]`.
+3. Use `#[ViewService(MyCustomViewService::class)]`.
 
-```php
-// config/services.yaml
+```yaml
+# config/services.yaml
 App\Service\MyCustomViewService:
     tags: ['autogrid.view_service']
 ```
@@ -176,11 +124,57 @@ class UserGridSubscriber implements EventSubscriberInterface
 </details>
 
 <details>
-<summary><strong>When Customizations Run</strong></summary>
+<summary><strong>Custom Actions</strong></summary>
 
-Customizations are services implementing `CustomizationInterface`.
+1. Implement [`ActionInterface`](../src/Action/ActionInterface.php).
+2. Register the service with the `autogrid.action` tag.
 
-They run after AutoGrid has already built the full grid context and prepared the view state, but before anything is rendered or any action-specific database work is executed.
+```yaml
+# config/services.yaml
+App\AutoGrid\MyAction:
+    tags: ['autogrid.action']
+```
+</details>
+
+<details>
+<summary><strong>Custom Action Parameters</strong></summary>
+
+1. Implement [`ActionParameterInterface`](../src/ActionParameter/ActionParameterInterface.php).
+2. Register the service with the `autogrid.action.parameter` tag.
+
+```yaml
+# config/services.yaml
+App\AutoGrid\MyActionParameter:
+    tags: ['autogrid.action.parameter']
+```
+</details>
+
+<details>
+<summary><strong>Customizations</strong></summary>
+
+1. Implement [`CustomizationInterface`](../src/Customization/CustomizationInterface.php).
+2. Register the service with the `autogrid.customization` tag.
+
+```php
+use F0ska\AutoGridBundle\Customization\CustomizationInterface;
+use F0ska\AutoGridBundle\Model\AutoGrid;
+use F0ska\AutoGridBundle\Model\Parameters;
+
+final class MyCustomization implements CustomizationInterface
+{
+    public function execute(AutoGrid $autoGrid, Parameters $parameters): void
+    {
+    }
+}
+```
+
+```yaml
+# config/services.yaml
+App\AutoGrid\MyCustomization:
+    tags: ['autogrid.customization']
+```
+
+Customizations run after AutoGrid has already built the full grid context and prepared the view state, but before anything is rendered or any action-specific database work is executed.
 
 Every service tagged with `autogrid.customization` runs for every grid. The `customization` array is only input data for your extension code, not a selector for which customization should execute.
 
