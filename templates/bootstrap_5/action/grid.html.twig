@@ -3,15 +3,7 @@
 {% block autogrid %}
     {{ include(attributes.template.grid.advanced_filter|default(ag_template('grid.advanced_filter'))) }}
     {% set columnsCount = (fields|length) + (ag_run(agIsAnyAllowed) ? 1 : 0) + (view.massActionFormView ? 1 : 0) %}
-    <table class="table caption-top {{ attributes.html_class.table|default('table-hover') }}">
-        {% block autogrid_grid_caption %}
-            {% if attributes.title is not empty %}
-                <caption class="text-center h4 text-secondary">
-                    {{ attributes.title|trans }}
-                </caption>
-            {% endif %}
-        {% endblock %}
-
+    <table class="table {{ attributes.html_class.table|default('table-hover') }}">
         {{ include(attributes.template.grid.colgroup|default(ag_template('grid.colgroup'))) }}
 
         {% block autogrid_grid_header %}

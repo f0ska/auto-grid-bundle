@@ -1,3 +1,22 @@
 <div id="{{ attributes.container_id }}" class="{{ attributes.container_class }} instance-{{ agId }} table-responsive">
+    {% block autogrid_header %}
+        {% if attributes.title is not empty %}
+            <div class="mb-3 text-center h4 text-secondary">
+                {{ attributes.title|trans }}
+            </div>
+        {% endif %}
+    {% endblock %}
+    {% block autogrid_before %}
+        {% set autogridBeforeTemplate = attributes.template.before ?? null %}
+        {% if autogridBeforeTemplate is not empty %}
+            {{ include(autogridBeforeTemplate) }}
+        {% endif %}
+    {% endblock %}
     {% block autogrid %}{% endblock %}
+    {% block autogrid_after %}
+        {% set autogridAfterTemplate = attributes.template.after ?? null %}
+        {% if autogridAfterTemplate is not empty %}
+            {{ include(autogridAfterTemplate) }}
+        {% endif %}
+    {% endblock %}
 </div>

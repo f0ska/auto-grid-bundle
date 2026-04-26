@@ -1,11 +1,14 @@
 {% import attributes.template.icons|default(ag_template('icons')) as ag_icons %}
 {% set isFilterActive = (attribute(request.filter ?? {}, field.name) is defined) and attribute(request.filter, field.name) is not same as null %}
-{% set linkClass = attributes.html_class.thead_link|default('text-secondary') %}
-{% set linkClassActive = attributes.html_class.thead_link_active|default('text-primary') %}
+{% set linkClass = attributes.html_class.thead_link|default('') %}
+{% set linkClassActive = attributes.html_class.thead_link_active|default('') %}
+{% set linkStyle = 'color: #767676;' %}
+{% set linkStyleActive = 'color: #1779ba;' %}
 {% set dropdownId = 'filterDropdown' ~ agId ~ field.name %}
 {% block autogrid_grid_column_header_filter %}
     <span>
         <a class="{{ isFilterActive ? linkClassActive : linkClass }}"
+           style="{{ isFilterActive ? linkStyleActive : linkStyle }}"
            role="button"
            aria-expanded="false"
            href="javascript:void(0);"

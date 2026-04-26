@@ -23,11 +23,17 @@ templates/bootstrap_5/
 
 Extend the default templates and override these blocks to customize your UI.
 
+### Main Wrapper (`base.html.twig`)
+| Block | Description |
+| :--- | :--- |
+| `autogrid_header` | Grid-level header area rendered before the action content. |
+| `autogrid_before` | Optional slot rendered before the main action content. |
+| `autogrid` | Wraps the rendered action content. |
+| `autogrid_after` | Optional slot rendered after the main action content. |
+
 ### Main Grid (`action/grid.html.twig`)
 | Block | Description |
 | :--- | :--- |
-| `autogrid` | Wraps the entire grid component. |
-| `autogrid_grid_caption` | Grid title/header area. |
 | `autogrid_grid_colgroup` | The `<colgroup>` section for column styling. |
 | `autogrid_grid_header` | The `<thead>` section. |
 | `autogrid_grid_body` | The `<tbody>` section. |

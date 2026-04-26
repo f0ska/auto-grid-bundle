@@ -147,14 +147,20 @@ class User { ... }
 <details>
 <summary><strong>Template</strong></summary>
 
-Overrides specific template areas (see `TemplateArea.php`).
+Overrides specific template areas (see `TemplateArea.php`). `Template` is a repeatable attribute, so add it multiple
+times to override different areas for the same entity.
 
 ```php
 use F0ska\AutoGridBundle\ValueObject\TemplateArea;
 
-#[Attribute\Entity\Template([
-    TemplateArea::ACTION_GRID => 'admin/user/custom_grid.html.twig'
-])]
+#[Attribute\Entity\Template(
+    area: TemplateArea::ACTION_GRID,
+    templatePath: 'admin/user/custom_grid.html.twig'
+)]
+#[Attribute\Entity\Template(
+    area: TemplateArea::BEFORE,
+    templatePath: 'admin/user/grid_intro.html.twig'
+)]
 class User { ... }
 ```
 </details>
@@ -162,7 +168,7 @@ class User { ... }
 <details>
 <summary><strong>Title</strong></summary>
 
-Sets the entity display title.
+Sets the AutoGrid header title.
 
 ```php
 #[Attribute\Entity\Title("User Management")]

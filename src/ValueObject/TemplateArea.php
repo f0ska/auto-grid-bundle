@@ -52,4 +52,6 @@ final class TemplateArea
 
     // Other Templates (from top-level 'template' node)
     public const BASE = 'base';
+    public const BEFORE = 'before';
+    public const AFTER = 'after';
 }

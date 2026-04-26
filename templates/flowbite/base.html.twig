@@ -1,3 +1,24 @@
 <div id="{{ attributes.container_id }}" class="{{ attributes.container_class }} instance-{{ agId }}">
+    {% block autogrid_header %}
+        {% if attributes.title is not empty %}
+            <div class="mb-4 text-center">
+                <div class="inline-flex items-center rounded-full bg-gray-100 px-5 py-2.5 text-base font-medium text-gray-600">
+                    {{ attributes.title|trans }}
+                </div>
+            </div>
+        {% endif %}
+    {% endblock %}
+    {% block autogrid_before %}
+        {% set autogridBeforeTemplate = attributes.template.before ?? null %}
+        {% if autogridBeforeTemplate is not empty %}
+            {{ include(autogridBeforeTemplate) }}
+        {% endif %}
+    {% endblock %}
     {% block autogrid %}{% endblock %}
+    {% block autogrid_after %}
+        {% set autogridAfterTemplate = attributes.template.after ?? null %}
+        {% if autogridAfterTemplate is not empty %}
+            {{ include(autogridAfterTemplate) }}
+        {% endif %}
+    {% endblock %}
 </div>

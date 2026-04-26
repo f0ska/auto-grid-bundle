@@ -6,14 +6,6 @@
     <div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
     <div class="overflow-x-auto">
     <table class="w-full {{ attributes.html_class.table|default('text-sm text-left text-gray-500') }}" id="{{ attributes.container_id }}">
-        {% block autogrid_grid_caption %}
-            {% if attributes.title is not empty %}
-                <caption class="px-4 py-4 text-center text-xl font-semibold text-gray-900 sm:px-6">
-                    {{ attributes.title|trans }}
-                </caption>
-            {% endif %}
-        {% endblock %}
-
         {{ include(attributes.template.grid.colgroup|default(ag_template('grid.colgroup'))) }}
 
         {% block autogrid_grid_header %}

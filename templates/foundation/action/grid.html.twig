@@ -3,14 +3,6 @@
     {{ include(attributes.template.grid.advanced_filter|default(ag_template('grid.advanced_filter'))) }}
     {% set columnsCount = (fields|length) + (ag_run(agIsAnyAllowed) ? 1 : 0) + (view.massActionFormView ? 1 : 0) %}
     <table class="{{ attributes.html_class.table|default('hover') }}">
-        {% block autogrid_grid_caption %}
-            {% if attributes.title is not empty %}
-                <caption class="text-center text-secondary h4 mb-3">
-                    {{ attributes.title|trans }}
-                </caption>
-            {% endif %}
-        {% endblock %}
-
         {{ include(attributes.template.grid.colgroup|default(ag_template('grid.colgroup'))) }}
 
         {% block autogrid_grid_header %}

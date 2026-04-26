@@ -34,14 +34,20 @@ admin_users:
 ```
 
 ### 4. Entity Level Attributes
-Override template areas for specific entities using `#[Template]`.
+Override template areas for specific entities using `#[Template]`. This attribute is repeatable, so add it multiple
+times for the areas you want to replace.
 
 ```php
 use F0ska\AutoGridBundle\ValueObject\TemplateArea;
 
-#[Attribute\Entity\Template([
-    TemplateArea::ACTION_GRID => 'admin/user/custom_grid.html.twig'
-])]
+#[Attribute\Entity\Template(
+    area: TemplateArea::ACTION_GRID,
+    templatePath: 'admin/user/custom_grid.html.twig'
+)]
+#[Attribute\Entity\Template(
+    area: TemplateArea::BEFORE,
+    templatePath: 'admin/user/grid_intro.html.twig'
+)]
 class User { ... }
 ```
 
