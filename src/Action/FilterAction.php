@@ -19,11 +19,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class FilterAction extends AbstractAction
 {
-    private RequestStack $requestStack;
-
-    public function __construct(RequestStack $requestStack)
+    public function __construct(private readonly RequestStack $requestStack)
     {
-        $this->requestStack = $requestStack;
     }
 
     public function execute(AutoGrid $autoGrid, Parameters $parameters): void

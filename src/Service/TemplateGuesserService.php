@@ -52,15 +52,10 @@ class TemplateGuesserService
         TypesCompatibility::TYPES_TIME_POINT => 'time',
     ];
 
-    private ConfigurationService $configuration;
-    private ViewServiceRegistry $viewServiceRegistry;
-
     public function __construct(
-        ConfigurationService $configuration,
-        ViewServiceRegistry $viewServiceRegistry
+        private readonly ConfigurationService $configuration,
+        private readonly ViewServiceRegistry $viewServiceRegistry
     ) {
-        $this->configuration = $configuration;
-        $this->viewServiceRegistry = $viewServiceRegistry;
     }
 
     public function guess(FieldParameter $field, array $entityAttributes = []): void

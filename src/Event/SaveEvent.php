@@ -20,15 +20,12 @@ final class SaveEvent extends Event
 {
     public const EVENT_NAME = 'f0ska.autogrid.entity.save';
 
-    private object $entity;
-    private FormInterface $form;
-    private Parameters $parameters;
-
-    public function __construct(object $entity, FormInterface $form, Parameters $parameters)
+    public function __construct(
+        private readonly object $entity,
+        private readonly FormInterface $form,
+        private readonly Parameters $parameters
+    )
     {
-        $this->entity = $entity;
-        $this->form = $form;
-        $this->parameters = $parameters;
     }
 
     public function getEntity(): object

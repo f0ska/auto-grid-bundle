@@ -19,15 +19,10 @@ use Symfony\Component\Form\FormInterface;
 
 class FormFacade
 {
-    private EntityFormBuilder $entityFormBuilder;
-    private FilterFormBuilder $filterFormBuilder;
-
     public function __construct(
-        EntityFormBuilder $entityFormBuilder,
-        FilterFormBuilder $filterFormBuilder
+        private readonly EntityFormBuilder $entityFormBuilder,
+        private readonly FilterFormBuilder $filterFormBuilder
     ) {
-        $this->entityFormBuilder = $entityFormBuilder;
-        $this->filterFormBuilder = $filterFormBuilder;
     }
 
     public function buildEntityForm(object $entity, Parameters $parameters): FormInterface

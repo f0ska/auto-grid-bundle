@@ -242,7 +242,9 @@ All event names can optionally include a `.{gridId}` suffix to target specific g
 | :--- | :--- | :--- |
 | `f0ska.autogrid.entity.save` | Before entity is persisted. | [`SaveEvent`](../src/Event/SaveEvent.php) |
 | `f0ska.autogrid.entity.delete` | Before entity removal. | [`DeleteEvent`](../src/Event/DeleteEvent.php) |
-| `f0ska.autogrid.entity.view` | When entity is loaded for view/edit. | [`ViewEvent`](../src/Event/ViewEvent.php) |
+| `f0ska.autogrid.entity.create` | When a new entity instance is created before form processing. | [`EntityEvent`](../src/Event/EntityEvent.php) |
+| `f0ska.autogrid.entity.edit` | When entity is loaded for edit before form processing. | [`EntityEvent`](../src/Event/EntityEvent.php) |
+| `f0ska.autogrid.entity.view` | When entity is loaded for detail view. | [`EntityEvent`](../src/Event/EntityEvent.php) |
 | `f0ska.autogrid.mass_action` | When a bulk action is triggered. | [`MassEvent`](../src/Event/MassEvent.php) |
 | `f0ska.autogrid.export_action` | When an export action is triggered. | [`ExportEvent`](../src/Event/ExportEvent.php) |
 | `f0ska.autogrid.entity.grid` | When grid data is being prepared. | [`GridEvent`](../src/Event/GridEvent.php) |

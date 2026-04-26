@@ -22,21 +22,12 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class FormProcessorService
 {
-    private FormFacade $formFacade;
-    private RequestStack $requestStack;
-    private EntityManagerInterface $entityManager;
-    private EventDispatcherInterface $dispatcher;
-
     public function __construct(
-        FormFacade $formFacade,
-        RequestStack $requestStack,
-        EntityManagerInterface $entityManager,
-        EventDispatcherInterface $dispatcher
+        private readonly FormFacade $formFacade,
+        private readonly RequestStack $requestStack,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly EventDispatcherInterface $dispatcher
     ) {
-        $this->formFacade = $formFacade;
-        $this->requestStack = $requestStack;
-        $this->entityManager = $entityManager;
-        $this->dispatcher = $dispatcher;
     }
 
     public function process(object $entity, AutoGrid $autoGrid, Parameters $parameters): FormProcessResult

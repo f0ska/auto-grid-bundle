@@ -19,12 +19,9 @@ final class MassEvent extends Event
 {
     public const EVENT_NAME = 'f0ska.autogrid.mass_action';
 
-    private string $code;
     /**
      * @var int[]
      */
-    private array $ids;
-    private Parameters $parameters;
     private ?string $redirectUrl = null;
 
     /**
@@ -32,11 +29,12 @@ final class MassEvent extends Event
      * @param int[] $ids
      * @param Parameters $parameters
      */
-    public function __construct(string $code, array $ids, Parameters $parameters)
+    public function __construct(
+        private readonly string $code,
+        private readonly array $ids,
+        private readonly Parameters $parameters
+    )
     {
-        $this->code = $code;
-        $this->ids = $ids;
-        $this->parameters = $parameters;
     }
 
     public function getCode(): string

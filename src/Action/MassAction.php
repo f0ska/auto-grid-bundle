@@ -23,18 +23,11 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class MassAction extends AbstractAction
 {
-    private FormFacade $formFacade;
-    private RequestStack $requestStack;
-    private EventDispatcherInterface $dispatcher;
-
     public function __construct(
-        FormFacade $formFacade,
-        RequestStack $requestStack,
-        EventDispatcherInterface $dispatcher
+        private readonly FormFacade $formFacade,
+        private readonly RequestStack $requestStack,
+        private readonly EventDispatcherInterface $dispatcher
     ) {
-        $this->formFacade = $formFacade;
-        $this->requestStack = $requestStack;
-        $this->dispatcher = $dispatcher;
     }
 
     public function execute(AutoGrid $autoGrid, Parameters $parameters): void

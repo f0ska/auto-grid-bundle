@@ -19,11 +19,8 @@ final class ErrorEvent extends Event
 {
     public const EVENT_NAME = 'f0ska.autogrid.error.show';
 
-    private Parameters $parameters;
-
-    public function __construct(Parameters $parameters)
+    public function __construct(private readonly Parameters $parameters)
     {
-        $this->parameters = $parameters;
     }
 
     public function getParameters(): Parameters

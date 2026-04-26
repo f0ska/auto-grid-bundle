@@ -27,18 +27,11 @@ use function Symfony\Component\String\u;
 
 class Extension extends AbstractExtension
 {
-    private TwigEnvironment $twig;
-    private ConfigurationService $configurationService;
-    private ViewServiceRegistry $viewServiceRegistry;
-
     public function __construct(
-        TwigEnvironment $twig,
-        ConfigurationService $configurationService,
-        ViewServiceRegistry $viewServiceRegistry
+        private readonly TwigEnvironment $twig,
+        private readonly ConfigurationService $configurationService,
+        private readonly ViewServiceRegistry $viewServiceRegistry
     ) {
-        $this->twig = $twig;
-        $this->configurationService = $configurationService;
-        $this->viewServiceRegistry = $viewServiceRegistry;
     }
 
     /**

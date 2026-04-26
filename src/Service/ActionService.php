@@ -20,24 +20,13 @@ use F0ska\AutoGridBundle\Model\AutoGrid;
 
 class ActionService
 {
-    private ViewService $viewService;
-    private ActionListService $actionList;
-    private ActionParametersListService $actionParametersList;
-    private ParametersService $parametersService;
-    private CustomizationService $customizationService;
-
     public function __construct(
-        ViewService $viewService,
-        ActionListService $actionList,
-        ActionParametersListService $actionParametersList,
-        ParametersService $parametersService,
-        CustomizationService $customizationService
+        private readonly ViewService $viewService,
+        private readonly ActionListService $actionList,
+        private readonly ActionParametersListService $actionParametersList,
+        private readonly ParametersService $parametersService,
+        private readonly CustomizationService $customizationService
     ) {
-        $this->viewService = $viewService;
-        $this->actionList = $actionList;
-        $this->actionParametersList = $actionParametersList;
-        $this->parametersService = $parametersService;
-        $this->customizationService = $customizationService;
     }
 
     public function executeAction(

@@ -25,15 +25,10 @@ use F0ska\AutoGridBundle\Service\RequestService;
 
 class AutoGridFactory
 {
-    private MetaDataService $metaDataService;
-    private RequestService $requestService;
-
     public function __construct(
-        MetaDataService $metaDataService,
-        RequestService $requestService
+        private readonly MetaDataService $metaDataService,
+        private readonly RequestService $requestService
     ) {
-        $this->metaDataService = $metaDataService;
-        $this->requestService = $requestService;
     }
 
     /**

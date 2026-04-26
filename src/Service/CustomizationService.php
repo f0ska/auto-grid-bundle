@@ -21,11 +21,8 @@ class CustomizationService
     /**
      * @var CustomizationInterface[]
      */
-    private iterable $customizations;
-
-    public function __construct(iterable $customizations)
+    public function __construct(private readonly iterable $customizations)
     {
-        $this->customizations = $customizations;
     }
 
     public function executeCustomizations(AutoGrid $autoGrid, Parameters $parameters): void

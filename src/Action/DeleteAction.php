@@ -22,18 +22,11 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class DeleteAction extends AbstractAction
 {
-    private EntityBuilder $entityBuilder;
-    private EntityManagerInterface $entityManager;
-    private EventDispatcherInterface $dispatcher;
-
     public function __construct(
-        EntityBuilder $entityBuilder,
-        EntityManagerInterface $entityManager,
-        EventDispatcherInterface $dispatcher
+        private readonly EntityBuilder $entityBuilder,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly EventDispatcherInterface $dispatcher
     ) {
-        $this->entityBuilder = $entityBuilder;
-        $this->entityManager = $entityManager;
-        $this->dispatcher = $dispatcher;
     }
 
     public function execute(AutoGrid $autoGrid, Parameters $parameters): void

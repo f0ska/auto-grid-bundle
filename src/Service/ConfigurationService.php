@@ -16,13 +16,11 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class ConfigurationService
 {
-    private array $config;
-    private RequestStack $requestStack;
-
-    public function __construct(array $config, RequestStack $requestStack)
+    public function __construct(
+        private readonly array $config,
+        private readonly RequestStack $requestStack
+    )
     {
-        $this->config = $config;
-        $this->requestStack = $requestStack;
     }
 
     public function getTemplate(string $templateCode): string
