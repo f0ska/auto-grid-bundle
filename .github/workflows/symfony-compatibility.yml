@@ -16,7 +16,6 @@ jobs:
     name: Symfony ${{ matrix.symfony }} / PHP ${{ matrix.php }}
     runs-on: ubuntu-latest
     env:
-      SHARED_REF: ${{ github.head_ref || github.ref_name }}
       LOCAL_PACKAGE_VERSION: 2.999.0
 
     strategy:
@@ -40,7 +39,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: f0ska/auto-grid-test-bundle
-          ref: ${{ env.SHARED_REF }}
+          ref: master
           path: auto-grid-test-bundle
 
       - name: Setup PHP
