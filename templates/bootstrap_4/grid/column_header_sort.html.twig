@@ -1,6 +1,6 @@
 {% import attributes.template.icons|default(ag_template('icons')) as ag_icons %}
-{% set linkClass = attributes.html_class.thead_link|default('link-secondary') %}
-{% set linkClassActive = attributes.html_class.thead_link_active|default('link-primary') %}
+{% set linkClass = attributes.html_class.thead_link|default('text-secondary') %}
+{% set linkClassActive = attributes.html_class.thead_link_active|default('text-primary') %}
 
 {% block autogrid_grid_column_header_sort %}
     {% if (attribute(request.order ?? {}, field.name) is not defined) or attribute(request.order, field.name) is same as null %}

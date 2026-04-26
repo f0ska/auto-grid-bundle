@@ -1,11 +1,14 @@
 {% import attributes.template.icons|default(ag_template('icons')) as ag_icons %}
-{% set linkClass = attributes.html_class.thead_link|default('text-secondary') %}
-{% set linkClassActive = attributes.html_class.thead_link_active|default('text-primary') %}
+{% set linkClass = attributes.html_class.thead_link|default('') %}
+{% set linkClassActive = attributes.html_class.thead_link_active|default('') %}
+{% set linkStyle = 'color: #767676;' %}
+{% set linkStyleActive = 'color: #1779ba;' %}
 
 {% block autogrid_grid_column_header_sort %}
     {% if (attribute(request.order ?? {}, field.name) is not defined) or attribute(request.order, field.name) is same as null %}
         {% block autogrid_grid_column_header_sort_none %}
             <a class="{{ linkClass }}"
+               style="{{ linkStyle }}"
                href="{{ ag_run(agActionUrl, 'grid', {'order': {(field.name): 'asc'}}) }}"
                title="{{ 'f0ska.autogrid.button.sort'|trans }}"
                aria-label="{{ 'f0ska.autogrid.button.sort'|trans }}"
@@ -14,6 +17,7 @@
     {% elseif attribute(request.order, field.name) is same as 'asc' %}
         {% block autogrid_grid_column_header_sort_asc %}
             <a class="{{ linkClassActive }}"
+               style="{{ linkStyleActive }}"
                href="{{ ag_run(agActionUrl, 'grid', {'order': {(field.name): 'desc'}}) }}"
                title="{{ 'f0ska.autogrid.button.sort'|trans }}"
                aria-label="{{ 'f0ska.autogrid.button.sort'|trans }}"
@@ -22,6 +26,7 @@
     {% else %}
         {% block autogrid_grid_column_header_sort_desc %}
             <a class="{{ linkClassActive }}"
+               style="{{ linkStyleActive }}"
                href="{{ ag_run(agActionUrl, 'grid', {'order': {(field.name): null}}) }}"
                title="{{ 'f0ska.autogrid.button.sort'|trans }}"
                aria-label="{{ 'f0ska.autogrid.button.sort'|trans }}"

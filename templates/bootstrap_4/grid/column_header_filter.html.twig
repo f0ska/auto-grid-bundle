@@ -1,7 +1,7 @@
 {% import attributes.template.icons|default(ag_template('icons')) as ag_icons %}
 {% set isFilterActive = (attribute(request.filter ?? {}, field.name) is defined) and attribute(request.filter, field.name) is not same as null %}
-{% set linkClass = attributes.html_class.thead_link|default('link-secondary') %}
-{% set linkClassActive = attributes.html_class.thead_link_active|default('link-primary') %}
+{% set linkClass = attributes.html_class.thead_link|default('text-secondary') %}
+{% set linkClassActive = attributes.html_class.thead_link_active|default('text-primary') %}
 {% block autogrid_grid_column_header_filter %}
 
     {% block autogrid_grid_column_header_filter_icon %}
