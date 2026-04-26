@@ -19,9 +19,6 @@ final class MassEvent extends Event
 {
     public const EVENT_NAME = 'f0ska.autogrid.mass_action';
 
-    /**
-     * @var int[]
-     */
     private ?string $redirectUrl = null;
 
     /**
