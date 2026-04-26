@@ -153,7 +153,9 @@ Overrides specific template areas (see `TemplateArea.php`).
 use F0ska\AutoGridBundle\ValueObject\TemplateArea;
 
 #[Attribute\Entity\Template([
-    TemplateArea::ACTION_GRID => 'admin/user/custom_grid.html.twig'
+    TemplateArea::ACTION_GRID => 'admin/user/custom_grid.html.twig',
+    TemplateArea::BEFORE => 'admin/user/grid_intro.html.twig',
+    TemplateArea::AFTER => 'admin/user/grid_outro.html.twig',
 ])]
 class User { ... }
 ```
