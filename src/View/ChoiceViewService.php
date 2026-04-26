@@ -18,15 +18,10 @@ use F0ska\AutoGridBundle\Service\Provider\FieldValueProvider;
 
 class ChoiceViewService implements ViewServiceInterface
 {
-    private FieldValueProvider $fieldValueProvider;
-    private ChoiceProvider $choiceProvider;
-
     public function __construct(
-        FieldValueProvider $fieldValueProvider,
-        ChoiceProvider $choiceProvider
+        private readonly FieldValueProvider $fieldValueProvider,
+        private readonly ChoiceProvider $choiceProvider
     ) {
-        $this->fieldValueProvider = $fieldValueProvider;
-        $this->choiceProvider = $choiceProvider;
     }
 
     public function prepare(object $entity, FieldParameter $field): array

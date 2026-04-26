@@ -17,11 +17,8 @@ use F0ska\AutoGridBundle\Service\Provider\FieldValueProvider;
 
 class DefaultViewService implements ViewServiceInterface
 {
-    private FieldValueProvider $fieldValueProvider;
-
-    public function __construct(FieldValueProvider $fieldValueProvider)
+    public function __construct(private readonly FieldValueProvider $fieldValueProvider)
     {
-        $this->fieldValueProvider = $fieldValueProvider;
     }
 
     public function prepare(object $entity, FieldParameter $field): array

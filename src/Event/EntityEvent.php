@@ -15,17 +15,17 @@ namespace F0ska\AutoGridBundle\Event;
 use F0ska\AutoGridBundle\Model\Parameters;
 use Symfony\Contracts\EventDispatcher\Event;
 
-final class ViewEvent extends Event
+final class EntityEvent extends Event
 {
-    public const EVENT_NAME = 'f0ska.autogrid.entity.view';
+    public const CREATE_EVENT_NAME = 'f0ska.autogrid.entity.create';
+    public const EDIT_EVENT_NAME = 'f0ska.autogrid.entity.edit';
+    public const VIEW_EVENT_NAME = 'f0ska.autogrid.entity.view';
 
-    private object $entity;
-    private Parameters $parameters;
-
-    public function __construct(object $entity, Parameters $parameters)
+    public function __construct(
+        private readonly object $entity,
+        private readonly Parameters $parameters
+    )
     {
-        $this->entity = $entity;
-        $this->parameters = $parameters;
     }
 
     public function getEntity(): object

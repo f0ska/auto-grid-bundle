@@ -19,15 +19,12 @@ final class GridEvent extends Event
 {
     public const EVENT_NAME = 'f0ska.autogrid.entity.grid';
 
-    private array $entities;
-    private int $count;
-    private Parameters $parameters;
-
-    public function __construct(array $entities, int $count, Parameters $parameters)
+    public function __construct(
+        private readonly array $entities,
+        private readonly int $count,
+        private readonly Parameters $parameters
+    )
     {
-        $this->parameters = $parameters;
-        $this->entities = $entities;
-        $this->count = $count;
     }
 
     public function getEntities(): array

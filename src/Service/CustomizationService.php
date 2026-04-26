@@ -19,13 +19,10 @@ use F0ska\AutoGridBundle\Model\Parameters;
 class CustomizationService
 {
     /**
-     * @var CustomizationInterface[]
+     * @param iterable<CustomizationInterface> $customizations
      */
-    private iterable $customizations;
-
-    public function __construct(iterable $customizations)
+    public function __construct(private readonly iterable $customizations)
     {
-        $this->customizations = $customizations;
     }
 
     public function executeCustomizations(AutoGrid $autoGrid, Parameters $parameters): void

@@ -43,18 +43,11 @@ use Symfony\Component\Validator\Constraints\NotNull;
 
 class GuesserService
 {
-    private MetaDataService $metaDataService;
-    private FormRegistryInterface $formRegistry;
-    private ConfigurationService $configuration;
-
     public function __construct(
-        MetaDataService $metaDataService,
-        FormRegistryInterface $formRegistry,
-        ConfigurationService $configuration
+        private readonly MetaDataService $metaDataService,
+        private readonly FormRegistryInterface $formRegistry,
+        private readonly ConfigurationService $configuration
     ) {
-        $this->metaDataService = $metaDataService;
-        $this->formRegistry = $formRegistry;
-        $this->configuration = $configuration;
     }
 
     public function guessFieldFormType(FieldParameter $field, string $agId): void

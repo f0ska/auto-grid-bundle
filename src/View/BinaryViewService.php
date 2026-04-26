@@ -18,15 +18,10 @@ use F0ska\AutoGridBundle\Service\Provider\FieldValueProvider;
 
 class BinaryViewService implements ViewServiceInterface
 {
-    private FieldValueProvider $fieldValueProvider;
-    private BinarySizeProvider $binarySizeProvider;
-
     public function __construct(
-        FieldValueProvider $fieldValueProvider,
-        BinarySizeProvider $binarySizeProvider
+        private readonly FieldValueProvider $fieldValueProvider,
+        private readonly BinarySizeProvider $binarySizeProvider
     ) {
-        $this->fieldValueProvider = $fieldValueProvider;
-        $this->binarySizeProvider = $binarySizeProvider;
     }
 
     public function prepare(object $entity, FieldParameter $field): array

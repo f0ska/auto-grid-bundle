@@ -19,13 +19,11 @@ final class DeleteEvent extends Event
 {
     public const EVENT_NAME = 'f0ska.autogrid.entity.delete';
 
-    private object $entity;
-    private Parameters $parameters;
-
-    public function __construct(object $entity, Parameters $parameters)
+    public function __construct(
+        private readonly object $entity,
+        private readonly Parameters $parameters
+    )
     {
-        $this->entity = $entity;
-        $this->parameters = $parameters;
     }
 
     public function getEntity(): object

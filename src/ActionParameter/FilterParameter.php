@@ -22,11 +22,8 @@ use F0ska\AutoGridBundle\Model\Parameters;
 
 class FilterParameter implements ActionParameterInterface
 {
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(private readonly EntityManagerInterface $entityManager)
     {
-        $this->entityManager = $entityManager;
     }
 
     public function getCode(): string

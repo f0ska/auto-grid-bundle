@@ -21,21 +21,12 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class RequestService
 {
-    private RequestStack $requestStack;
-    private ActionService $actionService;
-    private EncoderService $encoderService;
-    private ConfigurationService $configuration;
-
     public function __construct(
-        RequestStack $requestStack,
-        ActionService $actionService,
-        EncoderService $encoderService,
-        ConfigurationService $configuration
+        private readonly RequestStack $requestStack,
+        private readonly ActionService $actionService,
+        private readonly EncoderService $encoderService,
+        private readonly ConfigurationService $configuration
     ) {
-        $this->requestStack = $requestStack;
-        $this->actionService = $actionService;
-        $this->encoderService = $encoderService;
-        $this->configuration = $configuration;
     }
 
     public function processRequest(AutoGrid $autoGrid): void

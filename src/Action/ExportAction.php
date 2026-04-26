@@ -24,21 +24,12 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class ExportAction extends AbstractAction
 {
-    private GridQueryBuilder $gridQueryBuilder;
-    private FormFacade $formFacade;
-    private RequestStack $requestStack;
-    private EventDispatcherInterface $dispatcher;
-
     public function __construct(
-        GridQueryBuilder $gridQueryBuilder,
-        FormFacade $formFacade,
-        RequestStack $requestStack,
-        EventDispatcherInterface $dispatcher
+        private readonly GridQueryBuilder $gridQueryBuilder,
+        private readonly FormFacade $formFacade,
+        private readonly RequestStack $requestStack,
+        private readonly EventDispatcherInterface $dispatcher
     ) {
-        $this->gridQueryBuilder = $gridQueryBuilder;
-        $this->formFacade = $formFacade;
-        $this->requestStack = $requestStack;
-        $this->dispatcher = $dispatcher;
     }
 
     public function execute(AutoGrid $autoGrid, Parameters $parameters): void

@@ -17,18 +17,11 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class PermissionService
 {
-    private MetaDataService $metaDataService;
-    private ActionListService $actionListService;
-    private AuthorizationCheckerInterface $authorizationChecker;
-
     public function __construct(
-        MetaDataService $metaDataService,
-        AuthorizationCheckerInterface $authorizationChecker,
-        ActionListService $actionListService
+        private readonly MetaDataService $metaDataService,
+        private readonly AuthorizationCheckerInterface $authorizationChecker,
+        private readonly ActionListService $actionListService
     ) {
-        $this->metaDataService = $metaDataService;
-        $this->authorizationChecker = $authorizationChecker;
-        $this->actionListService = $actionListService;
     }
 
     public function getEntityActionPermissions(string $agId): array

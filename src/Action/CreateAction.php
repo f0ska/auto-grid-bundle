@@ -13,30 +13,29 @@ declare(strict_types=1);
 namespace F0ska\AutoGridBundle\Action;
 
 use F0ska\AutoGridBundle\Builder\EntityBuilder;
+use F0ska\AutoGridBundle\Event\EntityEvent;
 use F0ska\AutoGridBundle\Model\AutoGrid;
 use F0ska\AutoGridBundle\Model\Parameters;
 use F0ska\AutoGridBundle\Service\FormProcessorService;
 use F0ska\AutoGridBundle\Service\RedirectService;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class CreateAction extends AbstractAction
 {
-    private EntityBuilder $entityBuilder;
-    private FormProcessorService $formProcessor;
-    private RedirectService $redirectService;
-
     public function __construct(
-        EntityBuilder $entityBuilder,
-        FormProcessorService $formProcessor,
-        RedirectService $redirectService
+        private readonly EntityBuilder $entityBuilder,
+        private readonly FormProcessorService $formProcessor,
+        private readonly RedirectService $redirectService,
+        private readonly EventDispatcherInterface $dispatcher
     ) {
-        $this->entityBuilder = $entityBuilder;
-        $this->formProcessor = $formProcessor;
-        $this->redirectService = $redirectService;
     }
 
     public function execute(AutoGrid $autoGrid, Parameters $parameters): void
     {
         $entity = $this->entityBuilder->getNewEntity($parameters);
+        $event = new EntityEvent($entity, $parameters);
+        $this->dispatcher->dispatch($event, EntityEvent::CREATE_EVENT_NAME);
+        $this->dispatcher->dispatch($event, EntityEvent::CREATE_EVENT_NAME . '.' . $autoGrid->getId());
         $result = $this->formProcessor->process($entity, $autoGrid, $parameters);
 
         if ($result->isSuccess()) {

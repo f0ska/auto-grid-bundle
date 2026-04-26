@@ -20,16 +20,14 @@ final class ExportEvent extends Event
 {
     public const EVENT_NAME = 'f0ska.autogrid.export_action';
 
-    private string $code;
-    private QueryBuilder $queryBuilder;
-    private Parameters $parameters;
     private ?string $redirectUrl = null;
 
-    public function __construct(string $code, QueryBuilder $queryBuilder, Parameters $parameters)
+    public function __construct(
+        private readonly string $code,
+        private readonly QueryBuilder $queryBuilder,
+        private readonly Parameters $parameters
+    )
     {
-        $this->code = $code;
-        $this->queryBuilder = $queryBuilder;
-        $this->parameters = $parameters;
     }
 
     public function getCode(): string

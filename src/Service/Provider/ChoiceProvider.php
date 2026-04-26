@@ -19,11 +19,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ChoiceProvider
 {
-    private TranslatorInterface $translator;
-
-    public function __construct(TranslatorInterface $translator)
+    public function __construct(private readonly TranslatorInterface $translator)
     {
-        $this->translator = $translator;
     }
 
     public function getLabels(mixed $values, FieldParameter $field): array
