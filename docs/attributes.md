@@ -162,7 +162,7 @@ class User { ... }
 <details>
 <summary><strong>Title</strong></summary>
 
-Sets the entity display title.
+Sets the AutoGrid header title.
 
 ```php
 #[Attribute\Entity\Title("User Management")]

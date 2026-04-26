@@ -1,4 +1,11 @@
 <div id="{{ attributes.container_id }}" class="{{ attributes.container_class }} instance-{{ agId }}">
+    {% block autogrid_header %}
+        {% if attributes.title is not empty %}
+            <div class="has-text-centered has-text-grey mb-5">
+                <p class="is-size-4">{{ attributes.title|trans }}</p>
+            </div>
+        {% endif %}
+    {% endblock %}
     {% block autogrid %}{% endblock %}
 </div>
 <script>

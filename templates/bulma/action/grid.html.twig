@@ -4,14 +4,6 @@
     {{ include(attributes.template.grid.advanced_filter|default(ag_template('grid.advanced_filter'))) }}
     {% set columnsCount = (fields|length) + (ag_run(agIsAnyAllowed) ? 1 : 0) + (view.massActionFormView ? 1 : 0) %}
     <table class="table is-fullwidth {{ attributes.html_class.table|default('is-hoverable') }}">
-        {% block autogrid_grid_caption %}
-            {% if attributes.title is not empty %}
-                <caption class="has-text-centered has-text-grey">
-                    <h4 class="is-size-4">{{ attributes.title|trans }}</h4>
-                </caption>
-            {% endif %}
-        {% endblock %}
-
         {{ include(attributes.template.grid.colgroup|default(ag_template('grid.colgroup'))) }}
 
         {% block autogrid_grid_header %}

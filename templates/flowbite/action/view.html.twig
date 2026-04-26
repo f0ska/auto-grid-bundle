@@ -2,14 +2,6 @@
 {% import attributes.template.icons|default(ag_template('icons')) as ag_icons %}
 {% block autogrid %}
     <div class="{{ attributes.html_class.table|default('w-full overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm') }}">
-        {% block autogrid_view_caption %}
-            {% if attributes.title is not empty %}
-                <div class="mb-4 text-center text-xl font-semibold text-gray-900">
-                    {{ attributes.title|trans }}
-                </div>
-            {% endif %}
-        {% endblock %}
-
         {% block autogrid_view_header %}
             {% set btnClass = 'inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium leading-5 text-gray-700 shadow-xs transition hover:bg-gray-100 hover:text-gray-900 focus:outline-none' %}
             {% set btnDelClass = 'inline-flex items-center gap-2 rounded-lg bg-red-700 px-3 py-2 text-sm font-medium leading-5 text-white shadow-xs transition hover:bg-red-800 focus:outline-none' %}

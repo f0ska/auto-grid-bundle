@@ -2,14 +2,6 @@
 {% import attributes.template.icons|default(ag_template('icons')) as ag_icons %}
 {% block autogrid %}
     <table class="table">
-        {% block autogrid_form_caption %}
-            {% if attributes.title is not empty %}
-                <caption class="text-center h4 text-secondary" style="caption-side: top;">
-                    {{ attributes.title|trans }}
-                </caption>
-            {% endif %}
-        {% endblock %}
-
         {% block autogrid_form_header %}
             {% set btnClass = attributes.html_class.thead_btn|default('btn-outline-secondary') %}
             <thead class="{{ attributes.html_class.thead|default('') }}">

@@ -61,7 +61,7 @@ f0ska_auto_grid:
     # --- View & Display Settings ---
     view:
         friendly_id: 'autogrid'       # Container ID, class, and link fragment.
-        show_entity_title: true       # Display a default title for the grid.
+        show_entity_title: true       # Display a default title in the AutoGrid header.
         field_formats:
             date: 'Y-m-d'
             time: 'H:i'

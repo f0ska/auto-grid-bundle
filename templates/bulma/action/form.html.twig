@@ -2,14 +2,6 @@
 {% import attributes.template.icons|default(ag_template('icons')) as ag_icons %}
 {% block autogrid %}
     <div class="{{ attributes.html_class.table|default('') }}">
-        {% block autogrid_form_caption %}
-            {% if attributes.title is not empty %}
-                <div class="has-text-centered has-text-grey mb-5">
-                    <h4 class="is-size-4">{{ attributes.title|trans }}</h4>
-                </div>
-            {% endif %}
-        {% endblock %}
-
         {% block autogrid_form_header %}
             {% set btnClass = attributes.html_class.thead_btn|default('is-small') %}
             <div class="{{ attributes.html_class.thead|default('level mb-5') }}">
