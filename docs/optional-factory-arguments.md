@@ -84,6 +84,41 @@ $autoGrid = $autoGridFactory->create(
 ```
 </details>
 
+<details>
+<summary><strong>mode</strong>: Render the grid as a full page component or embedded content.</summary>
+
+Use `AutoGridMode::Embedded` when your controller template owns the surrounding page, for example tabs, page title,
+back button, edit button, or external submit button.
+
+Embedded mode hides AutoGrid-owned page chrome:
+
+- instance title
+- grid create button
+- form and view header bars
+- scroll-up buttons
+
+It keeps grid behavior and row actions in place. Routing stays hybrid: `#[ActionRoute]` is used for actions that define
+custom routes, and other actions keep the normal AutoGrid URL parameters.
+
+```php
+use F0ska\AutoGridBundle\ValueObject\AutoGridMode;
+
+$autoGrid = $autoGridFactory->create(
+    User::class,
+    gridId: 'user-profile-edit',
+    initialAction: 'edit',
+    initialParameters: ['id' => $user->getId()],
+    mode: AutoGridMode::Embedded
+);
+```
+
+Entity forms use the stable id `form-{gridId}`, so an embedded shell can render its own submit button:
+
+```twig
+<button type="submit" form="form-user-profile-edit">Save</button>
+```
+</details>
+
 ---
 
 [Attributes](./attributes.md) | [Templates](./templates.md) | [Customization](./customization.md)

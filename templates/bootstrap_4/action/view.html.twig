@@ -3,6 +3,7 @@
 {% block autogrid %}
     <table class="table">
         {% block autogrid_view_header %}
+            {% if attributes.chrome.view_header %}
             {% set btnClass = attributes.html_class.thead_btn|default('btn-outline-secondary') %}
             <thead class="{{ attributes.html_class.thead|default('') }}">
             <tr>
@@ -49,6 +50,7 @@
                 </td>
             </tr>
             </thead>
+            {% endif %}
         {% endblock %}
 
         {% block autogrid_view_body %}
@@ -89,6 +91,7 @@
         {% endblock %}
 
         {% block autogrid_view_footer %}
+            {% if attributes.chrome.scroll_top %}
             <tfoot class="{{ attributes.html_class.tfoot|default('border-top') }}">
             <tr>
                 <td colspan="2" class="pl-0 pr-0">
@@ -104,6 +107,7 @@
                 </td>
             </tr>
             </tfoot>
+            {% endif %}
         {% endblock %}
     </table>
 {% endblock %}

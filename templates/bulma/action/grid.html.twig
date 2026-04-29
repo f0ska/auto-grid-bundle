@@ -62,9 +62,11 @@
                                 <div class="level-item">
                                     <div class="is-inline-flex is-align-items-center" style="gap: 0.25rem; flex-wrap: wrap; justify-content: flex-end;">
                                         {{ include(attributes.template.grid.grid_number_per_page|default(ag_template('grid.grid_number_per_page'))) }}
-                                        <a class="button is-small"
-                                           href="#{{ attributes.container_id }}"
-                                        >{{ ag_icons.arrow_up() }}</a>
+                                        {% if attributes.chrome.scroll_top %}
+                                            <a class="button is-small"
+                                               href="#{{ attributes.container_id }}"
+                                            >{{ ag_icons.arrow_up() }}</a>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>

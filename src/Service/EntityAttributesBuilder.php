@@ -14,6 +14,7 @@ namespace F0ska\AutoGridBundle\Service;
 
 use Doctrine\ORM\Mapping\ClassMetadata;
 use F0ska\AutoGridBundle\Model\Parameters;
+use F0ska\AutoGridBundle\ValueObject\AutoGridMode;
 
 use function Symfony\Component\String\u;
 
@@ -46,6 +47,29 @@ class EntityAttributesBuilder
                 }
             }
         }
+
+        $this->applyMode($parameters);
+    }
+
+    private function applyMode(Parameters $parameters): void
+    {
+        $parameters->attributes['chrome'] = ($parameters->attributes['chrome'] ?? []) + [
+            'title' => true,
+            'grid_create' => true,
+            'form_header' => true,
+            'view_header' => true,
+            'scroll_top' => true,
+        ];
+
+        if ($parameters->mode !== AutoGridMode::Embedded) {
+            return;
+        }
+
+        $parameters->attributes['chrome']['title'] = false;
+        $parameters->attributes['chrome']['grid_create'] = false;
+        $parameters->attributes['chrome']['form_header'] = false;
+        $parameters->attributes['chrome']['view_header'] = false;
+        $parameters->attributes['chrome']['scroll_top'] = false;
     }
 
     private function buildEntityTitle(ClassMetadata $metadata): ?string

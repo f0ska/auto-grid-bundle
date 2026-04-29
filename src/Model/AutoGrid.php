@@ -15,6 +15,7 @@ namespace F0ska\AutoGridBundle\Model;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query\Expr;
 use F0ska\AutoGridBundle\Exception\RenderException;
+use F0ska\AutoGridBundle\ValueObject\AutoGridMode;
 use Symfony\Component\HttpFoundation\Response;
 
 class AutoGrid
@@ -33,6 +34,7 @@ class AutoGrid
     private ?string $routePrefix = null;
     private array $routeParameters = [];
     private array $customizationParameters = [];
+    private AutoGridMode $mode = AutoGridMode::Default;
 
     public function __construct(string $agId)
     {
@@ -151,5 +153,15 @@ class AutoGrid
     public function setCustomizationParameters(array $customizationParameters): void
     {
         $this->customizationParameters = $customizationParameters;
+    }
+
+    public function getMode(): AutoGridMode
+    {
+        return $this->mode;
+    }
+
+    public function setMode(AutoGridMode $mode): void
+    {
+        $this->mode = $mode;
     }
 }

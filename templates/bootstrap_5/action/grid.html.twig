@@ -32,9 +32,11 @@
                             </div>
                             <div class="d-flex flex-wrap align-items-center justify-content-end gap-2">
                                 {{ include(attributes.template.grid.grid_number_per_page|default(ag_template('grid.grid_number_per_page'))) }}
-                                <a class="btn btn-sm {{ attributes.html_class.tfoot_btn|default('btn-outline-secondary') }}"
-                                   href="#{{ attributes.container_id }}"
-                                 >{{ ag_icons.arrow_up() }}</a>
+                                {% if attributes.chrome.scroll_top %}
+                                    <a class="btn btn-sm {{ attributes.html_class.tfoot_btn|default('btn-outline-secondary') }}"
+                                       href="#{{ attributes.container_id }}"
+                                     >{{ ag_icons.arrow_up() }}</a>
+                                {% endif %}
                             </div>
                         </div>
                     </div>

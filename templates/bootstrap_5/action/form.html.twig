@@ -3,6 +3,7 @@
 {% block autogrid %}
     <table class="table">
         {% block autogrid_form_header %}
+            {% if attributes.chrome.form_header %}
             {% set btnClass = attributes.html_class.thead_btn|default('btn-outline-secondary') %}
             <thead class="{{ attributes.html_class.thead|default('') }}">
             <tr>
@@ -60,6 +61,7 @@
                 </td>
             </tr>
             </thead>
+            {% endif %}
         {% endblock %}
 
         {% block autogrid_form_body %}
@@ -88,6 +90,7 @@
         {% endblock %}
 
         {% block autogrid_form_footer %}
+            {% if attributes.chrome.scroll_top %}
             <tfoot class="{{ attributes.html_class.tfoot|default('table-group-divider') }}">
             <tr>
                 <td class="ps-0 pe-0">
@@ -102,6 +105,7 @@
                 </td>
             </tr>
             </tfoot>
+            {% endif %}
         {% endblock %}
     </table>
 {% endblock %}

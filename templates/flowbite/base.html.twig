@@ -1,6 +1,6 @@
 <div id="{{ attributes.container_id }}" class="{{ attributes.container_class }} instance-{{ agId }}">
     {% block autogrid_header %}
-        {% if attributes.title is not empty %}
+        {% if attributes.chrome.title and attributes.title is not empty %}
             <div class="mb-4 text-center">
                 <div class="inline-flex items-center rounded-full bg-gray-100 px-5 py-2.5 text-base font-medium text-gray-600">
                     {{ attributes.title|trans }}

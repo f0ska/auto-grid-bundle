@@ -3,6 +3,7 @@
 {% block autogrid %}
     <div class="{{ attributes.html_class.table|default('') }}">
         {% block autogrid_view_header %}
+            {% if attributes.chrome.view_header %}
             {% set btnClass = attributes.html_class.thead_btn|default('button') %}
             <div class="{{ attributes.html_class.thead|default('margin-bottom-2') }}">
                 <table style="width: 100%; border-collapse: collapse; table-layout: fixed;">
@@ -49,6 +50,7 @@
                     </tr>
                 </table>
             </div>
+            {% endif %}
         {% endblock %}
 
         {% block autogrid_view_body %}
@@ -81,6 +83,7 @@
         {% endblock %}
 
         {% block autogrid_view_footer %}
+            {% if attributes.chrome.scroll_top %}
             <div class="{{ attributes.html_class.tfoot|default('grid-x grid-padding-x') }}">
                 <div class="cell text-right">
                     <a class="{{ attributes.html_class.tfoot_btn|default('button') }}"
@@ -88,6 +91,7 @@
                     >{{ ag_icons.arrow_up() }}</a>
                 </div>
             </div>
+            {% endif %}
         {% endblock %}
     </div>
 {% endblock %}

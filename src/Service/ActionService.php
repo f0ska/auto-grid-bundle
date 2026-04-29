@@ -45,6 +45,7 @@ class ActionService
                     'virtual_alias_map' => [],
                 ],
                 'customization' => $autoGrid->getCustomizationParameters(),
+                'mode' => $autoGrid->getMode(),
             ]
         );
 

@@ -53,7 +53,7 @@
             {% endblock %}
 
             {% block autogrid_grid_header_action_create %}
-                {% if (ag_run(agIsAllowed, 'create')) %}
+                {% if attributes.chrome.grid_create and ag_run(agIsAllowed, 'create') %}
                     <a class="button small success" href="{{ ag_run(agActionUrl, 'create') }}" style="margin-bottom: 0;" title="{{ 'f0ska.autogrid.button.create'|trans }}" aria-label="{{ 'f0ska.autogrid.button.create'|trans }}">
                         {{ ag_icons.add() }}
                     </a>
