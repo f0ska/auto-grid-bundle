@@ -99,9 +99,7 @@ use F0ska\AutoGridBundle\ValueObject\AutoGridMode;
 
 $articles = $autoGridFactory->create(
     Article::class,
-    gridId: 'user-profile-articles',
-    context: ['author' => $user],
-    mode: AutoGridMode::Embedded,
+    context: ['author' => $user]
 );
 ```
 </details>
