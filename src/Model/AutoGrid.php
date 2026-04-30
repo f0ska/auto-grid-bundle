@@ -34,6 +34,7 @@ class AutoGrid
     private ?string $routePrefix = null;
     private array $routeParameters = [];
     private array $customizationParameters = [];
+    private array $gridContext = [];
     private AutoGridMode $mode = AutoGridMode::Default;
 
     public function __construct(string $agId)
@@ -153,6 +154,16 @@ class AutoGrid
     public function setCustomizationParameters(array $customizationParameters): void
     {
         $this->customizationParameters = $customizationParameters;
+    }
+
+    public function getGridContext(): array
+    {
+        return $this->gridContext;
+    }
+
+    public function setGridContext(array $gridContext): void
+    {
+        $this->gridContext = $gridContext;
     }
 
     public function getMode(): AutoGridMode

@@ -10,10 +10,11 @@
     "require": {
         "php": ">=8.1",
         "symfony/framework-bundle": ">=6.4",
-        "symfony/translation": "*",
-        "symfony/security-bundle": "*",
-        "symfony/form": "*",
-        "symfony/validator": "*",
-        "symfony/twig-bundle": "*"
+        "symfony/property-access": ">=6.4",
+        "symfony/translation": ">=6.4",
+        "symfony/security-bundle": ">=6.4",
+        "symfony/form": ">=6.4",
+        "symfony/validator": ">=6.4",
+        "symfony/twig-bundle": ">=6.4"
     }
 }

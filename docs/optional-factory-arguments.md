@@ -85,6 +85,28 @@ $autoGrid = $autoGridFactory->create(
 </details>
 
 <details>
+<summary><strong>context</strong>: Scope a grid to fixed field values.</summary>
+
+Use this when a grid is rendered inside a parent context, for example articles that belong to a profile user.
+AutoGrid applies simple equality conditions for these values, applies them to newly-created entities, and prevents users
+from editing or filtering the contextualized fields.
+
+Context is the scope of the grid. Use `queryExpression`/`queryParameters` only for additional conditions that narrow the
+context further.
+
+```php
+use F0ska\AutoGridBundle\ValueObject\AutoGridMode;
+
+$articles = $autoGridFactory->create(
+    Article::class,
+    gridId: 'user-profile-articles',
+    context: ['author' => $user],
+    mode: AutoGridMode::Embedded,
+);
+```
+</details>
+
+<details>
 <summary><strong>mode</strong>: Render the grid as a full page component or embedded content.</summary>
 
 Use `AutoGridMode::Embedded` when your controller template owns the surrounding page, for example tabs, page title,

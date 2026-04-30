@@ -41,6 +41,7 @@ class ActionService
                 'query' => [
                     'expression' => $autoGrid->getQueryExpression(),
                     'parameters' => $autoGrid->getQueryParameters(),
+                    'context' => $autoGrid->getGridContext(),
                     'has_dql' => false,
                     'virtual_alias_map' => [],
                 ],

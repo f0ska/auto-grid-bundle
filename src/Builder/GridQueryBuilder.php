@@ -93,7 +93,18 @@ class GridQueryBuilder
             }
         }
 
+        $this->applyContext($builder, $parameters);
+
         return $builder;
+    }
+
+    private function applyContext(QueryBuilder $builder, Parameters $parameters): void
+    {
+        foreach ($parameters->query['context'] ?? [] as $field => $value) {
+            $parameter = 'context_' . str_replace(['.', ':'], '_', $field);
+            $builder->andWhere(sprintf('%s = :%s', $this->prepareField($builder, $field), $parameter));
+            $builder->setParameter($parameter, $value);
+        }
     }
 
     private function buildFilters(QueryBuilder $builder, Parameters $parameters): void
