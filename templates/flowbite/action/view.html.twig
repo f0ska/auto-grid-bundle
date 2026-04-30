@@ -3,6 +3,7 @@
 {% block autogrid %}
     <div class="{{ attributes.html_class.table|default('w-full overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm') }}">
         {% block autogrid_view_header %}
+            {% if attributes.chrome.view_header %}
             {% set btnClass = 'inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium leading-5 text-gray-700 shadow-xs transition hover:bg-gray-100 hover:text-gray-900 focus:outline-none' %}
             {% set btnDelClass = 'inline-flex items-center gap-2 rounded-lg bg-red-700 px-3 py-2 text-sm font-medium leading-5 text-white shadow-xs transition hover:bg-red-800 focus:outline-none' %}
             <div class="{{ attributes.html_class.thead|default('flex flex-wrap items-center gap-3 border-b border-gray-200 bg-gray-50 px-4 py-4 sm:px-6') }}">
@@ -43,6 +44,7 @@
                     {% endblock %}
                 </div>
             </div>
+            {% endif %}
         {% endblock %}
 
         {% block autogrid_view_body %}
@@ -77,11 +79,13 @@
         {% endblock %}
 
         {% block autogrid_view_footer %}
+            {% if attributes.chrome.scroll_top %}
             <div class="{{ attributes.html_class.tfoot|default('flex justify-end border-t border-gray-200 bg-gray-50 px-4 py-4 sm:px-6') }}">
                 <a class="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium leading-5 text-gray-700 shadow-xs transition hover:bg-gray-100 hover:text-gray-900 focus:outline-none"
                    href="#{{ attributes.container_id }}"
                 >{{ ag_icons.arrow_up() }}</a>
             </div>
+            {% endif %}
         {% endblock %}
     </div>
 {% endblock %}

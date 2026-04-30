@@ -172,6 +172,7 @@ class FieldBuilder
         $field->canSort = $field->attributes['can_sort'] ?? $hasIndex;
         $field->canFilter = $field->attributes['can_filter'] ?? $hasIndex;
         $field->filterCondition = $field->attributes['filterable']['condition'] ?? null;
+        $this->applyContextFieldRestrictions($field);
 
         $this->guesserService->guessFieldFormType($field, $field->agId);
         $this->guesserService->guessFilterCondition($field);
@@ -253,8 +254,20 @@ class FieldBuilder
         $field->canSort = $field->attributes['can_sort'] ?? true;
         $field->canFilter = $field->attributes['can_filter'] ?? true;
         $field->filterCondition = $field->attributes['filterable']['condition'] ?? null;
+        $this->applyContextFieldRestrictions($field);
 
         $this->guesserService->guessAssociatedFormType($field);
         $this->guesserService->guessFilterCondition($field);
+    }
+
+    private function applyContextFieldRestrictions(FieldParameter $field): void
+    {
+        $contextField = $field->subObject ?? $field->name;
+        if (!array_key_exists($contextField, $field->parameters->query['context'] ?? [])) {
+            return;
+        }
+
+        $field->canEdit = false;
+        $field->canFilter = false;
     }
 }

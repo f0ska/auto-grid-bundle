@@ -22,6 +22,7 @@ use Doctrine\ORM\Query\Parameter;
 use F0ska\AutoGridBundle\Model\AutoGrid;
 use F0ska\AutoGridBundle\Service\MetaDataService;
 use F0ska\AutoGridBundle\Service\RequestService;
+use F0ska\AutoGridBundle\ValueObject\AutoGridMode;
 
 class AutoGridFactory
 {
@@ -41,6 +42,8 @@ class AutoGridFactory
      * @param string|null $routePrefix
      * @param array<string, int|string> $routeParameters
      * @param array $customization
+     * @param AutoGridMode $mode
+     * @param array<string, mixed> $context
      * @return AutoGrid
      */
     public function create(
@@ -52,7 +55,9 @@ class AutoGridFactory
         array $initialParameters = [],
         ?string $routePrefix = null,
         array $routeParameters = [],
-        array $customization = []
+        array $customization = [],
+        AutoGridMode $mode = AutoGridMode::Default,
+        array $context = []
     ): AutoGrid {
         $agId = $this->metaDataService->add($entityClass, $gridId);
         $autoGrid = new AutoGrid($agId);
@@ -63,6 +68,8 @@ class AutoGridFactory
         $autoGrid->setRoutePrefix($routePrefix);
         $autoGrid->setRouteParameters($routeParameters);
         $autoGrid->setCustomizationParameters($customization);
+        $autoGrid->setGridContext($context);
+        $autoGrid->setMode($mode);
         $this->requestService->processRequest($autoGrid);
         return $autoGrid;
     }

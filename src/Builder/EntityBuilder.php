@@ -17,20 +17,25 @@ use F0ska\AutoGridBundle\Exception\GridEntityNotFoundException;
 use F0ska\AutoGridBundle\Model\Parameters;
 use F0ska\AutoGridBundle\Service\MetaDataService;
 use LogicException;
+use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 class EntityBuilder
 {
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly MetaDataService $metaDataService,
-        private readonly GridQueryBuilder $queryBuilder
+        private readonly GridQueryBuilder $queryBuilder,
+        private readonly PropertyAccessorInterface $propertyAccessor
     ) {
     }
 
     public function getNewEntity(Parameters $parameters): object
     {
         $class = $this->getEntityClass($parameters);
-        return new $class();
+        $entity = new $class();
+        $this->applyContextDefaults($entity, $parameters);
+
+        return $entity;
     }
 
     public function loadEntity(Parameters $parameters): object
@@ -62,16 +67,34 @@ class EntityBuilder
         return $metadata->rootEntityName;
     }
 
+    private function applyContextDefaults(object $entity, Parameters $parameters): void
+    {
+        if (empty($parameters->query['context'])) {
+            return;
+        }
+
+        foreach ($parameters->query['context'] as $field => $value) {
+            $this->propertyAccessor->setValue($entity, $field, $value);
+        }
+    }
+
     private function findEntity(Parameters $parameters): ?object
     {
         $entityId = $parameters->request['id'] ?? null;
         $class = $this->getEntityClass($parameters);
         $repository = $this->entityManager->getRepository($class);
         $entity = $repository->find($entityId);
-        if (!empty($parameters->query['expression']) || !empty($parameters->query['has_dql'])) {
+        if ($this->shouldLoadEntityWithQueryScope($parameters)) {
             $query = $this->queryBuilder->buildEntityQuery($parameters, $entity);
             return $this->queryBuilder->getOneOrNullHydratedResult($query, $parameters);
         }
         return $entity;
+    }
+
+    private function shouldLoadEntityWithQueryScope(Parameters $parameters): bool
+    {
+        return !empty($parameters->query['expression'])
+            || !empty($parameters->query['has_dql'])
+            || !empty($parameters->query['context']);
     }
 }

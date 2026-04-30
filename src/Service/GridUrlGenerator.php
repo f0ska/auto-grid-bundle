@@ -87,7 +87,7 @@ class GridUrlGenerator
         }
 
         foreach ($params as $key) {
-            if (isset($parameters->route['custom'][$key])) {
+            if (isset($parameters->route['custom_params'][$key])) {
                 $finalParams[$key] = $parameters->route['custom_params'][$key];
             } elseif (isset($parameters->route['params'][$key])) {
                 $finalParams[$key] = $parameters->route['params'][$key];

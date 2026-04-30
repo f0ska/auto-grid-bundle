@@ -14,13 +14,16 @@ namespace F0ska\AutoGridBundle\Service\Provider;
 
 use F0ska\AutoGridBundle\Model\FieldParameter;
 use Symfony\Component\Form\ChoiceList\View\ChoiceView;
+use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Contracts\Translation\TranslatableInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ChoiceProvider
 {
-    public function __construct(private readonly TranslatorInterface $translator)
-    {
+    public function __construct(
+        private readonly TranslatorInterface $translator,
+        private readonly PropertyAccessorInterface $propertyAccessor
+    ) {
     }
 
     public function getLabels(mixed $values, FieldParameter $field): array
@@ -73,8 +76,13 @@ class ChoiceProvider
     private function resolveKey(mixed $value): mixed
     {
         if (is_object($value)) {
-            return enum_exists($value::class) ? $value->value : (method_exists($value, 'getId') ? $value->getId(
-            ) : (string) $value);
+            if (enum_exists($value::class)) {
+                return $value->value;
+            }
+
+            return $this->propertyAccessor->isReadable($value, 'id')
+                ? $this->propertyAccessor->getValue($value, 'id')
+                : (string) $value;
         }
         return $value;
     }

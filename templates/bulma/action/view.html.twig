@@ -3,6 +3,7 @@
 {% block autogrid %}
     <div class="{{ attributes.html_class.table|default('') }}">
         {% block autogrid_view_header %}
+            {% if attributes.chrome.view_header %}
             {% set btnClass = attributes.html_class.thead_btn|default('is-small') %}
             <div class="{{ attributes.html_class.thead|default('level mb-5') }}">
                 <div class="level-left">
@@ -49,6 +50,7 @@
                     </div>
                 </div>
             </div>
+            {% endif %}
         {% endblock %}
 
         {% block autogrid_view_body %}
@@ -81,11 +83,13 @@
         {% endblock %}
 
         {% block autogrid_view_footer %}
+            {% if attributes.chrome.scroll_top %}
             <div class="{{ attributes.html_class.tfoot|default('is-flex is-justify-content-flex-end') }}">
                 <a class="{{ attributes.html_class.tfoot_btn|default('button is-small') }}"
                    href="#{{ attributes.container_id }}"
                   >{{ ag_icons.arrow_up() }}</a>
             </div>
+            {% endif %}
         {% endblock %}
     </div>
 {% endblock %}

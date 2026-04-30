@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace F0ska\AutoGridBundle\Model;
 
 use F0ska\AutoGridBundle\Service\ParametersService;
+use F0ska\AutoGridBundle\ValueObject\AutoGridMode;
 use InvalidArgumentException;
 
 class Parameters
@@ -31,6 +32,7 @@ class Parameters
     public ?string $message = null;
     public ViewParameter $view;
     public array $customization = [];
+    public AutoGridMode $mode = AutoGridMode::Default;
 
     public function __construct(array $initial, ParametersService $parametersService)
     {

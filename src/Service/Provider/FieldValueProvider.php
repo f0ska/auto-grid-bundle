@@ -15,9 +15,15 @@ namespace F0ska\AutoGridBundle\Service\Provider;
 use Doctrine\Common\Collections\Collection;
 use F0ska\AutoGridBundle\Exception\RenderException;
 use F0ska\AutoGridBundle\Model\FieldParameter;
+use Symfony\Component\PropertyAccess\Exception\ExceptionInterface;
+use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 class FieldValueProvider
 {
+    public function __construct(private readonly PropertyAccessorInterface $propertyAccessor)
+    {
+    }
+
     public function getValue(object $entity, FieldParameter $field): mixed
     {
         $object = $entity;
@@ -56,21 +62,25 @@ class FieldValueProvider
 
     private function getPropertyValue(object $object, string $property): mixed
     {
-        $methods = ['get' . ucfirst($property), 'is' . ucfirst($property), $property];
-        foreach ($methods as $method) {
-            if (method_exists($object, $method)) {
-                return $object->{$method}();
-            }
+        try {
+            return $this->propertyAccessor->getValue($object, $property);
+        } catch (ExceptionInterface $exception) {
+            throw new RenderException(
+                sprintf('Invalid property "%s" in class "%s"', $property, get_class($object)),
+                previous: $exception
+            );
         }
-        throw new RenderException(sprintf('Invalid property "%s" in class "%s"', $property, get_class($object)));
     }
 
     private function setPropertyValue(object $object, string $property, mixed $value): void
     {
-        $method = 'set' . ucfirst($property);
-        if (!method_exists($object, $method)) {
-            throw new RenderException(sprintf('Setter "%s" not found in class "%s"', $method, get_class($object)));
+        try {
+            $this->propertyAccessor->setValue($object, $property, $value);
+        } catch (ExceptionInterface $exception) {
+            throw new RenderException(
+                sprintf('Unable to set property "%s" in class "%s"', $property, get_class($object)),
+                previous: $exception
+            );
         }
-        $object->{$method}($value);
     }
 }
