@@ -28,7 +28,6 @@
                     <button class="{{ btnDelClass }}"
                        type="submit"
                        form="{{ view.deleteActionFormView.vars.attr.id }}"
-                       {% if attributes.route.delete is defined %}formaction="{{ ag_run(agActionUrl, 'delete', {'id': entity.id}) }}"{% endif %}
                        name="{{ view.deleteActionFormView.id.vars.full_name }}"
                        value="{{ entity.id }}"
                        onclick="return confirm('{{ 'f0ska.autogrid.dialog.delete_confirm'|trans }}');"

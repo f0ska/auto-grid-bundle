@@ -128,9 +128,7 @@ class EntityFormBuilder
             ['attr' => ['id' => $formName . uniqid('-'), 'data-turbo' => 'false']]
         );
         $builder->setMethod('POST');
-        $builder->setAction(
-            $parameters->actionUrl(empty($parameters->attributes['route']['delete']) ? 'delete' : 'grid', ['id' => null])
-        );
+        $builder->setAction($parameters->actionUrl('delete'));
 
         $builder->add(
             'id',
