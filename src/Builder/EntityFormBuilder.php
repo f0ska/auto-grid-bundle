@@ -18,6 +18,7 @@ use F0ska\AutoGridBundle\Service\ParametersService;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
@@ -112,6 +113,29 @@ class EntityFormBuilder
             'code',
             ChoiceType::class,
             ['choices' => $this->choiceBuilder->buildExportChoices($parameters), 'constraints' => [new NotBlank()]]
+        );
+
+        return $builder->getForm();
+    }
+
+    public function buildDeleteActionForm(Parameters $parameters): FormInterface
+    {
+        $formName = 'delete-' . $parameters->agId;
+        $builder = $this->formFactory->createNamedBuilder(
+            $formName,
+            $this->getFormType('delete', $parameters),
+            null,
+            ['attr' => ['id' => $formName . uniqid('-'), 'data-turbo' => 'false']]
+        );
+        $builder->setMethod('POST');
+        $builder->setAction(
+            $parameters->actionUrl(empty($parameters->attributes['route']['delete']) ? 'delete' : 'grid', ['id' => null])
+        );
+
+        $builder->add(
+            'id',
+            HiddenType::class,
+            ['constraints' => [new NotBlank(), new Type(type: 'digit'), new Positive()]]
         );
 
         return $builder->getForm();

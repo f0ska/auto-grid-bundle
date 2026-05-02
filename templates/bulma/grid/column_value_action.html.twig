@@ -14,8 +14,8 @@
 {%- endif -%}
 {%- endblock -%}
 {%- block autogrid_grid_row_action_delete -%}
-{%- if ag_run(agIsAllowed, 'delete') and attributes.button.delete.display_in_grid -%}
-<a class="button {{ btnClass }} is-danger" href="{{ ag_run(agActionUrl, 'delete', {'id': entity.id}) }}" onclick="return confirm('{{ 'f0ska.autogrid.dialog.delete_confirm'|trans }}');" title="{{ 'f0ska.autogrid.button.delete'|trans }}" aria-label="{{ 'f0ska.autogrid.button.delete'|trans }}">{{ ag_icons.delete() }}</a>
+{%- if ag_run(agIsAllowed, 'delete') and attributes.button.delete.display_in_grid and view.deleteActionFormView -%}
+<button class="button {{ btnClass }} is-danger" type="submit" form="{{ view.deleteActionFormView.vars.attr.id }}" {% if attributes.route.delete is defined %}formaction="{{ ag_run(agActionUrl, 'delete', {'id': entity.id}) }}"{% endif %} name="{{ view.deleteActionFormView.id.vars.full_name }}" value="{{ entity.id }}" onclick="return confirm('{{ 'f0ska.autogrid.dialog.delete_confirm'|trans }}');" title="{{ 'f0ska.autogrid.button.delete'|trans }}" aria-label="{{ 'f0ska.autogrid.button.delete'|trans }}">{{ ag_icons.delete() }}</button>
 {%- endif -%}
 {%- endblock -%}
 {%- block autogrid_grid_row_custom_action %}{% endblock -%}

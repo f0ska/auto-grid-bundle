@@ -51,6 +51,8 @@ class ViewParameter
 
     public ?FormView $exportActionFormView = null;
 
+    public ?FormView $deleteActionFormView = null;
+
     /**
      * @var array<string, string>
      */

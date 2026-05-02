@@ -50,6 +50,7 @@ class ViewService
         $this->paginationBuilder->build($parameters);
         $this->buildMassAction($parameters);
         $this->buildExportAction($parameters);
+        $this->buildDeleteAction($parameters);
     }
 
     private function addViewParameters(FormView $displayFormView, FieldParameter $field): void
@@ -100,5 +101,17 @@ class ViewService
                 ->createView()
             ;
         }
+    }
+
+    private function buildDeleteAction(Parameters $parameters): void
+    {
+        if (empty($parameters->permissions['delete'])) {
+            return;
+        }
+
+        $parameters->view->deleteActionFormView = $this->formFacade
+            ->buildDeleteActionForm($parameters)
+            ->createView()
+        ;
     }
 }

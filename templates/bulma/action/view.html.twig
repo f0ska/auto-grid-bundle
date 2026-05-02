@@ -37,13 +37,17 @@
                                 {% endif %}
                             {% endblock %}
                             {% block autogrid_view_header_delete_button %}
-                                {% if ag_run(agIsAllowed, 'delete') and attributes.button.delete.display_in_grid %}
-                                    <a class="button is-danger {{ btnClass }}"
-                                       href="{{ ag_run(agActionUrl, 'delete', {'id': entity.id}) }}"
+                                {% if ag_run(agIsAllowed, 'delete') and attributes.button.delete.display_in_grid and view.deleteActionFormView %}
+                                    <button class="button is-danger {{ btnClass }}"
+                                       type="submit"
+                                       form="{{ view.deleteActionFormView.vars.attr.id }}"
+                                       {% if attributes.route.delete is defined %}formaction="{{ ag_run(agActionUrl, 'delete', {'id': entity.id}) }}"{% endif %}
+                                       name="{{ view.deleteActionFormView.id.vars.full_name }}"
+                                       value="{{ entity.id }}"
                                        onclick="return confirm('{{ 'f0ska.autogrid.dialog.delete_confirm'|trans }}');"
                                     >
                                         {{ ag_icons.delete() }}&nbsp;{{ 'f0ska.autogrid.button.delete'|trans }}
-                                    </a>
+                                    </button>
                                 {% endif %}
                             {% endblock %}
                         </div>

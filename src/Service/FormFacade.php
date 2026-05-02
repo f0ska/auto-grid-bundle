@@ -45,6 +45,11 @@ class FormFacade
         return $this->entityFormBuilder->buildExportActionForm($parameters);
     }
 
+    public function buildDeleteActionForm(Parameters $parameters): FormInterface
+    {
+        return $this->entityFormBuilder->buildDeleteActionForm($parameters);
+    }
+
     public function buildFilterForms(Parameters $parameters): array
     {
         $filterForms = [];
