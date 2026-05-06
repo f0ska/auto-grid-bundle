@@ -147,7 +147,7 @@ class EntityFormBuilder
     ): void {
         foreach ($parameters->fields as $field) {
             if ($isTrueForm) {
-                if (!$parameters->isFieldAllowed($field, $action)) {
+                if (!$parameters->isFieldGranted($field, $action)) {
                     if ($builder->has($field->name)) {
                         $builder->remove($field->name);
                     }

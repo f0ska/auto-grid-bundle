@@ -15,6 +15,7 @@ namespace F0ska\AutoGridBundle\Service;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use F0ska\AutoGridBundle\Attribute\AttributeInterface;
+use F0ska\AutoGridBundle\Attribute\Entity\RowActionPermission;
 use F0ska\AutoGridBundle\Attribute\EntityField\Filterable;
 use F0ska\AutoGridBundle\Attribute\EntityField\Sortable;
 use F0ska\AutoGridBundle\Model\AttributeCollection;
@@ -150,6 +151,11 @@ class AttributeParserService
     private function addEntityValue(array &$entityAttributes, ReflectionAttribute $attribute): void
     {
         $instance = $attribute->newInstance();
+        if ($instance instanceof RowActionPermission) {
+            $entityAttributes['row_action_permission'][] = $instance->getValue();
+            return;
+        }
+
         if ($instance instanceof AttributeInterface) {
             $this->addValue($entityAttributes, $instance->getCode(), $instance->getValue());
         }

@@ -9,6 +9,29 @@ Attributes configure AutoGrid at the class and property levels.
 ## Class Level Attributes
 
 <details>
+<summary><strong>RowActionPermission</strong></summary>
+
+Adds row-specific permission rules for action buttons and direct action execution.
+
+```php
+use F0ska\AutoGridBundle\Attribute\Entity\RowActionPermission;
+
+#[RowActionPermission(service: ArticleRowActionPermission::class, actions: ['edit', 'delete'])]
+#[RowActionPermission(
+    service: ArchivedArticleRowActionPermission::class,
+    actions: ['delete'],
+    effect: RowActionPermission::Deny,
+)]
+class Article { ... }
+```
+
+The service must implement `RowActionPermissionInterface`.
+
+With the default `Allow` effect, returning `false` hides and blocks the action.
+With the `Deny` effect, returning `true` hides and blocks the action.
+</details>
+
+<details>
 <summary><strong>ActionButtonDisplay</strong></summary>
 
 Configures action button visibility.

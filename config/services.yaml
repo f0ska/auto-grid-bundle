@@ -16,33 +16,45 @@ services:
 
     F0ska\AutoGridBundle\Action\:
         resource: '../src/Action/*'
-        tags: [ 'autogrid.action' ]
         autowire: true
+        autoconfigure: true
 
     F0ska\AutoGridBundle\Condition\:
         resource: '../src/Condition/*'
-        tags: [ 'autogrid.filter_condition' ]
         autowire: true
+        autoconfigure: true
 
     F0ska\AutoGridBundle\ActionParameter\:
         resource: '../src/ActionParameter/*'
-        tags: [ 'autogrid.action.parameter' ]
         autowire: true
+        autoconfigure: true
 
     F0ska\AutoGridBundle\View\:
         resource: '../src/View/*'
-        tags: [ 'autogrid.view_service' ]
+        exclude: '../src/View/Helper'
+        autowire: true
+        autoconfigure: true
+
+    F0ska\AutoGridBundle\View\Helper\:
+        resource: '../src/View/Helper/*'
         autowire: true
 
-    F0ska\AutoGridBundle\Service\Provider\:
-        resource: '../src/Service/Provider/*'
+    F0ska\AutoGridBundle\RowActionPermission\:
+        resource: '../src/RowActionPermission/*'
         autowire: true
+        autoconfigure: true
 
     F0ska\AutoGridBundle\View\ViewServiceRegistry:
         autowire: true
         lazy: true
         arguments:
             $services: !tagged_iterator 'autogrid.view_service'
+
+    F0ska\AutoGridBundle\RowActionPermission\RowActionPermissionRegistry:
+        autowire: true
+        lazy: true
+        arguments:
+            $services: !tagged_iterator 'autogrid.row_action_permission'
 
     F0ska\AutoGridBundle\Service\ConfigurationService:
         autowire: true
@@ -60,10 +72,6 @@ services:
         lazy: true
         arguments:
             $actionParameters: !tagged_iterator 'autogrid.action.parameter'
-
-    F0ska\AutoGridBundle\Service\PermissionService:
-        autowire: true
-        lazy: true
 
     F0ska\AutoGridBundle\Service\FilterConditionListService:
         autowire: true

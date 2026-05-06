@@ -61,7 +61,7 @@ class ActionService
 
             $actionObject = $this->actionList->getAction($action);
 
-            if (!$parameters->isAllowed($action)) {
+            if (!$parameters->isGranted($action)) {
                 throw new GridAccessDeniedException();
             }
             if (

@@ -11,7 +11,7 @@
                         <td style="width: 33.333%; text-align: left; vertical-align: middle;">
                             <div class="button-group small" style="margin-bottom: 0;">
                         {% block autogrid_view_header_back_button %}
-                            {% if ag_run(agIsAllowed, 'grid') %}
+                            {% if ag_run(agIsGranted, 'grid') %}
                                 <a class="{{ btnClass }}" href="{{ ag_run(agActionUrl, 'grid') }}">
                                     {{ ag_icons.arrow_left() }}&nbsp;{{ 'f0ska.autogrid.button.back'|trans }}
                                 </a>
@@ -29,14 +29,14 @@
                         <td style="width: 33.333%; text-align: right; vertical-align: middle;">
                             <div class="button-group small align-right" style="margin-bottom: 0;">
                         {% block autogrid_view_header_edit_button %}
-                            {% if ag_run(agIsAllowed, 'edit') and attributes.button.edit.display_in_view %}
+                            {% if ag_run(agIsGranted, 'edit', entity) and attributes.button.edit.display_in_view %}
                                 <a class="{{ btnClass }}" href="{{ ag_run(agActionUrl, 'edit') }}">
                                     {{ ag_icons.edit() }}&nbsp;{{ 'f0ska.autogrid.button.modify'|trans }}
                                 </a>
                             {% endif %}
                         {% endblock %}
                         {% block autogrid_view_header_delete_button %}
-                            {% if ag_run(agIsAllowed, 'delete') and attributes.button.delete.display_in_grid and view.deleteActionFormView %}
+                            {% if ag_run(agIsGranted, 'delete', entity) and attributes.button.delete.display_in_grid and view.deleteActionFormView %}
                                 <button class="button alert"
                                    type="submit"
                                    form="{{ view.deleteActionFormView.vars.attr.id }}"

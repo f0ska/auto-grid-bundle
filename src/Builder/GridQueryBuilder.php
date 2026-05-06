@@ -18,7 +18,7 @@ use Doctrine\ORM\QueryBuilder;
 use F0ska\AutoGridBundle\Model\Parameters;
 use F0ska\AutoGridBundle\Service\FilterConditionListService;
 use F0ska\AutoGridBundle\Service\MetaDataService;
-use F0ska\AutoGridBundle\Service\Provider\FieldValueProvider;
+use F0ska\AutoGridBundle\View\Helper\FieldValueHelper;
 
 use function Symfony\Component\String\u;
 
@@ -33,7 +33,7 @@ class GridQueryBuilder
         private readonly EntityManagerInterface $entityManager,
         private readonly MetaDataService $metaDataService,
         private readonly FilterConditionListService $conditionList,
-        private readonly FieldValueProvider $fieldValueProvider
+        private readonly FieldValueHelper $fieldValueHelper
     ) {
     }
 
@@ -245,7 +245,7 @@ class GridQueryBuilder
                     continue;
                 }
 
-                $this->fieldValueProvider->setValue(
+                $this->fieldValueHelper->setValue(
                     $entity,
                     $parameters->fields[$fieldName],
                     $row[$alias]

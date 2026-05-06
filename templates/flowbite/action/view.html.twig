@@ -9,7 +9,7 @@
             <div class="{{ attributes.html_class.thead|default('flex flex-wrap items-center gap-3 border-b border-gray-200 bg-gray-50 px-4 py-4 sm:px-6') }}">
                 <div class="flex flex-1 flex-wrap items-center gap-2">
                     {% block autogrid_view_header_back_button %}
-                        {% if ag_run(agIsAllowed, 'grid') %}
+                        {% if ag_run(agIsGranted, 'grid') %}
                             <a class="{{ btnClass }}" href="{{ ag_run(agActionUrl, 'grid') }}">
                                 {{ ag_icons.arrow_left() }}<span>{{ 'f0ska.autogrid.button.back'|trans }}</span>
                             </a>
@@ -26,14 +26,14 @@
                 </div>
                 <div class="flex flex-1 flex-wrap items-center justify-end gap-2">
                     {% block autogrid_view_header_edit_button %}
-                        {% if ag_run(agIsAllowed, 'edit') and attributes.button.edit.display_in_view %}
+                        {% if ag_run(agIsGranted, 'edit', entity) and attributes.button.edit.display_in_view %}
                             <a class="{{ btnClass }}" href="{{ ag_run(agActionUrl, 'edit') }}">
                                 {{ ag_icons.edit() }}<span>{{ 'f0ska.autogrid.button.modify'|trans }}</span>
                             </a>
                         {% endif %}
                     {% endblock %}
                     {% block autogrid_view_header_delete_button %}
-                        {% if ag_run(agIsAllowed, 'delete') and attributes.button.delete.display_in_grid and view.deleteActionFormView %}
+                        {% if ag_run(agIsGranted, 'delete', entity) and attributes.button.delete.display_in_grid and view.deleteActionFormView %}
                             <button class="{{ btnDelClass }}"
                                type="submit"
                                form="{{ view.deleteActionFormView.vars.attr.id }}"
