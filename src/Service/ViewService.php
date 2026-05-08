@@ -44,6 +44,8 @@ class ViewService
         $parameters->view->advancedFilterForm = $filterData['advancedFilterForm'];
         $parameters->view->advancedFilterFormView = $filterData['advancedFilterFormView'];
 
+        $this->buildSearchForm($parameters);
+
         $parameters->view->fieldset = $this->fieldsetService->build($parameters);
 
         $this->buildFormThemes($parameters);
@@ -86,6 +88,16 @@ class ViewService
                 ->createView()
             ;
         }
+    }
+
+    private function buildSearchForm(Parameters $parameters): void
+    {
+        if (empty($parameters->attributes['searchable']['fields']) || empty($parameters->permissions['search'])) {
+            return;
+        }
+
+        $parameters->view->searchForm = $this->formFacade->buildSearchForm($parameters);
+        $parameters->view->searchFormView = $parameters->view->searchForm->createView();
     }
 
     private function buildExportAction(Parameters $parameters): void

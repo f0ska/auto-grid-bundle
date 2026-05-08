@@ -7,8 +7,10 @@ AutoGrid is extendable at multiple levels, from template overrides to core servi
 <details>
 <summary><strong>Overriding Templates</strong></summary>
 
+AutoGrid templates can be overridden globally, per route, per entity, or per field. The complete template key list is in [Configuration](./global-configuration.md), and the template inventory is in [Templates](./templates.md).
+
 ### 1. Global Configuration
-Configure default themes in `f0ska_auto_grid.yaml`.
+Configure default templates in `f0ska_auto_grid.yaml`.
 
 ```yaml
 f0ska_auto_grid:
@@ -16,6 +18,8 @@ f0ska_auto_grid:
         theme: '@@F0skaAutoGrid/bootstrap_5'
         base: 'base.html.twig'
         form_themes: ['bootstrap_5_layout.html.twig']
+        grid:
+            search: 'grid/search.html.twig'
 ```
 
 ### 2. File-based Overrides
@@ -72,6 +76,45 @@ private ?string $avatarPath = null;
 App\Filter\MyCustomCondition:
     tags: ['autogrid.filter_condition']
 ```
+</details>
+
+<details>
+<summary><strong>Custom Search Services</strong></summary>
+
+Use `SearchServiceInterface` when the default `LIKE` search is not enough.
+Inject `QueryFieldResolver` when the service still needs AutoGrid field resolution for root fields and joined fields.
+
+```php
+use Doctrine\ORM\QueryBuilder;
+use F0ska\AutoGridBundle\Model\Parameters;
+use F0ska\AutoGridBundle\Search\SearchServiceInterface;
+
+final class ArticleSearchService implements SearchServiceInterface
+{
+    public function apply(QueryBuilder $builder, string $term, array $fields, Parameters $parameters): void
+    {
+        $ids = $this->externalSearch->findArticleIds($term);
+
+        if ($ids === []) {
+            $builder->andWhere('1 = 0');
+            return;
+        }
+
+        $alias = $builder->getRootAliases()[0];
+        $builder->andWhere(sprintf('%s.id IN (:search_ids)', $alias));
+        $builder->setParameter('search_ids', $ids);
+    }
+}
+```
+
+```php
+use F0ska\AutoGridBundle\Attribute\Entity\Searchable;
+
+#[Searchable(fields: ['title', 'content'], service: ArticleSearchService::class)]
+class Article { ... }
+```
+
+Register the service with the `autogrid.search_service` tag. If service autoconfiguration is enabled, the tag is added automatically.
 </details>
 
 <details>

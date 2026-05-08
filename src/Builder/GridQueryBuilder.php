@@ -16,23 +16,22 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use F0ska\AutoGridBundle\Model\Parameters;
+use F0ska\AutoGridBundle\Search\SearchServiceRegistry;
 use F0ska\AutoGridBundle\Service\FilterConditionListService;
 use F0ska\AutoGridBundle\Service\MetaDataService;
+use F0ska\AutoGridBundle\Service\QueryFieldResolver;
 use F0ska\AutoGridBundle\View\Helper\FieldValueHelper;
 
 use function Symfony\Component\String\u;
 
 class GridQueryBuilder
 {
-    /**
-     * @var array<string, bool>
-     */
-    private array $joins;
-
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly MetaDataService $metaDataService,
         private readonly FilterConditionListService $conditionList,
+        private readonly SearchServiceRegistry $searchServiceRegistry,
+        private readonly QueryFieldResolver $fieldResolver,
         private readonly FieldValueHelper $fieldValueHelper
     ) {
     }
@@ -44,6 +43,7 @@ class GridQueryBuilder
 
         $builder = $this->buildGenericParts($parameters);
         $this->buildFilters($builder, $parameters);
+        $this->buildSearch($builder, $parameters);
 
         $aliases = $builder->getRootAliases();
         $builder->select(reset($aliases));
@@ -59,6 +59,7 @@ class GridQueryBuilder
     {
         $builder = $this->buildGenericParts($parameters);
         $this->buildFilters($builder, $parameters);
+        $this->buildSearch($builder, $parameters);
         $aliases = $builder->getRootAliases();
         $builder->select(sprintf('COUNT(DISTINCT %s.id)', reset($aliases)));
         return $builder->getQuery();
@@ -79,7 +80,6 @@ class GridQueryBuilder
 
     public function buildGenericParts(Parameters $parameters): QueryBuilder
     {
-        $this->joins = [];
         $agId = $parameters->agId;
         $metadata = $this->metaDataService->getMetadata($agId);
         $builder = $this->entityManager->createQueryBuilder();
@@ -126,6 +126,18 @@ class GridQueryBuilder
         }
     }
 
+    private function buildSearch(QueryBuilder $builder, Parameters $parameters): void
+    {
+        $term = $parameters->request['search']['term'] ?? null;
+        if (!is_string($term) || $term === '') {
+            return;
+        }
+
+        $search = $parameters->attributes['searchable'] ?? [];
+        $service = $this->searchServiceRegistry->get($search['service']);
+        $service->apply($builder, $term, $search['fields'], $parameters);
+    }
+
     private function buildOrder(QueryBuilder $builder, Parameters $parameters): void
     {
         $order = $parameters->request['order'] ?? $parameters->attributes['default_sort'] ?? [];
@@ -158,20 +170,7 @@ class GridQueryBuilder
 
     private function prepareField(QueryBuilder $builder, string $key): string
     {
-        $aliases = $builder->getRootAliases();
-        $key = str_replace(':', '.', $key);
-        $rootAlias = reset($aliases);
-        if (!str_contains($key, '.')) {
-            return $rootAlias . '.' . $key;
-        }
-
-        $alias = strstr($key, '.', true);
-        if (is_string($alias) && !isset($this->joins[$alias])) {
-            $this->joins[$alias] = true;
-            $builder->leftJoin($rootAlias . '.' . $alias, $alias);
-        }
-
-        return $key;
+        return $this->fieldResolver->resolve($builder, $key);
     }
 
     private function addVirtualDqlSelects(QueryBuilder $builder, Parameters $parameters): void

@@ -14,6 +14,7 @@ namespace F0ska\AutoGridBundle\Service;
 
 use F0ska\AutoGridBundle\Builder\EntityFormBuilder;
 use F0ska\AutoGridBundle\Builder\FilterFormBuilder;
+use F0ska\AutoGridBundle\Builder\SearchFormBuilder;
 use F0ska\AutoGridBundle\Model\Parameters;
 use Symfony\Component\Form\FormInterface;
 
@@ -21,7 +22,8 @@ class FormFacade
 {
     public function __construct(
         private readonly EntityFormBuilder $entityFormBuilder,
-        private readonly FilterFormBuilder $filterFormBuilder
+        private readonly FilterFormBuilder $filterFormBuilder,
+        private readonly SearchFormBuilder $searchFormBuilder
     ) {
     }
 
@@ -48,6 +50,11 @@ class FormFacade
     public function buildDeleteActionForm(Parameters $parameters): FormInterface
     {
         return $this->entityFormBuilder->buildDeleteActionForm($parameters);
+    }
+
+    public function buildSearchForm(Parameters $parameters): FormInterface
+    {
+        return $this->searchFormBuilder->buildSearchForm($parameters);
     }
 
     public function buildFilterForms(Parameters $parameters): array

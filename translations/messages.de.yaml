@@ -27,6 +27,8 @@ f0ska:
         range:
             from: "Von"
             to: "Bis"
+        placeholder:
+            search: "Suchen"
         rows: "Zeilen"
         total: "Gesamt"
         empty: "Leer"

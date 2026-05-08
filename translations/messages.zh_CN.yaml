@@ -27,6 +27,8 @@ f0ska:
         range:
             from: "从"
             to: "到"
+        placeholder:
+            search: "搜索"
         rows: "行"
         total: "总计"
         empty: "空"

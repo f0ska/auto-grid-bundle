@@ -27,6 +27,8 @@ f0ska:
         range:
             from: "From"
             to: "To"
+        placeholder:
+            search: "Search"
         rows: "Rows"
         total: "Total"
         empty: "Empty"

@@ -44,6 +44,11 @@ services:
         autowire: true
         autoconfigure: true
 
+    F0ska\AutoGridBundle\Search\:
+        resource: '../src/Search/*'
+        autowire: true
+        autoconfigure: true
+
     F0ska\AutoGridBundle\View\ViewServiceRegistry:
         autowire: true
         lazy: true
@@ -55,6 +60,12 @@ services:
         lazy: true
         arguments:
             $services: !tagged_iterator 'autogrid.row_action_permission'
+
+    F0ska\AutoGridBundle\Search\SearchServiceRegistry:
+        autowire: true
+        lazy: true
+        arguments:
+            $services: !tagged_iterator 'autogrid.search_service'
 
     F0ska\AutoGridBundle\Service\ConfigurationService:
         autowire: true

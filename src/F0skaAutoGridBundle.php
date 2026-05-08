@@ -18,6 +18,7 @@ use F0ska\AutoGridBundle\Condition\FilterConditionInterface;
 use F0ska\AutoGridBundle\Customization\CustomizationInterface;
 use F0ska\AutoGridBundle\DependencyInjection\F0skaAutoGridExtension;
 use F0ska\AutoGridBundle\RowActionPermission\RowActionPermissionInterface;
+use F0ska\AutoGridBundle\Search\SearchServiceInterface;
 use F0ska\AutoGridBundle\View\ViewServiceInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
@@ -54,6 +55,11 @@ class F0skaAutoGridBundle extends AbstractBundle
         $container
             ->registerForAutoconfiguration(RowActionPermissionInterface::class)
             ->addTag('autogrid.row_action_permission')
+        ;
+
+        $container
+            ->registerForAutoconfiguration(SearchServiceInterface::class)
+            ->addTag('autogrid.search_service')
         ;
     }
 

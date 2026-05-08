@@ -57,6 +57,7 @@ f0ska_auto_grid:
             grid_number_per_page: 'grid/grid_number_per_page.html.twig'
             grid_pagination: 'grid/grid_pagination.html.twig'
             row_class: 'grid/row_class.html.twig'
+            search: 'grid/search.html.twig'
 
     # --- View & Display Settings ---
     view:

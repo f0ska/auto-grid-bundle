@@ -42,6 +42,10 @@ class ViewParameter
 
     public ?FormView $advancedFilterFormView = null;
 
+    public ?FormInterface $searchForm = null;
+
+    public ?FormView $searchFormView = null;
+
     public ?FormView $massActionFormView = null;
 
     /**

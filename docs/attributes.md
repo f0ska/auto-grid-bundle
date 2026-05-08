@@ -168,6 +168,36 @@ class User { ... }
 </details>
 
 <details>
+<summary><strong>Searchable</strong></summary>
+
+Enables global search for the grid.
+
+```php
+use F0ska\AutoGridBundle\Attribute\Entity\Searchable;
+
+#[Searchable(fields: ['title', 'content', 'author.email'])]
+class Article { ... }
+```
+
+AutoGrid searches the configured fields with `LIKE` by default and combines them with `OR`.
+Search state is stored in `agParams[search][term]`.
+
+Use a custom service when search should use external indexes or domain rules:
+
+```php
+#[Searchable(
+    fields: ['title', 'content'],
+    service: ArticleSearchService::class,
+    minLength: 2,
+    maxLength: 255,
+)]
+class Article { ... }
+```
+
+The service must implement `SearchServiceInterface`.
+</details>
+
+<details>
 <summary><strong>Template</strong></summary>
 
 Overrides specific template areas (see `TemplateArea.php`). `Template` is a repeatable attribute, so add it multiple

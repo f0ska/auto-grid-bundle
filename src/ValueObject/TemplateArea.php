@@ -49,6 +49,7 @@ final class TemplateArea
     public const GRID_NUMBER_PER_PAGE = 'grid.grid_number_per_page';
     public const GRID_PAGINATION = 'grid.grid_pagination';
     public const GRID_ROW_CLASS = 'grid.row_class';
+    public const GRID_SEARCH = 'grid.search';
 
     // Other Templates (from top-level 'template' node)
     public const BASE = 'base';
