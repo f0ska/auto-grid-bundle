@@ -79,7 +79,11 @@ class FilterParameter implements ActionParameterInterface
             if (!isset($parameters->fields[$field])) {
                 return false;
             }
-            if (!$this->isValueValid($fieldValue, $parameters->fields[$field])) {
+            $fieldParameter = $parameters->fields[$field];
+            if (!$fieldParameter->canFilter || $fieldParameter->filterCondition === null) {
+                return false;
+            }
+            if (!$this->isValueValid($fieldValue, $fieldParameter)) {
                 return false;
             }
         }

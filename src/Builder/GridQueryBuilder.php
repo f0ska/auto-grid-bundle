@@ -114,7 +114,7 @@ class GridQueryBuilder
             return;
         }
         foreach ($parameters->fields as $field) {
-            if (isset($filters[$field->name]) && $field->filterCondition !== null) {
+            if (isset($filters[$field->name]) && $field->canFilter && $field->filterCondition !== null) {
                 $column = $this->prepareQueryField($builder, $field->name, $parameters);
                 $this->conditionList->get($field->filterCondition)->apply(
                     $builder,
