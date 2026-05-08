@@ -17,8 +17,6 @@ use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Validator\Constraints\AtLeastOneOf;
-use Symfony\Component\Validator\Constraints\Blank;
 use Symfony\Component\Validator\Constraints\Length;
 
 class SearchFormBuilder
@@ -44,18 +42,16 @@ class SearchFormBuilder
         $builder->add('term', TextType::class, [
             'required' => false,
             'data' => $parameters->request['search']['term'] ?? null,
+            'empty_data' => null,
             'attr' => [
                 'minlength' => $minLength,
                 'maxlength' => $maxLength,
             ],
             'constraints' => [
-                new AtLeastOneOf([
-                    new Blank(),
-                    new Length(
-                        min: $minLength,
-                        max: $maxLength
-                    ),
-                ]),
+                new Length(
+                    min: $minLength,
+                    max: $maxLength
+                ),
             ],
         ]);
 

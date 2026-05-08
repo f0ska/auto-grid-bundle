@@ -16,6 +16,8 @@ use F0ska\AutoGridBundle\Exception\GridAccessDeniedException;
 use F0ska\AutoGridBundle\Exception\InvalidGridParameterException;
 use F0ska\AutoGridBundle\Model\AutoGrid;
 use F0ska\AutoGridBundle\Model\Parameters;
+use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -33,8 +35,12 @@ class SearchAction extends AbstractAction
         }
 
         $form->handleRequest($this->requestStack->getCurrentRequest());
-        if (!$form->isSubmitted() || !$form->isValid()) {
+        if (!$form->isSubmitted()) {
             throw new InvalidGridParameterException('Invalid request parameter: invalid search form submission');
+        }
+
+        if (!$form->isValid()) {
+            throw new InvalidGridParameterException($this->getFirstFormErrorMessage($form));
         }
 
         $term = trim((string) $form->get('term')->getData());
@@ -44,5 +50,14 @@ class SearchAction extends AbstractAction
             'search' => $search,
             'page' => null,
         ])));
+    }
+
+    private function getFirstFormErrorMessage(FormInterface $form): string
+    {
+        $error = $form->getErrors(true)->current();
+
+        return $error instanceof FormError
+            ? $error->getMessage()
+            : 'Invalid request parameter: invalid search form submission';
     }
 }
