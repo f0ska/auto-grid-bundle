@@ -28,6 +28,6 @@ class LimitParameter implements ActionParameterInterface
         if (is_numeric($value) && (int) $value > 0) {
             return (int) $value;
         }
-        throw new InvalidGridParameterException();
+        throw new InvalidGridParameterException('Invalid request parameter: limit must be a positive integer');
     }
 }

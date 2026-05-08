@@ -71,6 +71,10 @@ private ?string $avatarPath = null;
 2. Register as a service with the `autogrid.filter_condition` tag.
 3. Use in `#[Filterable(condition: MyCustomCondition::class)]`.
 
+If the condition should support `#[Filterable(additionalFields: [...])]`, also implement
+[`FilterExpressionConditionInterface`](../src/Condition/FilterExpressionConditionInterface.php). AutoGrid uses that
+interface to compose one expression per field and wrap them in a single `OR` group.
+
 ```yaml
 # config/services.yaml
 App\Filter\MyCustomCondition:

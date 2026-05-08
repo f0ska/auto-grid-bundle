@@ -31,6 +31,8 @@ class SearchServiceRegistry
 
     public function get(string $class): SearchServiceInterface
     {
-        return $this->services[$class] ?? throw new InvalidGridParameterException();
+        return $this->services[$class] ?? throw new InvalidGridParameterException(
+            sprintf('Invalid request parameter: unknown search service "%s"', $class)
+        );
     }
 }

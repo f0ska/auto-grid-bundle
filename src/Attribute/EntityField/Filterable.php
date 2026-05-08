@@ -23,18 +23,21 @@ class Filterable extends AbstractAttribute
      * @param string|null $condition   Filter condition class (implements FilterConditionInterface). Auto-guessed if null.
      * @param string|null $formType    Override the filter form type. Auto-guessed if null.
      * @param array       $formOptions Override the filter form options.
+     * @param string[]    $additionalFields Additional mapped fields searched by this visible filter.
      */
     public function __construct(
         bool $enabled = true,
         ?string $condition = null,
         ?string $formType = null,
         array $formOptions = [],
+        array $additionalFields = [],
     ) {
         parent::__construct([
             'enabled' => $enabled,
             'condition' => $condition,
             'form_type' => $formType,
             'form_options' => $formOptions,
+            'additional_fields' => $additionalFields,
         ]);
     }
 

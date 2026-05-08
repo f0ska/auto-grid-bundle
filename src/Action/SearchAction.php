@@ -29,12 +29,12 @@ class SearchAction extends AbstractAction
     {
         $form = $parameters->view->searchForm;
         if ($form === null) {
-            throw new GridAccessDeniedException();
+            throw new GridAccessDeniedException('Not Allowed: search form is not available');
         }
 
         $form->handleRequest($this->requestStack->getCurrentRequest());
         if (!$form->isSubmitted() || !$form->isValid()) {
-            throw new InvalidGridParameterException();
+            throw new InvalidGridParameterException('Invalid request parameter: invalid search form submission');
         }
 
         $term = trim((string) $form->get('term')->getData());

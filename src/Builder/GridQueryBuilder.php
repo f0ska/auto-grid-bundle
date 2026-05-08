@@ -15,10 +15,13 @@ namespace F0ska\AutoGridBundle\Builder;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
+use F0ska\AutoGridBundle\Condition\FilterExpressionConditionInterface;
+use F0ska\AutoGridBundle\Exception\InvalidGridParameterException;
 use F0ska\AutoGridBundle\Model\Parameters;
 use F0ska\AutoGridBundle\Search\SearchServiceRegistry;
 use F0ska\AutoGridBundle\Service\FilterConditionListService;
 use F0ska\AutoGridBundle\Service\MetaDataService;
+use F0ska\AutoGridBundle\Service\ParametersService;
 use F0ska\AutoGridBundle\Service\QueryFieldResolver;
 use F0ska\AutoGridBundle\View\Helper\FieldValueHelper;
 
@@ -116,12 +119,50 @@ class GridQueryBuilder
         foreach ($parameters->fields as $field) {
             if (isset($filters[$field->name]) && $field->canFilter && $field->filterCondition !== null) {
                 $column = $this->prepareQueryField($builder, $field->name, $parameters);
-                $this->conditionList->get($field->filterCondition)->apply(
-                    $builder,
-                    $column,
-                    $field,
-                    $filters[$field->name]
-                );
+                $condition = $this->conditionList->get($field->filterCondition);
+                $additionalFields = $field->attributes['filterable']['additional_fields'] ?? [];
+
+                if ($additionalFields === []) {
+                    $condition->apply($builder, $column, $field, $filters[$field->name]);
+                    continue;
+                }
+
+                if (!$condition instanceof FilterExpressionConditionInterface) {
+                    throw new InvalidGridParameterException(sprintf(
+                        'Invalid request parameter: filter condition "%s" does not support additional fields',
+                        $field->filterCondition
+                    ));
+                }
+
+                $expressions = [$condition->buildExpression($builder, $column, $field, $filters[$field->name])];
+                foreach ($additionalFields as $additionalField) {
+                    if (!is_string($additionalField) || !isset($parameters->fields[$additionalField])) {
+                        throw new InvalidGridParameterException(sprintf(
+                            'Invalid request parameter: unknown additional filter field "%s" for "%s"',
+                            is_scalar($additionalField) ? (string) $additionalField : get_debug_type($additionalField),
+                            $field->name
+                        ));
+                    }
+                    $additionalParameter = $parameters->fields[$additionalField];
+                    if ($additionalParameter->mappingType === ParametersService::MAPPING_PURE_VIRTUAL) {
+                        throw new InvalidGridParameterException(sprintf(
+                            'Invalid request parameter: additional filter field "%s" is not queryable',
+                            $additionalField
+                        ));
+                    }
+
+                    $expressions[] = $condition->buildExpression(
+                        $builder,
+                        $this->prepareField($builder, $additionalField),
+                        $field,
+                        $filters[$field->name]
+                    );
+                }
+
+                $expressions = array_filter($expressions, static fn(mixed $expression): bool => $expression !== null);
+                if ($expressions !== []) {
+                    $builder->andWhere($builder->expr()->orX(...$expressions));
+                }
             }
         }
     }

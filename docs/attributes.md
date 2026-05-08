@@ -327,11 +327,20 @@ Enables grid searching/filtering.
   - [`StartsWithCondition`](../src/Condition/StartsWithCondition.php): SQL `LIKE value%`.
 - `formType`: Override the guessed filter form type.
 - `formOptions`: Override the guessed filter form options.
+- `additionalFields`: Apply the same filter value and condition to extra mapped fields without rendering extra inputs.
 
 ```php
 #[Filterable(condition: ContainsCondition::class)]
 private ?string $description = null;
 ```
+
+```php
+#[Filterable(condition: ContainsCondition::class, additionalFields: ['normalizedName', 'legacyName'])]
+private ?string $name = null;
+```
+
+Additional fields are combined with the visible field using `OR`, and the whole group is combined with other filters
+using `AND`.
 </details>
 
 <details>

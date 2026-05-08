@@ -33,8 +33,9 @@ class FilterParameter implements ActionParameterInterface
 
     public function normalize(mixed $value, Parameters $parameters): ?array
     {
-        if (!$this->validate($value, $parameters)) {
-            throw new InvalidGridParameterException();
+        $error = $this->validate($value, $parameters);
+        if ($error !== null) {
+            throw new InvalidGridParameterException($error);
         }
 
         if (!is_array($value)) {
@@ -67,27 +68,30 @@ class FilterParameter implements ActionParameterInterface
         return $value ?: [];
     }
 
-    private function validate(mixed $value, Parameters $parameters): bool
+    private function validate(mixed $value, Parameters $parameters): ?string
     {
         if ($value === null) {
-            return true;
+            return null;
         }
         if (!is_array($value) || empty($value)) {
-            return false;
+            return 'Invalid request parameter: filter must be a non-empty array';
         }
         foreach ($value as $field => $fieldValue) {
             if (!isset($parameters->fields[$field])) {
-                return false;
+                return sprintf(
+                    'Invalid request parameter: unknown filter field "%s"',
+                    (string) $field
+                );
             }
             $fieldParameter = $parameters->fields[$field];
             if (!$fieldParameter->canFilter || $fieldParameter->filterCondition === null) {
-                return false;
+                return sprintf('Invalid request parameter: field "%s" is not filterable', $field);
             }
             if (!$this->isValueValid($fieldValue, $fieldParameter)) {
-                return false;
+                return sprintf('Invalid request parameter: invalid filter value for field "%s"', $field);
             }
         }
-        return true;
+        return null;
     }
 
     private function isValueValid(mixed $value, FieldParameter $field): bool

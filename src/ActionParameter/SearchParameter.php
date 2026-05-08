@@ -25,7 +25,7 @@ class SearchParameter implements ActionParameterInterface
     public function normalize(mixed $value, Parameters $parameters): ?array
     {
         if (!$this->isSearchAllowed($parameters)) {
-            throw new InvalidGridParameterException();
+            throw new InvalidGridParameterException('Invalid request parameter: search is not enabled or not allowed');
         }
 
         if ($value === null) {
@@ -33,11 +33,11 @@ class SearchParameter implements ActionParameterInterface
         }
 
         if (!is_array($value) || !array_key_exists('term', $value) || count($value) > 1) {
-            throw new InvalidGridParameterException();
+            throw new InvalidGridParameterException('Invalid request parameter: search must contain only a term value');
         }
 
         if (!is_scalar($value['term']) && $value['term'] !== null) {
-            throw new InvalidGridParameterException();
+            throw new InvalidGridParameterException('Invalid request parameter: search term must be scalar');
         }
 
         $term = trim((string) $value['term']);
@@ -50,7 +50,7 @@ class SearchParameter implements ActionParameterInterface
         $length = strlen($term);
 
         if ($length < $minLength || $length > $maxLength) {
-            throw new InvalidGridParameterException();
+            throw new InvalidGridParameterException('Invalid request parameter: search term length is outside allowed bounds');
         }
 
         return ['term' => $term];

@@ -16,9 +16,14 @@ use Doctrine\ORM\Mapping\ToManyAssociationMapping;
 use Doctrine\ORM\QueryBuilder;
 use F0ska\AutoGridBundle\Model\FieldParameter;
 
-class AssociationCondition implements FilterConditionInterface
+class AssociationCondition implements FilterExpressionConditionInterface
 {
     public function apply(QueryBuilder $qb, string $column, FieldParameter $field, mixed $value): void
+    {
+        $qb->andWhere($this->buildExpression($qb, $column, $field, $value));
+    }
+
+    public function buildExpression(QueryBuilder $qb, string $column, FieldParameter $field, mixed $value): mixed
     {
         $alias = uniqid('param');
 
@@ -28,7 +33,8 @@ class AssociationCondition implements FilterConditionInterface
             $column = $joinAlias;
         }
 
-        $qb->andWhere($qb->expr()->in($column, ':' . $alias));
         $qb->setParameter($alias, $value);
+
+        return $qb->expr()->in($column, ':' . $alias);
     }
 }

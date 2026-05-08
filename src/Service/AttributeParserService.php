@@ -130,6 +130,9 @@ class AttributeParserService
         if (!empty($info['form_options'])) {
             $this->addValue($propertyAttributes, 'filterable.form_options', $info['form_options']);
         }
+        if (!empty($info['additional_fields'])) {
+            $this->addValue($propertyAttributes, 'filterable.additional_fields', $info['additional_fields']);
+        }
     }
 
     private function processFieldsetAttributes(array $fieldAttributes, array &$entityAttributes): void
