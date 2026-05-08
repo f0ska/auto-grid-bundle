@@ -45,9 +45,9 @@ class SearchParameter implements ActionParameterInterface
             return null;
         }
 
-        $minLength = (int) ($parameters->attributes['searchable']['min_length'] ?? 1);
-        $maxLength = (int) ($parameters->attributes['searchable']['max_length'] ?? 255);
-        $length = strlen($term);
+        $minLength = (int) $parameters->attributes['searchable']['min_length'];
+        $maxLength = (int) $parameters->attributes['searchable']['max_length'];
+        $length = mb_strlen($term, 'UTF-8');
 
         if ($length < $minLength || $length > $maxLength) {
             throw new InvalidGridParameterException('Invalid request parameter: search term length is outside allowed bounds');
