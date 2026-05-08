@@ -7,8 +7,10 @@ AutoGrid is extendable at multiple levels, from template overrides to core servi
 <details>
 <summary><strong>Overriding Templates</strong></summary>
 
+AutoGrid templates can be overridden globally, per route, per entity, or per field. The complete template key list is in [Configuration](./global-configuration.md), and the template inventory is in [Templates](./templates.md).
+
 ### 1. Global Configuration
-Configure default themes in `f0ska_auto_grid.yaml`.
+Configure default templates in `f0ska_auto_grid.yaml`.
 
 ```yaml
 f0ska_auto_grid:
@@ -16,6 +18,8 @@ f0ska_auto_grid:
         theme: '@@F0skaAutoGrid/bootstrap_5'
         base: 'base.html.twig'
         form_themes: ['bootstrap_5_layout.html.twig']
+        grid:
+            search: 'grid/search.html.twig'
 ```
 
 ### 2. File-based Overrides
@@ -67,11 +71,54 @@ private ?string $avatarPath = null;
 2. Register as a service with the `autogrid.filter_condition` tag.
 3. Use in `#[Filterable(condition: MyCustomCondition::class)]`.
 
+If the condition should support `#[Filterable(additionalFields: [...])]`, also implement
+[`FilterExpressionConditionInterface`](../src/Condition/FilterExpressionConditionInterface.php). AutoGrid uses that
+interface to compose one expression per field and wrap them in a single `OR` group.
+
 ```yaml
 # config/services.yaml
 App\Filter\MyCustomCondition:
     tags: ['autogrid.filter_condition']
 ```
+</details>
+
+<details>
+<summary><strong>Custom Search Services</strong></summary>
+
+Use `SearchServiceInterface` when the default `LIKE` search is not enough.
+Inject `QueryFieldResolver` when the service still needs AutoGrid field resolution for root fields and joined fields.
+
+```php
+use Doctrine\ORM\QueryBuilder;
+use F0ska\AutoGridBundle\Model\Parameters;
+use F0ska\AutoGridBundle\Search\SearchServiceInterface;
+
+final class ArticleSearchService implements SearchServiceInterface
+{
+    public function apply(QueryBuilder $builder, string $term, array $fields, Parameters $parameters): void
+    {
+        $ids = $this->externalSearch->findArticleIds($term);
+
+        if ($ids === []) {
+            $builder->andWhere('1 = 0');
+            return;
+        }
+
+        $alias = $builder->getRootAliases()[0];
+        $builder->andWhere(sprintf('%s.id IN (:search_ids)', $alias));
+        $builder->setParameter('search_ids', $ids);
+    }
+}
+```
+
+```php
+use F0ska\AutoGridBundle\Attribute\Entity\Searchable;
+
+#[Searchable(fields: ['title', 'content'], service: ArticleSearchService::class)]
+class Article { ... }
+```
+
+Register the service with the `autogrid.search_service` tag. If service autoconfiguration is enabled, the tag is added automatically.
 </details>
 
 <details>
@@ -127,6 +174,45 @@ class UserGridSubscriber implements EventSubscriberInterface
     }
 }
 ```
+</details>
+
+<details>
+<summary><strong>Row Action Permission</strong></summary>
+
+Use `RowActionPermissionInterface` when an action depends on the current entity row.
+
+```php
+use F0ska\AutoGridBundle\RowActionPermission\RowActionPermissionInterface;
+use F0ska\AutoGridBundle\Model\Parameters;
+
+final class ArticleRowActionPermission implements RowActionPermissionInterface
+{
+    public function isGranted(string $action, object $entity, Parameters $parameters): bool
+    {
+        return $entity instanceof Article && !$entity->isLocked();
+    }
+}
+```
+
+```yaml
+# config/services.yaml
+App\AutoGrid\ArticleRowActionPermission:
+    tags: ['autogrid.row_action_permission']
+```
+
+If service autoconfiguration is enabled, the tag is added automatically for services that implement the interface.
+
+Built-in templates pass the entity to `agIsGranted` for view, edit, and delete buttons.
+Custom row templates can use `agIsRowActionGranted` for non-standard action codes:
+
+```twig
+{% if ag_run(agIsRowActionGranted, 'archive', entity) %}
+    <a href="{{ ag_run(agActionUrl, 'archive', {'id': entity.id}) }}">Archive</a>
+{% endif %}
+```
+
+Custom actions that operate on a single entity row should extend `AbstractEntityAction` to reuse the standard
+entity loading and row-aware permission validation.
 </details>
 
 <details>

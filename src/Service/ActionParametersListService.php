@@ -38,13 +38,20 @@ class ActionParametersListService
 
     public function getParameter(string $key): ActionParameterInterface
     {
-        return $this->actionParameters[$key] ?? throw new InvalidGridParameterException();
+        return $this->actionParameters[$key] ?? throw new InvalidGridParameterException(
+            sprintf('Invalid request parameter: unknown parameter "%s"', $key)
+        );
     }
 
     public function normalizeParameter(mixed $key, mixed $value, Parameters $parameters): mixed
     {
         if (!$this->hasParameter($key)) {
-            return throw new InvalidGridParameterException();
+            return throw new InvalidGridParameterException(
+                sprintf(
+                    'Invalid request parameter: unknown parameter "%s"',
+                    is_scalar($key) ? (string) $key : get_debug_type($key)
+                )
+            );
         }
         return $this->getParameter($key)->normalize($value, $parameters);
     }

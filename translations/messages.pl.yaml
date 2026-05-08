@@ -27,6 +27,8 @@ f0ska:
         range:
             from: "Od"
             to: "Do"
+        placeholder:
+            search: "Szukaj"
         rows: "Wiersze"
         total: "Łącznie"
         empty: "Pusto"

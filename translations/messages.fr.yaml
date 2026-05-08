@@ -27,6 +27,8 @@ f0ska:
         range:
             from: "De"
             to: "À"
+        placeholder:
+            search: "Rechercher"
         rows: "Lignes"
         total: "Total"
         empty: "Vide"

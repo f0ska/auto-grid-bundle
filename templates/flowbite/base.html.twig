@@ -15,6 +15,13 @@
         {% endif %}
     {% endblock %}
     {% block autogrid %}{% endblock %}
+    {% block autogrid_delete_form %}
+        {% if view.deleteActionFormView %}
+            {{ form_start(view.deleteActionFormView) }}
+                {{ form_widget(view.deleteActionFormView._token) }}
+            {{ form_end(view.deleteActionFormView, { render_rest: false }) }}
+        {% endif %}
+    {% endblock %}
     {% block autogrid_after %}
         {% set autogridAfterTemplate = attributes.template.after ?? null %}
         {% if autogridAfterTemplate is not empty %}

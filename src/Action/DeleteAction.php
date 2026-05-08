@@ -15,23 +15,40 @@ namespace F0ska\AutoGridBundle\Action;
 use Doctrine\ORM\EntityManagerInterface;
 use F0ska\AutoGridBundle\Builder\EntityBuilder;
 use F0ska\AutoGridBundle\Event\DeleteEvent;
+use F0ska\AutoGridBundle\Exception\InvalidGridParameterException;
 use F0ska\AutoGridBundle\Model\AutoGrid;
 use F0ska\AutoGridBundle\Model\Parameters;
+use F0ska\AutoGridBundle\Service\RowActionPermissionService;
+use F0ska\AutoGridBundle\Service\FormFacade;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-class DeleteAction extends AbstractAction
+class DeleteAction extends AbstractEntityAction
 {
     public function __construct(
-        private readonly EntityBuilder $entityBuilder,
+        EntityBuilder $entityBuilder,
+        RowActionPermissionService $rowActionPermissionService,
         private readonly EntityManagerInterface $entityManager,
-        private readonly EventDispatcherInterface $dispatcher
+        private readonly EventDispatcherInterface $dispatcher,
+        private readonly FormFacade $formFacade,
+        private readonly RequestStack $requestStack
     ) {
+        parent::__construct($entityBuilder, $rowActionPermissionService);
     }
 
     public function execute(AutoGrid $autoGrid, Parameters $parameters): void
     {
-        $entity = $this->entityBuilder->loadEntity($parameters);
+        $form = $this->formFacade->buildDeleteActionForm($parameters);
+        $form->handleRequest($this->requestStack->getCurrentRequest());
+
+        if (!$form->isSubmitted() || !$form->isValid()) {
+            throw new InvalidGridParameterException('Bad Request');
+        }
+
+        $parameters->request['id'] = (int) $form->get('id')->getData();
+        $entity = $this->loadEntityForAction($parameters);
+
         $event = new DeleteEvent($entity, $parameters);
         $this->dispatcher->dispatch($event, $event::EVENT_NAME);
         $this->dispatcher->dispatch($event, $event::EVENT_NAME . '.' . $autoGrid->getId());
@@ -42,6 +59,6 @@ class DeleteAction extends AbstractAction
 
     public function isIdRequired(): bool
     {
-        return true;
+        return false;
     }
 }

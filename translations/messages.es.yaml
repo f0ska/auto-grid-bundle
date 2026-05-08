@@ -27,6 +27,8 @@ f0ska:
         range:
             from: "Desde"
             to: "Hasta"
+        placeholder:
+            search: "Buscar"
         rows: "Filas"
         total: "Total"
         empty: "Vacío"

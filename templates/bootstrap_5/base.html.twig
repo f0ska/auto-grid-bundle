@@ -1,4 +1,4 @@
-<div id="{{ attributes.container_id }}" class="{{ attributes.container_class }} instance-{{ agId }} table-responsive">
+<div id="{{ attributes.container_id }}" class="{{ attributes.container_class }} instance-{{ agId }}">
     {% block autogrid_header %}
         {% if attributes.chrome.title and attributes.title is not empty %}
             <div class="mb-3 text-center h4 text-secondary">
@@ -13,6 +13,13 @@
         {% endif %}
     {% endblock %}
     {% block autogrid %}{% endblock %}
+    {% block autogrid_delete_form %}
+        {% if view.deleteActionFormView %}
+            {{ form_start(view.deleteActionFormView) }}
+                {{ form_widget(view.deleteActionFormView._token) }}
+            {{ form_end(view.deleteActionFormView, { render_rest: false }) }}
+        {% endif %}
+    {% endblock %}
     {% block autogrid_after %}
         {% set autogridAfterTemplate = attributes.template.after ?? null %}
         {% if autogridAfterTemplate is not empty %}

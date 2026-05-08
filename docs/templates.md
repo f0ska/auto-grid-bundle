@@ -40,6 +40,11 @@ Extend the default templates and override these blocks to customize your UI.
 | `autogrid_grid_body_empty` | Shown when no results are found. |
 | `autogrid_grid_row` | A single `<tr>` row. |
 
+### Grid Search
+| Template | Description |
+| :--- | :--- |
+| `grid/search.html.twig` | Renders the global search form when `#[Searchable]` is configured and the `search` action is granted. |
+
 ### Column Headers (`grid/column_header.html.twig`)
 | Block | Description |
 | :--- | :--- |
@@ -79,4 +84,4 @@ The rendered value inside each cell is prepared **lazily** using the `ag_prepare
 
 ---
 
-For instructions on how to apply these overrides, see [Customization](./customization.md).
+For template configuration keys, see [Configuration](./global-configuration.md). For override methods, see [Customization](./customization.md).

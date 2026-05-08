@@ -1,0 +1,20 @@
+{% if view.searchFormView and ag_run(agIsGranted, 'search') %}
+    {% if view.formThemes is not empty %}
+        {% form_theme view.searchFormView with view.formThemes %}
+    {% endif %}
+    <div class="mb-3">
+        {{ form_start(view.searchFormView) }}
+            <div class="input-group">
+                {{ form_widget(view.searchFormView.term, {'attr': {'placeholder': 'f0ska.autogrid.placeholder.search'|trans}}) }}
+                <button class="btn btn-outline-primary" type="submit">
+                    {{- 'f0ska.autogrid.button.submit'|trans -}}
+                </button>
+                <a class="btn btn-outline-secondary {% if request.search is not defined %}disabled{% endif %}"
+                   href="{{ ag_run(agActionUrl, 'grid', {'search': null, 'page': null}) }}"
+                >
+                    {{- 'f0ska.autogrid.button.reset'|trans -}}
+                </a>
+            </div>
+        {{ form_end(view.searchFormView) }}
+    </div>
+{% endif %}

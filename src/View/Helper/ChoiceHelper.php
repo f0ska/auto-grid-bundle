@@ -10,7 +10,7 @@
 
 declare(strict_types=1);
 
-namespace F0ska\AutoGridBundle\Service\Provider;
+namespace F0ska\AutoGridBundle\View\Helper;
 
 use F0ska\AutoGridBundle\Model\FieldParameter;
 use Symfony\Component\Form\ChoiceList\View\ChoiceView;
@@ -18,7 +18,7 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Contracts\Translation\TranslatableInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class ChoiceProvider
+class ChoiceHelper
 {
     public function __construct(
         private readonly TranslatorInterface $translator,

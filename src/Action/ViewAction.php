@@ -16,29 +16,26 @@ use F0ska\AutoGridBundle\Builder\EntityBuilder;
 use F0ska\AutoGridBundle\Event\EntityEvent;
 use F0ska\AutoGridBundle\Model\AutoGrid;
 use F0ska\AutoGridBundle\Model\Parameters;
+use F0ska\AutoGridBundle\Service\RowActionPermissionService;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-class ViewAction extends AbstractAction
+class ViewAction extends AbstractEntityAction
 {
     public function __construct(
-        private readonly EntityBuilder $entityBuilder,
+        EntityBuilder $entityBuilder,
+        RowActionPermissionService $rowActionPermissionService,
         private readonly EventDispatcherInterface $dispatcher
-    )
-    {
+    ) {
+        parent::__construct($entityBuilder, $rowActionPermissionService);
     }
 
     public function execute(AutoGrid $autoGrid, Parameters $parameters): void
     {
-        $entity = $this->entityBuilder->loadEntity($parameters);
+        $entity = $this->loadEntityForAction($parameters);
         $event = new EntityEvent($entity, $parameters);
         $this->dispatcher->dispatch($event, EntityEvent::VIEW_EVENT_NAME);
         $this->dispatcher->dispatch($event, EntityEvent::VIEW_EVENT_NAME . '.' . $autoGrid->getId());
         $autoGrid->setTemplate($parameters->getActionTemplate('view'));
         $autoGrid->setContext($parameters->render(['entity' => $entity]));
-    }
-
-    public function isIdRequired(): bool
-    {
-        return true;
     }
 }

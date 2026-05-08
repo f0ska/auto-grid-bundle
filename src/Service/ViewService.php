@@ -44,12 +44,15 @@ class ViewService
         $parameters->view->advancedFilterForm = $filterData['advancedFilterForm'];
         $parameters->view->advancedFilterFormView = $filterData['advancedFilterFormView'];
 
+        $this->buildSearchForm($parameters);
+
         $parameters->view->fieldset = $this->fieldsetService->build($parameters);
 
         $this->buildFormThemes($parameters);
         $this->paginationBuilder->build($parameters);
         $this->buildMassAction($parameters);
         $this->buildExportAction($parameters);
+        $this->buildDeleteAction($parameters);
     }
 
     private function addViewParameters(FormView $displayFormView, FieldParameter $field): void
@@ -87,6 +90,16 @@ class ViewService
         }
     }
 
+    private function buildSearchForm(Parameters $parameters): void
+    {
+        if (empty($parameters->attributes['searchable']['fields']) || empty($parameters->permissions['search'])) {
+            return;
+        }
+
+        $parameters->view->searchForm = $this->formFacade->buildSearchForm($parameters);
+        $parameters->view->searchFormView = $parameters->view->searchForm->createView();
+    }
+
     private function buildExportAction(Parameters $parameters): void
     {
         if (empty($parameters->permissions['export'])) {
@@ -100,5 +113,17 @@ class ViewService
                 ->createView()
             ;
         }
+    }
+
+    private function buildDeleteAction(Parameters $parameters): void
+    {
+        if (empty($parameters->permissions['delete'])) {
+            return;
+        }
+
+        $parameters->view->deleteActionFormView = $this->formFacade
+            ->buildDeleteActionForm($parameters)
+            ->createView()
+        ;
     }
 }

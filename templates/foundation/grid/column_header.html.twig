@@ -18,7 +18,7 @@
 
                 <span style="display: inline-flex; align-items: center; flex-shrink: 0;">
                     {% block autogrid_grid_column_header_filter %}
-                        {% if (field.canFilter and ag_run(agIsAllowed, 'filter')) %}
+                        {% if (field.canFilter and ag_run(agIsGranted, 'filter')) %}
                             {{ include(attributes.template.grid.column_header_filter|default(ag_template('grid.column_header_filter'))) }}
                         {% endif %}
                     {% endblock %}

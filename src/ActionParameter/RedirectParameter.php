@@ -28,6 +28,6 @@ class RedirectParameter implements ActionParameterInterface
         if (is_string($value) && !empty($value)) {
             return $value;
         }
-        throw new InvalidGridParameterException();
+        throw new InvalidGridParameterException('Invalid request parameter: redirect must be a non-empty string');
     }
 }

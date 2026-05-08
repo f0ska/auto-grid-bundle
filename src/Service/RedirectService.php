@@ -32,7 +32,7 @@ class RedirectService
         ];
 
         foreach ($actions as $action) {
-            if (!empty($action) && $parameters->isAllowed($action)) {
+            if (!empty($action) && $parameters->isGranted($action)) {
                 return new RedirectResponse($parameters->actionUrl($action, ['id' => $entityId]));
             }
         }

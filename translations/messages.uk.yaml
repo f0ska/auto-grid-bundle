@@ -27,6 +27,8 @@ f0ska:
         range:
             from: "Від"
             to: "До"
+        placeholder:
+            search: "Пошук"
         rows: "Рядки"
         total: "Усього"
         empty: "Порожньо"

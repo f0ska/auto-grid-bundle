@@ -42,6 +42,10 @@ class ViewParameter
 
     public ?FormView $advancedFilterFormView = null;
 
+    public ?FormInterface $searchForm = null;
+
+    public ?FormView $searchFormView = null;
+
     public ?FormView $massActionFormView = null;
 
     /**
@@ -50,6 +54,8 @@ class ViewParameter
     public array $massActionChoices = [];
 
     public ?FormView $exportActionFormView = null;
+
+    public ?FormView $deleteActionFormView = null;
 
     /**
      * @var array<string, string>

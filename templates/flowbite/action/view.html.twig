@@ -5,11 +5,11 @@
         {% block autogrid_view_header %}
             {% if attributes.chrome.view_header %}
             {% set btnClass = 'inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium leading-5 text-gray-700 shadow-xs transition hover:bg-gray-100 hover:text-gray-900 focus:outline-none' %}
-            {% set btnDelClass = 'inline-flex items-center gap-2 rounded-lg bg-red-700 px-3 py-2 text-sm font-medium leading-5 text-white shadow-xs transition hover:bg-red-800 focus:outline-none' %}
+            {% set btnDelClass = 'inline-flex cursor-pointer items-center gap-2 rounded-lg bg-red-700 px-3 py-2 text-sm font-medium leading-5 text-white shadow-xs transition hover:bg-red-800 focus:outline-none' %}
             <div class="{{ attributes.html_class.thead|default('flex flex-wrap items-center gap-3 border-b border-gray-200 bg-gray-50 px-4 py-4 sm:px-6') }}">
                 <div class="flex flex-1 flex-wrap items-center gap-2">
                     {% block autogrid_view_header_back_button %}
-                        {% if ag_run(agIsAllowed, 'grid') %}
+                        {% if ag_run(agIsGranted, 'grid') %}
                             <a class="{{ btnClass }}" href="{{ ag_run(agActionUrl, 'grid') }}">
                                 {{ ag_icons.arrow_left() }}<span>{{ 'f0ska.autogrid.button.back'|trans }}</span>
                             </a>
@@ -26,20 +26,23 @@
                 </div>
                 <div class="flex flex-1 flex-wrap items-center justify-end gap-2">
                     {% block autogrid_view_header_edit_button %}
-                        {% if ag_run(agIsAllowed, 'edit') and attributes.button.edit.display_in_view %}
+                        {% if ag_run(agIsGranted, 'edit', entity) and attributes.button.edit.display_in_view %}
                             <a class="{{ btnClass }}" href="{{ ag_run(agActionUrl, 'edit') }}">
                                 {{ ag_icons.edit() }}<span>{{ 'f0ska.autogrid.button.modify'|trans }}</span>
                             </a>
                         {% endif %}
                     {% endblock %}
                     {% block autogrid_view_header_delete_button %}
-                        {% if ag_run(agIsAllowed, 'delete') and attributes.button.delete.display_in_grid %}
-                            <a class="{{ btnDelClass }}"
-                               href="{{ ag_run(agActionUrl, 'delete', {'id': entity.id}) }}"
+                        {% if ag_run(agIsGranted, 'delete', entity) and attributes.button.delete.display_in_grid and view.deleteActionFormView %}
+                            <button class="{{ btnDelClass }}"
+                               type="submit"
+                               form="{{ view.deleteActionFormView.vars.attr.id }}"
+                               name="{{ view.deleteActionFormView.id.vars.full_name }}"
+                               value="{{ entity.id }}"
                                onclick="return confirm('{{ 'f0ska.autogrid.dialog.delete_confirm'|trans }}');"
                             >
                                 {{ ag_icons.delete() }}<span>{{ 'f0ska.autogrid.button.delete'|trans }}</span>
-                            </a>
+                            </button>
                         {% endif %}
                     {% endblock %}
                 </div>

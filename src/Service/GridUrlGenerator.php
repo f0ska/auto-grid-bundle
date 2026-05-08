@@ -34,6 +34,10 @@ class GridUrlGenerator
             if (!$this->actionParametersList->hasParameter($key)) {
                 continue;
             }
+            if ($value === null) {
+                $request[$key] = null;
+                continue;
+            }
             $value = $this->actionParametersList->normalizeParameter($key, $value, $parameters);
             if (is_array($value) && !empty($request[$key]) && is_array($request[$key])) {
                 $request[$key] = array_filter(array_merge($request[$key], $value), $callback);

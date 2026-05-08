@@ -41,10 +41,10 @@ class PermissionService
             $gridSpecificAction = $this->metaDataService->getEntityAttribute($agId, "permission.grid.$agId.action.$key");
 
             // Resolve global first
-            $resolvedGlobal = $this->isAllowed($gridSpecificGlobal, $this->isAllowed($genericGlobal, $defaultAllowed));
+            $resolvedGlobal = $this->isGranted($gridSpecificGlobal, $this->isGranted($genericGlobal, $defaultAllowed));
 
             // Resolve action with global as default
-            $rules[$key] = $this->isAllowed($gridSpecificAction, $this->isAllowed($genericAction, $resolvedGlobal));
+            $rules[$key] = $this->isGranted($gridSpecificAction, $this->isGranted($genericAction, $resolvedGlobal));
         }
         return $rules;
     }
@@ -67,22 +67,22 @@ class PermissionService
             $gridSpecificAction = $this->metaDataService->getEntityFieldAttribute($agId, $field, "permission.grid.$gridId.action.$key");
 
             // Resolve global first
-            $resolvedGlobal = $this->isAllowed($gridSpecificGlobal, $this->isAllowed($genericGlobal, $defaultAllowed));
+            $resolvedGlobal = $this->isGranted($gridSpecificGlobal, $this->isGranted($genericGlobal, $defaultAllowed));
 
             // Resolve action with global as default
-            $rules[$key] = $this->isAllowed($gridSpecificAction, $this->isAllowed($genericAction, $resolvedGlobal));
+            $rules[$key] = $this->isGranted($gridSpecificAction, $this->isGranted($genericAction, $resolvedGlobal));
         }
         return $rules;
     }
 
     /**
-     * Determines if a permission is granted based on a Permission object and a default value.
+     * Determines if a permission grants access based on a Permission object and a default value.
      *
      * @param Permission|null $permission The permission object to check.
      * @param bool $default The default value to return if no specific permission is defined.
      * @return bool
      */
-    private function isAllowed(?Permission $permission, bool $default): bool
+    private function isGranted(?Permission $permission, bool $default): bool
     {
         // If no specific permission attribute is set, fall back to the default.
         if ($permission === null) {

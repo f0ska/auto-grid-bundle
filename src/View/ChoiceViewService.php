@@ -13,25 +13,25 @@ declare(strict_types=1);
 namespace F0ska\AutoGridBundle\View;
 
 use F0ska\AutoGridBundle\Model\FieldParameter;
-use F0ska\AutoGridBundle\Service\Provider\ChoiceProvider;
-use F0ska\AutoGridBundle\Service\Provider\FieldValueProvider;
+use F0ska\AutoGridBundle\View\Helper\ChoiceHelper;
+use F0ska\AutoGridBundle\View\Helper\FieldValueHelper;
 
 class ChoiceViewService implements ViewServiceInterface
 {
     public function __construct(
-        private readonly FieldValueProvider $fieldValueProvider,
-        private readonly ChoiceProvider $choiceProvider
+        private readonly FieldValueHelper $fieldValueHelper,
+        private readonly ChoiceHelper $choiceHelper
     ) {
     }
 
     public function prepare(object $entity, FieldParameter $field): array
     {
-        $value = $this->fieldValueProvider->getValue($entity, $field);
+        $value = $this->fieldValueHelper->getValue($entity, $field);
 
         return [
             'value'  => $value,
-            'labels' => $this->choiceProvider->getLabels($value, $field),
-            'values' => $this->choiceProvider->getValues($value, $field),
+            'labels' => $this->choiceHelper->getLabels($value, $field),
+            'values' => $this->choiceHelper->getValues($value, $field),
         ];
     }
 }

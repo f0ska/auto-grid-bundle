@@ -16,23 +16,26 @@ use F0ska\AutoGridBundle\Builder\EntityBuilder;
 use F0ska\AutoGridBundle\Event\EntityEvent;
 use F0ska\AutoGridBundle\Model\AutoGrid;
 use F0ska\AutoGridBundle\Model\Parameters;
+use F0ska\AutoGridBundle\Service\RowActionPermissionService;
 use F0ska\AutoGridBundle\Service\FormProcessorService;
 use F0ska\AutoGridBundle\Service\RedirectService;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-class EditAction extends AbstractAction
+class EditAction extends AbstractEntityAction
 {
     public function __construct(
-        protected readonly EntityBuilder $entityBuilder,
+        EntityBuilder $entityBuilder,
+        RowActionPermissionService $rowActionPermissionService,
         private readonly FormProcessorService $formProcessor,
         private readonly RedirectService $redirectService,
         private readonly EventDispatcherInterface $dispatcher
     ) {
+        parent::__construct($entityBuilder, $rowActionPermissionService);
     }
 
     public function execute(AutoGrid $autoGrid, Parameters $parameters): void
     {
-        $entity = $this->entityBuilder->loadEntity($parameters);
+        $entity = $this->loadEntityForAction($parameters);
         $event = new EntityEvent($entity, $parameters);
         $this->dispatcher->dispatch($event, EntityEvent::EDIT_EVENT_NAME);
         $this->dispatcher->dispatch($event, EntityEvent::EDIT_EVENT_NAME . '.' . $autoGrid->getId());
@@ -53,10 +56,5 @@ class EditAction extends AbstractAction
         $autoGrid->setContext(
             $parameters->render(['entity' => $result->getEntity(), 'form' => $result->getForm()->createView()])
         );
-    }
-
-    public function isIdRequired(): bool
-    {
-        return true;
     }
 }

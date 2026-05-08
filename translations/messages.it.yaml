@@ -27,6 +27,8 @@ f0ska:
         range:
             from: "Da"
             to: "A"
+        placeholder:
+            search: "Cerca"
         rows: "Righe"
         total: "Totale"
         empty: "Vuoto"

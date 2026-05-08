@@ -10,7 +10,7 @@
 
 declare(strict_types=1);
 
-namespace F0ska\AutoGridBundle\Service\Provider;
+namespace F0ska\AutoGridBundle\View\Helper;
 
 use Doctrine\Common\Collections\Collection;
 use F0ska\AutoGridBundle\Exception\RenderException;
@@ -18,7 +18,7 @@ use F0ska\AutoGridBundle\Model\FieldParameter;
 use Symfony\Component\PropertyAccess\Exception\ExceptionInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
-class FieldValueProvider
+class FieldValueHelper
 {
     public function __construct(private readonly PropertyAccessorInterface $propertyAccessor)
     {

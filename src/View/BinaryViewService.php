@@ -13,24 +13,24 @@ declare(strict_types=1);
 namespace F0ska\AutoGridBundle\View;
 
 use F0ska\AutoGridBundle\Model\FieldParameter;
-use F0ska\AutoGridBundle\Service\Provider\BinarySizeProvider;
-use F0ska\AutoGridBundle\Service\Provider\FieldValueProvider;
+use F0ska\AutoGridBundle\View\Helper\BinarySizeHelper;
+use F0ska\AutoGridBundle\View\Helper\FieldValueHelper;
 
 class BinaryViewService implements ViewServiceInterface
 {
     public function __construct(
-        private readonly FieldValueProvider $fieldValueProvider,
-        private readonly BinarySizeProvider $binarySizeProvider
+        private readonly FieldValueHelper $fieldValueHelper,
+        private readonly BinarySizeHelper $binarySizeHelper
     ) {
     }
 
     public function prepare(object $entity, FieldParameter $field): array
     {
-        $value = $this->fieldValueProvider->getValue($entity, $field);
+        $value = $this->fieldValueHelper->getValue($entity, $field);
 
         return [
             'value' => $value,
-            'size'  => $this->binarySizeProvider->getFormattedSize($value),
+            'size'  => $this->binarySizeHelper->getFormattedSize($value),
         ];
     }
 }

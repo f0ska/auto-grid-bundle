@@ -10,9 +10,9 @@
 
 declare(strict_types=1);
 
-namespace F0ska\AutoGridBundle\Service\Provider;
+namespace F0ska\AutoGridBundle\View\Helper;
 
-class BinarySizeProvider
+class BinarySizeHelper
 {
     public function getFormattedSize(mixed $binaryString): string
     {

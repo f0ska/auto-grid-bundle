@@ -26,17 +26,17 @@ class OrderParameter implements ActionParameterInterface
     {
         $result = [];
         if (!is_array($value) || empty($value)) {
-            throw new InvalidGridParameterException();
+            throw new InvalidGridParameterException('Invalid request parameter: order must be a non-empty array');
         }
         foreach ($value as $field => $direction) {
             if (!is_string($field)) {
-                throw new InvalidGridParameterException();
+                throw new InvalidGridParameterException('Invalid request parameter: order field must be a string');
             }
             if (!in_array($direction, ['asc', 'desc', null], true)) {
-                throw new InvalidGridParameterException();
+                throw new InvalidGridParameterException(sprintf('Invalid request parameter: invalid order direction for "%s"', $field));
             }
             if (!isset($parameters->fields[$field])) {
-                throw new InvalidGridParameterException();
+                throw new InvalidGridParameterException(sprintf('Invalid request parameter: unknown order field "%s"', $field));
             }
             $result[$field] = $direction;
         }

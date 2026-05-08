@@ -1,5 +1,5 @@
 {% import attributes.template.icons|default(ag_template('icons')) as ag_icons %}
-{% if view.advancedFilterFormView and ag_run(agIsAllowed, 'advanced_filter') %}
+{% if view.advancedFilterFormView and ag_run(agIsGranted, 'advanced_filter') %}
     {% block autogrid_grid_advanced_filter_modal %}
         <div class="modal fade"
              id="adv{{ agId }}"

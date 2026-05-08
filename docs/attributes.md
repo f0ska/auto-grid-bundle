@@ -9,6 +9,29 @@ Attributes configure AutoGrid at the class and property levels.
 ## Class Level Attributes
 
 <details>
+<summary><strong>RowActionPermission</strong></summary>
+
+Adds row-specific permission rules for action buttons and direct action execution.
+
+```php
+use F0ska\AutoGridBundle\Attribute\Entity\RowActionPermission;
+
+#[RowActionPermission(service: ArticleRowActionPermission::class, actions: ['edit', 'delete'])]
+#[RowActionPermission(
+    service: ArchivedArticleRowActionPermission::class,
+    actions: ['delete'],
+    effect: RowActionPermission::Deny,
+)]
+class Article { ... }
+```
+
+The service must implement `RowActionPermissionInterface`.
+
+With the default `Allow` effect, returning `false` hides and blocks the action.
+With the `Deny` effect, returning `true` hides and blocks the action.
+</details>
+
+<details>
 <summary><strong>ActionButtonDisplay</strong></summary>
 
 Configures action button visibility.
@@ -145,6 +168,36 @@ class User { ... }
 </details>
 
 <details>
+<summary><strong>Searchable</strong></summary>
+
+Enables global search for the grid.
+
+```php
+use F0ska\AutoGridBundle\Attribute\Entity\Searchable;
+
+#[Searchable(fields: ['title', 'content', 'author.email'])]
+class Article { ... }
+```
+
+AutoGrid searches the configured fields with `LIKE` by default and combines them with `OR`.
+Search state is stored in `agParams[search][term]`.
+
+Use a custom service when search should use external indexes or domain rules:
+
+```php
+#[Searchable(
+    fields: ['title', 'content'],
+    service: ArticleSearchService::class,
+    minLength: 2,
+    maxLength: 255,
+)]
+class Article { ... }
+```
+
+The service must implement `SearchServiceInterface`.
+</details>
+
+<details>
 <summary><strong>Template</strong></summary>
 
 Overrides specific template areas (see `TemplateArea.php`). `Template` is a repeatable attribute, so add it multiple
@@ -274,11 +327,20 @@ Enables grid searching/filtering.
   - [`StartsWithCondition`](../src/Condition/StartsWithCondition.php): SQL `LIKE value%`.
 - `formType`: Override the guessed filter form type.
 - `formOptions`: Override the guessed filter form options.
+- `additionalFields`: Apply the same filter value and condition to extra mapped fields without rendering extra inputs.
 
 ```php
 #[Filterable(condition: ContainsCondition::class)]
 private ?string $description = null;
 ```
+
+```php
+#[Filterable(condition: ContainsCondition::class, additionalFields: ['normalizedName', 'legacyName'])]
+private ?string $name = null;
+```
+
+Additional fields are combined with the visible field using `OR`, and the whole group is combined with other filters
+using `AND`.
 </details>
 
 <details>

@@ -27,6 +27,8 @@ f0ska:
         range:
             from: "De"
             to: "Até"
+        placeholder:
+            search: "Pesquisar"
         rows: "Linhas"
         total: "Total"
         empty: "Vazio"

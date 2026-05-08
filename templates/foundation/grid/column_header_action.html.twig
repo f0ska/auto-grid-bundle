@@ -1,18 +1,18 @@
 {% import attributes.template.icons|default(ag_template('icons')) as ag_icons %}
-{% if (ag_run(agIsAnyAllowed)) or attributes.has_custom_action is defined %}
+{% if (ag_run(agIsAnyGranted)) or attributes.has_custom_action is defined %}
     {% set btnClass = attributes.html_class.thead_btn|default('button small secondary') %}
     {% set btnClassActive = attributes.html_class.thead_btn_active|default('button small primary') %}
     <th class="{{ attributes.html_class.action_column_header|default('text-right') }}" style="white-space: nowrap; position: relative;">
         <div style="display: inline-flex; gap: 0; float: right;">
             {% block autogrid_grid_header_action_clear_filter %}
-                {% if request.filter is defined and ag_run(agIsAllowed, 'filter') %}
+                {% if request.filter is defined and ag_run(agIsGranted, 'filter') %}
                     <a class="button small alert" href="{{ ag_run(agActionUrl, 'grid', {'filter': null}) }}" style="margin-bottom: 0;" title="{{ 'f0ska.autogrid.button.filter_reset'|trans }}" aria-label="{{ 'f0ska.autogrid.button.filter_reset'|trans }}">
                         {{ ag_icons.filter_reset() }}
                     </a>
                 {% endif %}
             {% endblock %}
             {% block autogrid_grid_header_action_advanced_filter %}
-                {% if view.advancedFilterFormView and ag_run(agIsAllowed, 'advanced_filter') %}
+                {% if view.advancedFilterFormView and ag_run(agIsGranted, 'advanced_filter') %}
                     <button class="button small {{ request.filter is defined ? 'primary' : 'secondary' }}"
                             style="margin-bottom: 0;"
                             onclick="var d=document.getElementById('adv{{ agId }}');d.style.display=d.style.display=='none'?'block':'none';"
@@ -53,7 +53,7 @@
             {% endblock %}
 
             {% block autogrid_grid_header_action_create %}
-                {% if attributes.chrome.grid_create and ag_run(agIsAllowed, 'create') %}
+                {% if attributes.chrome.grid_create and ag_run(agIsGranted, 'create') %}
                     <a class="button small success" href="{{ ag_run(agActionUrl, 'create') }}" style="margin-bottom: 0;" title="{{ 'f0ska.autogrid.button.create'|trans }}" aria-label="{{ 'f0ska.autogrid.button.create'|trans }}">
                         {{ ag_icons.add() }}
                     </a>

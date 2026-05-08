@@ -25,13 +25,14 @@ class ParametersService
         private readonly ConfigurationService $configuration,
         private readonly GridUrlGenerator $urlGenerator,
         private readonly EntityAttributesBuilder $entityAttributesBuilder,
-        private readonly FieldBuilder $fieldBuilder
+        private readonly FieldBuilder $fieldBuilder,
+        private readonly RowActionPermissionService $rowActionPermissionService
     ) {
     }
 
     public function createParametersModel(array $initialParameters): Parameters
     {
-        $parameters = new Parameters($initialParameters, $this);
+        $parameters = new Parameters($initialParameters, $this, $this->rowActionPermissionService);
         $this->buildAttributes($parameters);
         return $parameters;
     }

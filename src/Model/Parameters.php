@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace F0ska\AutoGridBundle\Model;
 
+use F0ska\AutoGridBundle\Service\RowActionPermissionService;
 use F0ska\AutoGridBundle\Service\ParametersService;
 use F0ska\AutoGridBundle\ValueObject\AutoGridMode;
 use InvalidArgumentException;
@@ -19,6 +20,7 @@ use InvalidArgumentException;
 class Parameters
 {
     private ParametersService $parametersService;
+    private RowActionPermissionService $rowActionPermissionService;
 
     public string $action = '';
     public array $route;
@@ -34,8 +36,11 @@ class Parameters
     public array $customization = [];
     public AutoGridMode $mode = AutoGridMode::Default;
 
-    public function __construct(array $initial, ParametersService $parametersService)
-    {
+    public function __construct(
+        array $initial,
+        ParametersService $parametersService,
+        RowActionPermissionService $rowActionPermissionService
+    ) {
         foreach ($initial as $key => $value) {
             if (!property_exists($this, $key)) {
                 throw new InvalidArgumentException(
@@ -46,19 +51,33 @@ class Parameters
         }
         $this->view = new ViewParameter();
         $this->parametersService = $parametersService;
+        $this->rowActionPermissionService = $rowActionPermissionService;
     }
 
-    public function isAllowed(string $action): bool
+    public function isGranted(string $action, ?object $entity = null): bool
     {
-        return !empty($this->permissions[$action]);
+        if (empty($this->permissions[$action])) {
+            return false;
+        }
+
+        return $entity === null || $this->rowActionPermissionService->isGranted($action, $entity, $this);
     }
 
-    public function isAnyAllowed(): bool
+    public function isRowActionGranted(string $action, ?object $entity = null): bool
+    {
+        if (array_key_exists($action, $this->permissions) && empty($this->permissions[$action])) {
+            return false;
+        }
+
+        return $entity === null || $this->rowActionPermissionService->isGranted($action, $entity, $this);
+    }
+
+    public function isAnyGranted(): bool
     {
         return !empty(array_filter($this->permissions));
     }
 
-    public function isFieldAllowed(FieldParameter $field, string $action): bool
+    public function isFieldGranted(FieldParameter $field, string $action): bool
     {
         return !empty($field->permissions[$action]);
     }
@@ -100,8 +119,12 @@ class Parameters
         $parameters['message'] = $parameters['message'] ?? $this->message;
         $parameters['customization'] = $this->customization;
 
-        $parameters['agIsAllowed'] = fn(string $action) => $this->isAllowed($action);
-        $parameters['agIsAnyAllowed'] = fn() => $this->isAnyAllowed();
+        $parameters['agIsGranted'] = fn(string $action, ?object $entity = null) => $this->isGranted($action, $entity);
+        $parameters['agIsRowActionGranted'] = fn(string $action, ?object $entity = null) => $this->isRowActionGranted(
+            $action,
+            $entity
+        );
+        $parameters['agIsAnyGranted'] = fn() => $this->isAnyGranted();
         $parameters['agActionUrl'] = fn(string $action, array $params = []) => $this->actionUrl($action, $params);
 
         return $parameters;

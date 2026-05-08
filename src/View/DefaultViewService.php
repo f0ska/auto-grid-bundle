@@ -13,18 +13,18 @@ declare(strict_types=1);
 namespace F0ska\AutoGridBundle\View;
 
 use F0ska\AutoGridBundle\Model\FieldParameter;
-use F0ska\AutoGridBundle\Service\Provider\FieldValueProvider;
+use F0ska\AutoGridBundle\View\Helper\FieldValueHelper;
 
 class DefaultViewService implements ViewServiceInterface
 {
-    public function __construct(private readonly FieldValueProvider $fieldValueProvider)
+    public function __construct(private readonly FieldValueHelper $fieldValueHelper)
     {
     }
 
     public function prepare(object $entity, FieldParameter $field): array
     {
         return [
-            'value' => $this->fieldValueProvider->getValue($entity, $field),
+            'value' => $this->fieldValueHelper->getValue($entity, $field),
         ];
     }
 }

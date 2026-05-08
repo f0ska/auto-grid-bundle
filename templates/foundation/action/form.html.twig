@@ -11,14 +11,14 @@
                         <td style="width: 33.333%; text-align: left; vertical-align: middle;">
                             <div class="button-group small" style="margin-bottom: 0;">
                         {% block autogrid_form_header_back_button %}
-                            {% if ag_run(agIsAllowed, 'grid') %}
+                            {% if ag_run(agIsGranted, 'grid') %}
                                 <a class="{{ btnClass }}" href="{{ ag_run(agActionUrl, 'grid') }}">
                                     {{ ag_icons.arrow_left() }}&nbsp;{{ 'f0ska.autogrid.button.back'|trans }}
                                 </a>
                             {% endif %}
                         {% endblock %}
                         {% block autogrid_form_header_view_button %}
-                            {% if action is not same as 'create' and ag_run(agIsAllowed, 'view') and attributes.button.view.display_in_edit %}
+                            {% if action is not same as 'create' and ag_run(agIsGranted, 'view', entity) and attributes.button.view.display_in_edit %}
                                 <a class="{{ btnClass }}"
                                    href="{{ ag_run(agActionUrl, 'view', {'id': entity.id}) }}"
                                 >
@@ -47,13 +47,16 @@
                             </button>
                         {% endblock %}
                         {% block autogrid_form_header_delete_button %}
-                            {% if action is not same as 'create' and ag_run(agIsAllowed, 'delete') and attributes.button.delete.display_in_edit %}
-                                <a class="button alert"
-                                   href="{{ ag_run(agActionUrl, 'delete', {'id': entity.id}) }}"
+                            {% if action is not same as 'create' and ag_run(agIsGranted, 'delete', entity) and attributes.button.delete.display_in_edit and view.deleteActionFormView %}
+                                <button class="button alert"
+                                   type="submit"
+                                   form="{{ view.deleteActionFormView.vars.attr.id }}"
+                                   name="{{ view.deleteActionFormView.id.vars.full_name }}"
+                                   value="{{ entity.id }}"
                                    onclick="return confirm('{{ 'f0ska.autogrid.dialog.delete_confirm'|trans }}');"
                                 >
                                     {{ ag_icons.delete() }}&nbsp;{{ 'f0ska.autogrid.button.delete'|trans }}
-                                </a>
+                                </button>
                             {% endif %}
                         {% endblock %}
                             </div>
