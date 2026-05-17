@@ -4,7 +4,7 @@
     {{ include(attributes.template.grid.advanced_filter|default(ag_template('grid.advanced_filter'))) }}
     {{ include(attributes.template.grid.search|default(ag_template('grid.search'))) }}
     {% set columnsCount = (fields|length) + (ag_run(agIsAnyGranted) ? 1 : 0) + (view.massActionFormView ? 1 : 0) %}
-    <table class="table is-fullwidth {{ attributes.html_class.table|default('is-hoverable') }}">
+    <table class="table is-fullwidth is-hoverable is-striped {{ attributes.html_class.table|default('') }}">
         {{ include(attributes.template.grid.colgroup|default(ag_template('grid.colgroup'))) }}
 
         {% block autogrid_grid_header %}

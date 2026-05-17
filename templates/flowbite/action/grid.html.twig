@@ -34,7 +34,7 @@
             {% endif %}
             {% for entity in rows %}
                 {% block autogrid_grid_row %}
-                    <tr class="{{ include(attributes.template.grid.row_class|default(ag_template('grid.row_class'))) }} hover:bg-gray-50">
+                    <tr class="{{ include(attributes.template.grid.row_class|default(ag_template('grid.row_class'))) }} odd:bg-white even:bg-gray-50 hover:bg-gray-100">
                         {{ include(attributes.template.grid.column_value_massaction|default(ag_template('grid.column_value_massaction'))) }}
                         {% for field in fields %}
                             {{ include(attributes.template.grid.column_value|default(ag_template('grid.column_value'))) }}

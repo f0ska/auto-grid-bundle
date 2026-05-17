@@ -123,7 +123,7 @@ class User { ... }
 <details>
 <summary><strong>HtmlClass</strong></summary>
 
-Sets CSS classes for the grid table and specific columns.
+Adds CSS classes for the grid table and specific columns. Theme-level grid affordances such as hover and striped rows remain fixed in the bundled grid templates.
 
 ```php
 #[Attribute\Entity\HtmlClass(
