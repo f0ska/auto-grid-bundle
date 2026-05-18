@@ -6,11 +6,9 @@
     {% if advancedFilterDisplay == 'inline' %}
         {% block autogrid_grid_advanced_filter_inline %}
             <details class="card mb-3" {% if advancedFilterOpen %}open{% endif %}>
-                <summary class="card-header d-flex align-items-center gap-2 fw-semibold" style="cursor: pointer;">
-                    {{ ag_icons.search() }}
-                    {% if attributes.title is not empty %}
-                        {{ attributes.title|trans }}
-                    {% endif %}
+                <summary class="card-header border-bottom-0 d-flex align-items-center gap-2 small text-muted fw-normal" style="cursor: pointer;">
+                    {{ ag_icons.filter() }}
+                    {{ 'f0ska.autogrid.button.filter'|trans }}
                 </summary>
                 <div class="card-body">
                     <div class="container-fluid px-0">
@@ -61,10 +59,8 @@
                             {% block autogrid_grid_advanced_filter_header %}
                                 <div class="modal-header">
                                     <h1 class="modal-title fs-5" id="adv{{ agId }}Label">
-                                        {{ ag_icons.search() }}
-                                        {% if attributes.title is not empty %}
-                                            {{ attributes.title|trans }}
-                                        {% endif %}
+                                        {{ ag_icons.filter() }}
+                                        {{ 'f0ska.autogrid.button.filter'|trans }}
                                     </h1>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>

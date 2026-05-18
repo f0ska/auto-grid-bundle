@@ -6,11 +6,9 @@
     {% if advancedFilterDisplay == 'inline' %}
         {% block autogrid_grid_advanced_filter_inline %}
             <details class="mb-4 rounded-xl border border-gray-200 bg-white shadow-sm" {% if advancedFilterOpen %}open{% endif %}>
-                <summary class="flex cursor-pointer items-center gap-2 rounded-t-xl bg-gray-50 px-4 py-3 text-sm font-semibold text-gray-900">
-                    {{ ag_icons.search() }}
-                    {% if attributes.title is not empty %}
-                        {{ attributes.title|trans }}
-                    {% endif %}
+                <summary class="flex cursor-pointer items-center gap-2 rounded-t-xl bg-gray-50 px-4 py-3 text-sm font-normal text-gray-500">
+                    {{ ag_icons.filter() }}
+                    {{ 'f0ska.autogrid.button.filter'|trans }}
                 </summary>
                 <div class="p-6">
                     {% if view.formThemes is not empty %}
@@ -52,10 +50,8 @@
                             <div class="flex justify-between items-start p-4 rounded-t border-b">
                                 {% block autogrid_grid_advanced_filter_header %}
                                     <h3 class="text-xl font-semibold text-gray-900">
-                                        {{ ag_icons.search() }}
-                                        {% if attributes.title is not empty %}
-                                            {{ attributes.title|trans }}
-                                        {% endif %}
+                                        {{ ag_icons.filter() }}
+                                        {{ 'f0ska.autogrid.button.filter'|trans }}
                                     </h3>
                                     <button type="button" onclick="document.getElementById('adv{{ agId }}').style.display='none';" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center">
                                         ✕

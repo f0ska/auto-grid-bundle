@@ -17,9 +17,9 @@
                     <a class="button {{ btnClass }} {{ request.filter is defined ? btnClassActive }}"
                        data-target="adv{{ agId }}"
                        onclick="document.getElementById('adv{{ agId }}').classList.add('is-active');"
-                       title="{{ 'f0ska.autogrid.button.search'|trans }}"
-                       aria-label="{{ 'f0ska.autogrid.button.search'|trans }}"
-                    >{{ ag_icons.search() }}</a>
+                       title="{{ 'f0ska.autogrid.button.filter'|trans }}"
+                       aria-label="{{ 'f0ska.autogrid.button.filter'|trans }}"
+                    >{{ request.filter is defined ? ag_icons.filter_active() : ag_icons.filter() }}</a>
                 {% endif %}
             {% endblock %}
 

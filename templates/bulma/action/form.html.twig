@@ -83,15 +83,5 @@
                 {% endblock %}
             </div>
         {% endblock %}
-
-        {% block autogrid_form_footer %}
-            {% if attributes.chrome.scroll_top %}
-            <div class="{{ attributes.html_class.tfoot|default('is-flex is-justify-content-flex-end') }}">
-                <a class="{{ attributes.html_class.tfoot_btn|default('button is-small') }}"
-                   href="#{{ attributes.container_id }}"
-                >{{ ag_icons.arrow_up() }}</a>
-            </div>
-            {% endif %}
-        {% endblock %}
     </div>
 {% endblock %}

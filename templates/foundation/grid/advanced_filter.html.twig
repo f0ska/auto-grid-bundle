@@ -4,40 +4,34 @@
 {% set advancedFilterCollapsed = attributes.advanced_filter|default(false) is iterable ? attributes.advanced_filter|default({}).collapsed|default(true) : true %}
 {% set advancedFilterOpen = request.filter is defined or not advancedFilterCollapsed %}
 {% if advancedFilterDisplay == 'inline' %}
-<details class="callout" {% if advancedFilterOpen %}open{% endif %}>
-    <summary style="cursor: pointer; font-weight: 600;">
-        {{ ag_icons.search() }}
-        {% if attributes.title is not empty %}
-            {{ attributes.title|trans }}
-        {% endif %}
+<details class="callout" style="padding: .55rem .75rem;" {% if advancedFilterOpen %}open{% endif %}>
+    <summary class="subheader" style="cursor: pointer; font-size: .875rem; margin-bottom: 0;">
+        {{ ag_icons.filter() }}
+        {{ 'f0ska.autogrid.button.filter'|trans }}
     </summary>
-    <div class="grid-x grid-padding-x" style="margin-top: 1rem;">
-        <div class="cell">
-            {% if view.formThemes is not empty %}
-                {% form_theme view.advancedFilterFormView with view.formThemes %}
-            {% endif %}
-            {{ form_start(view.advancedFilterFormView) }}
-            {{ include(attributes.template.grid.advanced_filter_fields|default(ag_template('grid.advanced_filter_fields'))) }}
-            {{ form_rest(view.advancedFilterFormView) }}
-            {{ form_end(view.advancedFilterFormView) }}
-        </div>
-        <div class="cell">
-            <div class="grid-x grid-padding-x">
-                <div class="cell medium-6">
-                    <button type="submit"
-                            form="{{ view.advancedFilterFormView.vars.attr.id }}"
-                            class="button primary expanded"
-                    >
-                        {{- 'f0ska.autogrid.button.submit'|trans -}}
-                    </button>
-                </div>
-                <div class="cell medium-6">
-                    <a class="button secondary expanded {% if request.filter is not defined %}disabled{% endif %}"
-                       href="{{ ag_run(agActionUrl, 'grid', {'filter': null}) }}"
-                    >
-                        {{- 'f0ska.autogrid.button.reset'|trans -}}
-                    </a>
-                </div>
+    <div style="margin-top: .75rem; box-sizing: border-box;">
+        {% if view.formThemes is not empty %}
+            {% form_theme view.advancedFilterFormView with view.formThemes %}
+        {% endif %}
+        {{ form_start(view.advancedFilterFormView) }}
+        {{ include(attributes.template.grid.advanced_filter_fields|default(ag_template('grid.advanced_filter_fields'))) }}
+        {{ form_rest(view.advancedFilterFormView) }}
+        {{ form_end(view.advancedFilterFormView) }}
+        <div class="button-group grid-x grid-padding-x">
+            <div class="cell medium-6">
+                <button type="submit"
+                        form="{{ view.advancedFilterFormView.vars.attr.id }}"
+                        class="button primary expanded"
+                >
+                    {{- 'f0ska.autogrid.button.submit'|trans -}}
+                </button>
+            </div>
+            <div class="cell medium-6">
+                <a class="button secondary expanded {% if request.filter is not defined %}disabled{% endif %}"
+                   href="{{ ag_run(agActionUrl, 'grid', {'filter': null}) }}"
+                >
+                    {{- 'f0ska.autogrid.button.reset'|trans -}}
+                </a>
             </div>
         </div>
     </div>
@@ -48,10 +42,8 @@
         <div class="grid-x grid-padding-x">
             <div class="cell">
                 <h3>
-                    {{ ag_icons.search() }}
-                    {% if attributes.title is not empty %}
-                        {{ attributes.title|trans }}
-                    {% endif %}
+                    {{ ag_icons.filter() }}
+                    {{ 'f0ska.autogrid.button.filter'|trans }}
                 </h3>
                 <button class="close-button" aria-label="Close modal" type="button" onclick="document.getElementById('adv{{ agId }}').style.display='none';">
                     <span aria-hidden="true">&times;</span>

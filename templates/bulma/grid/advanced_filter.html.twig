@@ -5,14 +5,12 @@
     {% set advancedFilterOpen = request.filter is defined or not advancedFilterCollapsed %}
     {% if advancedFilterDisplay == 'inline' %}
         {% block autogrid_grid_advanced_filter_inline %}
-            <details class="box mb-4" {% if advancedFilterOpen %}open{% endif %}>
-                <summary class="is-flex is-align-items-center has-text-weight-semibold" style="cursor: pointer; gap: .5rem;">
-                    {{ ag_icons.search() }}
-                    {% if attributes.title is not empty %}
-                        {{ attributes.title|trans }}
-                    {% endif %}
+            <details class="is-shadowless mb-4" style="border: 1px solid #dbdbdb; border-radius: 6px;" {% if advancedFilterOpen %}open{% endif %}>
+                <summary class="is-flex is-align-items-center has-text-grey" style="cursor: pointer; gap: .5rem; font-size: .875rem; padding: .5rem .75rem;">
+                    {{ ag_icons.filter() }}
+                    {{ 'f0ska.autogrid.button.filter'|trans }}
                 </summary>
-                <div class="mt-4">
+                <div class="p-4" style="box-sizing: border-box;">
                     {% if view.formThemes is not empty %}
                         {% form_theme view.advancedFilterFormView with view.formThemes %}
                     {% endif %}
@@ -22,17 +20,17 @@
                         {{ form_rest(view.advancedFilterFormView) }}
                         {{ form_end(view.advancedFilterFormView) }}
                     {% endblock %}
-                    <div class="field is-grouped">
-                        <div class="control">
+                    <div class="field is-grouped columns">
+                        <div class="control column is-6">
                             <button type="submit"
                                     form="{{ view.advancedFilterFormView.vars.attr.id }}"
-                                    class="button is-primary"
+                                    class="button is-primary is-fullwidth"
                             >
                                 {{- 'f0ska.autogrid.button.submit'|trans -}}
                             </button>
                         </div>
-                        <div class="control">
-                            <a class="button is-light {% if request.filter is not defined %}is-static{% endif %}"
+                        <div class="control column is-6">
+                            <a class="button is-light is-fullwidth {% if request.filter is not defined %}is-static{% endif %}"
                                href="{{ ag_run(agActionUrl, 'grid', {'filter': null}) }}"
                             >
                                 {{- 'f0ska.autogrid.button.reset'|trans -}}
@@ -58,10 +56,8 @@
                         <header class="modal-card-head">
                             {% block autogrid_grid_advanced_filter_header %}
                                 <p class="modal-card-title" id="adv{{ agId }}Label">
-                                    {{ ag_icons.search() }}
-                                    {% if attributes.title is not empty %}
-                                        {{ attributes.title|trans }}
-                                    {% endif %}
+                                    {{ ag_icons.filter() }}
+                                    {{ 'f0ska.autogrid.button.filter'|trans }}
                                 </p>
                                 <button class="delete" aria-label="close" onclick="document.getElementById('adv{{ agId }}').classList.remove('is-active');"></button>
                             {% endblock %}
@@ -81,26 +77,24 @@
                         </section>
                         <footer class="modal-card-foot">
                             {% block autogrid_grid_advanced_filter_footer %}
-                                <div class="field is-grouped">
-                                    <div class="control">
-                                        {% block autogrid_grid_advanced_filter_submit_button %}
-                                            <button type="submit"
-                                                    form="{{ view.advancedFilterFormView.vars.attr.id }}"
-                                                    class="button is-primary"
-                                            >
-                                                {{- 'f0ska.autogrid.button.submit'|trans -}}
-                                            </button>
-                                        {% endblock %}
-                                    </div>
-                                    <div class="control">
-                                        {% block autogrid_grid_advanced_filter_reset_button %}
-                                            <a class="button is-light {% if request.filter is not defined %}is-static{% endif %}"
-                                               href="{{ ag_run(agActionUrl, 'grid', {'filter': null}) }}"
-                                            >
-                                                {{- 'f0ska.autogrid.button.reset'|trans -}}
-                                            </a>
-                                        {% endblock %}
-                                    </div>
+                                <div class="column is-6">
+                                    {% block autogrid_grid_advanced_filter_submit_button %}
+                                        <button type="submit"
+                                                form="{{ view.advancedFilterFormView.vars.attr.id }}"
+                                                class="button is-primary is-fullwidth"
+                                        >
+                                            {{- 'f0ska.autogrid.button.submit'|trans -}}
+                                        </button>
+                                    {% endblock %}
+                                </div>
+                                <div class="column is-6">
+                                    {% block autogrid_grid_advanced_filter_reset_button %}
+                                        <a class="button is-light is-fullwidth {% if request.filter is not defined %}is-static{% endif %}"
+                                           href="{{ ag_run(agActionUrl, 'grid', {'filter': null}) }}"
+                                        >
+                                            {{- 'f0ska.autogrid.button.reset'|trans -}}
+                                        </a>
+                                    {% endblock %}
                                 </div>
                             {% endblock %}
                         </footer>

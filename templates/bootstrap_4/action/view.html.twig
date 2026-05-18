@@ -92,25 +92,5 @@
             {% endif %}
             </tbody>
         {% endblock %}
-
-        {% block autogrid_view_footer %}
-            {% if attributes.chrome.scroll_top %}
-            <tfoot class="{{ attributes.html_class.tfoot|default('border-top') }}">
-            <tr>
-                <td colspan="2" class="pl-0 pr-0">
-                    <div class="container-fluid py-2">
-                        <div class="d-flex justify-content-end">
-                            <div>
-                                <a class="btn btn-sm {{ attributes.html_class.tfoot_btn|default('btn-outline-secondary') }}"
-                                   href="#{{ attributes.container_id }}"
-                                >{{ ag_icons.arrow_up() }}</a>
-                            </div>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-            </tfoot>
-            {% endif %}
-        {% endblock %}
     </table>
 {% endblock %}
