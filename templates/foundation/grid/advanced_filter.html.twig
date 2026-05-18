@@ -17,26 +17,7 @@
                 {% form_theme view.advancedFilterFormView with view.formThemes %}
             {% endif %}
             {{ form_start(view.advancedFilterFormView) }}
-            <div class="grid-x grid-padding-x">
-                {% for field in fields %}
-                    {% if field.canFilter %}
-                        {% set formField = attribute(view.advancedFilterFormView, field.name) %}
-                        {% if formField.children|length %}
-                            {% for child in formField.children %}
-                                <div class="cell medium-4 mb-3">
-                                    <label>{{ field_label(formField) }} - {{ field_label(child) }}</label>
-                                    {{ form_widget(child) }}
-                                </div>
-                            {% endfor %}
-                        {% else %}
-                            <div class="cell medium-4 mb-3">
-                                <label>{{ field_label(formField) }}</label>
-                                {{ form_widget(formField) }}
-                            </div>
-                        {% endif %}
-                    {% endif %}
-                {% endfor %}
-            </div>
+            {{ include(attributes.template.grid.advanced_filter_fields|default(ag_template('grid.advanced_filter_fields'))) }}
             {{ form_rest(view.advancedFilterFormView) }}
             {{ form_end(view.advancedFilterFormView) }}
         </div>
@@ -81,26 +62,7 @@
                     {% form_theme view.advancedFilterFormView with view.formThemes %}
                 {% endif %}
                 {{ form_start(view.advancedFilterFormView) }}
-                <div class="grid-x grid-padding-x">
-                    {% for field in fields %}
-                        {% if field.canFilter %}
-                            {% set formField = attribute(view.advancedFilterFormView, field.name) %}
-                            {% if formField.children|length %}
-                                {% for child in formField.children %}
-                                    <div class="cell medium-4 mb-3">
-                                        <label>{{ field_label(formField) }} - {{ field_label(child) }}</label>
-                                        {{ form_widget(child) }}
-                                    </div>
-                                {% endfor %}
-                            {% else %}
-                                <div class="cell medium-4 mb-3">
-                                    <label>{{ field_label(formField) }}</label>
-                                    {{ form_widget(formField) }}
-                                </div>
-                            {% endif %}
-                        {% endif %}
-                    {% endfor %}
-                </div>
+                {{ include(attributes.template.grid.advanced_filter_fields|default(ag_template('grid.advanced_filter_fields'))) }}
                 {{ form_rest(view.advancedFilterFormView) }}
                 {{ form_end(view.advancedFilterFormView) }}
             </div>

@@ -18,31 +18,7 @@
                     {% endif %}
                     {% block autogrid_grid_advanced_filter_inline_form %}
                         {{ form_start(view.advancedFilterFormView) }}
-                        <div class="columns is-multiline">
-                            {% for field in fields %}
-                                {% if field.canFilter %}
-                                    {% set formField = attribute(view.advancedFilterFormView, field.name) %}
-                                    {% block autogrid_grid_advanced_filter_inline_field %}
-                                        <div class="column is-4">
-                                            {% if formField.children|length %}
-                                                {% for child in formField.children %}
-                                                    <div class="field">
-                                                        <label class="label is-small">{{ field_label(formField) }}
-                                                            - {{ field_label(child) }}</label>
-                                                        {{ form_widget(child) }}
-                                                    </div>
-                                                {% endfor %}
-                                            {% else %}
-                                                <div class="field">
-                                                    <label class="label is-small">{{ field_label(formField) }}</label>
-                                                    {{ form_widget(formField) }}
-                                                </div>
-                                            {% endif %}
-                                        </div>
-                                    {% endblock %}
-                                {% endif %}
-                            {% endfor %}
-                        </div>
+                        {{ include(attributes.template.grid.advanced_filter_fields|default(ag_template('grid.advanced_filter_fields'))) }}
                         {{ form_rest(view.advancedFilterFormView) }}
                         {{ form_end(view.advancedFilterFormView) }}
                     {% endblock %}
@@ -97,31 +73,7 @@
                                 {% endif %}
                                 {% block autogrid_grid_advanced_filter_form %}
                                     {{ form_start(view.advancedFilterFormView) }}
-                                    <div class="columns is-multiline">
-                                        {% for field in fields %}
-                                            {% if field.canFilter %}
-                                                {% set formField = attribute(view.advancedFilterFormView, field.name) %}
-                                                {% block autogrid_grid_advanced_filter_field %}
-                                                    <div class="column is-4">
-                                                        {% if formField.children|length %}
-                                                            {% for child in formField.children %}
-                                                                <div class="field">
-                                                                    <label class="label is-small">{{ field_label(formField) }}
-                                                                        - {{ field_label(child) }}</label>
-                                                                    {{ form_widget(child) }}
-                                                                </div>
-                                                            {% endfor %}
-                                                        {% else %}
-                                                            <div class="field">
-                                                                <label class="label is-small">{{ field_label(formField) }}</label>
-                                                                {{ form_widget(formField) }}
-                                                            </div>
-                                                        {% endif %}
-                                                    </div>
-                                                {% endblock %}
-                                            {% endif %}
-                                        {% endfor %}
-                                    </div>
+                                    {{ include(attributes.template.grid.advanced_filter_fields|default(ag_template('grid.advanced_filter_fields'))) }}
                                     {{ form_rest(view.advancedFilterFormView) }}
                                     {{ form_end(view.advancedFilterFormView) }}
                                 {% endblock %}

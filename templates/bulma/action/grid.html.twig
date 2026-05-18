@@ -1,8 +1,8 @@
 {% extends attributes.template.base|default(ag_template('base')) %}
 {% import attributes.template.icons|default(ag_template('icons')) as ag_icons %}
 {% block autogrid %}
-    {{ include(attributes.template.grid.advanced_filter|default(ag_template('grid.advanced_filter'))) }}
     {{ include(attributes.template.grid.search|default(ag_template('grid.search'))) }}
+    {{ include(attributes.template.grid.advanced_filter|default(ag_template('grid.advanced_filter'))) }}
     {% set columnsCount = (fields|length) + (ag_run(agIsAnyGranted) ? 1 : 0) + (view.massActionFormView ? 1 : 0) %}
     <table class="table is-fullwidth is-hoverable is-striped {{ attributes.html_class.table|default('') }}">
         {{ include(attributes.template.grid.colgroup|default(ag_template('grid.colgroup'))) }}
