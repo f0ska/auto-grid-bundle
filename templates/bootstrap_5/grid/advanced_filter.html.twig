@@ -1,5 +1,74 @@
 {% import attributes.template.icons|default(ag_template('icons')) as ag_icons %}
 {% if view.advancedFilterFormView and ag_run(agIsGranted, 'advanced_filter') %}
+    {% set advancedFilterDisplay = attributes.advanced_filter|default(false) is iterable ? attributes.advanced_filter|default({}).display|default('modal') : 'modal' %}
+    {% set advancedFilterCollapsed = attributes.advanced_filter|default(false) is iterable ? attributes.advanced_filter|default({}).collapsed|default(true) : true %}
+    {% set advancedFilterOpen = request.filter is defined or not advancedFilterCollapsed %}
+    {% if advancedFilterDisplay == 'inline' %}
+        {% block autogrid_grid_advanced_filter_inline %}
+            <details class="card mb-3" {% if advancedFilterOpen %}open{% endif %}>
+                <summary class="card-header d-flex align-items-center gap-2 fw-semibold" style="cursor: pointer;">
+                    {{ ag_icons.search() }}
+                    {% if attributes.title is not empty %}
+                        {{ attributes.title|trans }}
+                    {% endif %}
+                </summary>
+                <div class="card-body">
+                    <div class="container-fluid px-0">
+                        {% if view.formThemes is not empty %}
+                            {% form_theme view.advancedFilterFormView with view.formThemes %}
+                        {% endif %}
+                        {% block autogrid_grid_advanced_filter_inline_form %}
+                            {{ form_start(view.advancedFilterFormView) }}
+                            <div class="row">
+                                {% for field in fields %}
+                                    {% if field.canFilter %}
+                                        {% set formField = attribute(view.advancedFilterFormView, field.name) %}
+                                        {% block autogrid_grid_advanced_filter_inline_field %}
+                                            {% if formField.children|length %}
+                                                {% for child in formField.children %}
+                                                    <div class="col col-12 col-xl-4 col-lg-6 mb-3">
+                                                        <label class="form-label">{{ field_label(formField) }}
+                                                            - {{ field_label(child) }}</label>
+                                                        {{ form_widget(child) }}
+                                                    </div>
+                                                {% endfor %}
+                                            {% else %}
+                                                <div class="col col-12 col-xl-4 col-lg-6 mb-3">
+                                                    <label class="form-label">{{ field_label(formField) }}</label>
+                                                    {{ form_widget(formField) }}
+                                                </div>
+                                            {% endif %}
+                                        {% endblock %}
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            {{ form_rest(view.advancedFilterFormView) }}
+                            {{ form_end(view.advancedFilterFormView) }}
+                        {% endblock %}
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col col-6">
+                            <button type="submit"
+                                    form="{{ view.advancedFilterFormView.vars.attr.id }}"
+                                    class="btn btn-outline-primary w-100 m-0"
+                            >
+                                {{- 'f0ska.autogrid.button.submit'|trans -}}
+                            </button>
+                        </div>
+                        <div class="col col-6">
+                            <a class="btn btn-outline-secondary w-100 m-0 {% if request.filter is not defined %}disabled{% endif %}"
+                               href="{{ ag_run(agActionUrl, 'grid', {'filter': null}) }}"
+                            >
+                                {{- 'f0ska.autogrid.button.reset'|trans -}}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </details>
+        {% endblock %}
+    {% else %}
     {% block autogrid_grid_advanced_filter_modal %}
         <div class="modal fade"
              id="adv{{ agId }}"
@@ -94,4 +163,5 @@
             {% endblock %}
         </div>
     {% endblock %}
+    {% endif %}
 {% endif %}
