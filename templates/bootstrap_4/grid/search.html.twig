@@ -18,11 +18,10 @@
                 </div>
             </div>
             {% if view.searchFormView.fields is defined %}
-                <div class="d-flex flex-wrap mt-2">
+                <div class="d-flex flex-wrap mt-1">
                     {% for field in view.searchFormView.fields %}
                         <div class="form-check form-check-inline mr-3">
-                            {{ form_widget(field, {'attr': {'class': 'form-check-input'}}) }}
-                            {{ form_label(field, null, {'label_attr': {'class': 'form-check-label'}}) }}
+                            {{ form_widget(field, {'attr': {'class': 'form-check-input'}, 'label_attr': {'class': 'form-check-label text-muted small'}}) }}
                         </div>
                     {% endfor %}
                 </div>
