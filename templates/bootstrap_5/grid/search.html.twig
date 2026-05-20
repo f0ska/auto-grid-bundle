@@ -15,6 +15,16 @@
                     {{- 'f0ska.autogrid.button.reset'|trans -}}
                 </a>
             </div>
+            {% if view.searchFormView.fields is defined %}
+                <div class="d-flex flex-wrap gap-3 mt-2">
+                    {% for field in view.searchFormView.fields %}
+                        <div class="form-check form-check-inline m-0">
+                            {{ form_widget(field, {'attr': {'class': 'form-check-input'}}) }}
+                            {{ form_label(field, null, {'label_attr': {'class': 'form-check-label'}}) }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
         {{ form_end(view.searchFormView) }}
     </div>
 {% endif %}

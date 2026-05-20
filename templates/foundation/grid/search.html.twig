@@ -22,5 +22,15 @@
                 {{- 'f0ska.autogrid.button.reset'|trans -}}
             </a>
         </div>
+        {% if view.searchFormView.fields is defined %}
+            <div style="display: flex; flex-wrap: wrap; gap: 1rem; width: 100%; margin-top: .5rem;">
+                {% for field in view.searchFormView.fields %}
+                    <label style="display: inline-flex; align-items: center; gap: .35rem;">
+                        {{ form_widget(field) }}
+                        <span>{{ field.vars.label|trans }}</span>
+                    </label>
+                {% endfor %}
+            </div>
+        {% endif %}
     {{ form_end(view.searchFormView) }}
 {% endif %}

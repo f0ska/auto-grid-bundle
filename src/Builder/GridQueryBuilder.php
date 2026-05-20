@@ -176,7 +176,8 @@ class GridQueryBuilder
 
         $search = $parameters->attributes['searchable'] ?? [];
         $service = $this->searchServiceRegistry->get($search['service']);
-        $service->apply($builder, $term, $search['fields'], $parameters);
+        $fields = $parameters->request['search']['fields'] ?? $search['fields'];
+        $service->apply($builder, $term, $fields, $parameters);
     }
 
     private function buildOrder(QueryBuilder $builder, Parameters $parameters): void

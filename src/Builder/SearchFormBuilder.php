@@ -13,11 +13,14 @@ declare(strict_types=1);
 namespace F0ska\AutoGridBundle\Builder;
 
 use F0ska\AutoGridBundle\Model\Parameters;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Validator\Constraints\Length;
+
+use function Symfony\Component\String\u;
 
 class SearchFormBuilder
 {
@@ -55,6 +58,41 @@ class SearchFormBuilder
             ],
         ]);
 
+        if (!empty($search['field_selector'])) {
+            $builder->add('fields', ChoiceType::class, [
+                'required' => false,
+                'multiple' => true,
+                'expanded' => true,
+                'choices' => $this->buildFieldChoices($parameters, $search['fields']),
+                'data' => $parameters->request['search']['fields'] ?? $search['fields'],
+            ]);
+        }
+
         return $builder->getForm();
+    }
+
+    /**
+     * @param string[] $fields
+     *
+     * @return array<string, string>
+     */
+    private function buildFieldChoices(Parameters $parameters, array $fields): array
+    {
+        $choices = [];
+        foreach ($fields as $field) {
+            $choices[$this->getFieldLabel($parameters, $field)] = $field;
+        }
+
+        return $choices;
+    }
+
+    private function getFieldLabel(Parameters $parameters, string $field): string
+    {
+        $fieldParameter = $parameters->fields[$field] ?? $parameters->fields[str_replace('.', ':', $field)] ?? null;
+        if ($fieldParameter !== null && isset($fieldParameter->attributes['label'])) {
+            return (string) $fieldParameter->attributes['label'];
+        }
+
+        return u($field)->replace('.', ' ')->snake()->replace('_', ' ')->title()->toString();
     }
 }

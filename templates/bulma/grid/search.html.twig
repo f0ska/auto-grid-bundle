@@ -2,21 +2,37 @@
     {% if view.formThemes is not empty %}
         {% form_theme view.searchFormView with view.formThemes %}
     {% endif %}
-    {{ form_start(view.searchFormView, {'attr': {'class': 'field has-addons mb-4'}}) }}
-        <div class="control is-expanded">
-            {{ form_widget(view.searchFormView.term, {'attr': {'class': 'input', 'placeholder': 'f0ska.autogrid.placeholder.search'|trans}}) }}
-        </div>
-        <div class="control">
-            <button class="button is-primary" type="submit">
-                {{- 'f0ska.autogrid.button.submit'|trans -}}
-            </button>
-        </div>
-        <div class="control">
-            <a class="button is-light {% if request.search is not defined %}is-static{% endif %}"
-               href="{{ ag_run(agActionUrl, 'grid', {'search': null, 'page': null}) }}"
-            >
-                {{- 'f0ska.autogrid.button.reset'|trans -}}
-            </a>
-        </div>
-    {{ form_end(view.searchFormView) }}
+    <div class="mb-4">
+        {{ form_start(view.searchFormView) }}
+            <div class="field has-addons">
+                <div class="control is-expanded">
+                    {{ form_widget(view.searchFormView.term, {'attr': {'class': 'input', 'placeholder': 'f0ska.autogrid.placeholder.search'|trans}}) }}
+                </div>
+                <div class="control">
+                    <button class="button is-primary" type="submit">
+                        {{- 'f0ska.autogrid.button.submit'|trans -}}
+                    </button>
+                </div>
+                <div class="control">
+                    <a class="button is-light {% if request.search is not defined %}is-static{% endif %}"
+                       href="{{ ag_run(agActionUrl, 'grid', {'search': null, 'page': null}) }}"
+                    >
+                        {{- 'f0ska.autogrid.button.reset'|trans -}}
+                    </a>
+                </div>
+            </div>
+            {% if view.searchFormView.fields is defined %}
+                <div class="field is-grouped is-grouped-multiline">
+                    {% for field in view.searchFormView.fields %}
+                        <div class="control">
+                            <label class="checkbox">
+                                {{ form_widget(field) }}
+                                <span>{{ field.vars.label|trans }}</span>
+                            </label>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {{ form_end(view.searchFormView) }}
+    </div>
 {% endif %}

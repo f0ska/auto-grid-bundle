@@ -45,6 +45,9 @@ class SearchAction extends AbstractAction
 
         $term = trim((string) $form->get('term')->getData());
         $search = $term === '' ? null : ['term' => $term];
+        if ($search !== null && $form->has('fields')) {
+            $search['fields'] = $form->get('fields')->getData();
+        }
 
         $autoGrid->setResponse(new RedirectResponse($parameters->actionUrl('grid', [
             'search' => $search,

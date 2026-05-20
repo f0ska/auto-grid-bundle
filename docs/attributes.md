@@ -190,11 +190,14 @@ Use a custom service when search should use external indexes or domain rules:
     service: ArticleSearchService::class,
     minLength: 2,
     maxLength: 255,
+    fieldSelector: true,
 )]
 class Article { ... }
 ```
 
 The service must implement `SearchServiceInterface`.
+Set `fieldSelector` to `true` to let users choose which configured fields to search.
+If none are selected, all fields are searched.
 </details>
 
 <details>
