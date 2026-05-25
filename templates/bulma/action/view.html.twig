@@ -61,7 +61,7 @@
                 {% if view.fieldset.defined %}
                     {{ include(attributes.template.fieldset.view|default(ag_template('fieldset.view'))) }}
                 {% else %}
-                    <div class="box">
+                    <div class="box is-shadowless" style="border: 1px solid #dbdbdb;">
                         {% for field in fields %}
                             {% if field.permissions.view %}
                                 {% block autogrid_view_body_row %}
@@ -83,16 +83,6 @@
                     </div>
                 {% endif %}
             </div>
-        {% endblock %}
-
-        {% block autogrid_view_footer %}
-            {% if attributes.chrome.scroll_top %}
-            <div class="{{ attributes.html_class.tfoot|default('is-flex is-justify-content-flex-end') }}">
-                <a class="{{ attributes.html_class.tfoot_btn|default('button is-small') }}"
-                   href="#{{ attributes.container_id }}"
-                  >{{ ag_icons.arrow_up() }}</a>
-            </div>
-            {% endif %}
         {% endblock %}
     </div>
 {% endblock %}

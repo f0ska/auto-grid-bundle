@@ -18,8 +18,15 @@ use F0ska\AutoGridBundle\Attribute\AbstractAttribute;
 #[Attribute]
 class AdvancedFilter extends AbstractAttribute
 {
-    public function __construct(bool $value)
-    {
-        parent::__construct($value);
+    public function __construct(
+        bool $enabled = true,
+        string $display = 'modal',
+        bool $collapsed = true
+    ) {
+        parent::__construct($enabled ? [
+            'enabled' => true,
+            'display' => $display,
+            'collapsed' => $collapsed,
+        ] : false);
     }
 }

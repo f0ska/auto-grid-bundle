@@ -27,12 +27,14 @@ class Searchable extends AbstractAttribute
         string $service = DefaultSearchService::class,
         int $minLength = 1,
         int $maxLength = 255,
+        bool $fieldSelector = false,
     ) {
         parent::__construct([
             'fields' => $fields,
             'service' => $service,
             'min_length' => $minLength,
             'max_length' => $maxLength,
+            'field_selector' => $fieldSelector,
         ]);
     }
 }

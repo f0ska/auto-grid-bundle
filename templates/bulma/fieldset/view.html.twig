@@ -3,7 +3,7 @@
         {% for fieldset in view.fieldset.defined %}
             {% block autogrid_fieldset_view_card %}
                 <div class="column {{ fieldset.class|default('is-full') }}">
-                    <div class="box">
+                    <div class="box is-shadowless" style="border: 1px solid #dbdbdb;">
                         {% block autogrid_fieldset_view_header %}
                             <p class="title is-5 mb-4">{{ fieldset.name|trans }}</p>
                         {% endblock %}
@@ -29,7 +29,7 @@
         {% if view.fieldset.not_defined %}
             {% block autogrid_fieldset_view_no_fieldset %}
                 <div class="column is-full">
-                    <div class="box">
+                    <div class="box is-shadowless" style="border: 1px solid #dbdbdb;">
                         {% for fieldName in view.fieldset.not_defined %}
                             {% set field = attribute(fields, fieldName) %}
                             <div class="{{ not loop.first ? 'pt-4 mt-4 has-border-top' : '' }}">

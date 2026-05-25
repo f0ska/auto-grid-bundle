@@ -32,8 +32,13 @@ class SearchParameter implements ActionParameterInterface
             return null;
         }
 
-        if (!is_array($value) || !array_key_exists('term', $value) || count($value) > 1) {
-            throw new InvalidGridParameterException('Invalid request parameter: search must contain only a term value');
+        if (!is_array($value) || !array_key_exists('term', $value)) {
+            throw new InvalidGridParameterException('Invalid request parameter: search must contain a term value');
+        }
+
+        $unknownKeys = array_diff(array_keys($value), ['term', 'fields']);
+        if ($unknownKeys !== []) {
+            throw new InvalidGridParameterException('Invalid request parameter: search contains an unsupported value');
         }
 
         if (!is_scalar($value['term']) && $value['term'] !== null) {
@@ -53,12 +58,56 @@ class SearchParameter implements ActionParameterInterface
             throw new InvalidGridParameterException('Invalid request parameter: search term length is outside allowed bounds');
         }
 
-        return ['term' => $term];
+        $search = ['term' => $term];
+        $fields = $this->normalizeFields($value['fields'] ?? null, $parameters);
+        if ($fields !== []) {
+            $search['fields'] = $fields;
+        }
+
+        return $search;
     }
 
     private function isSearchAllowed(Parameters $parameters): bool
     {
         return !empty($parameters->attributes['searchable']['fields'])
             && !empty($parameters->permissions['search']);
+    }
+
+    /**
+     * @return string[]
+     */
+    private function normalizeFields(mixed $value, Parameters $parameters): array
+    {
+        if ($value === null || $value === []) {
+            return [];
+        }
+
+        if (empty($parameters->attributes['searchable']['field_selector'])) {
+            throw new InvalidGridParameterException('Invalid request parameter: search fields selector is not enabled');
+        }
+
+        if (!is_array($value) || !array_is_list($value)) {
+            throw new InvalidGridParameterException('Invalid request parameter: search fields must be a list');
+        }
+
+        $configuredFields = $parameters->attributes['searchable']['fields'];
+        $fields = [];
+        foreach ($value as $field) {
+            if (!is_scalar($field)) {
+                throw new InvalidGridParameterException('Invalid request parameter: search field must be scalar');
+            }
+
+            $field = (string) $field;
+            if (!in_array($field, $configuredFields, true)) {
+                throw new InvalidGridParameterException(sprintf(
+                    'Invalid request parameter: unknown search field "%s"',
+                    $field
+                ));
+            }
+
+            $fields[] = $field;
+        }
+
+        return array_values(array_unique($fields));
     }
 }
