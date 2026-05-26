@@ -1,6 +1,6 @@
 {% if field.permissions.grid %}
     {% block autogrid_grid_column_header_cell %}
-        <th class="{{ field.attributes.column_html_class.column|default('') }} {{ field.attributes.column_html_class.header|default('align-middle') }}">
+        <th class="{{ ag_column_class(field, 'header', 'align-middle') }}">
             <span style="display: inline-flex; align-items: center; gap: 0.35rem; max-width: 100%; min-width: 0; vertical-align: middle;">
                 <span style="display: inline-flex; align-items: center; flex-shrink: 0;">
                     {% block autogrid_grid_column_header_sort %}

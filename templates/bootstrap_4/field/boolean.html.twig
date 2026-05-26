@@ -4,7 +4,7 @@
         <span class="{{ value ? 'text-success' : 'text-secondary' }} d-inline-flex">
             {{ value ? ag_icons.boolean_true() : ag_icons.boolean_false() }}
         </span>
-        <span class="{{ value ? 'text-success' : 'text-secondary' }} font-weight-bold">
+        <span class="{{ value ? 'text-success font-weight-normal' : 'text-secondary font-weight-normal' }}">
             {{- (value ? 'f0ska.autogrid.choice.yes' : 'f0ska.autogrid.choice.no')|trans -}}
         </span>
     </span>

@@ -3,10 +3,10 @@
     <span class="icon-text cursor-default">
         {% if value %}
             <span class="icon has-text-success">{{ ag_icons.boolean_true() }}</span>
-            <span class="has-text-success has-text-weight-bold">{{ 'f0ska.autogrid.choice.yes'|trans }}</span>
+            <span class="has-text-success has-text-weight-medium">{{ 'f0ska.autogrid.choice.yes'|trans }}</span>
         {% else %}
             <span class="icon has-text-grey">{{ ag_icons.boolean_false() }}</span>
-            <span class="has-text-grey has-text-weight-bold">{{ 'f0ska.autogrid.choice.no'|trans }}</span>
+            <span class="has-text-grey">{{ 'f0ska.autogrid.choice.no'|trans }}</span>
         {% endif %}
     </span>
 {% endblock %}

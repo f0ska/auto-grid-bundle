@@ -4,7 +4,7 @@
         <span style="color: {{ value ? '#3adb0a' : '#8a8a8a' }}; display: inline-flex;">
             {{ value ? ag_icons.boolean_true() : ag_icons.boolean_false() }}
         </span>
-        <span style="color: {{ value ? '#3adb0a' : '#8a8a8a' }}; font-weight: bold;">
+        <span style="color: {{ value ? '#3adb0a' : '#8a8a8a' }}; font-weight: {{ value ? '500' : '400' }};">
             {{- (value ? 'f0ska.autogrid.choice.yes' : 'f0ska.autogrid.choice.no')|trans -}}
         </span>
     </span>

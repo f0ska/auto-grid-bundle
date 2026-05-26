@@ -4,7 +4,7 @@
         <span class="{{ value ? 'text-green-600' : 'text-gray-400' }} inline-flex">
             {{ value ? ag_icons.boolean_true() : ag_icons.boolean_false() }}
         </span>
-        <span class="text-sm font-bold {{ value ? 'text-green-600' : 'text-gray-400' }}">
+        <span class="text-sm {{ value ? 'font-medium text-green-600' : 'font-normal text-gray-400' }}">
             {{- (value ? 'f0ska.autogrid.choice.yes' : 'f0ska.autogrid.choice.no')|trans -}}
         </span>
     </span>
