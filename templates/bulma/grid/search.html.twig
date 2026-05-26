@@ -2,9 +2,9 @@
     {% if view.formThemes is not empty %}
         {% form_theme view.searchFormView with view.formThemes %}
     {% endif %}
-    <div class="mb-4">
-        {{ form_start(view.searchFormView) }}
-            <div class="field has-addons mb-1">
+    <div style="display: contents;">
+        {{ form_start(view.searchFormView, {'attr': {'style': 'display: contents;'}}) }}
+            <div class="field has-addons" style="width: 100%; margin-bottom: 0;">
                 <div class="control is-expanded">
                     {{ form_widget(view.searchFormView.term, {'attr': {'class': 'input', 'placeholder': 'f0ska.autogrid.placeholder.search'|trans}}) }}
                 </div>
@@ -22,14 +22,12 @@
                 </div>
             </div>
             {% if view.searchFormView.fields is defined %}
-                <div class="field is-grouped is-grouped-multiline mt-1 ml-4">
+                <div class="is-flex is-align-items-center mb-0" style="gap: 0.75rem; margin-left: 1.5rem;">
                     {% for field in view.searchFormView.fields %}
-                        <div class="control">
-                            <label class="checkbox has-text-grey is-size-7">
-                                {{ form_widget(field) }}
-                                <span>{{ field.vars.label|trans }}</span>
-                            </label>
-                        </div>
+                        <label class="checkbox has-text-grey is-size-7" style="display: inline-flex; align-items: center; gap: 0.25rem; margin-bottom: 0;">
+                            {{ form_widget(field, {'attr': {'style': 'margin: 0;'}}) }}
+                            <span>{{ field.vars.label|trans }}</span>
+                        </label>
                     {% endfor %}
                 </div>
             {% endif %}

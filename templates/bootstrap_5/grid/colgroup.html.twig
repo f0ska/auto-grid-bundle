@@ -6,7 +6,7 @@
         {% if fields is not empty %}
             {% for field in fields %}
                 {% if field.permissions.grid %}
-                    <col class="{{ field.attributes.column_html_class.column|default('') }}">
+                    <col class="{{ ag_column_class(field, 'column') }}">
                 {% endif %}
             {% endfor %}
         {% endif %}

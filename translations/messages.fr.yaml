@@ -5,6 +5,7 @@ f0ska:
             back: "Retour"
             sort: "Trier"
             filter: "Filtrer"
+            advanced_filter: "Filtre avancé"
             mass_action: "Actions de masse"
             export: "Exporter"
             search: "Rechercher"

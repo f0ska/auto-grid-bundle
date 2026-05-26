@@ -18,13 +18,17 @@ use F0ska\AutoGridBundle\Attribute\AbstractAttribute;
 #[Attribute]
 class ColumnHtmlClass extends AbstractAttribute
 {
-    public function __construct(?string $columnClass = null, ?string $headerClass = null, ?string $valueClass = null)
+    public function __construct(?string $columnClass = null, ?string $headerClass = null, ?string $valueClass = null, bool $override = false)
     {
         $value = array_filter([
             'column' => $columnClass,
             'header' => $headerClass,
             'value' => $valueClass,
         ], fn ($v) => $v !== null);
+
+        if ($override) {
+            $value['override'] = true;
+        }
 
         parent::__construct($value);
     }

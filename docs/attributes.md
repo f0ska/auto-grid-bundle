@@ -306,11 +306,12 @@ private ?User $author = null;
 <details>
 <summary><strong>ColumnHtmlClass</strong></summary>
 
-Sets CSS classes for headers and data cells.
+Sets classes for the field column. `columnClass` applies to `<col>`, `<th>` and `<td>`.
+Custom classes append to theme defaults; use `override: true` to replace defaults for affected cells.
 
 ```php
-#[ColumnHtmlClass(columnClass: "w-25", headerClass: "text-center", valueClass: "fw-bold")]
-private ?string $status = null;
+#[ColumnHtmlClass(columnClass: "text-end align-top", valueClass: "fw-bold", override: true)]
+private ?string $amount = null;
 ```
 </details>
 

@@ -17,7 +17,6 @@ use F0ska\AutoGridBundle\Model\AutoGrid;
 use F0ska\AutoGridBundle\Model\FieldParameter;
 use F0ska\AutoGridBundle\Service\ConfigurationService;
 use F0ska\AutoGridBundle\View\ViewServiceRegistry;
-use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment as TwigEnvironment;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
@@ -43,6 +42,7 @@ class Extension extends AbstractExtension
             new TwigFunction('ag_render', $this->agRender(...)),
             new TwigFunction('ag_run', $this->agRun(...)),
             new TwigFunction('ag_template', $this->agTemplate(...)),
+            new TwigFunction('ag_column_class', $this->agColumnClass(...)),
         ];
     }
 
@@ -91,5 +91,30 @@ class Extension extends AbstractExtension
     public function agTemplate(string $templateCode): string
     {
         return $this->configurationService->getTemplate($templateCode);
+    }
+
+    public function agColumnClass(FieldParameter $field, string $area, string $defaultClass = ''): string
+    {
+        $classes = $field->attributes['column_html_class'] ?? [];
+        $columnClass = $classes['column'] ?? '';
+
+        if ($area === 'column') {
+            return trim($columnClass);
+        }
+
+        $specificClass = match ($area) {
+            'header' => $classes['header'] ?? '',
+            'value' => $classes['value'] ?? '',
+            default => throw new \InvalidArgumentException(sprintf('Unknown column class area "%s".', $area)),
+        };
+
+        $hasCustomClass = $columnClass !== '' || $specificClass !== '';
+        $useDefaultClass = !($classes['override'] ?? false) || !$hasCustomClass;
+
+        return trim(implode(' ', array_filter([
+            $useDefaultClass ? $defaultClass : '',
+            $columnClass,
+            $specificClass,
+        ])));
     }
 }
