@@ -5,6 +5,7 @@ f0ska:
             back: "Назад"
             sort: "Сортувати"
             filter: "Фільтрувати"
+            advanced_filter: "Розширений фільтр"
             mass_action: "Масові дії"
             export: "Експортувати"
             search: "Пошук"

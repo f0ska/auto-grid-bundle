@@ -5,40 +5,102 @@
     {% set advancedFilterOpen = request.filter is defined or not advancedFilterCollapsed %}
     {% if advancedFilterDisplay == 'inline' %}
         {% block autogrid_grid_advanced_filter_inline %}
-            <details class="card mb-3" {% if advancedFilterOpen %}open{% endif %}>
-                <summary class="card-header border-bottom-0 d-flex align-items-center small text-muted font-weight-normal" style="cursor: pointer; gap: .5rem;">
+            <style>
+                .autogrid-inline-details summary {
+                    list-style: none; /* remove summary marker */
+                }
+                .autogrid-inline-details summary::-webkit-details-marker {
+                    display: none; /* remove safari summary marker */
+                }
+                .autogrid-inline-details {
+                    margin-left: auto;
+                }
+                .autogrid-filter-link:hover {
+                    color: var(--bs-primary, #007bff) !important;
+                    text-decoration: underline !important;
+                }
+                .autogrid-inline-details[open] {
+                    width: 100%;
+                    display: block;
+                    margin-top: 1rem;
+                    margin-left: 0 !important;
+                    margin-right: 0 !important;
+                    background-color: #fff;
+                    border: 1px solid rgba(0,0,0,.125);
+                    border-radius: 0.25rem;
+                    overflow: hidden;
+                }
+                .autogrid-inline-details[open] summary {
+                    display: flex !important;
+                    align-items: center !important;
+                    gap: 0.5rem !important;
+                    padding: 0.75rem 1.25rem !important;
+                    background-color: rgba(0,0,0,.03) !important;
+                    border: none !important;
+                    border-bottom: 1px solid rgba(0,0,0,.125) !important;
+                    color: #495057 !important;
+                    font-weight: 500 !important;
+                    cursor: pointer !important;
+                    width: 100% !important;
+                    border-radius: 0 !important;
+                    outline: none !important;
+                    box-shadow: none !important;
+                }
+                .autogrid-inline-details[open] summary::after {
+                    content: "";
+                    display: inline-block;
+                    width: 0.45rem;
+                    height: 0.45rem;
+                    border-right: 2px solid currentColor;
+                    border-bottom: 2px solid currentColor;
+                    transform: rotate(-135deg); /* Chevron pointing up */
+                    margin-left: auto;
+                    margin-right: 0.25rem;
+                    transition: transform 0.2s ease;
+                }
+                .autogrid-inline-details[open] summary .ag-filter-ellipsis {
+                    display: none !important;
+                }
+                .autogrid-inline-filter-content {
+                    width: 100%;
+                }
+            </style>
+            <details class="autogrid-inline-details mb-0" {% if advancedFilterOpen %}open{% endif %}>
+                <summary class="text-secondary text-decoration-none d-inline-flex align-items-center cursor-pointer autogrid-filter-link" style="gap: 0.25rem; font-size: 0.875rem;">
                     {{ ag_icons.filter() }}
-                    {{ 'f0ska.autogrid.button.filter'|trans }}
+                    <span>{{ 'f0ska.autogrid.button.advanced_filter'|trans }}<span class="ag-filter-ellipsis">...</span></span>
                 </summary>
-                <div class="card-body">
-                    <div class="container-fluid px-0">
-                        {% if view.formThemes is not empty %}
-                            {% form_theme view.advancedFilterFormView with view.formThemes %}
-                        {% endif %}
-                        {% block autogrid_grid_advanced_filter_inline_form %}
-                            {{ form_start(view.advancedFilterFormView) }}
-                            {{ include(attributes.template.grid.advanced_filter_fields|default(ag_template('grid.advanced_filter_fields'))) }}
-                            {{ form_rest(view.advancedFilterFormView) }}
-                            {{ form_end(view.advancedFilterFormView) }}
-                        {% endblock %}
-                    </div>
-                </div>
-                <div class="card-footer">
-                    <div class="row">
-                        <div class="col col-6">
-                            <button type="submit"
-                                    form="{{ view.advancedFilterFormView.vars.attr.id }}"
-                                    class="btn btn-outline-primary w-100 m-0"
-                            >
-                                {{- 'f0ska.autogrid.button.submit'|trans -}}
-                            </button>
+                <div class="autogrid-inline-filter-content">
+                    <div class="card-body">
+                        <div class="container-fluid px-0">
+                            {% if view.formThemes is not empty %}
+                                {% form_theme view.advancedFilterFormView with view.formThemes %}
+                            {% endif %}
+                            {% block autogrid_grid_advanced_filter_inline_form %}
+                                {{ form_start(view.advancedFilterFormView) }}
+                                {{ include(attributes.template.grid.advanced_filter_fields|default(ag_template('grid.advanced_filter_fields'))) }}
+                                {{ form_rest(view.advancedFilterFormView) }}
+                                {{ form_end(view.advancedFilterFormView) }}
+                            {% endblock %}
                         </div>
-                        <div class="col col-6">
-                            <a class="btn btn-outline-secondary w-100 m-0 {% if request.filter is not defined %}disabled{% endif %}"
-                               href="{{ ag_run(agActionUrl, 'grid', {'filter': null}) }}"
-                            >
-                                {{- 'f0ska.autogrid.button.reset'|trans -}}
-                            </a>
+                    </div>
+                    <div class="card-footer">
+                        <div class="row">
+                            <div class="col col-6">
+                                <button type="submit"
+                                        form="{{ view.advancedFilterFormView.vars.attr.id }}"
+                                        class="btn btn-outline-primary w-100 m-0"
+                                >
+                                    {{- 'f0ska.autogrid.button.submit'|trans -}}
+                                </button>
+                            </div>
+                            <div class="col col-6">
+                                <a class="btn btn-outline-secondary w-100 m-0 {% if request.filter is not defined %}disabled{% endif %}"
+                                   href="{{ ag_run(agActionUrl, 'grid', {'filter': null}) }}"
+                                >
+                                    {{- 'f0ska.autogrid.button.reset'|trans -}}
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -61,7 +123,7 @@
                                 <div class="modal-header">
                                     <h1 class="modal-title h5" id="adv{{ agId }}Label">
                                         {{ ag_icons.filter() }}
-                                        {{ 'f0ska.autogrid.button.filter'|trans }}
+                                        {{ 'f0ska.autogrid.button.advanced_filter'|trans }}
                                     </h1>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>

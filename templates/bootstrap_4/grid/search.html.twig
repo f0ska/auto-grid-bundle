@@ -2,9 +2,9 @@
     {% if view.formThemes is not empty %}
         {% form_theme view.searchFormView with view.formThemes %}
     {% endif %}
-    <div class="mb-3">
-        {{ form_start(view.searchFormView) }}
-            <div class="input-group">
+    <div style="display: contents;">
+        {{ form_start(view.searchFormView, {'attr': {'style': 'display: contents;'}}) }}
+            <div class="input-group w-100">
                 {{ form_widget(view.searchFormView.term, {'attr': {'placeholder': 'f0ska.autogrid.placeholder.search'|trans}}) }}
                 <div class="input-group-append">
                     <button class="btn btn-outline-primary" type="submit">
@@ -18,9 +18,9 @@
                 </div>
             </div>
             {% if view.searchFormView.fields is defined %}
-                <div class="d-flex flex-wrap mt-1">
+                <div class="d-flex flex-wrap align-items-center mb-0 ml-2" style="gap: 0.75rem;">
                     {% for field in view.searchFormView.fields %}
-                        <div class="form-check form-check-inline mr-3">
+                        <div class="form-check form-check-inline m-0">
                             {{ form_widget(field, {'attr': {'class': 'form-check-input'}, 'label_attr': {'class': 'form-check-label text-muted small'}}) }}
                         </div>
                     {% endfor %}

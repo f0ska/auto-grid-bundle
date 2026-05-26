@@ -4,38 +4,104 @@
 {% set advancedFilterCollapsed = attributes.advanced_filter|default(false) is iterable ? attributes.advanced_filter|default({}).collapsed|default(true) : true %}
 {% set advancedFilterOpen = request.filter is defined or not advancedFilterCollapsed %}
 {% if advancedFilterDisplay == 'inline' %}
-<details class="callout" style="padding: .55rem .75rem;" {% if advancedFilterOpen %}open{% endif %}>
-    <summary class="subheader" style="cursor: pointer; font-size: .875rem; margin-bottom: 0;">
-        {{ ag_icons.filter() }}
-        {{ 'f0ska.autogrid.button.filter'|trans }}
-    </summary>
-    <div style="margin-top: .75rem; box-sizing: border-box;">
-        {% if view.formThemes is not empty %}
-            {% form_theme view.advancedFilterFormView with view.formThemes %}
-        {% endif %}
-        {{ form_start(view.advancedFilterFormView) }}
-        {{ include(attributes.template.grid.advanced_filter_fields|default(ag_template('grid.advanced_filter_fields'))) }}
-        {{ form_rest(view.advancedFilterFormView) }}
-        {{ form_end(view.advancedFilterFormView) }}
-        <div class="button-group grid-x grid-padding-x">
-            <div class="cell medium-6">
-                <button type="submit"
-                        form="{{ view.advancedFilterFormView.vars.attr.id }}"
-                        class="button primary expanded"
-                >
-                    {{- 'f0ska.autogrid.button.submit'|trans -}}
-                </button>
-            </div>
-            <div class="cell medium-6">
-                <a class="button secondary expanded {% if request.filter is not defined %}disabled{% endif %}"
-                   href="{{ ag_run(agActionUrl, 'grid', {'filter': null}) }}"
-                >
-                    {{- 'f0ska.autogrid.button.reset'|trans -}}
-                </a>
-            </div>
-        </div>
-    </div>
-</details>
+        {% block autogrid_grid_advanced_filter_inline %}
+            <style>
+                .autogrid-inline-details summary {
+                    list-style: none; /* remove summary marker */
+                    cursor: pointer !important;
+                }
+                .autogrid-inline-details summary::-webkit-details-marker {
+                    display: none; /* remove safari summary marker */
+                }
+                .autogrid-inline-details {
+                    margin-left: auto;
+                }
+                .autogrid-filter-link:hover {
+                    color: #1779ba !important;
+                    text-decoration: underline !important;
+                }
+                .autogrid-inline-details[open] {
+                    width: 100%;
+                    display: block;
+                    margin-top: 1rem;
+                    margin-left: 0 !important;
+                    margin-right: 0 !important;
+                    background-color: #f7f7f7;
+                    border: 1px solid rgba(10, 10, 10, 0.25);
+                    border-radius: 0;
+                    overflow: hidden;
+                }
+                .autogrid-inline-details[open] summary {
+                    display: flex !important;
+                    align-items: center !important;
+                    gap: 0.5rem !important;
+                    padding: 0.75rem 1rem !important;
+                    background-color: #e6e6e6 !important;
+                    border: none !important;
+                    border-bottom: 1px solid rgba(10, 10, 10, 0.25) !important;
+                    color: #0a0a0a !important;
+                    font-weight: bold !important;
+                    cursor: pointer !important;
+                    width: 100% !important;
+                    border-radius: 0 !important;
+                    outline: none !important;
+                    box-shadow: none !important;
+                    font-size: 0.875rem !important;
+                }
+                .autogrid-inline-details[open] summary::after {
+                    content: "";
+                    display: inline-block;
+                    width: 0.45rem;
+                    height: 0.45rem;
+                    border-right: 2px solid currentColor;
+                    border-bottom: 2px solid currentColor;
+                    transform: rotate(-135deg); /* Chevron pointing up */
+                    margin-left: auto;
+                    margin-right: 0.25rem;
+                    transition: transform 0.2s ease;
+                }
+                .autogrid-inline-details[open] summary .ag-filter-ellipsis {
+                    display: none !important;
+                }
+                .autogrid-inline-filter-content {
+                    width: 100%;
+                }
+            </style>
+            <details class="autogrid-inline-details mb-0" {% if advancedFilterOpen %}open{% endif %}>
+                <summary class="inline-flex align-center cursor-pointer autogrid-filter-link" style="margin-bottom: 0; display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.875rem; color: #767676; outline: none; border: none; background: transparent; padding: 0; cursor: pointer !important;">
+                    {{ ag_icons.filter() }}
+                    <span>{{ 'f0ska.autogrid.button.advanced_filter'|trans }}<span class="ag-filter-ellipsis">...</span></span>
+                </summary>
+                <div class="autogrid-inline-filter-content p-4" style="margin-top: 0; box-sizing: border-box; padding: 1.25rem;">
+                    {% if view.formThemes is not empty %}
+                        {% form_theme view.advancedFilterFormView with view.formThemes %}
+                    {% endif %}
+                    {% block autogrid_grid_advanced_filter_inline_form %}
+                        {{ form_start(view.advancedFilterFormView) }}
+                        {{ include(attributes.template.grid.advanced_filter_fields|default(ag_template('grid.advanced_filter_fields'))) }}
+                        {{ form_rest(view.advancedFilterFormView) }}
+                        {{ form_end(view.advancedFilterFormView) }}
+                    {% endblock %}
+                    <div class="button-group grid-x grid-padding-x" style="margin-bottom: 0; margin-top: 1rem;">
+                        <div class="cell medium-6">
+                            <button type="submit"
+                                    form="{{ view.advancedFilterFormView.vars.attr.id }}"
+                                    class="button primary expanded"
+                            >
+                                {{- 'f0ska.autogrid.button.submit'|trans -}}
+                            </button>
+                        </div>
+                        <div class="cell medium-6">
+                            <a class="button secondary expanded {% if request.filter is not defined %}disabled{% endif %}"
+                               href="{{ ag_run(agActionUrl, 'grid', {'filter': null}) }}"
+                            >
+                                {{- 'f0ska.autogrid.button.reset'|trans -}}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </details>
+        {% endblock %}
 {% else %}
 <div id="adv{{ agId }}" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2000; background: rgba(0,0,0,0.5);">
     <div style="position: relative; max-width: 900px; margin: 100px auto; background: white; border-radius: 4px; padding: 20px;">
@@ -43,7 +109,7 @@
             <div class="cell">
                 <h3>
                     {{ ag_icons.filter() }}
-                    {{ 'f0ska.autogrid.button.filter'|trans }}
+                    {{ 'f0ska.autogrid.button.advanced_filter'|trans }}
                 </h3>
                 <button class="close-button" aria-label="Close modal" type="button" onclick="document.getElementById('adv{{ agId }}').style.display='none';">
                     <span aria-hidden="true">&times;</span>

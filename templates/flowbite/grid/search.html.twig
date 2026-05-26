@@ -7,9 +7,9 @@
             color: var(--color-gray-400);
         }
     </style>
-    <div class="mb-4">
-        {{ form_start(view.searchFormView) }}
-            <div class="flex gap-2">
+    <div style="display: contents;">
+        {{ form_start(view.searchFormView, {'attr': {'style': 'display: contents;'}}) }}
+            <div class="flex gap-2 w-full">
                 {{ form_widget(view.searchFormView.term, {'attr': {'class': 'autogrid-flowbite-search-input bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5', 'placeholder': 'f0ska.autogrid.placeholder.search'|trans}}) }}
                 <button class="cursor-pointer text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg text-sm px-5 py-2.5" type="submit">
                     {{- 'f0ska.autogrid.button.submit'|trans -}}
@@ -21,7 +21,7 @@
                 </a>
             </div>
             {% if view.searchFormView.fields is defined %}
-                <div class="mt-2 flex flex-wrap" style="gap: .5rem;">
+                <div class="flex flex-wrap" style="gap: .5rem;">
                     {% for field in view.searchFormView.fields %}
                         <label class="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-3 py-1.5 text-sm text-gray-500">
                             {{ form_widget(field, {'attr': {'class': 'h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500'}}) }}

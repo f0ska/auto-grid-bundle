@@ -17,8 +17,8 @@
                     <button class="btn btn-sm {{ request.filter is defined ? btnClassActive : btnClass }}"
                             data-bs-toggle="modal"
                             data-bs-target="#adv{{ agId }}"
-                            title="{{ 'f0ska.autogrid.button.filter'|trans }}"
-                            aria-label="{{ 'f0ska.autogrid.button.filter'|trans }}"
+                            title="{{ 'f0ska.autogrid.button.advanced_filter'|trans }}"
+                            aria-label="{{ 'f0ska.autogrid.button.advanced_filter'|trans }}"
                     >{{ request.filter is defined ? ag_icons.filter_active() : ag_icons.filter() }}</button>
                 {% endif %}
             {% endblock %}
