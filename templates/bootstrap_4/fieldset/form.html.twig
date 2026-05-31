@@ -1,12 +1,12 @@
 {{ form_start(form) }}
-<div class="container-fluid">
+<div class="container-fluid pt-2">
     <div class="row">
         {% for fieldset in view.fieldset.defined %}
             {% block autogrid_fieldset_form_card %}
                 <div class="col {{ fieldset.class|default('col-12') }} mb-3">
-                    <section class="h-100 border rounded bg-light px-4 py-3">
+                    <section class="h-100 border rounded px-4 py-3">
                         {% block autogrid_fieldset_form_header %}
-                            <h5 class="h6 text-dark font-weight-bold mb-3 pb-2 border-bottom">
+                            <h5 class="h6 text-dark font-weight-bold mb-3">
                                 {{ fieldset.name|trans }}
                             </h5>
                         {% endblock %}

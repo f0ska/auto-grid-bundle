@@ -7,7 +7,7 @@
             {% set btnClass = attributes.html_class.thead_btn|default('btn-outline-secondary') %}
             <thead class="{{ attributes.html_class.thead|default('') }}">
             <tr>
-                <td class="align-middle pl-0 pr-0" colspan="2">
+                <td class="align-middle px-0 border-top-0" colspan="2">
                     <div class="container-fluid py-2">
                         <div class="d-flex flex-wrap align-items-center justify-content-between">
                             <div class="d-flex flex-wrap align-items-center mb-2 mb-md-0">
@@ -60,14 +60,14 @@
             <tbody class="{{ attributes.html_class.tbody|default('border-top') }}">
             {% if view.fieldset.defined %}
                 <tr>
-                    <td colspan="2" class="pl-0 pr-0">
+                    <td colspan="2" class="px-0">
                         {{ include(attributes.template.fieldset.view|default(ag_template('fieldset.view'))) }}
                     </td>
                 </tr>
             {% else %}
                 <tr>
-                    <td colspan="2" class="pl-0 pr-0">
-                        <div class="container-fluid py-3">
+                    <td colspan="2" class="px-0">
+                        <div class="container-fluid pb-3">
                             {% for field in fields %}
                                 {% if field.permissions.view %}
                                     {% block autogrid_view_body_row %}

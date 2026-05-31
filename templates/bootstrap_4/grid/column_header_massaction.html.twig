@@ -1,7 +1,7 @@
 {% if view.massActionFormView %}
     {% set btnClass = attributes.html_class.thead_btn|default('btn-outline-secondary') %}
     {% block autogrid_grid_column_header_massaction %}
-        <th class="{{ attributes.html_class.mass_action_column_header|default('align-middle') }}">
+        <th class="{{ attributes.html_class.mass_action_column_header|default('align-middle border-top-0') }}">
             {{ form_start(view.massActionFormView) }}
             {% block autogrid_grid_column_header_massaction_dropdown %}
                 <div class="input-group">

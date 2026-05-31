@@ -7,7 +7,7 @@
             {% set btnClass = attributes.html_class.thead_btn|default('btn-outline-secondary') %}
             <thead class="{{ attributes.html_class.thead|default('') }}">
             <tr>
-                <td class="align-middle pl-0 pr-0">
+                <td class="align-middle px-0 border-top-0">
                     <div class="container-fluid py-2">
                         <div class="d-flex flex-wrap align-items-center justify-content-between">
                             <div class="d-flex flex-wrap align-items-center mb-2 mb-md-0">
@@ -70,7 +70,7 @@
         {% block autogrid_form_body %}
             <tbody class="{{ attributes.html_class.tbody|default('border-top') }}">
             <tr>
-                <td class="pl-0 pr-0">
+                <td class="px-0">
                     {% block autogrid_form_form %}
                         {% if view.formThemes is not empty %}
                             {% form_theme form with view.formThemes %}

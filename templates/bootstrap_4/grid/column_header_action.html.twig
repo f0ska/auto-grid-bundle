@@ -3,7 +3,7 @@
     {% set btnClass = attributes.html_class.thead_btn|default('btn-outline-secondary') %}
     {% set btnClassActive = attributes.html_class.thead_btn_active|default('btn-primary') %}
     {% set advancedFilterDisplay = attributes.advanced_filter|default(false) is iterable ? attributes.advanced_filter|default({}).display|default('modal') : 'modal' %}
-    <th class="{{ attributes.html_class.action_column_header|default('text-right text-nowrap align-middle') }}">
+    <th class="{{ attributes.html_class.action_column_header|default('text-right text-nowrap align-middle border-top-0') }}">
         <span class="d-inline-flex align-items-center">
             {% block autogrid_grid_header_action_clear_filter %}
                 {% if advancedFilterDisplay == 'modal' and request.filter is defined and ag_run(agIsGranted, 'filter') %}

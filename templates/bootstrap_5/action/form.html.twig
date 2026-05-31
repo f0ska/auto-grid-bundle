@@ -7,7 +7,7 @@
             {% set btnClass = attributes.html_class.thead_btn|default('btn-outline-secondary') %}
             <thead class="{{ attributes.html_class.thead|default('') }}">
             <tr>
-                <td class="align-middle ps-0 pe-0">
+                <td class="align-middle px-0">
                     <div class="container-fluid py-2">
                         <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
                             <div class="d-flex flex-wrap align-items-center gap-2">
@@ -70,7 +70,7 @@
         {% block autogrid_form_body %}
             <tbody class="{{ attributes.html_class.tbody|default('table-group-divider') }}">
             <tr>
-                <td class="ps-0 pe-0 border-0">
+                <td class="px-0 border-0">
                     {% block autogrid_form_form %}
                         {% if view.formThemes is not empty %}
                             {% form_theme form with view.formThemes %}
