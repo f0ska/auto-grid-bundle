@@ -1,10 +1,10 @@
 {% import attributes.template.icons|default(ag_template('icons')) as ag_icons %}
 {% block autogrid_field_boolean_content %}
-    <span class="d-inline-flex align-items-center" style="gap: 0.25rem;">
-        <span class="{{ value ? 'text-success' : 'text-secondary' }} d-inline-flex">
+    <span class="d-inline-flex align-items-center" style="gap: 0.4rem; cursor: default;">
+        <span class="badge {{ value ? 'badge-success' : 'badge-secondary' }} d-inline-flex align-items-center justify-content-center" style="width: 1.2rem; height: 1.2rem; padding: 0; font-size: 0.75rem;">
             {{ value ? ag_icons.boolean_true() : ag_icons.boolean_false() }}
         </span>
-        <span class="{{ value ? 'text-success font-weight-normal' : 'text-secondary font-weight-normal' }}">
+        <span class="{{ value ? 'text-dark' : 'text-secondary' }}">
             {{- (value ? 'f0ska.autogrid.choice.yes' : 'f0ska.autogrid.choice.no')|trans -}}
         </span>
     </span>

@@ -1,10 +1,10 @@
 {% import attributes.template.icons|default(ag_template('icons')) as ag_icons %}
 {% block autogrid_field_boolean_content %}
-    <span class="inline-flex items-center gap-1 cursor-default">
-        <span class="{{ value ? 'text-green-600' : 'text-gray-400' }} inline-flex">
+    <span class="inline-flex items-center gap-1.5 cursor-default">
+        <span class="w-5 h-5 flex items-center justify-center rounded {{ value ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300' }}">
             {{ value ? ag_icons.boolean_true() : ag_icons.boolean_false() }}
         </span>
-        <span class="text-sm {{ value ? 'font-medium text-green-600' : 'font-normal text-gray-400' }}">
+        <span class="text-sm {{ value ? 'text-gray-900 dark:text-white' : 'text-gray-500 dark:text-gray-400' }}">
             {{- (value ? 'f0ska.autogrid.choice.yes' : 'f0ska.autogrid.choice.no')|trans -}}
         </span>
     </span>
