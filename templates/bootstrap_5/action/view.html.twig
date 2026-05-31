@@ -57,7 +57,7 @@
         {% endblock %}
 
         {% block autogrid_view_body %}
-            <tbody class="{{ attributes.html_class.tbody|default('table-group-divider') }}">
+            <tbody class="{{ attributes.html_class.tbody|default('') }}">
             {% if view.fieldset.defined %}
                 <tr>
                     <td colspan="2" class="px-0 border-0">

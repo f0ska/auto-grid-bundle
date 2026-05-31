@@ -68,7 +68,7 @@
         {% endblock %}
 
         {% block autogrid_form_body %}
-            <tbody class="{{ attributes.html_class.tbody|default('table-group-divider') }}">
+            <tbody class="{{ attributes.html_class.tbody|default('') }}">
             <tr>
                 <td class="px-0 border-0">
                     {% block autogrid_form_form %}
@@ -78,7 +78,7 @@
                         {% if view.fieldset.defined %}
                             {{ include(attributes.template.fieldset.form|default(ag_template('fieldset.form'))) }}
                         {% else %}
-                            <div class="container-fluid">
+                            <div class="container-fluid pt-3">
                                 <div class="row">
                                     <div class="col">
                                         {{ form(form) }}
