@@ -60,13 +60,13 @@
             <tbody class="{{ attributes.html_class.tbody|default('table-group-divider') }}">
             {% if view.fieldset.defined %}
                 <tr>
-                    <td colspan="2" class="ps-0 pe-0">
+                    <td colspan="2" class="ps-0 pe-0 border-0">
                         {{ include(attributes.template.fieldset.view|default(ag_template('fieldset.view'))) }}
                     </td>
                 </tr>
             {% else %}
                 <tr>
-                    <td colspan="2" class="ps-0 pe-0">
+                    <td colspan="2" class="ps-0 pe-0 border-0">
                         <div class="container-fluid py-3">
                             {% for field in fields %}
                                 {% if field.permissions.view %}
